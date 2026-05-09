@@ -1,0 +1,88 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title whiteFontColor"><strong>{{ title }}</strong></h4>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="form">
+      <div class="row mb-5">
+        <div class="col-md-6 mb-5">
+          <label class="form-label required">Mango Type</label>
+          <select class="form-select form-select-lg"
+            formControlName="mangoTypeId"
+            [class.is-invalid]="isInvalid('mangoTypeId')"
+            [attr.disabled]="isEdit ? true : null">
+            <option [value]="0">-- Select Mango Type --</option>
+            <option *ngFor="let opt of mangoTypeOptions" [value]="opt.id">{{ opt.label }}</option>
+          </select>
+          <div *ngIf="isInvalid('mangoTypeId')" class="invalid-feedback">Mango type is required.</div>
+        </div>
+        <div class="col-md-6 mb-5">
+          <label class="form-label required">Season Year</label>
+          <input type="number" class="form-control form-control-lg"
+            formControlName="seasonYear"
+            [class.is-invalid]="isInvalid('seasonYear')"
+            placeholder="e.g. 2025" />
+          <div *ngIf="isInvalid('seasonYear')" class="invalid-feedback">Valid season year is required.</div>
+        </div>
+      </div>
+
+      <div class="row mb-5">
+        <div class="col-md-6 mb-5">
+          <label class="form-label required">Start Date</label>
+          <input type="date" class="form-control form-control-lg"
+            formControlName="startDate"
+            [class.is-invalid]="isInvalid('startDate')" />
+          <div *ngIf="isInvalid('startDate')" class="invalid-feedback">Start date is required.</div>
+        </div>
+        <div class="col-md-6 mb-5">
+          <label class="form-label required">End Date</label>
+          <input type="date" class="form-control form-control-lg"
+            formControlName="endDate"
+            [class.is-invalid]="isInvalid('endDate')" />
+          <div *ngIf="isInvalid('endDate')" class="invalid-feedback">End date is required.</div>
+        </div>
+      </div>
+
+      <div class="row mb-5">
+        <div class="col-md-6 mb-5">
+          <label class="form-label required">Price per Kg (৳)</label>
+          <input type="number" class="form-control form-control-lg"
+            formControlName="pricePerKg"
+            [class.is-invalid]="isInvalid('pricePerKg')"
+            placeholder="0.00" step="0.01" />
+          <div *ngIf="isInvalid('pricePerKg')" class="invalid-feedback">Price per kg must be greater than zero.</div>
+        </div>
+        <div class="col-md-6 mb-5">
+          <label class="form-label required">Status</label>
+          <select class="form-select form-select-lg"
+            formControlName="status"
+            [class.is-invalid]="isInvalid('status')">
+            <option *ngFor="let opt of statusOptions" [value]="opt.id">{{ opt.label }}</option>
+          </select>
+          <div *ngIf="isInvalid('status')" class="invalid-feedback">Status is required.</div>
+        </div>
+      </div>
+
+      <div class="mb-5">
+        <label class="form-label">Notes</label>
+        <textarea class="form-control" formControlName="notes" rows="3"
+          placeholder="Optional notes about this availability record"></textarea>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light border shadow-sm px-4 me-2"
+      (click)="cancel()" [disabled]="isLoading">
+      <i class="bi bi-x-lg"></i> Cancel
+    </button>
+    <button type="button" class="btn btn-primary px-4"
+      (click)="save()" [disabled]="isLoading">
+      <span *ngIf="!isLoading"><i class="bi bi-check-lg me-1"></i> Save</span>
+      <span *ngIf="isLoading">
+        <span class="spinner-border spinner-border-sm me-2"></span> Saving...
+      </span>
+    </button>
+  </div>
+</div>

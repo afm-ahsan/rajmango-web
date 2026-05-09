@@ -59,4 +59,14 @@ export class EnumLabelUtils {
     };
     return labels[type] ?? `Type ${type}`;
   }
+
+  static getMangoAvailabilityStatusLabel(status: number): string {
+    const labels: Record<number, string> = {
+      0: 'Upcoming',
+      1: 'Available',
+      2: 'Limited',
+      3: 'Ended',
+    };
+    return labels[status] ?? `Status ${status}`;
+  }
 }

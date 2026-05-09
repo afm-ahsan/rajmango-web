@@ -63,6 +63,15 @@ export class DropdownService {
     ];
   }
 
+  getMangoAvailabilityStatusOptions(): DropdownModel[] {
+    return [
+      { id: 0, label: 'Upcoming' },
+      { id: 1, label: 'Available' },
+      { id: 2, label: 'Limited' },
+      { id: 3, label: 'Ended' },
+    ];
+  }
+
   getAddressTypeOptions(): DropdownModel[] {
     return [
       { id: 1, label: 'Home' },

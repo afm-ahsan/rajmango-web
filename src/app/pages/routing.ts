@@ -91,6 +91,13 @@ const Routing: Routes = [
         (m) => m.CustomerProfileModule
       ),
   },
+  {
+    path: 'mango-availability',
+    loadChildren: () =>
+      import('../features/mango-availability/mango-availability.module').then(
+        (m) => m.MangoAvailabilityModule
+      ),
+  },
   
 {
     path: '',
