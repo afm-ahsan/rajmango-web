@@ -84,6 +84,13 @@ const Routing: Routes = [
     loadChildren: () =>
       import('../features/payments/payment.module').then((m) => m.PaymentModule),
   },
+  {
+    path: 'customer-profile',
+    loadChildren: () =>
+      import('../features/customer-profile/customer-profile.module').then(
+        (m) => m.CustomerProfileModule
+      ),
+  },
   
 {
     path: '',

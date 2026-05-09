@@ -48,4 +48,15 @@ export class EnumLabelUtils {
     };
     return labels[method] ?? `Method ${method}`;
   }
+
+  static getAddressTypeLabel(type: number): string {
+    const labels: Record<number, string> = {
+      0: 'Unknown',
+      1: 'Home',
+      2: 'Work',
+      3: 'Billing',
+      4: 'Shipping',
+    };
+    return labels[type] ?? `Type ${type}`;
+  }
 }

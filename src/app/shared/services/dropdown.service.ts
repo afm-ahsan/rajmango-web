@@ -63,6 +63,15 @@ export class DropdownService {
     ];
   }
 
+  getAddressTypeOptions(): DropdownModel[] {
+    return [
+      { id: 1, label: 'Home' },
+      { id: 2, label: 'Work' },
+      { id: 3, label: 'Billing' },
+      { id: 4, label: 'Shipping' },
+    ];
+  }
+
   getDeliveryStatusOptions(): DropdownModel[] {
     return [
       { id: 1, label: 'Pending' },

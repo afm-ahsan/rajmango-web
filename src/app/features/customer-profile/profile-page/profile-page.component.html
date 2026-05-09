@@ -1,0 +1,157 @@
+<div class="container-xxl">
+  <div class="row g-5 g-xl-8">
+
+    <!-- Profile Edit Card -->
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-header border-0 pt-5">
+          <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bold fs-3 mb-1">My Profile</span>
+            <span class="text-muted mt-1 fw-semibold fs-7">Update your personal information</span>
+          </h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="isProfileLoading" class="text-center py-6">
+            <div class="spinner-border text-primary" role="status"></div>
+          </div>
+
+          <form *ngIf="!isProfileLoading" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+            <div *ngIf="profile" class="row mb-7">
+              <div class="col-lg-4 mb-4">
+                <span class="fw-semibold text-muted d-block">Email</span>
+                <span class="fw-bold fs-6">{{ profile.email }}</span>
+              </div>
+              <div class="col-lg-4 mb-4">
+                <span class="fw-semibold text-muted d-block">Username</span>
+                <span class="fw-bold fs-6">{{ profile.userName }}</span>
+              </div>
+              <div class="col-lg-4 mb-4">
+                <span class="fw-semibold text-muted d-block">Role</span>
+                <span class="fw-bold fs-6">{{ profile.roleName ?? '—' }}</span>
+              </div>
+            </div>
+
+            <div class="separator separator-dashed my-5"></div>
+
+            <div class="row mb-5">
+              <div class="col-md-6 mb-5">
+                <label class="form-label required">First Name</label>
+                <input type="text" class="form-control form-control-lg"
+                  formControlName="firstName"
+                  [class.is-invalid]="isInvalid('firstName')" />
+                <div *ngIf="isInvalid('firstName')" class="invalid-feedback">First name is required.</div>
+              </div>
+              <div class="col-md-6 mb-5">
+                <label class="form-label required">Last Name</label>
+                <input type="text" class="form-control form-control-lg"
+                  formControlName="lastName"
+                  [class.is-invalid]="isInvalid('lastName')" />
+                <div *ngIf="isInvalid('lastName')" class="invalid-feedback">Last name is required.</div>
+              </div>
+              <div class="col-md-6 mb-5">
+                <label class="form-label required">Phone Number</label>
+                <input type="text" class="form-control form-control-lg"
+                  formControlName="phoneNumber"
+                  [class.is-invalid]="isInvalid('phoneNumber')" />
+                <div *ngIf="isInvalid('phoneNumber')" class="invalid-feedback">Phone number is required.</div>
+              </div>
+            </div>
+
+            <div class="separator separator-dashed my-5"></div>
+            <p class="fw-bold text-gray-700 mb-5">
+              Change Password
+              <span class="text-muted fs-7 fw-normal ms-2">(leave blank to keep current password)</span>
+            </p>
+
+            <div class="row mb-5">
+              <div class="col-md-6 mb-5">
+                <label class="form-label">Current Password</label>
+                <input type="password" class="form-control form-control-lg"
+                  formControlName="currentPassword" autocomplete="current-password" />
+              </div>
+              <div class="col-md-6 mb-5">
+                <label class="form-label">New Password</label>
+                <input type="password" class="form-control form-control-lg"
+                  formControlName="newPassword" autocomplete="new-password" />
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <button type="submit" class="btn btn-primary px-6" [disabled]="isSavingProfile">
+                <span *ngIf="!isSavingProfile">Save Changes</span>
+                <span *ngIf="isSavingProfile">
+                  <span class="spinner-border spinner-border-sm me-2"></span> Saving...
+                </span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved Addresses Card -->
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-header border-0 pt-5">
+          <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bold fs-3 mb-1">Saved Addresses</span>
+          </h3>
+          <div class="card-toolbar">
+            <button class="btn btn-sm btn-primary" (click)="openAddressModal()">
+              <i class="bi bi-plus-lg me-1"></i> Add Address
+            </button>
+          </div>
+        </div>
+        <div class="card-body pt-0">
+          <div *ngIf="isAddressLoading" class="text-center py-6">
+            <div class="spinner-border text-primary" role="status"></div>
+          </div>
+
+          <div *ngIf="!isAddressLoading && addresses.length === 0" class="text-center text-muted py-10">
+            No saved addresses yet. Add one to get started.
+          </div>
+
+          <div *ngIf="!isAddressLoading && addresses.length > 0" class="table-responsive">
+            <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+              <thead>
+                <tr class="fw-bold text-muted">
+                  <th>Address</th>
+                  <th>City / Area</th>
+                  <th>Postal Code</th>
+                  <th>Type</th>
+                  <th>Primary</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let addr of addresses">
+                  <td>{{ addr.addressLine }}</td>
+                  <td>
+                    {{ addr.city }}<span *ngIf="addr.area">, {{ addr.area }}</span>
+                  </td>
+                  <td>{{ addr.postalCode || '—' }}</td>
+                  <td>{{ getAddressTypeLabel(addr.addressType) }}</td>
+                  <td>
+                    <span *ngIf="addr.isPrimary" class="badge badge-light-success">Primary</span>
+                    <span *ngIf="!addr.isPrimary" class="text-muted">—</span>
+                  </td>
+                  <td class="text-end">
+                    <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
+                      (click)="openAddressModal(addr)" title="Edit">
+                      <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm"
+                      (click)="deleteAddress(addr.id)" title="Delete">
+                      <i class="bi bi-trash-fill"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
