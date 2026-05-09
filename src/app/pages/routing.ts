@@ -4,7 +4,12 @@ const Routing: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
-  },  
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () =>
+      import('../features/dashboard/dashboard.module').then((m) => m.DashboardModule),
+  },
   {
     path: 'couriers',
     loadChildren: () =>
@@ -28,18 +33,6 @@ const Routing: Routes = [
     path: 'crafted/account',
     loadChildren: () =>
       import('../features/account/account.module').then((m) => m.AccountModule),
-  },
-  {
-    path: 'crafted/pages/wizards',
-    loadChildren: () =>
-      import('../features/wizards/wizards.module').then((m) => m.WizardsModule),
-  },
-  {
-    path: 'crafted/widgets',
-    loadChildren: () =>
-      import('../features/widgets-examples/widgets-examples.module').then(
-        (m) => m.WidgetsExamplesModule
-      ),
   },
   {
     path: 'mango-types',
@@ -87,15 +80,9 @@ const Routing: Routes = [
       ),
   },
   
-  {
-    path: 'apps/chat',
-    loadChildren: () =>
-      import('../features/apps/chat/chat.module').then((m) => m.ChatModule),
-  },
-  {
+{
     path: '',
-    redirectTo: '/home',
-    //redirectTo: '/dashboard',
+    redirectTo: '/dashboard/customer',
     pathMatch: 'full',
   },
   {

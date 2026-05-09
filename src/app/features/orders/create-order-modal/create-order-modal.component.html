@@ -104,7 +104,17 @@
               class="form-control"
               placeholder="Quantity"
               min="1"
-              [class.is-invalid]="isControlInvalid('quantity')" />
+              [class.is-invalid]="isControlInvalid('quantity') || (isControlTouched('quantity') && orderForm.hasError('minOrderKg'))" />
+            <div class="invalid-feedback" *ngIf="controlHasError('required', 'quantity')">
+              Quantity is required.
+            </div>
+            <div class="invalid-feedback" *ngIf="controlHasError('min', 'quantity')">
+              Quantity must be at least 1.
+            </div>
+            <div class="invalid-feedback"
+              *ngIf="isControlTouched('quantity') && !controlHasError('min', 'quantity') && orderForm.hasError('minOrderKg')">
+              Minimum order is 10 kg. Please increase the quantity.
+            </div>
           </div>
 
           <div class="col-md-8 d-flex justify-content-end gap-2">

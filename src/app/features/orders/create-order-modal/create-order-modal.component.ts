@@ -11,6 +11,7 @@ import { LoaderService } from 'src/app/shared/services/loader.service';
 import { DomainUtils } from 'src/app/shared/utils/domain-utils';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { dropdownRequiredValidator } from 'src/app/shared/validators/dropdown-validators';
+import { minOrderKgValidator } from 'src/app/shared/validators/order-validators';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../auth';
@@ -85,14 +86,12 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       ],
       quantity: [
         this.newOrderDto.quantity,
-          Validators.compose([
-            Validators.required
-        ]),
+        Validators.compose([Validators.required, Validators.min(1)]),
       ],
       note: [this.newOrderDto.note],
       courierStationId: [this.newOrderDto.courierStationId],
       fallbackAddress: [this.newOrderDto.fallbackAddress],
-    });
+    }, { validators: [minOrderKgValidator(10)] });
   }
 
   get formControl() {

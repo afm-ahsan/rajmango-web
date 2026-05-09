@@ -19,6 +19,8 @@ import { AuthService } from './features/auth/services/auth.service';
 import { GlobalErrorHandlerService } from './shared/services/global-error-handler.service';
 import { LoaderService } from './shared/services/loader.service';
 import { SharedModule } from './shared/shared.module';
+import { API_BASE_URL } from './services/client-proxy';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,10 @@ import { SharedModule } from './shared/shared.module';
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandlerService
+    },
+    {
+      provide: API_BASE_URL,
+      useValue: environment.apis.default.url
     }
   ],
   bootstrap: [AppComponent]
