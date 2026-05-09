@@ -33,5 +33,19 @@ export class EnumLabelUtils {
   static getMangoTypeLabel(mangoTypeId: number): string {
     return MangoType[mangoTypeId] ?? 'Unknown';
   }
-  // Add more enums as needed
+
+  static getPaymentMethodLabel(method: number): string {
+    const labels: Record<number, string> = {
+      0: 'None',
+      1: 'Cash',
+      2: 'bKash',
+      3: 'Nagad',
+      4: 'Rocket',
+      5: 'Bank Transfer',
+      6: 'Cheque',
+      7: 'Card',
+      8: 'Other',
+    };
+    return labels[method] ?? `Method ${method}`;
+  }
 }

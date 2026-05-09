@@ -79,6 +79,11 @@ const Routing: Routes = [
         (m) => m.CustomerModule
       ),
   },
+  {
+    path: 'payments',
+    loadChildren: () =>
+      import('../features/payments/payment.module').then((m) => m.PaymentModule),
+  },
   
 {
     path: '',

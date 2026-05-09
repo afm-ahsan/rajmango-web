@@ -50,6 +50,19 @@ export class DropdownService {
     ];
   }
 
+  getPaymentMethodOptions(): DropdownModel[] {
+    return [
+      { id: 1, label: 'Cash' },
+      { id: 2, label: 'bKash' },
+      { id: 3, label: 'Nagad' },
+      { id: 4, label: 'Rocket' },
+      { id: 5, label: 'Bank Transfer' },
+      { id: 6, label: 'Cheque' },
+      { id: 7, label: 'Card' },
+      { id: 8, label: 'Other' },
+    ];
+  }
+
   getDeliveryStatusOptions(): DropdownModel[] {
     return [
       { id: 1, label: 'Pending' },

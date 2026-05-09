@@ -1,0 +1,72 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title whiteFontColor"><strong>Payment Details</strong></h4>
+  </div>
+
+  <div class="modal-body">
+    <div *ngIf="isLoading" class="text-center py-6">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <ng-container *ngIf="!isLoading && payment">
+      <table class="table table-borderless">
+        <tbody>
+          <tr>
+            <th class="text-muted w-40">Payment ID</th>
+            <td>#{{ payment.id }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted">Order ID</th>
+            <td>#{{ payment.orderId }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted">Transaction ID</th>
+            <td>{{ payment.transactionId || '—' }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted">Method</th>
+            <td>{{ getPaymentMethodLabel(payment.paymentMethod) }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted">Status</th>
+            <td><span class="badge badge-light-warning">{{ getPaymentStatusLabel(payment.paymentStatus) }}</span></td>
+          </tr>
+          <tr>
+            <th class="text-muted">Gross Amount</th>
+            <td>{{ payment.grossAmount | number:'1.0-2' }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted">Paid Amount</th>
+            <td class="text-success fw-bold">{{ payment.paidAmount | number:'1.0-2' }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted">Due Amount</th>
+            <td class="text-danger fw-bold">{{ payment.dueAmount | number:'1.0-2' }}</td>
+          </tr>
+          <tr *ngIf="payment.discountAmount">
+            <th class="text-muted">Discount</th>
+            <td>{{ payment.discountAmount | number:'1.0-2' }}</td>
+          </tr>
+          <tr *ngIf="payment.vatAmount">
+            <th class="text-muted">VAT</th>
+            <td>{{ payment.vatAmount | number:'1.0-2' }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted">Net Amount</th>
+            <td class="fw-bold">{{ payment.netAmount | number:'1.0-2' }}</td>
+          </tr>
+          <tr *ngIf="payment.createdAt">
+            <th class="text-muted">Recorded At</th>
+            <td>{{ payment.createdAt.toDate() | date:'dd MMM yyyy, HH:mm' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light border shadow-sm px-4" (click)="close()">
+      <i class="bi bi-x-lg"></i> Close
+    </button>
+  </div>
+</div>
