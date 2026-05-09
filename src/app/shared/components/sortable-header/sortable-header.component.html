@@ -1,0 +1,6 @@
+<th (click)="sort.emit(field)" [class.sortable]="true" style="cursor: pointer;">
+  {{ label }}
+  <span *ngIf="active">
+    {{ direction === 'asc' ? '▲' : '▼' }}
+  </span>
+</th>

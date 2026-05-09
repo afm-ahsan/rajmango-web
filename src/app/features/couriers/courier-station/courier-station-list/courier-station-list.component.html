@@ -1,0 +1,182 @@
+<!--begin::Courier Station List-->
+<div class="post d-flex flex-column-fluid" id="kt_courier_station">
+  <div id="kt_content_container" class="container-xxl">
+    <div class="card">
+
+      <!--begin::Header-->
+      <div class="card-header border-0 pt-6 justify-content-between align-items-center">
+        <!-- Search -->
+        <div class="card-title">
+          <div class="d-flex align-items-center position-relative">
+            <i class="bi bi-search fs-3 position-absolute ms-3 text-muted"></i>
+            <input
+              type="search"
+              class="form-control form-control-solid w-250px ps-10"
+              placeholder="Search Courier Station"
+              (input)="onSearchChange($event)"
+            />
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div>
+          <button type="button" class="btn btn-sm btn-primary" (click)="create()">
+            <i class="bi bi-plus-circle me-2"></i>
+            Add Courier Station
+          </button>
+        </div>
+      </div>
+      <!--end::Header-->
+
+      <!--begin::Body-->
+      <div class="card-body py-4" *ngIf="courierStations.length > 0">
+        <div class="table-responsive" style="overflow-x: auto;">
+            <table class="table table-striped table-hover align-middle fs-6 gy-5 w-100">
+                <thead>
+                    <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                    <th class="text-nowrap" style="width: 150px;" (click)="onSort('name')">
+                    <span class="d-flex align-items-center gap-1">
+                        <i class="bi bi-fonts text-primary fs-5"></i>
+                        NAME
+                        <span *ngIf="filter.sortBy === 'name'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                    </span>
+                    </th>
+                    <th class="text-nowrap" style="width: 180px;">
+                    <span class="d-flex align-items-center gap-1">
+                        <i class="bi bi-building text-secondary fs-5"></i> PROVIDER
+                    </span>
+                    </th>
+                    <th class="text-nowrap" style="width: 220px;" (click)="onSort('addressLine')">
+                    <span class="d-flex align-items-center gap-1">
+                        <i class="bi bi-geo-alt text-warning fs-5"></i> ADDRESS
+                        <span *ngIf="filter.sortBy === 'addressLine'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                    </span>
+                    </th>
+                    <th class="text-nowrap" style="width: 100px;" (click)="onSort('city')">
+                    <span class="d-flex align-items-center gap-1">
+                        <i class="bi bi-globe text-info fs-5"></i> CITY
+                        <span *ngIf="filter.sortBy === 'city'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                    </span>
+                    </th>
+                    <th class="text-nowrap" style="width: 100px;" (click)="onSort('area')">
+                    <span class="d-flex align-items-center gap-1">
+                        <i class="bi bi-signpost text-info fs-5"></i> AREA
+                        <span *ngIf="filter.sortBy === 'area'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                    </span>
+                    </th>
+                    <th class="text-nowrap" style="width: 120px;" (click)="onSort('supportPhone1')">
+                    <span class="d-flex align-items-center gap-1">
+                        <i class="bi bi-telephone text-success fs-5"></i> PHONE 1
+                        <span *ngIf="filter.sortBy === 'supportPhone1'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                    </span>
+                    </th>
+                    <th class="text-nowrap" style="width: 120px;" (click)="onSort('supportPhone2')">
+                    <span class="d-flex align-items-center gap-1">
+                        <i class="bi bi-telephone-outbound text-success fs-5"></i> PHONE 2
+                        <span *ngIf="filter.sortBy === 'supportPhone2'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                    </span>
+                    </th>
+                    <th class="text-nowrap" style="width: 120px;" (click)="onSort('googleMapUrl')">
+                    <span class="d-flex align-items-center gap-1">
+                        <i class="bi bi-map text-dark fs-5"></i> MAP URL
+                        <span *ngIf="filter.sortBy === 'googleMapUrl'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                    </span>
+                    </th>
+                    <!-- <th class="text-nowrap" style="width: 180px;" (click)="onSort('email')">
+                    <span class="d-flex align-items-center gap-1">
+                        <i class="bi bi-envelope text-danger fs-5"></i> EMAIL
+                        <span *ngIf="filter.sortBy === 'email'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                    </span>
+                    </th> -->
+                    <th class="text-nowrap" style="width: 25px;" (click)="onSort('isActive')">
+                    <span class="d-flex align-items-center gap-1">
+                        <i class="bi bi-toggle-on text-success fs-5"></i> ACTIVE
+                        <span *ngIf="filter.sortBy === 'isActive'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                    </span>
+                    </th>
+                    <th class="text-center text-nowrap" style="width: 80px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-700 fw-semibold">
+              <tr *ngFor="let station of courierStations">
+                <td>
+                  <a href="javascript:void(0)" (click)="view(station.id)" class="text-hover-primary">
+                    {{ station.name }}
+                  </a>
+                </td>
+                <td>{{ station.courierProviderName }}</td>
+                <td>{{ station.addressLine }}</td>
+                <td>{{ station.city }}</td>
+                <td>{{ station.area }}</td>
+                <td>{{ station.supportPhone1 }}</td>
+                <td>{{ station.supportPhone2 }}</td>                
+                <td>
+                  <ng-container *ngIf="station.googleMapUrl; else noMap">
+                    <a [href]="station.googleMapUrl" target="_blank" rel="noopener noreferrer">Open Map</a>
+                  </ng-container>
+                  <ng-template #noMap>—</ng-template>
+                </td>
+                <!-- <td>
+                  <span class="d-inline-block text-truncate" style="max-width: 160px;" [title]="station.email">
+                    {{ station.email }}
+                  </span>
+                </td> -->
+                <td>
+                  <span class="badge" [ngClass]="station.isActive ? 'bg-success' : 'bg-danger'">
+                    {{ station.isActive ? 'Yes' : 'No' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-light btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                    Actions <i class="bi bi-three-dots-vertical ms-1"></i>
+                  </button>
+                  <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-150px py-4" data-kt-menu="true">
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="edit(station.id)">
+                        <i class="bi bi-pencil-square me-2 text-primary"></i>Edit
+                      </a>
+                    </div>
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="view(station.id)">
+                        <i class="bi bi-eye me-2 text-info"></i>View
+                      </a>
+                    </div>
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3 text-danger" (click)="delete(station.id)">
+                        <i class="bi bi-trash me-2"></i>Delete
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <app-pagination
+          [collectionSize]="totalCount"
+          [pageSize]="filter.pageSize"
+          [pageNumber]="filter.pageNumber"
+          (pageChange)="pageChanged($event)"
+          (pageSizeChange)="pageSizeChanged($event)">
+        </app-pagination>
+      </div>
+      <!--end::Body-->
+
+      <!--begin::No Data Component-->
+      <div class="card-body" *ngIf="!courierStations.length && !isLoading">
+        <app-data-empty
+          icon="bi-truck"
+          title="No Courier Stations Found"
+          message="Try adjusting your search or add a new station to get started."
+          buttonText="Add Courier Station"
+          (buttonClick)="create()">
+        </app-data-empty>
+      </div>
+      <!--end::No Data Component-->
+
+    </div>
+  </div>
+</div>
+<!--end::Courier Station List-->

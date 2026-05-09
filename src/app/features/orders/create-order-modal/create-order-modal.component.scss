@@ -1,0 +1,23 @@
+.remove-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #dc3545; // Bootstrap "danger" red
+  color: white;
+  width: 15px;
+  height: 15px;
+  font-size: 10px;
+  text-decoration: none;
+  border-radius: 0; // sharp square corners
+  padding: 0;
+
+  i {
+    line-height: 1;
+  }
+
+  &:hover {
+    background-color: darken(#dc3545, 10%);
+    cursor: pointer;
+  }
+}
+

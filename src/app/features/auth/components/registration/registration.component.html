@@ -1,0 +1,256 @@
+<form
+  [formGroup]="registrationForm"
+  (ngSubmit)="submit()"
+  novalidate
+  class="form w-100 fv-plugins-bootstrap5 fv-plugins-framework"
+  id="kt_login_signup_form"
+  aria-labelledby="registerTitle"
+>
+  <!--begin::Heading-->
+  <div class="mb-10 text-center">
+    <h1 id="registerTitle" class="text-dark mb-3">Create an Account</h1>
+    <div class="text-gray-400 fw-bold fs-4">
+      Already have an account?
+      <a routerLink="/auth/login" class="link-primary fw-bolder">Sign in?</a>
+    </div>
+  </div>
+  <!--end::Heading-->
+
+  <!--begin::Error Alert-->
+  <div *ngIf="hasError" class="mb-lg-15 alert alert-danger" role="alert">
+    <div class="alert-text fw-bold">The registration details are incorrect</div>
+  </div>
+  <!--end::Error Alert-->
+
+  <!--begin::First Name + Last Name-->
+  <div class="row mb-7">
+    <div class="col-md-6 fv-row mb-5 mb-md-0">
+      <label for="firstName" class="form-label fw-bold text-dark fs-6">First Name</label>
+      <input
+        id="firstName"
+        type="text"
+        formControlName="firstName"
+        class="form-control form-control-lg form-control-solid"
+        placeholder="First Name"
+        autocomplete="given-name"
+        [ngClass]="{
+          'is-invalid': firstName?.invalid && (firstName?.dirty || firstName?.touched),
+          'is-valid': firstName?.valid
+        }"
+      />
+      <ng-container *ngFor="let error of firstNameErrors">
+        <ng-container
+          [ngTemplateOutlet]="formError"
+          [ngTemplateOutletContext]="{
+            validation: error.key,
+            message: error.msg,
+            control: firstName
+          }"
+        ></ng-container>
+      </ng-container>
+    </div>
+    <div class="col-md-6 fv-row">
+      <label for="lastName" class="form-label fw-bold text-dark fs-6">Last Name</label>
+      <input
+        id="lastName"
+        type="text"
+        formControlName="lastName"
+        class="form-control form-control-lg form-control-solid"
+        placeholder="Last Name"
+        autocomplete="family-name"
+        [ngClass]="{
+          'is-invalid': lastName?.invalid && (lastName?.dirty || lastName?.touched),
+          'is-valid': lastName?.valid
+        }"
+      />
+      <ng-container *ngFor="let error of lastNameErrors">
+        <ng-container
+          [ngTemplateOutlet]="formError"
+          [ngTemplateOutletContext]="{
+            validation: error.key,
+            message: error.msg,
+            control: lastName
+          }"
+        ></ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <!--end::First Name + Last Name-->
+
+  <!--begin::Email-->
+  <div class="fv-row mb-7">
+    <label for="email" class="form-label fw-bold text-dark fs-6">Email</label>
+    <input
+      id="email"
+      type="email"
+      formControlName="email"
+      class="form-control form-control-lg form-control-solid"
+      placeholder="Email"
+      autocomplete="email"
+      [ngClass]="{
+        'is-invalid': email?.invalid && (email?.dirty || email?.touched),
+        'is-valid': email?.valid
+      }"
+    />
+    <ng-container *ngFor="let error of emailErrors">
+      <ng-container
+        [ngTemplateOutlet]="formError"
+        [ngTemplateOutletContext]="{
+          validation: error.key,
+          message: error.msg,
+          control: email
+        }"
+      ></ng-container>
+    </ng-container>
+  </div>
+  <!--end::Email-->
+
+  <!--begin::Phone Number-->
+  <div class="fv-row mb-7">
+    <label for="phoneNumber" class="form-label fw-bold text-dark fs-6">Phone Number</label>
+    <input
+      id="phoneNumber"
+      type="text"
+      formControlName="phoneNumber"
+      class="form-control form-control-lg form-control-solid"
+      placeholder="e.g. 01712345678"
+      autocomplete="tel"
+      maxlength="20"
+      [ngClass]="{
+        'is-invalid': phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched),
+        'is-valid': phoneNumber?.valid
+      }"
+    />
+    <ng-container *ngFor="let error of phoneNumberErrors">
+      <ng-container
+        [ngTemplateOutlet]="formError"
+        [ngTemplateOutletContext]="{
+          validation: error.key,
+          message: error.msg,
+          control: phoneNumber
+        }"
+      ></ng-container>
+    </ng-container>
+  </div>
+  <!--end::Phone Number-->
+
+  <!--begin::Password-->
+  <div class="fv-row mb-7">
+    <label for="password" class="form-label fw-bold text-dark fs-6">Password</label>
+    <input
+      id="password"
+      type="password"
+      formControlName="password"
+      class="form-control form-control-lg form-control-solid"
+      placeholder="Password"
+      autocomplete="new-password"
+      [ngClass]="{
+        'is-invalid': password?.invalid && (password?.dirty || password?.touched),
+        'is-valid': password?.valid
+      }"
+    />
+    <ng-container *ngFor="let error of passwordErrors">
+      <ng-container
+        [ngTemplateOutlet]="formError"
+        [ngTemplateOutletContext]="{
+          validation: error.key,
+          message: error.msg,
+          control: password
+        }"
+      ></ng-container>
+    </ng-container>
+  </div>
+  <!--end::Password-->
+
+  <!--begin::Confirm Password-->
+  <div class="fv-row mb-7">
+    <label for="cPassword" class="form-label fw-bold text-dark fs-6">Confirm Password</label>
+    <input
+      id="cPassword"
+      type="password"
+      formControlName="cPassword"
+      class="form-control form-control-lg form-control-solid"
+      placeholder="Confirm password"
+      autocomplete="new-password"
+      [ngClass]="{
+        'is-invalid': cPassword?.invalid && (cPassword?.dirty || cPassword?.touched),
+        'is-valid': cPassword?.valid
+      }"
+    />
+    <ng-container *ngFor="let error of confirmPasswordErrors">
+      <ng-container
+        [ngTemplateOutlet]="formError"
+        [ngTemplateOutletContext]="{
+          validation: error.key,
+          message: error.msg,
+          control: cPassword
+        }"
+      ></ng-container>
+    </ng-container>
+    <ng-container *ngIf="registrationForm.hasError('mismatch')">
+      <div class="fv-plugins-message-container">
+        <div class="fv-help-block text-danger">Passwords do not match.</div>
+      </div>
+    </ng-container>
+  </div>
+  <!--end::Confirm Password-->
+
+  <!--begin::Agree-->
+  <div class="fv-row mb-10">
+    <div class="form-check form-check-custom form-check-solid">
+      <input
+        id="agree"
+        type="checkbox"
+        formControlName="agree"
+        class="form-check-input"
+      />
+      <label for="agree" class="form-check-label fw-bold text-gray-700 fs-6">
+        I agree to the
+        <a href="javascript:void(0)" class="ms-1 link-primary">terms and conditions</a>
+      </label>
+    </div>
+  </div>
+  <!--end::Agree-->
+
+  <!--begin::Actions-->
+  <div class="text-center">
+    <button
+      type="submit"
+      [disabled]="registrationForm.invalid || !agree?.value"
+      class="btn btn-lg btn-primary w-100 mb-5"
+    >
+      <ng-container *ngIf="(isLoading$ | async) === false">
+        <span class="indicator-label">Submit</span>
+      </ng-container>
+      <ng-container *ngIf="isLoading$ | async">
+        <span class="indicator-progress d-block">
+          Please wait...
+          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+        </span>
+      </ng-container>
+    </button>
+
+    <a
+      routerLink="/auth/login"
+      class="btn btn-lg btn-light-primary w-100"
+    >
+      Cancel
+    </a>
+  </div>
+  <!--end::Actions-->
+</form>
+
+<!-- Form Error Template -->
+<ng-template
+  #formError
+  let-control="control"
+  let-message="message"
+  let-validation="validation"
+>
+  <div
+    *ngIf="control.hasError(validation) && (control.dirty || control.touched)"
+    class="fv-plugins-message-container"
+  >
+    <span class="fv-help-block text-danger" role="alert">{{ message }}</span>
+  </div>
+</ng-template>

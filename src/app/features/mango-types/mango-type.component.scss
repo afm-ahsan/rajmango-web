@@ -1,0 +1,14 @@
+th {
+    cursor: pointer;
+    user-select: none;
+  }
+  th span {
+    margin-left: 5px;
+    font-size: 0.8em;
+    color: gray;
+  }
+
+  .preview-image{
+    width:60px; 
+    height:60px;
+  }

@@ -1,0 +1,199 @@
+<!-- Dashboard -->
+<!-- <div class="menu-item">
+  <a
+    class="menu-link without-sub"
+    routerLink="/dashboard"
+    routerLinkActive="active"
+  >
+    <span class="menu-icon">
+      <span
+        [inlineSVG]="'./assets/media/icons/duotune/graphs/gra001.svg'"
+        class="svg-icon svg-icon-2"
+      ></span>
+    </span>
+    <span class="menu-title" translate="MENU.DASHBOARD"></span>
+  </a>
+</div> -->
+
+<div class="menu-item">
+  <a class="menu-link without-sub" routerLink="/home" routerLinkActive="active">
+    <span class="menu-icon">
+      <span [inlineSVG]="'./assets/media/icons/duotune/general/gen001.svg'" class="svg-icon svg-icon-2"></span>
+    </span>
+    <span class="menu-title" translate="HOME"></span>
+  </a>
+</div>
+
+<div class="menu-item">
+  <a class="menu-link without-sub" routerLink="/orders/order-list" routerLinkActive="active">
+    <span class="menu-icon">
+      <span [inlineSVG]="'./assets/media/icons/duotune/ecommerce/ecm002.svg'" class="svg-icon svg-icon-2"></span>
+    </span>
+    <span class="menu-title" translate="Orders"></span>
+  </a>
+</div>
+
+<div class="menu-item">
+  <div class="menu-content pt-8 pb-2">
+    <span class="menu-section text-muted text-uppercase fs-8 ls-1">RM Advance</span>
+  </div>
+</div>
+
+<div class="menu-item menu-accordion" data-kt-menu-trigger="click" routerLinkActive="here show">
+  <span class="menu-link">
+    <span class="menu-icon">
+      <span class="svg-icon svg-icon-2" [inlineSVG]="'./assets/media/icons/duotune/general/gen022.svg'"></span>
+    </span>
+    <span class="menu-title" data-link="/mango-types/mango-type-list">Admin</span>
+    <span class="menu-arrow"></span>
+  </span>
+  <div class="menu-sub menu-sub-accordion" routerLinkActive="menu-active-bg">
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/mango-types/mango-type-list" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/general/gen005.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Mango Types"></span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/expense-types/expense-type-list" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/finance/fin008.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Expense Types"></span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/expenses/expense-list" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/finance/fin006.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Expenses"></span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/users/user-list" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/communication/com005.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Users"></span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/roles/role-list" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/general/gen051.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="User Roles"></span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/customers/customer-list" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/communication/com014.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Customers"></span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="menu-item">
+  <div class="menu-content pt-8 pb-2">
+    <span class="menu-section text-muted text-uppercase fs-8 ls-1">RM Courier</span>
+  </div>
+</div>
+
+<div class="menu-item menu-accordion" data-kt-menu-trigger="click" routerLinkActive="here show">
+  <span class="menu-link">
+    <span class="menu-icon">
+      <span class="svg-icon svg-icon-2" [inlineSVG]="'./assets/media/icons/duotune/communication/com003.svg'"></span>
+    </span>
+    <span class="menu-title" data-link="/couriers">Courier</span>
+    <span class="menu-arrow"></span>
+  </span>
+  <div class="menu-sub menu-sub-accordion" routerLinkActive="menu-active-bg">
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/couriers/courier-provider-list" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/general/gen019.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Courier Provider"></span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/couriers/courier-station-list" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/maps/map001.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Courier Stations"></span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/couriers/courier-area-map-list" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/maps/map003.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Area Map"></span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="menu-item">
+  <div class="menu-content pt-8 pb-2">
+    <span class="menu-section text-muted text-uppercase fs-8 ls-1">RM Reports</span>
+  </div>
+</div>
+
+<div class="menu-item menu-accordion" data-kt-menu-trigger="click" routerLinkActive="here show">
+  <span class="menu-link">
+    <span class="menu-icon">
+      <span class="svg-icon svg-icon-2" [inlineSVG]="'./assets/media/icons/duotune/graphs/gra001.svg'"></span>
+    </span>
+    <span class="menu-title" data-link="/gc-report">Report</span>
+    <span class="menu-arrow"></span>
+  </span>
+  <div class="menu-sub menu-sub-accordion" routerLinkActive="menu-active-bg">
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/overall-report" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/graphs/gra001.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Overall Report"></span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/expense-report" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/finance/fin004.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Expense Report"></span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/expense-report" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/finance/fin001.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Sales Report"></span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/expense-report" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/finance/fin003.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title" translate="Purchase Report"></span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Separator -->
+<div class="menu-item">
+  <div class="menu-content">
+    <div class="separator mx-1 my-1"></div>
+  </div>
+</div>

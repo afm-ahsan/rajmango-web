@@ -1,0 +1,93 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="modal-title h4 whiteFontColor" id="example-modal-sizes-title-lg">
+            <ng-container *ngIf="expenseDto">
+                <ng-container *ngIf="expenseDto.id" class="font-weight-bold"><strong>Edit
+                        Expense</strong></ng-container>
+                <ng-container *ngIf="!expenseDto.id" class="font-weight-bold"><strong>Add
+                        Expense</strong></ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body">
+        <ng-container *ngIf="isLoading">
+            <div class="overlay-layer bg-transparent">
+                <div class="spinner spinner-lg spinner-success"></div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="expenseDto">
+            <form action="#" class="form form-label-right" [formGroup]="formGroup">
+                <!-- Expense Name -->
+                <div class="form-group row">
+                    <label class="col-3 col-form-label text-lg-right"><b>Title<span
+                                class="text-danger">*</span>:</b></label>
+                    <div class="col-9">
+                        <input type="text" class="form-control form-control-lg form-control-solid" name="name"
+                            placeholder="Expense Name" autocomplete="off" [class.is-invalid]="isControlInvalid('name')"
+                            [class.is-valid]="isControlValid('name')" formControlName="name" />
+                        <div class="invalid-feedback" *ngIf="controlHasError('required', 'name')">
+                            Expense name is required
+                        </div>
+                        <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'name')">
+                            Expense name should have at least 2 characters
+                        </div>
+                        <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'name')">
+                            Expense name should have maximum 50 characters
+                        </div>
+                    </div>
+                </div>
+                <!-- Expense Description -->
+                <div class="form-group row mt-2">
+                    <label class="col-3 col-form-label text-lg-right"><b>Description:</b></label>
+                    <div class="col-9">
+                        <input type="text" class="form-control form-control-lg form-control-solid" name="description"
+                            placeholder="Description" autocomplete="off" formControlName="description" />
+                    </div>
+                </div>
+
+                <!-- Expense Type -->
+                <div class="form-group row mt-2">
+                    <label class="col-3 col-form-label text-lg-right"><b>Expense Type:</b></label>
+                    <div class="col-9">
+                        <select class="form-control form-select form-select-solid is-invalid" name="expenseTypeId"
+                            [class.is-invalid]="isControlInvalid('expenseTypeId')" formControlName="expenseTypeId">
+                            <option value="">Select an Expenst Type</option>
+                            <option *ngFor="let item of ddlExpenseTypes" value="{{ item.id }}">
+                                {{item.label }}
+                            </option>
+                        </select>
+                        <div *ngIf="formControl.expenseTypeId.touched && formControl.expenseTypeId.invalid"
+                            class="alert alert-danger">
+                            <div *ngIf="formControl.expenseTypeId.errors?.required">Expense type is required.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row mt-2">
+                    <label class="col-3 col-form-label text-lg-right"><b>Amount<span
+                                class="text-danger">*</span>:</b></label>
+                    <div class="col-9">
+                        <input type="number" class="form-control form-control-lg form-control-solid" name="amount"
+                            placeholder="Amount" autocomplete="off" formControlName="amount" />
+                        <div class="invalid-feedback" *ngIf="controlHasError('required', 'amount')">
+                            Amount is required
+                        </div>
+                    </div>
+                </div>                
+                <!-- Is Active -->
+                <div class="form-group row mt-2">
+                    <label class="col-3 col-form-label text-lg-right"><b>Is Active:</b></label>
+                    <div class="col-9 mt-4">
+                        <input type="checkbox" formControlName="isActive" />
+                        <!-- <label class="col-form-label text-lg-left ps-3 mb-2"><b>Is Active:</b></label> -->
+                    </div>
+
+                </div>
+            </form>
+        </ng-container>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">Cancel</button>
+        <button class="btn btn-primary btn-elevate" (click)="save()" [disabled]="formGroup.invalid">Save</button>
+    </div>
+</div>

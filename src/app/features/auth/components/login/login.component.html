@@ -1,0 +1,150 @@
+<!--begin::Login Form-->
+<form
+  [formGroup]="loginForm"
+  (ngSubmit)="submit()"
+  novalidate
+  class="form w-100"
+  id="kt_login_signin_form"
+  aria-labelledby="loginTitle"
+>
+  <!--begin::Header-->
+  <div class="text-center mb-6">
+    <img
+      src="./assets/media/logos/logo-1.png"
+      alt="Raj Mango Logo"
+      class="rounded-pill img-fluid"
+      style="max-width: 120px; height: auto;"
+    />
+    <h2 id="loginTitle" class="text-dark mt-4 mb-3">Sign In to Raj Mango</h2>
+  </div>
+  <!--end::Header-->
+
+  <!--begin::Error Message-->
+  <div
+    *ngIf="hasError"
+    class="mb-lg-15 alert alert-danger"
+    role="alert"
+    aria-live="assertive"
+  >
+    <div class="alert-text fw-bold">The login details are incorrect</div>
+  </div>
+  <!--end::Error Message-->
+
+  <!--begin::Fieldset-->
+  <fieldset>
+    <legend class="visually-hidden">Sign-in Credentials</legend>
+
+    <!--begin::Email-->
+    <div class="form-group fv-row mb-10">
+      <label for="email" class="form-label fs-6 fw-bolder text-dark">Email</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        class="form-control form-control-lg form-control-solid"
+        autocomplete="email"
+        [attr.aria-invalid]="email?.invalid && (email?.dirty || email?.touched)"
+        aria-describedby="emailHelp"
+      />
+      <ng-container *ngFor="let error of emailErrors">
+        <ng-container
+          [ngTemplateOutlet]="formError"
+          [ngTemplateOutletContext]="{
+            validation: error.key,
+            message: error.msg,
+            control: email
+          }"
+        ></ng-container>
+      </ng-container>
+    </div>
+    <!--end::Email-->
+
+    <!--begin::Password-->
+    <div class="form-group fv-row mb-10">
+      <div class="d-flex justify-content-between">
+        <label for="password" class="form-label fw-bolder text-dark fs-6 mb-0">
+          Password
+        </label>
+        <a
+          routerLink="/auth/forgot-password"
+          class="link-primary fs-6 fw-bolder"
+          id="kt_login_forgot"
+        >
+          Forgot Password?
+        </a>
+      </div>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        class="form-control form-control-lg form-control-solid"
+        autocomplete="current-password"
+        [attr.aria-invalid]="password?.invalid && (password?.dirty || password?.touched)"
+      />
+      <ng-container *ngFor="let error of passwordErrors">
+        <ng-container
+          [ngTemplateOutlet]="formError"
+          [ngTemplateOutletContext]="{
+            validation: error.key,
+            message: error.msg,
+            control: password
+          }"
+        ></ng-container>
+      </ng-container>
+    </div>
+    <!--end::Password-->
+
+  </fieldset>
+  <!--end::Fieldset-->
+
+  <!--begin::Actions-->
+  <div class="text-center">
+    <button
+      type="submit"
+      class="btn btn-lg btn-primary w-100 mb-5"
+      [disabled]="loginForm.invalid"
+      [attr.aria-busy]="(isLoading$ | async) ? 'true' : 'false'"
+    >
+      <ng-container *ngIf="isLoading$ | async; else submitLabel">
+        <span class="indicator-progress d-block">
+          Please wait...
+          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+        </span>
+      </ng-container>
+      <ng-template #submitLabel>
+        <span class="indicator-label">Continue</span>
+      </ng-template>
+    </button>
+
+    <!--begin::Sign Up Prompt-->
+    <div class="text-gray-400 fw-bold fs-5 mt-5">
+      New Here? Please Register
+      <a
+        routerLink="/auth/registration"
+        class="link-primary fw-bolder"
+        id="kt_login_signup"
+      >
+        {{ "AUTH.GENERAL.SIGNUP_BUTTON" | translate }}
+      </a>
+    </div>
+    <!--end::Sign Up Prompt-->
+  </div>
+  <!--end::Actions-->
+</form>
+<!--end::Login Form-->
+
+<!--begin::Form Error Template-->
+<ng-template
+  #formError
+  let-control="control"
+  let-message="message"
+  let-validation="validation"
+>
+  <div
+    *ngIf="control?.hasError(validation) && (control?.dirty || control?.touched)"
+    class="fv-plugins-message-container"
+  >
+    <span class="text-danger" role="alert">{{ message }}</span>
+  </div>
+</ng-template>
+<!--end::Form Error Template-->

@@ -1,0 +1,120 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="modal-title h4 whiteFontColor" id="example-modal-sizes-title-lg">
+            <ng-container *ngIf="roleDto">
+                <ng-container *ngIf="roleDto.id" class="font-weight-bold"><strong>Edit
+                        Role</strong></ng-container>
+                <ng-container *ngIf="!roleDto.id" class="font-weight-bold"><strong>Add
+                        Role</strong></ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body">
+        <ng-container *ngIf="isLoading">
+            <div class="overlay-layer bg-transparent">
+                <div class="spinner spinner-lg spinner-success"></div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="roleDto">
+            <form action="#" class="form form-label-right" [formGroup]="formGroup">
+                <!-- Role Name -->
+                <div class="form-group row">
+                    <label class="col-3 col-form-label text-lg-right"><b>Name<span
+                                class="text-danger">*</span>:</b></label>
+                    <div class="col-9">
+                        <input type="text" class="form-control form-control-lg form-control-solid" name="name"
+                            placeholder="Role Name" autocomplete="off" [class.is-invalid]="isControlInvalid('name')"
+                            [class.is-valid]="isControlValid('name')" formControlName="name" />
+                        <div class="invalid-feedback" *ngIf="controlHasError('required', 'name')">
+                            Role name is required
+                        </div>
+                        <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'name')">
+                            Role name should have at least 2 characters
+                        </div>
+                        <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'name')">
+                            Role name should have maximum 50 characters
+                        </div>
+                    </div>
+                </div>
+                <!-- Role Description -->
+                <div class="form-group row mt-2">
+                    <label class="col-3 col-form-label text-lg-right"><b>Description:</b></label>
+                    <div class="col-9">
+                        <input type="text" class="form-control form-control-lg form-control-solid" name="description"
+                            placeholder="Description" autocomplete="off" formControlName="description" />
+                    </div>
+                </div>
+                <!-- Is Active -->
+                <div class="form-group row mt-2">
+                    <label class="col-3 col-form-label text-lg-right"><b>Is Active:</b></label>
+                    <div class="col-9 mt-4">
+                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                            <input type="checkbox" formControlName="isActive" name="isActive" class="form-check-input" />                            
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <!-- Select All -->
+                <div class="form-group row mt-2">
+                    <label class="col-3 col-form-label text-lg-right"><b>Select All:</b></label>
+                    <div class="col-9 mt-4">
+                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                            <input type="checkbox" (change)="onCheckAll($event)" class="form-check-input" />
+                        </div>
+                    </div>
+                </div>
+                <!-- Role Permissions -->
+                <div class="form-group row mt-2">
+                    <label class="col-3 col-form-label text-lg-right"><b>Permissions:</b></label>
+                    <div class="col-9 overflow-auto permission-list border border-2">
+                        <div class="mt-5 md:mt-0 md:col-span-2">
+                            <div *ngFor="let permission of permissionList">
+                                <!-- <div *ngIf="permission.area.length" class="col-span-3 py-1 my-2">
+                                    <strong class="text-xs">{{permission.area}}</strong>
+                                </div> -->
+                                <div *ngFor="let featureModel of permission.featureModels" class="col-span-3">
+                                    <div class="flex mt-1">
+                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                            <!-- <input id="kt_permission_{{featureModel.title.toLowerCase()}}" type="checkbox" 
+                                                formControlName="{{featureModel.title.toLowerCase()}}" 
+                                                name="{{featureModel.title.toLowerCase()}}"
+                                                (change)="onCheckChange(featureModel.id, $event)"
+                                                class="form-check-input" /> -->
+                                            <input id="kt_permission_{{featureModel.title.toLowerCase()}}" type="checkbox"
+                                                (change)="onCheckChange(featureModel.id, $event)"
+                                                [checked]="hasFeatureAccess(featureModel.id)" class="form-check-input" />
+                                            <label for="kt_permission_{{featureModel.title.toLowerCase()}}" class="form-check-label fw-bold text-gray-700 text-xs">
+                                                {{featureModel.title}}
+                                            </label>
+                                        </div>
+                                        <div class="flex mt-1 ms-10" *ngFor="let actionModel of featureModel.actionModels">
+                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                                <!-- <input id="kt_permission_{{featureModel.title.toLowerCase()}}_{{actionModel.action.toLowerCase()}}" type="checkbox" 
+                                                    formControlName="{{featureModel.title.toLowerCase()}}_{{actionModel.action.toLowerCase()}}" 
+                                                    name="{{featureModel.title.toLowerCase()}}_{{actionModel.action.toLowerCase()}}"
+                                                    (change)="onActionCheckChange(featureModel.id, actionModel.id, $event)"
+                                                    class="form-check-input" /> -->
+                                                <input id="kt_permission_{{featureModel.title.toLowerCase()}}_{{actionModel.action.toLowerCase()}}" type="checkbox"
+                                                    (change)="onActionCheckChange(featureModel.id, actionModel.id, $event)" 
+                                                    [checked]="hasActionAccess(featureModel.id, actionModel.id)"
+                                                    class="form-check-input" />
+                                                <label for="kt_permission_{{featureModel.title.toLowerCase()}}_{{actionModel.action.toLowerCase()}}" class="form-check-label fw-bold text-gray-700 text-xs">
+                                                    {{actionModel.action}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr *ngIf="permission.area.length">
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </form>
+        </ng-container>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">Cancel</button>
+        <button class="btn btn-primary btn-elevate" (click)="save()" [disabled]="formGroup.invalid">Save</button>
+    </div>
+</div>

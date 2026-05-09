@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.bi {
+  opacity: 0.85;
+}
+
+.btn {
+  transition: all 0.2s ease-in-out;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+}
+
+.subtle-message {
+  color: #4a4a4a;
+  font-size: 1rem;
+  font-weight: 400;
+}
+

@@ -1,0 +1,39 @@
+<div class="card mango-card h-100 text-center border-0 shadow-sm">
+  <a href="javasript:void(0)" class="image-link" (click)="openOrderModal()">
+    <img [src]="mango.image" class="card-img-top" [alt]="mango.name" />
+  </a>
+  <div class="card-body">
+    <h5 class="card-title">{{ mango.name }}</h5>
+    <p class="text-muted mb-1">Price: {{ mango.price | currency:'BDT' }}</p>
+    <p class="mb-1">
+      Availability:
+      <span class="badge" [ngClass]="mango.isAvailable ? 'bg-success' : 'bg-secondary'">
+        {{ mango.isAvailable ? 'Available' : 'Unavailable' }}
+      </span>
+    </p>
+    <p class="mb-1">Sweetness: <strong>{{ mango.sweetness }}</strong></p>
+    <div class="progress mt-2" style="height: 5px;">
+      <div
+        class="progress-bar bg-warning"
+        role="progressbar"
+        [style.width]="getSweetnessWidth(mango.sweetness)"
+      ></div>
+    </div>
+    <!-- Order Button -->
+    <div class="mt-3">
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-primary flex-fill" (click)="openOrderModal()">
+            <i class="bi bi-eye me-1"></i> View Detail
+          </button>
+
+          <button
+            class="btn btn-sm btn-primary flex-fill"
+            (click)="goToOrderList()"
+            [disabled]="!mango.isAvailable"
+            >
+            <i class="bi bi-cart-plus me-1"></i> Order Now
+          </button>
+        </div>
+    </div>
+  </div>
+</div>

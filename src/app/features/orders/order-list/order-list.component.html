@@ -1,0 +1,162 @@
+<!--begin::Mango  Type-->
+<div class="post d-flex flex-column-fluid" id="kt_mango_type">
+  <!--begin::Container-->
+  <div id="kt_content_container" class="container-xxl">
+    <!--begin::Card-->
+    <div class="card">
+      <!--begin::Card header-->
+      <div class="card-header border-0 pt-6">
+        <!--begin::Card title-->
+        <div class="card-title">
+          <div class="d-flex align-items-center position-relative my-1">
+            <span
+              class="svg-icon svg-icon-1 position-absolute ms-6"
+              [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
+              [cacheSVG]="true"
+            ></span>
+            <input
+              type="search"
+              class="form-control form-control-solid w-250px ps-14"
+              placeholder="Search order"
+              (input)="onSearchChange($event)"
+            />
+          </div>
+        </div>
+        <!--end::Card title-->
+
+        <!--begin::Card toolbar-->
+        <div class="card-toolbar">
+          <div class="d-flex justify-content-end" data-kt-user-order-toolbar="base">
+            <!--begin::Add mango type button-->
+            <button type="button" class="btn btn-primary" (click)="create()">
+              <span
+                class="svg-icon svg-icon-2"
+                [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'"
+                [cacheSVG]="true"
+              ></span>
+              New Order
+            </button>
+          </div>
+        </div>
+        <!--end::Card toolbar-->
+      </div>
+      <!--end::Card header-->
+
+      <!--begin::Card body-->
+      <div class="card-body py-4">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle fs-6 gy-5" id="kt_category">
+            <thead>
+                <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                    <th (click)="onSort('orderNumber')">Order Number
+                    <span *ngIf="filter.sortBy === 'orderNumber'">
+                        {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                    </span>
+                    </th>
+                    <th (click)="onSort('orderDate')">OrderDate
+                    <span *ngIf="filter.sortBy === 'orderDate'">
+                        {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                    </span>
+                    </th>
+                    <th (click)="onSort('totalQuantity')">Total Quantity
+                    <span *ngIf="filter.sortBy === 'totalQuantity'">
+                        {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                    </span>
+                    </th>
+                    <th (click)="onSort('totalAmount')">Total Amount
+                    <span *ngIf="filter.sortBy === 'totalAmount'">
+                        {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                    </span>
+                    </th>
+                    <th (click)="onSort('orderStatus')">Order Status
+                    <span *ngIf="filter.sortBy === 'orderStatus'">
+                        {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                    </span>
+                    </th>
+                    <th (click)="onSort('paymentStatus')">Payment Status
+                    <span *ngIf="filter.sortBy === 'paymentStatus'">
+                        {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                    </span>
+                    </th>
+                    <th (click)="onSort('isDelivered')">Delivered
+                    <span *ngIf="filter.sortBy === 'isDelivered'">
+                        {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                    </span>
+                    </th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 fw-bold">
+              <tr *ngFor="let order of orders">                
+                <td>
+                  <a
+                    href="javascript:"
+                    (click)="view(order.id)"
+                    class="text-gray-800 text-hover-primary mb-1 d-block"
+                  >
+                    {{ order.orderNumber }}
+                  </a>
+                </td>
+                <td>{{ order.orderDate | date }}</td>
+                <td>{{ order.totalQuantity }} Kg</td>
+                <td>{{ order.totalAmount }}</td>
+                <td>{{ getOrderStatusLabel(order.orderStatus) }}</td>
+                <td>{{ getPaymentStatusLabel(order.paymentStatus) }}</td>
+                <td>{{ order.isDelivered | yesNo }}</td>
+                <td class="text-center">
+                  <a
+                    href="javascript:void(0)"
+                    class="btn btn-light btn-active-light-primary btn-sm"
+                    data-kt-menu-trigger="click"
+                    data-kt-menu-placement="bottom-end"
+                  >
+                    Actions
+                    <span
+                      class="svg-icon svg-icon-5 m-0"
+                      [inlineSVG]="'./assets/media/icons/duotune/arrows/arr072.svg'"
+                      [cacheSVG]="true"
+                    ></span>
+                  </a>
+                  <div
+                    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                    data-kt-menu="true"
+                  >
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="edit(order.id)">Edit</a>
+                    </div>
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="view(order.id)">View</a>
+                    </div>
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="delete(order.id)">Delete</a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <app-pagination
+          [collectionSize]="totalCount"
+          [pageSize]="filter.pageSize"
+          [pageNumber]="filter.pageNumber"
+          (pageChange)="pageChanged($event)"
+          (pageSizeChange)="pageSizeChanged($event)"
+        ></app-pagination>
+      </div>
+      <!--end::Card body-->
+
+      <!--begin::No data component-->
+      <div class="card-body">
+        <ng-container *ngIf="!orders.length && !isLoading">
+          <app-data-loading-empty></app-data-loading-empty>
+        </ng-container>
+      </div>
+      <!--end::No data component-->
+    </div>
+    <!--end::Card-->
+  </div>
+  <!--end::Container-->
+</div>
+<!--end::Post-->

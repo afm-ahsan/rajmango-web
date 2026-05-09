@@ -1,0 +1,187 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title whiteFontColor">
+      <strong>{{ orderDto.id ? 'Edit Order' : 'New Order' }}</strong>
+    </h4>
+  </div>
+
+  <div class="overlay overlay-block cursor-default modal-body">
+    <ng-container *ngIf="isLoading; else formContent">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container>
+
+    <ng-template #formContent>
+      <form [formGroup]="orderForm" class="form form-label-right">
+        <!-- Row: Mango Type + Crate Type -->
+        <div class="form-group row mt-2">
+          <div class="col-md-6">
+            <label><b>Mango Type <span class="text-danger">*</span>:</b></label>
+            <select
+              formControlName="mangoType"
+              class="form-control form-select"
+              [class.is-invalid]="isControlInvalid('mangoType')">
+              <option value="0">Select Mango Type</option>
+              <option *ngFor="let item of mangoTypeOptions" [value]="item.id">
+                {{ item.name }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label><b>Crate Type <span class="text-danger">*</span>:</b></label>
+            <select
+              formControlName="crateType"
+              class="form-control form-select"
+              [class.is-invalid]="isControlInvalid('crateType')">
+              <option value="0">Select Crate Type</option>
+              <option *ngFor="let item of crateTypeOptions" [value]="item.id">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Row: Delivery Area -->
+        <div class="form-group mt-3">
+          <label><b>Delivery Area <span class="text-danger">*</span>:</b></label>
+          <select
+            class="form-control form-select"
+            formControlName="area"
+            (change)="onAreaChanged()">
+            <option value="0">Select Your Area</option>
+            <option *ngFor="let area of courierAreaOptions" [value]="area.name">
+              {{ area.name }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Row: Courier Station -->
+        <div class="form-group mt-3" *ngIf="!isFallbackMode && availableStations.length > 0">
+          <label><b>Select Courier Station <span class="text-danger">*</span>:</b></label>
+          <select
+            formControlName="courierStationId"
+            class="form-control form-select"
+            [class.is-invalid]="isControlInvalid('courierStationId')">
+            <option value="0">Select Station</option>
+            <option *ngFor="let station of availableStations" [value]="station.stationId">
+              {{ station.providerName }} - {{ station.stationName }} ({{ station.area }})
+            </option>
+          </select>
+        </div>
+
+        <!-- Row: Manual Address -->
+        <div class="form-group mt-3" *ngIf="isFallbackMode">
+          <label><b>Manual Delivery Address <span class="text-danger">*</span>:</b></label>
+          <textarea
+            class="form-control"
+            formControlName="fallbackAddress"
+            rows="3"
+            placeholder="Enter your full delivery address"
+          ></textarea>
+          <small class="text-muted">No matching courier found. Provide address manually.</small>
+        </div>
+        <!-- Row: Note -->
+        <div class="form-group mt-3">
+          <label><b>Note:</b></label>
+          <textarea
+            formControlName="note"
+            class="form-control"
+            placeholder="Optional note"
+            rows="2"
+            maxlength="512"
+          ></textarea>
+        </div>
+
+        <!-- Row: Quantity + Action Buttons -->
+        <div class="form-group row mt-3 align-items-end">
+          <div class="col-md-4">
+            <label><b>Quantity <span class="text-danger">*</span>:</b></label>
+            <input
+              type="number"
+              formControlName="quantity"
+              class="form-control"
+              placeholder="Quantity"
+              min="1"
+              [class.is-invalid]="isControlInvalid('quantity')" />
+          </div>
+
+          <div class="col-md-8 d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-primary" (click)="addOrder()">
+              <i class="bi bi-plus-lg"></i> Add
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="reset()">
+              <i class="bi bi-arrow-counterclockwise"></i> Reset
+            </button>
+          </div>
+        </div>   
+      </form>
+
+
+      <!-- Order Details Table -->
+      <hr *ngIf="orderDetails.length > 0" />
+      <div class="table-responsive-sm" *ngIf="orderDetails.length > 0">
+        <table class="table table-striped align-middle">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Mango Type</th>
+              <th>Crate Type</th>
+              <th class="text-end">Quantity</th>
+              <th class="text-end">Unit Price</th>              
+              <th class="text-end">Total Price</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orderDetails; index as i">
+              <td>{{ i + 1 }}</td>
+              <td>{{ order.mangoName }}</td>
+              <td>{{ order.crateName }}</td>
+              <td class="text-end">{{ order.quantity | number }}</td>              
+              <td class="text-end">{{ order.unitPrice }}</td>
+              <td class="text-end">{{ order.totalPrice }}</td>
+              <td>
+                <a
+                  href="javascript:void(0)"
+                  (click)="remove(order.id)"
+                  title="Remove"
+                  class="remove-icon"
+                >
+                  <i class="bi bi-x-lg"></i>
+                </a>
+              </td>
+            </tr>
+            <tr class="table-light fw-bold">
+              <td colspan="5" class="text-end">Total:</td>
+              <td class="text-end">{{ orderDto.totalAmount | number }}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="modal-footer">
+    <div class="d-flex justify-content-end gap-3 mt-4">
+      <button
+        type="button"
+        class="btn btn-light border shadow-sm px-4 py-2"
+        (click)="cancel()"
+      >
+        <i class="bi bi-x-lg"></i> Cancel
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-primary shadow-sm px-4 py-2"
+        [disabled]="isSaveDisabled"
+        (click)="save()"
+      >
+        <i class="bi bi-save"></i> Save
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,133 @@
+import { Injectable, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, finalize, map, switchMap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
+import { SubSink } from 'subsink';
+import { AppUserModel } from '../models/app-user.model';
+import { RegisterModel } from '../models/register.model';
+import { AuthHttpService } from './auth-http/auth-http.service';
+import { UserPermissionService } from './user-permission.service';
+
+export type UserType = AppUserModel | undefined;
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService implements OnDestroy {
+  private subs = new SubSink();
+  private readonly tokenKey = `${environment.appVersion}-${environment.USERDATA_KEY}`;
+  private readonly userIdKey = `${environment.appVersion}-${environment.USERID_KEY}`;
+
+  private isLoadingSubject = new BehaviorSubject<boolean>(false);
+  private currentUserSubject = new BehaviorSubject<UserType>(undefined);
+
+  isLoading$ = this.isLoadingSubject.asObservable();
+  currentUser$ = this.currentUserSubject.asObservable();
+
+  get currentUserValue(): UserType {
+    return this.currentUserSubject.value;
+  }
+
+  set currentUserValue(user: UserType) {
+    this.currentUserSubject.next(user);
+  }
+
+  constructor(
+    private router: Router,
+    private authHttpService: AuthHttpService,
+    private permissionService: UserPermissionService
+  ) {
+    this.subs.sink = this.getUserByToken().subscribe();
+  }
+
+  login(email: string, password: string): Observable<UserType> {
+    if (!email || !password) return of(undefined);
+
+    this.isLoadingSubject.next(true);
+    return this.authHttpService.login(email, password).pipe(
+      map((auth: any) => this.setAuthToLocalStorage(auth.data)),
+      switchMap(() => this.getUserByToken()),
+      catchError(err => {
+        console.error('Login error:', err);
+        return of(undefined);
+      }),
+      finalize(() => this.isLoadingSubject.next(false))
+    );
+  }
+
+  logout(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userIdKey);
+    this.router.navigate(['/auth/login']);
+  }
+
+  registration(user: RegisterModel): Observable<UserType> {
+    this.isLoadingSubject.next(true);
+    return this.authHttpService.registerUser(user).pipe(
+      switchMap(() => this.login(user.email, user.password)),
+      catchError(err => {
+        console.error('Registration error:', err);
+        return of(undefined);
+      }),
+      finalize(() => this.isLoadingSubject.next(false))
+    );
+  }
+
+  forgotPassword(email: string): Observable<boolean> {
+    this.isLoadingSubject.next(true);
+    return this.authHttpService
+      .forgotPassword(email)
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
+  }
+
+  getUserByToken(): Observable<UserType> {
+    const auth = this.getAuthFromLocalStorage();
+    if (!auth?.authToken) return of(undefined);
+
+    this.isLoadingSubject.next(true);
+
+    return this.authHttpService.getUserByToken(auth.authToken).pipe(
+      map((response: any) => {
+        if (response?.messages?.[0]?.includes('Valid Token')) {
+          this.permissionService.currentPermission = this.permissionService.preparePermissionModel(auth.permissions);
+          this.currentUserSubject.next(auth);
+        } else {
+          this.logout();
+        }
+        return auth;
+      }),
+      finalize(() => this.isLoadingSubject.next(false))
+    );
+  }
+
+  getLoggedUserId(): number {
+    const userId = localStorage.getItem(this.userIdKey);
+    const parsedId = userId ? parseInt(userId, 10) : 0;
+    if (!parsedId) this.logout();
+    return parsedId;
+  }
+
+  private setAuthToLocalStorage(auth: any): boolean {
+    if (auth?.authToken) {
+      localStorage.setItem(this.tokenKey, JSON.stringify(auth));
+      localStorage.setItem(this.userIdKey, auth.userId);
+      return true;
+    }
+    return false;
+  }
+
+  private getAuthFromLocalStorage(): any | undefined {
+    try {
+      const token = localStorage.getItem(this.tokenKey);
+      return token ? JSON.parse(token) : undefined;
+    } catch (error) {
+      console.error('Auth retrieval error:', error);
+      return undefined;
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+}

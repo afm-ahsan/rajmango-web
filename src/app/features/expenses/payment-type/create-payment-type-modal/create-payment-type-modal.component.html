@@ -1,0 +1,65 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="modal-title h4 whiteFontColor" id="example-modal-sizes-title-lg">
+            <ng-container *ngIf="paymentTypeDto">
+                <ng-container *ngIf="paymentTypeDto.id" class="font-weight-bold"><strong>Edit
+                        Payment Type</strong></ng-container>
+                <ng-container *ngIf="!paymentTypeDto.id" class="font-weight-bold"><strong>Add
+                        Payment Type</strong></ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body">
+        <ng-container *ngIf="isLoading">
+            <div class="overlay-layer bg-transparent">
+                <div class="spinner spinner-lg spinner-success"></div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="paymentTypeDto">
+            <form action="#" class="form form-label-right" [formGroup]="formGroup">
+                <!-- Payment Type Name -->
+                <div class="form-group row">
+                    <label class="col-3 col-form-label text-lg-right"><b>Title:</b></label>
+                    <div class="col-9">
+                        <input type="text" class="form-control form-control-lg form-control-solid" name="name"
+                            placeholder="Payment Type" autocomplete="off"
+                            [class.is-invalid]="isControlInvalid('name')"
+                            [class.is-valid]="isControlValid('name')" formControlName="name" />
+                        <div class="valid-feedback" *ngIf="isControlValid('name')">
+                            Payment type was entered correct
+                        </div>
+                        <div class="invalid-feedback" *ngIf="controlHasError('required', 'name')">
+                            Payment type is required
+                        </div>
+                        <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'name')">
+                            Payment type should have at least 2 characters
+                        </div>
+                        <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'name')">
+                            Payment type should have maximum 50 characters
+                        </div>
+                    </div>
+                </div>
+                <!-- Payment Type Description -->
+                <div class="form-group row mt-2">
+                    <label class="col-3 col-form-label text-lg-right"><b>Description:</b></label>
+                    <div class="col-9">
+                        <input type="text" class="form-control form-control-lg form-control-solid"
+                            name="description" placeholder="Payment Type Description" autocomplete="off"
+                            formControlName="description" />
+                    </div>
+                </div>
+                <!-- Is Active -->
+                <div class="form-group row mt-2">
+                    <label class="col-3 col-form-label text-lg-right"><b>Is Active:</b></label>
+                    <div class="col-9 mt-4">
+                        <input type="checkbox" formControlName="isActive" />
+                    </div>
+                </div>
+            </form>
+        </ng-container>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">Cancel</button>
+        <button class="btn btn-primary btn-elevate" (click)="save()" [disabled]="formGroup.invalid">Save</button>
+    </div>
+</div>

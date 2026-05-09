@@ -1,0 +1,50 @@
+.mango-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0.75rem;
+
+  &:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-img-top {
+    height: 240px;
+    object-fit: cover;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+    transition: transform 0.3s ease;
+  }
+
+  .card-title {
+    font-weight: 600;
+    font-size: 1.15rem;
+  }
+
+  .image-link {
+    display: block;
+    overflow: hidden;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+  }
+}
+
+button.btn-primary {
+  font-weight: 500;
+  border-radius: 0.4rem;
+  transition: background-color 0.3s ease;
+
+  i {
+    vertical-align: middle;
+  }
+
+  &:hover {
+    background-color: darken(#0d6efd, 5%);
+  }
+}
+
+.btn-sm {
+  font-weight: 500;
+  min-width: 120px;
+}
+
+

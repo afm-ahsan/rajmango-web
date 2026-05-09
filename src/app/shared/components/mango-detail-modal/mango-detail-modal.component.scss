@@ -1,0 +1,13 @@
+// mango-detail-modal.component.scss
+.modal-body img {
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.modal-header h5 {
+  font-weight: 600;
+}
+
+.modal-footer {
+  justify-content: space-between;
+}

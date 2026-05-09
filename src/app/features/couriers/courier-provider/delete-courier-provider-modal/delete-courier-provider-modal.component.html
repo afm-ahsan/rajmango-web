@@ -1,0 +1,49 @@
+<!-- Loading Spinner -->
+<ng-container *ngIf="isLoading">
+  <div class="progress progress-modal rounded-0">
+    <div
+      class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+      role="progressbar"
+      style="width: 100%"
+      aria-valuenow="100"
+      aria-valuemin="0"
+      aria-valuemax="100">
+    </div>
+  </div>
+</ng-container>
+
+<!-- Modal Header -->
+<div class="modal-header">
+  <h5 class="modal-title text-danger fw-bold">
+    <i class="bi bi-trash-fill me-2"></i> Delete Courier Provider
+  </h5>
+</div>
+
+<!-- Modal Body -->
+<div class="modal-body">
+  <ng-container *ngIf="isLoading; else confirmContent">
+    <span class="text-muted">
+      <i class="bi bi-hourglass-split me-2 text-primary"></i> Deleting courier provider...
+    </span>
+  </ng-container>
+
+  <ng-template #confirmContent>
+    <p class="mb-0 text-gray-700">
+      <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+      Are you sure you want to permanently delete this courier provider?
+    </p>
+  </ng-template>
+</div>
+
+<!-- Modal Footer -->
+<div class="modal-footer justify-content-end">
+  <button type="button" class="btn btn-light d-flex align-items-center" (click)="modal.dismiss()">
+    <i class="bi bi-x-circle me-2 fs-5 text-danger"></i>
+    Cancel
+  </button>
+
+  <button type="button" class="btn btn-danger d-flex align-items-center" (click)="delete()" [disabled]="isLoading">
+    <i class="bi bi-trash me-2 fs-5"></i>
+    Delete
+  </button>
+</div>

@@ -1,0 +1,42 @@
+<!-- Loader Progress Bar -->
+<div *ngIf="isLoading" class="progress progress-modal mb-0">
+  <div
+    class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+    role="progressbar"
+    style="width: 100%"
+    aria-valuenow="100"
+    aria-valuemin="0"
+    aria-valuemax="100"
+  ></div>
+</div>
+
+<!-- Modal Header -->
+<div class="modal-header">
+  <h4 class="modal-title whiteFontColor">Order Delete</h4>
+</div>
+
+<!-- Modal Body -->
+<div class="modal-body">
+  <span *ngIf="isLoading">Order is deleting...</span>
+  <span *ngIf="!isLoading">Are you sure you want to permanently delete this order?</span>
+</div>
+
+<!-- Modal Footer -->
+<div class="modal-footer d-flex justify-content-end gap-2">
+  <button
+    type="button"
+    class="btn btn-light shadow-sm px-4 py-2"
+    (click)="modal.dismiss()"
+  >
+    Cancel
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-danger shadow-sm px-4 py-2"
+    (click)="delete()"
+    [disabled]="isLoading"
+  >
+    Delete
+  </button>
+</div>

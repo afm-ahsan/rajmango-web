@@ -1,0 +1,25 @@
+<!-- Top Carousel using ngb-carousel -->
+<ngb-carousel [interval]="3000" [pauseOnHover]="true" [wrap]="true" class="mb-7 rounded overflow-hidden shadow">
+  <ng-template ngbSlide *ngFor="let image of carouselImages; let i = index">
+    <img [src]="image" class="d-block w-100 carousel-img" [alt]="'Mango Slide ' + (i + 1)" />
+  </ng-template>
+</ngb-carousel>
+
+<!-- Legacy Banner & Text -->
+<div class="row g-0 mb-7">
+  <div class="bg-light-primary p-5 text-center rounded">
+    <h3 class="fw-bold text-danger fs-1 mb-3">A Legacy of Legendary Mangoes</h3>
+    <p class="fs-5 mx-auto" style="max-width: 900px;">
+      Rajshahi, the mango capital of Bangladesh, is home to a royal lineage of mangoes—each variety a masterpiece of nature and tradition. From the honeyed sweetness of Gopalbhog to the colossal Fazli, every bite of a Rajshahi mango is not just fruit—it’s history, heritage, and unmatched flavor.
+    </p>
+  </div>
+</div>
+
+<!-- Mango Grid -->
+<div class="container mb-7">
+  <div class="row g-4">
+    <div class="col-sm-6 col-lg-4" *ngFor="let mango of mangoList">
+      <app-mango-card [mango]="mango"></app-mango-card>
+    </div>
+  </div>
+</div>

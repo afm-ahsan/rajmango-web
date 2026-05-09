@@ -1,0 +1,36 @@
+<!--begin::Pagination Wrapper-->
+<div class="row align-items-center mb-4 w-100 mx-0">
+  <!-- Records Per Page Selector (Left Aligned) -->
+  <div class="col-md-6 d-flex align-items-center gap-2 ps-0">
+    <label for="pageSize" class="form-label mb-0 fw-bold">Records per page:</label>
+    <select
+      id="pageSize"
+      class="form-select form-select-sm w-auto"
+      [ngModel]="pageSize"
+      (ngModelChange)="onPageSizeChange($event)"
+    >
+      <option *ngFor="let size of pageSizeOptions" [ngValue]="size">{{ size }}</option>
+    </select>
+  </div>
+
+  <!-- Page Navigation (Right Aligned to Table Edge) -->
+  <div class="col-md-6 d-flex justify-content-end pe-0">
+    <ngb-pagination
+      class="pagination-sm mb-0"
+      [collectionSize]="collectionSize"
+      [pageSize]="pageSize"
+      [(page)]="pageNumber"
+      [maxSize]="5"
+      [boundaryLinks]="true"
+      [directionLinks]="true"
+      [rotate]="true"
+      (pageChange)="onPageChange($event)"
+      aria-label="Pagination"
+    ></ngb-pagination>
+  </div>
+</div>
+
+<!-- Print-only pagination summary -->
+<div class="d-none d-print-block text-muted fs-6">
+  Showing page {{ pageNumber }} of {{ totalPageCount }}.
+</div>

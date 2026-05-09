@@ -1,0 +1,89 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="modal-title h4 whiteFontColor" id="example-modal-sizes-title-lg">
+            <ng-container *ngIf="mangoTypeDto">
+                <ng-container *ngIf="mangoTypeDto.id" class="font-weight-bold"><strong>Edit Mango Type</strong></ng-container>
+                <ng-container *ngIf="!mangoTypeDto.id" class="font-weight-bold"><strong>Add Mango Type</strong></ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <div class="overlay overlay-block cursor-default modal-body">
+        <ng-container *ngIf="isLoading">
+            <div class="overlay-layer bg-transparent">
+                <div class="spinner spinner-lg spinner-success"></div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="mangoTypeDto">
+          <form action="#" class="form form-label-right" [formGroup]="formGroup">            
+            <!-- Mango Type Name -->
+            <div class="form-group row mt-2">
+              <label class="col-3 col-form-label text-lg-right"><b>Name<span class="text-danger">*</span>:</b></label>
+              <div class="col-9">
+                <input type="text"
+                       class="form-control"
+                       name="name"
+                       placeholder="Mango Type Name"
+                       autocomplete="off"
+                       [class.is-invalid]="isControlInvalid('name')"
+                       [class.is-valid]="isControlValid('name')"
+                       formControlName="name" />
+                <div class="valid-feedback" *ngIf="isControlValid('name')">
+                  Mango Type name was entered correct
+                </div>
+                <div class="invalid-feedback" *ngIf="controlHasError('required', 'name')">
+                  Mango Type name is required
+                </div>
+                <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'name')">
+                  Mango Type name should have maximum 256 characters
+                </div>
+              </div>
+            </div>
+            <!-- Mango Type Description -->
+            <div class="form-group row mt-2">
+              <label class="col-3 col-form-label text-lg-right"><b>Description:</b></label>
+              <div class="col-9">
+                <textarea
+                       class="form-control"
+                       name="description"
+                       placeholder="Mango Type Description"
+                       autocomplete="off"
+                       formControlName="description"></textarea>
+              </div>
+            </div>
+            <div class="form-group row mt-2">
+                <label class="col-3 col-form-label text-lg-right"><b>PricePerKg<span class="text-danger">*</span>:</b></label>
+                <div class="col-9">
+                    <input type="number" class="form-control" name="pricePerKg"
+                        placeholder="Price/Kg" autocomplete="off" formControlName="pricePerKg" />
+                    <div class="invalid-feedback" *ngIf="controlHasError('required', 'pricePerKg')">
+                        Price per kg is required
+                    </div>
+                </div>
+            </div>    
+            <!-- Image Upload -->
+            <div class="form-group row mt-2">
+              <label class="col-3 col-form-label text-lg-right"><b>Image:</b></label>
+              <div class="col-9 mt-2">
+                <app-upload [location]="location" (uploadFinished)="uploadFinished($event)"></app-upload>
+                <div *ngIf="mangoTypeDto.imagePath?.length">
+                  <div class="overflow-hidden mt-2">
+                    <img [src]="createImagePath(mangoTypeDto.imagePath)" alt="Mango Type Image" class="rounded preview-image" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Is Available -->
+            <div class="form-group row mt-2">
+              <label class="col-3 col-form-label text-lg-right"><b>Is Available:</b></label>
+              <div class="col-9 mt-4">
+                <input type="checkbox" formControlName="isAvailable" />
+              </div>
+            </div>
+          </form>
+        </ng-container>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">Cancel</button>
+        <button class="btn btn-primary btn-elevate" (click)="save()" [disabled]="formGroup.invalid">Save</button>
+    </div>
+  </div>

@@ -1,0 +1,62 @@
+<div class="modal-content">
+  <!-- Modal Header -->
+  <div class="modal-header">
+    <h5 class="modal-title whiteFontColor">Courier Provider Details</h5>
+  </div>
+
+  <!-- Modal Body with Overlay Spinner -->
+  <div class="modal-body overlay overlay-block cursor-default">
+    <ng-container *ngIf="isLoading">
+      <div class="overlay-layer bg-transparent">
+        <div class="spinner spinner-lg spinner-success"></div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="courierProviderDto">
+      <div class="row mb-3">
+        <label class="col-4 fw-bold text-start">Name:</label>
+        <div class="col-8">
+          <span class="form-text text-wrap">{{ courierProviderDto.name }}</span>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <label class="col-4 fw-bold text-start">Description:</label>
+        <div class="col-8">
+          <span class="form-text text-wrap">{{ courierProviderDto.description || '—' }}</span>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <label class="col-4 fw-bold text-start">Support Phone:</label>
+        <div class="col-8">
+          <span class="form-text text-wrap">{{ courierProviderDto.supportPhone || '—' }}</span>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <label class="col-4 fw-bold text-start">Email:</label>
+        <div class="col-8">
+          <span class="form-text text-wrap">{{ courierProviderDto.email || '—' }}</span>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <label class="col-4 fw-bold text-start">Is Active:</label>
+        <div class="col-8">
+          <span class="badge" [ngClass]="courierProviderDto.isActive ? 'bg-success' : 'bg-danger'">
+            {{ courierProviderDto.isActive ? 'Yes' : 'No' }}
+          </span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Modal Footer -->
+  <div class="modal-footer justify-content-end">
+    <button type="button" class="btn btn-light d-flex align-items-center" (click)="modal.dismiss()">
+      <i class="bi bi-x-circle me-2 fs-5 text-danger"></i>
+      Close
+    </button>
+  </div>
+</div>

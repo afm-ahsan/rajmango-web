@@ -1,0 +1,147 @@
+<!--begin::Courier Provider List-->
+<div class="post d-flex flex-column-fluid" id="kt_courier_provider">
+  <div id="kt_content_container" class="container-xxl">
+    <div class="card">
+
+      <!--begin::Header-->
+      <div class="card-header border-0 pt-6 justify-content-between align-items-center">
+        <!-- Search -->
+        <div class="card-title">
+          <div class="d-flex align-items-center position-relative">
+            <i class="bi bi-search fs-3 position-absolute ms-3 text-muted"></i>
+            <input
+              type="search"
+              class="form-control form-control-solid w-250px ps-10"
+              placeholder="Search Courier Provider"
+              (input)="onSearchChange($event)"
+            />
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-sm btn-primary" (click)="create()">
+            <i class="bi bi-plus-circle me-2"></i>
+            Add Courier Provider
+          </button>
+        </div>
+      </div>
+      <!--end::Header-->
+
+      <!--begin::Body-->
+      <div class="card-body py-4" 
+          *ngIf="courierProviders.length > 0">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle fs-6 gy-5">
+            <thead>
+              <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                <th (click)="onSort('name')" class="cursor-pointer">
+                  <i class="bi bi-fonts text-primary me-1"></i>
+                  Name
+                  <span *ngIf="filter.sortBy === 'name'">
+                    {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                  </span>
+                </th>
+                <th (click)="onSort('description')" class="cursor-pointer">
+                  <i class="bi bi-card-text text-info me-1"></i>
+                  Description
+                  <span *ngIf="filter.sortBy === 'description'">
+                    {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                  </span>
+                </th>
+                <th (click)="onSort('supportPhone')" class="cursor-pointer">
+                  <i class="bi bi-telephone text-warning me-1"></i>
+                  Phone
+                  <span *ngIf="filter.sortBy === 'supportPhone'">
+                    {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                  </span>
+                </th>
+                <th (click)="onSort('email')" class="cursor-pointer">
+                  <i class="bi bi-envelope-at text-danger me-1"></i>
+                  Email
+                  <span *ngIf="filter.sortBy === 'email'">
+                    {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                  </span>
+                </th>                
+                <th (click)="onSort('isActive')" class="cursor-pointer">
+                  <i class="bi bi-toggle-on text-success me-1"></i>
+                  Active
+                  <span *ngIf="filter.sortBy === 'isActive'">
+                    {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                  </span>
+                </th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-600 fw-semibold">
+              <tr *ngFor="let courierProvider of courierProviders">
+                <td>
+                  <a href="javascript:void(0)" (click)="view(courierProvider.id)" class="text-gray-800 text-hover-primary">
+                    {{ courierProvider.name }}
+                  </a>
+                </td>
+                <td>{{ courierProvider.description }}</td>
+                <td>{{ courierProvider.supportPhone }}</td>
+                <td>{{ courierProvider.email }}</td>
+                <td>
+                  <span class="badge" [ngClass]="courierProvider.isActive ? 'bg-success' : 'bg-danger'">
+                    {{ courierProvider.isActive ? 'Yes' : 'No' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-light btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                    Actions
+                    <i class="bi bi-three-dots-vertical ms-2"></i>
+                  </button>
+                  <!-- Dropdown -->
+                  <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="edit(courierProvider.id)">
+                        <i class="bi bi-pencil-square me-2 text-primary"></i>Edit
+                      </a>
+                    </div>
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="view(courierProvider.id)">
+                        <i class="bi bi-eye me-2 text-info"></i>View
+                      </a>
+                    </div>
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3 text-danger" (click)="delete(courierProvider.id)">
+                        <i class="bi bi-trash me-2"></i>Delete
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <app-pagination
+          [collectionSize]="totalCount"
+          [pageSize]="filter.pageSize"
+          [pageNumber]="filter.pageNumber"
+          (pageChange)="pageChanged($event)"
+          (pageSizeChange)="pageSizeChanged($event)">
+        </app-pagination>
+      </div>
+      <!--end::Body-->
+
+      <!--begin::No Data Component-->
+      <div class="card-body" *ngIf="!courierProviders.length && !isLoading">
+        <!-- <app-data-loading-empty></app-data-loading-empty> -->
+         <app-data-empty
+          icon="bi-truck"
+          title="No Courier Providers Found"
+          message="Try adjusting your search or add a new provider to get started."
+          buttonText="Add Courier Provider"
+          (buttonClick)="create()"
+        ></app-data-empty>
+      </div>
+      <!--end::No Data Component-->
+
+    </div>
+  </div>
+</div>
+<!--end::Courier Provider List-->

@@ -1,0 +1,52 @@
+.carousel-img {
+  height: 400px;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+// Animate zoom effect on active image
+ngb-carousel ::ng-deep .carousel-item.active img {
+  animation: zoomFade 5s ease-in-out infinite;
+}
+
+@keyframes zoomFade {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.mango-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0.75rem;
+
+  &:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-img-top {
+    height: 240px;
+    object-fit: cover;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+    transition: transform 0.3s ease;
+  }
+
+  .card-title {
+    font-weight: 600;
+    font-size: 1.15rem;
+  }
+}
+
+.image-link {
+  display: block;
+  overflow: hidden;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
