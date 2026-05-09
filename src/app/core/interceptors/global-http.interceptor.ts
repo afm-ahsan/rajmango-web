@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { ErrorLoggerService } from 'src/app/shared/services/error-logger.service';
 import { ErrorMessageService } from 'src/app/shared/services/error-message.service';
 
@@ -16,6 +17,7 @@ import { ErrorMessageService } from 'src/app/shared/services/error-message.servi
   providedIn: 'root',
 })
 export class GlobalHttpInterceptor implements HttpInterceptor {
+  private readonly tokenKey = `${environment.appVersion}-${environment.USERDATA_KEY}`;
 
   constructor(
     private router: Router,
@@ -27,9 +29,10 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    return next.handle(req).pipe(
+    const authReq = this.addAuthHeader(req);
+    return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        this.errorLogger.logHttpError(error); // ✅ log here
+        this.errorLogger.logHttpError(error);
         this.errorMessageService.handleHttpError(error);
 
         if (error.status === 401 || error.status === 408) {
@@ -39,5 +42,18 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
         return throwError(() => error);
       })
     );
+  }
+
+  private addAuthHeader(req: HttpRequest<any>): HttpRequest<any> {
+    try {
+      const raw = localStorage.getItem(this.tokenKey);
+      if (!raw) return req;
+      const auth = JSON.parse(raw);
+      const token: string | undefined = auth?.authToken;
+      if (!token) return req;
+      return req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
+    } catch {
+      return req;
+    }
   }
 }
