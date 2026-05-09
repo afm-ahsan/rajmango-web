@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserPermissionKey } from 'src/app/core/constants/user-permission-keys.enum';
 import { UserPermissionService } from 'src/app/features/auth/services/user-permission.service';
 import { environment_demo } from '../../../../../../environments/environment.demo';
 
@@ -14,4 +15,8 @@ export class AsideMenuComponent implements OnInit {
   constructor(public permissionService: UserPermissionService) {}
 
   ngOnInit(): void {}
+
+  get isAdmin(): boolean {
+    return this.permissionService.hasAccess(UserPermissionKey.HasAdminAccess);
+  }
 }

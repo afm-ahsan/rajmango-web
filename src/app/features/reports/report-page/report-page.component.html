@@ -1,0 +1,381 @@
+<div class="container-xxl">
+
+  <!-- Date Range Filter -->
+  <div class="card mb-6">
+    <div class="card-body py-4">
+      <div class="row align-items-end g-4">
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">From Date</label>
+          <input type="date" class="form-control form-control-lg" [(ngModel)]="fromDate" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label fw-semibold">To Date</label>
+          <input type="date" class="form-control form-control-lg" [(ngModel)]="toDate" />
+        </div>
+        <div class="col-md-4">
+          <button class="btn btn-primary btn-lg w-100" (click)="runReport()">
+            <i class="bi bi-bar-chart-fill me-2"></i> Run Report
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'orders'" (click)="setTab('orders')" href="javascript:void(0)">
+        Orders
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'payments'" (click)="setTab('payments')" href="javascript:void(0)">
+        Payments
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'expenses'" (click)="setTab('expenses')" href="javascript:void(0)">
+        Expenses
+      </a>
+    </li>
+  </ul>
+
+  <!-- ── Orders Report ── -->
+  <ng-container *ngIf="activeTab === 'orders'">
+    <div *ngIf="isLoadingOrders" class="text-center py-10">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <ng-container *ngIf="!isLoadingOrders && orderReport">
+      <!-- Summary Cards -->
+      <div class="row g-4 mb-6">
+        <div class="col-md-3">
+          <div class="card bg-light-primary">
+            <div class="card-body text-center py-5">
+              <div class="fs-2 fw-bold text-primary">{{ orderReport.totalOrders }}</div>
+              <div class="text-muted fs-7">Total Orders</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-light-success">
+            <div class="card-body text-center py-5">
+              <div class="fs-2 fw-bold text-success">{{ orderReport.totalRevenue | number:'1.0-0' }} ৳</div>
+              <div class="text-muted fs-7">Total Revenue</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-light-info">
+            <div class="card-body text-center py-5">
+              <div class="fs-2 fw-bold text-info">{{ orderReport.totalCollected | number:'1.0-0' }} ৳</div>
+              <div class="text-muted fs-7">Collected</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-light-danger">
+            <div class="card-body text-center py-5">
+              <div class="fs-2 fw-bold text-danger">{{ orderReport.totalOutstanding | number:'1.0-0' }} ৳</div>
+              <div class="text-muted fs-7">Outstanding</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Breakdown -->
+      <div class="row g-4 mb-6">
+        <div class="col-6 col-md-2" *ngIf="orderReport.pendingOrders">
+          <div class="card border border-warning">
+            <div class="card-body text-center py-4">
+              <div class="fs-3 fw-bold">{{ orderReport.pendingOrders }}</div>
+              <div class="text-muted fs-8">Pending</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-2" *ngIf="orderReport.confirmedOrders">
+          <div class="card border border-primary">
+            <div class="card-body text-center py-4">
+              <div class="fs-3 fw-bold">{{ orderReport.confirmedOrders }}</div>
+              <div class="text-muted fs-8">Confirmed</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-2" *ngIf="orderReport.processingOrders">
+          <div class="card border border-info">
+            <div class="card-body text-center py-4">
+              <div class="fs-3 fw-bold">{{ orderReport.processingOrders }}</div>
+              <div class="text-muted fs-8">Processing</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-2" *ngIf="orderReport.shippedOrders">
+          <div class="card border border-secondary">
+            <div class="card-body text-center py-4">
+              <div class="fs-3 fw-bold">{{ orderReport.shippedOrders }}</div>
+              <div class="text-muted fs-8">Shipped</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-2" *ngIf="orderReport.deliveredOrders">
+          <div class="card border border-success">
+            <div class="card-body text-center py-4">
+              <div class="fs-3 fw-bold">{{ orderReport.deliveredOrders }}</div>
+              <div class="text-muted fs-8">Delivered</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-2" *ngIf="orderReport.cancelledOrders">
+          <div class="card border border-danger">
+            <div class="card-body text-center py-4">
+              <div class="fs-3 fw-bold">{{ orderReport.cancelledOrders }}</div>
+              <div class="text-muted fs-8">Cancelled</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Lines -->
+      <div class="card" *ngIf="orderReport.orders?.length">
+        <div class="card-header border-0 pt-5">
+          <h3 class="card-title"><span class="card-label fw-bold fs-5">Order Lines</span></h3>
+        </div>
+        <div class="card-body pt-0 table-responsive">
+          <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3">
+            <thead>
+              <tr class="fw-bold text-muted">
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Customer</th>
+                <th>Qty</th>
+                <th>Total (৳)</th>
+                <th>Paid (৳)</th>
+                <th>Due (৳)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let o of orderReport.orders">
+                <td class="fw-bold">{{ o.orderNumber }}</td>
+                <td>{{ o.orderDate.toDate() | date:'dd MMM yyyy' }}</td>
+                <td>{{ o.customerName }}</td>
+                <td>{{ o.totalQuantity }}</td>
+                <td>{{ o.totalAmount | number:'1.0-0' }}</td>
+                <td class="text-success">{{ o.paidAmount | number:'1.0-0' }}</td>
+                <td class="text-danger">{{ o.dueAmount | number:'1.0-0' }}</td>
+                <td>{{ getOrderStatusLabel(o.orderStatus) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="!isLoadingOrders && !orderReport" class="text-center text-muted py-10">
+      No data for the selected date range.
+    </div>
+  </ng-container>
+
+  <!-- ── Payments Report ── -->
+  <ng-container *ngIf="activeTab === 'payments'">
+    <div *ngIf="isLoadingPayments" class="text-center py-10">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <ng-container *ngIf="!isLoadingPayments && paymentReport">
+      <!-- Summary Cards -->
+      <div class="row g-4 mb-6">
+        <div class="col-md-3">
+          <div class="card bg-light-primary">
+            <div class="card-body text-center py-5">
+              <div class="fs-2 fw-bold text-primary">{{ paymentReport.totalPayments }}</div>
+              <div class="text-muted fs-7">Total Payments</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-light-success">
+            <div class="card-body text-center py-5">
+              <div class="fs-2 fw-bold text-success">{{ paymentReport.totalPaid | number:'1.0-0' }} ৳</div>
+              <div class="text-muted fs-7">Total Paid</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-light-warning">
+            <div class="card-body text-center py-5">
+              <div class="fs-2 fw-bold text-warning">{{ paymentReport.totalDue | number:'1.0-0' }} ৳</div>
+              <div class="text-muted fs-7">Total Due</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card bg-light-info">
+            <div class="card-body text-center py-5">
+              <div class="fs-2 fw-bold text-info">{{ paymentReport.totalNet | number:'1.0-0' }} ৳</div>
+              <div class="text-muted fs-7">Net Amount</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- By Method -->
+      <div class="card mb-6" *ngIf="paymentReport.byMethod?.length">
+        <div class="card-header border-0 pt-5">
+          <h3 class="card-title"><span class="card-label fw-bold fs-5">By Payment Method</span></h3>
+        </div>
+        <div class="card-body pt-0 table-responsive">
+          <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3">
+            <thead>
+              <tr class="fw-bold text-muted">
+                <th>Method</th>
+                <th>Count</th>
+                <th>Total Paid (৳)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let m of paymentReport.byMethod">
+                <td>{{ getPaymentMethodLabel(m.method) }}</td>
+                <td>{{ m.count }}</td>
+                <td class="fw-bold text-success">{{ m.totalPaid | number:'1.0-0' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Payment Lines -->
+      <div class="card" *ngIf="paymentReport.payments?.length">
+        <div class="card-header border-0 pt-5">
+          <h3 class="card-title"><span class="card-label fw-bold fs-5">Payment Lines</span></h3>
+        </div>
+        <div class="card-body pt-0 table-responsive">
+          <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3">
+            <thead>
+              <tr class="fw-bold text-muted">
+                <th>Order #</th>
+                <th>Transaction ID</th>
+                <th>Gross (৳)</th>
+                <th>Discount (৳)</th>
+                <th>Net (৳)</th>
+                <th>Paid (৳)</th>
+                <th>Due (৳)</th>
+                <th>Method</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of paymentReport.payments">
+                <td class="fw-bold">{{ p.orderNumber || '#' + p.orderId }}</td>
+                <td>{{ p.transactionId || '—' }}</td>
+                <td>{{ p.grossAmount | number:'1.0-0' }}</td>
+                <td>{{ p.discountAmount | number:'1.0-0' }}</td>
+                <td>{{ p.netAmount | number:'1.0-0' }}</td>
+                <td class="text-success fw-bold">{{ p.paidAmount | number:'1.0-0' }}</td>
+                <td class="text-danger">{{ p.dueAmount | number:'1.0-0' }}</td>
+                <td>{{ getPaymentMethodLabel(p.paymentMethod) }}</td>
+                <td>{{ p.createdAt.toDate() | date:'dd MMM yyyy' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="!isLoadingPayments && !paymentReport" class="text-center text-muted py-10">
+      No data for the selected date range.
+    </div>
+  </ng-container>
+
+  <!-- ── Expenses Report ── -->
+  <ng-container *ngIf="activeTab === 'expenses'">
+    <div *ngIf="isLoadingExpenses" class="text-center py-10">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <ng-container *ngIf="!isLoadingExpenses && expenseReport">
+      <!-- Summary Cards -->
+      <div class="row g-4 mb-6">
+        <div class="col-md-6">
+          <div class="card bg-light-danger">
+            <div class="card-body text-center py-5">
+              <div class="fs-2 fw-bold text-danger">{{ expenseReport.totalExpenses }}</div>
+              <div class="text-muted fs-7">Total Expense Records</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card bg-light-warning">
+            <div class="card-body text-center py-5">
+              <div class="fs-2 fw-bold text-warning">{{ expenseReport.totalAmount | number:'1.0-0' }} ৳</div>
+              <div class="text-muted fs-7">Total Amount</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- By Type -->
+      <div class="card mb-6" *ngIf="expenseReport.byType?.length">
+        <div class="card-header border-0 pt-5">
+          <h3 class="card-title"><span class="card-label fw-bold fs-5">By Expense Type</span></h3>
+        </div>
+        <div class="card-body pt-0 table-responsive">
+          <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3">
+            <thead>
+              <tr class="fw-bold text-muted">
+                <th>Expense Type</th>
+                <th>Count</th>
+                <th>Total Amount (৳)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of expenseReport.byType">
+                <td>{{ t.expenseTypeName }}</td>
+                <td>{{ t.count }}</td>
+                <td class="fw-bold text-danger">{{ t.totalAmount | number:'1.0-0' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Expense Lines -->
+      <div class="card" *ngIf="expenseReport.expenses?.length">
+        <div class="card-header border-0 pt-5">
+          <h3 class="card-title"><span class="card-label fw-bold fs-5">Expense Lines</span></h3>
+        </div>
+        <div class="card-body pt-0 table-responsive">
+          <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-3">
+            <thead>
+              <tr class="fw-bold text-muted">
+                <th>Type</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Paid To</th>
+                <th>Transaction ID</th>
+                <th>Amount (৳)</th>
+                <th>Method</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let e of expenseReport.expenses">
+                <td>{{ e.expenseTypeName }}</td>
+                <td>{{ e.name }}</td>
+                <td>{{ e.expenseDate.toDate() | date:'dd MMM yyyy' }}</td>
+                <td>{{ e.paidTo || '—' }}</td>
+                <td>{{ e.transactionId || '—' }}</td>
+                <td class="fw-bold text-danger">{{ e.amount | number:'1.0-0' }}</td>
+                <td>{{ getPaymentMethodLabel(e.paymentMethod) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <div *ngIf="!isLoadingExpenses && !expenseReport" class="text-center text-muted py-10">
+      No data for the selected date range.
+    </div>
+  </ng-container>
+
+</div>

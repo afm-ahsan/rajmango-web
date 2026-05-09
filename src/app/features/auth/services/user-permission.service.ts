@@ -24,16 +24,29 @@ export class UserPermissionService {
     return !!this.currentPermission?.[key];
   }
 
+  // When backend sends a structured permissions object, replace `true` with `!!userPermissions.<key>`.
   preparePermissionModel(userPermissions: Partial<UserAccessModel>): UserAccessModel {
     return {
-      hasDashboardAccess: true,// !!userPermissions.hasDashboardAccess,
-      hasHomeAccess: true,//!!userPermissions.hasHomeAccess,
-      hasOrderAccess: true,//!!userPermissions.hasOrderAccess,
+      hasDashboardAccess: true,
+      hasHomeAccess: true,
+      hasAdminAccess: true,       // TODO: !!userPermissions.hasAdminAccess when backend sends role flag
 
-      hasCourierAccess: true,//!!userPermissions.hasCourierAccess,
-      hasCourierProviderAccess: true,//!!userPermissions.hasCourierProviderAccess,
-      hasCourierStationsAccess: true,//!!userPermissions.hasCourierStationsAccess,
-      hasAreaMapAccess: true,//!!userPermissions.hasAreaMapAccess,
+      hasOrderAccess: true,
+
+      hasCourierAccess: true,
+      hasCourierProviderAccess: true,
+      hasCourierStationsAccess: true,
+      hasAreaMapAccess: true,
+
+      hasMangoTypeAccess: true,
+      hasMangoAvailabilityAccess: true,
+      hasExpenseTypeAccess: true,
+      hasExpensesAccess: true,
+      hasUsersAccess: true,
+      hasUserRolesAccess: true,
+      hasCustomersAccess: true,
+      hasPaymentsAccess: true,
+      hasReportAccess: true,
     };
   }
 }

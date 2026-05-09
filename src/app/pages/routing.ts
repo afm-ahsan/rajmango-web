@@ -98,6 +98,11 @@ const Routing: Routes = [
         (m) => m.MangoAvailabilityModule
       ),
   },
+  {
+    path: 'reports',
+    loadChildren: () =>
+      import('../features/reports/report.module').then((m) => m.ReportModule),
+  },
   
 {
     path: '',
