@@ -1,0 +1,97 @@
+<!--begin::Post-->
+<div class="post d-flex flex-column-fluid" id="kt_post">
+  <div id="kt_content_container" class="container-xxl">
+
+    <!--begin::Page header-->
+    <div class="d-flex align-items-center justify-content-between mb-7">
+      <div>
+        <h1 class="fs-2 fw-bold text-dark mb-1">Mango Catalog</h1>
+        <span class="text-muted fs-7">Available mangoes for the current season</span>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="placeOrder()">
+        <span class="svg-icon svg-icon-2 me-1"
+          [inlineSVG]="'./assets/media/icons/duotune/ecommerce/ecm002.svg'" [cacheSVG]="true"></span>
+        Place Order
+      </button>
+    </div>
+    <!--end::Page header-->
+
+    <!--begin::Loading-->
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-20">
+      <span class="spinner-border text-primary" role="status"></span>
+    </div>
+    <!--end::Loading-->
+
+    <!--begin::Empty-->
+    <ng-container *ngIf="!isLoading && !catalog.length">
+      <app-data-empty
+        icon="bi-basket3"
+        title="No Mangoes Available Right Now"
+        message="Check back soon — new seasonal availability will be listed here."
+      ></app-data-empty>
+    </ng-container>
+    <!--end::Empty-->
+
+    <!--begin::Catalog grid-->
+    <div *ngIf="!isLoading && catalog.length" class="row g-6">
+      <div class="col-sm-6 col-xl-4" *ngFor="let item of catalog">
+        <div class="card h-100 border-0 shadow-sm">
+
+          <!--begin::Card header-->
+          <div class="card-header border-0 pt-6 pb-0">
+            <div class="card-title flex-column">
+              <span class="fs-3 fw-bold text-dark">{{ item.mangoTypeName }}</span>
+              <span class="text-muted fs-7 mt-1">Season {{ item.seasonYear }}</span>
+            </div>
+            <div class="card-toolbar">
+              <span class="badge fs-7 fw-semibold" [ngClass]="getStatusBadgeClass(item.status)">
+                {{ getStatusLabel(item.status) }}
+              </span>
+            </div>
+          </div>
+          <!--end::Card header-->
+
+          <!--begin::Card body-->
+          <div class="card-body pt-4">
+            <!--Price-->
+            <div class="d-flex align-items-center mb-5">
+              <span class="fs-1 fw-bolder text-primary">৳ {{ item.pricePerKg }}</span>
+              <span class="text-muted fs-7 ms-2">/ kg</span>
+            </div>
+
+            <!--Dates-->
+            <div class="d-flex align-items-center mb-3">
+              <span class="svg-icon svg-icon-3 text-muted me-2"
+                [inlineSVG]="'./assets/media/icons/duotune/general/gen014.svg'" [cacheSVG]="true"></span>
+              <span class="text-gray-700 fs-7">
+                {{ item.startDate.toDate() | date:'dd MMM' }} &ndash;
+                {{ item.endDate.toDate() | date:'dd MMM yyyy' }}
+              </span>
+            </div>
+
+            <!--Notes-->
+            <p *ngIf="item.notes" class="text-muted fs-7 mb-0">{{ item.notes }}</p>
+          </div>
+          <!--end::Card body-->
+
+          <!--begin::Card footer-->
+          <div class="card-footer border-0 pt-0">
+            <button
+              type="button"
+              class="btn btn-sm w-100"
+              [ngClass]="item.status === 1 || item.status === 2 ? 'btn-primary' : 'btn-light-primary'"
+              (click)="placeOrder()"
+            >
+              {{ item.status === 0 ? 'Coming Soon' : item.status === 3 ? 'Season Ended' : 'Order Now' }}
+            </button>
+          </div>
+          <!--end::Card footer-->
+
+        </div>
+      </div>
+    </div>
+    <!--end::Catalog grid-->
+
+  </div>
+</div>
+<!--end::Post-->

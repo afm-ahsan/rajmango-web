@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg-2';
-import { MangoAvailabilityServiceProxy } from 'src/app/services/client-proxy';
+import { MangoAvailabilityServiceProxy, MangoTypeServiceProxy } from 'src/app/services/client-proxy';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MangoAvailabilityComponent } from './mango-availability.component';
 import { MangoAvailabilityRoutingModule } from './mango-availability-routing.module';
@@ -25,6 +25,6 @@ import { AvailabilityModalComponent } from './availability-modal/availability-mo
     SharedModule,
     MangoAvailabilityRoutingModule,
   ],
-  providers: [MangoAvailabilityServiceProxy],
+  providers: [MangoAvailabilityServiceProxy, MangoTypeServiceProxy],
 })
 export class MangoAvailabilityModule {}

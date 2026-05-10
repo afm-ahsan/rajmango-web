@@ -9,6 +9,7 @@ import {
   MangoAvailabilityDto,
   MangoAvailabilityServiceProxy,
   MangoAvailabilityStatus,
+  MangoTypeServiceProxy,
   UpdateMangoAvailabilityCommand,
 } from 'src/app/services/client-proxy';
 import { AuthService } from '../../auth';
@@ -35,13 +36,14 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
     public modal: NgbActiveModal,
     private fb: FormBuilder,
     private proxy: MangoAvailabilityServiceProxy,
+    private mangoTypeProxy: MangoTypeServiceProxy,
     private authService: AuthService,
     private dropdownService: DropdownService
   ) {}
 
   ngOnInit(): void {
     this.statusOptions = this.dropdownService.getMangoAvailabilityStatusOptions();
-    this.mangoTypeOptions = this.dropdownService.getMangoTypeOptions();
+    this.loadMangoTypes();
 
     this.form = this.fb.group({
       mangoTypeId: [this.item?.mangoTypeId ?? 0, [Validators.required, Validators.min(1)]],
@@ -60,6 +62,21 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
       pricePerKg: [this.item?.pricePerKg ?? null, [Validators.required, Validators.min(0.01)]],
       status: [this.item?.status ?? 0, [Validators.required]],
       notes: [this.item?.notes ?? ''],
+    });
+  }
+
+  private loadMangoTypes(): void {
+    this.subs.sink = this.mangoTypeProxy.get().subscribe({
+      next: (res) => {
+        this.mangoTypeOptions = this.dropdownService.mapToDropdown(
+          res.data ?? [],
+          'id',
+          'name'
+        );
+      },
+      error: () => {
+        this.mangoTypeOptions = this.dropdownService.getMangoTypeOptions();
+      },
     });
   }
 

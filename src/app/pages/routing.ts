@@ -24,16 +24,8 @@ const Routing: Routes = [
         (m) => m.OrderModule
       ),
   },
-  {
-    path: 'crafted/pages/profile',
-    loadChildren: () =>
-      import('../features/profile/profile.module').then((m) => m.ProfileModule),
-  },
-  {
-    path: 'crafted/account',
-    loadChildren: () =>
-      import('../features/account/account.module').then((m) => m.AccountModule),
-  },
+  { path: 'crafted/pages/profile', children: [{ path: '**', redirectTo: '/customer-profile/profile' }] },
+  { path: 'crafted/account', children: [{ path: '**', redirectTo: '/customer-profile/profile' }] },
   {
     path: 'mango-types',
     loadChildren: () =>
@@ -96,6 +88,13 @@ const Routing: Routes = [
     loadChildren: () =>
       import('../features/mango-availability/mango-availability.module').then(
         (m) => m.MangoAvailabilityModule
+      ),
+  },
+  {
+    path: 'mango-catalog',
+    loadChildren: () =>
+      import('../features/mango-catalog/mango-catalog.module').then(
+        (m) => m.MangoCatalogModule
       ),
   },
   {
