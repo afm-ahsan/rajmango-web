@@ -1,24 +1,4 @@
 :host {
   display: block;
-}
-
-.data-loading {
-  font-size: 1.5rem;
-  padding: 10px 10px 10px;
-  text-align: center;
-  text-shadow: 0 0 7px rgba(0, 0, 0, 0.1);
-
-  .material-icons {
-    font-size: 3.5rem;
-    padding-top: 2px;
-  }
-
-  .message {
-    font-size: 2rem;
-    font-weight: bold;
-  }
-
-  .sub-message {
-    font-size: 1.5rem;
-  }
+  width: 100%;
 }

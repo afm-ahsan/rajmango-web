@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg-2';
+import { RoleServiceProxy } from 'src/app/services/client-proxy';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CreateRoleModalComponent } from './create-role-modal/create-role-modal.component';
 import { DeleteRoleModalComponent } from './delete-role-modal/delete-role-modal.component';
@@ -27,6 +28,7 @@ import { ViewRoleModalComponent } from './view-role-modal/view-role-modal.compon
     DeleteRoleModalComponent,
     ViewRoleModalComponent,
     RoleListComponent,
-  ]
+  ],
+  providers: [RoleServiceProxy],
 })
 export class RoleModule { }

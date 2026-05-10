@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SubSink } from 'subsink';
 import { CustomerDashboardDto, DashboardServiceProxy } from 'src/app/services/client-proxy';
@@ -15,7 +15,8 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private dashboardProxy: DashboardServiceProxy,
-    private router: Router
+    private router: Router,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -28,9 +29,11 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.dashboard = res?.data ?? null;
         this.isLoading = false;
+        this.cdRef.detectChanges();
       },
       error: () => {
         this.isLoading = false;
+        this.cdRef.detectChanges();
       },
     });
   }

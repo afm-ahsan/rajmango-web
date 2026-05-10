@@ -1,17 +1,14 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { combineLatestWith } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
+import { AppUserDto, UserServiceProxy } from 'src/app/services/client-proxy';
 import { FilterModel } from 'src/app/shared/models/filter.model';
-import { PagedAndSortedDto } from 'src/app/shared/models/pagedAndSorted.model';
 import { SubSink } from 'subsink';
 import _ from 'underscore';
 import { RoleDto } from '../../roles/models/role-dto.model';
 import { RoleService } from '../../roles/role.service';
 import { CreateUserModalComponent } from '../create-user-modal/create-user-modal.component';
 import { DeleteUserModalComponent } from '../delete-user-modal/delete-user-modal.component';
-import { UserDto } from '../models/user-dto.model';
-import { UserService } from '../user.service';
 import { ViewUserModalComponent } from '../view-user-modal/view-user-modal.component';
 
 @Component({
@@ -22,9 +19,9 @@ import { ViewUserModalComponent } from '../view-user-modal/view-user-modal.compo
 export class UserListComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   isLoading: boolean;
-  users: UserDto[] = [];
+  users: AppUserDto[] = [];
   roles: RoleDto[] = [];
-  totalCount = 10;
+  totalCount = 0;
   filter: FilterModel = {
     offset: 0,
     limit: 0,
@@ -39,7 +36,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
-    private userService: UserService,
+    private userProxy: UserServiceProxy,
     private roleService: RoleService
   ) {}
 
@@ -50,36 +47,29 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   load() {
     this.isLoading = true;
-    //this.filter.limit = this.filter.pageSize;
-    //this.filter.offset = (this.filter.pageNo - 1) * this.filter.pageSize;
-    var pagedAndSortedDto: PagedAndSortedDto = {
-      pageNumber: this.filter.pageNumber,
-      pageSize: this.filter.pageSize,
-      sortBy: this.filter.sortBy,
-      sortOrder:  this.filter.sortOrder,
-      filter: '',
-      userId: 0,
-    };
-
-    this.subs.sink = this.userService
-      .getAll(pagedAndSortedDto)
-      .pipe(combineLatestWith(this.userService.getCount()))
-      .subscribe(([pagedResponse, countResponse]) => {
+    this.subs.sink = this.userProxy.get().subscribe({
+      next: (res) => {
+        this.users = res.data ?? [];
+        this.totalCount = this.users.length;
         this.isLoading = false;
-        this.users = pagedResponse.data;
-        this.totalCount = countResponse.data.totalCount;
-
-        console.log(pagedResponse);
         this.cdRef.detectChanges();
         MenuComponent.reinitialization();
-      });
+      },
+      error: () => {
+        this.isLoading = false;
+        this.cdRef.detectChanges();
+      },
+    });
   }
 
   loadRole() {
     this.subs.sink = this.roleService
       .list()
-      .subscribe((response: any) => {
-        this.roles = response.data;
+      .subscribe({
+        next: (response: any) => {
+          this.roles = response.data ?? [];
+        },
+        error: () => {},
       });
   }
 

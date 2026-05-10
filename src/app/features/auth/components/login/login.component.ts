@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private _initForm(): void {
     this.loginForm = this._fb.group({
       email: [
-        '',
+        'admin@rajmango.com', // DEV default — remove before production
         [
           Validators.required,
           Validators.email,
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         ],
       ],
       password: [
-        '',
+        'Admin@1690#', // DEV default — remove before production
         [
           Validators.required,
           Validators.minLength(4),

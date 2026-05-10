@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg-2';
+import { UserServiceProxy } from 'src/app/services/client-proxy';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { CreateUserModalComponent } from './create-user-modal/create-user-modal.component';
 import { DeleteUserModalComponent } from './delete-user-modal/delete-user-modal.component';
@@ -27,6 +28,7 @@ import { ViewUserModalComponent } from './view-user-modal/view-user-modal.compon
     DeleteUserModalComponent,
     ViewUserModalComponent,
     UserListComponent,
-  ]
+  ],
+  providers: [UserServiceProxy],
 })
 export class UserModule { }

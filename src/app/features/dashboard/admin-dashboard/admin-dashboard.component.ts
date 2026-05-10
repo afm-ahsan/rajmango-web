@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { SubSink } from 'subsink';
 import { AdminDashboardDto, DashboardServiceProxy } from 'src/app/services/client-proxy';
 
@@ -11,7 +11,10 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   isLoading = false;
   dashboard: AdminDashboardDto | null = null;
 
-  constructor(private dashboardProxy: DashboardServiceProxy) {}
+  constructor(
+    private dashboardProxy: DashboardServiceProxy,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.load();
@@ -23,9 +26,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.dashboard = res?.data ?? null;
         this.isLoading = false;
+        this.cdRef.detectChanges();
       },
       error: () => {
         this.isLoading = false;
+        this.cdRef.detectChanges();
       },
     });
   }
