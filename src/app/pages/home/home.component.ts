@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { GetAllMangoTypeDto, MangoTypeServiceProxy } from 'src/app/services/client-proxy';
 import { SubSink } from 'subsink';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
 
 @Component({
   selector: 'app-home',
@@ -26,11 +27,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private mangoTypeProxy: MangoTypeServiceProxy,
+    private signalR: SignalRService,
     private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadMangoTypes();
+    this.subs.sink = this.signalR.catalogUpdated$.subscribe(() => this.loadMangoTypes());
   }
 
   private loadMangoTypes(): void {

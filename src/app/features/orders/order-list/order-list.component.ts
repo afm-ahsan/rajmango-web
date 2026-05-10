@@ -10,6 +10,7 @@ import { LoaderService } from 'src/app/shared/services/loader.service';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { FilterUtils } from 'src/app/shared/utils/filter-utils';
 import { SubSink } from 'subsink';
+import Swal from 'sweetalert2';
 import { AuthService } from '../../auth';
 import { CreateOrderModalComponent } from '../create-order-modal/create-order-modal.component';
 import { DeleteOrderModalComponent } from '../delete-order-modal/delete-order-modal.component';
@@ -18,6 +19,7 @@ import { OrderFacade } from '../order.facade';
 import { ViewOrderModalComponent } from '../view-order-modal/view-order-modal.component';
 import { SubmitFeedbackModalComponent } from 'src/app/features/feedback/submit-feedback-modal/submit-feedback-modal.component';
 import { SubmitComplaintModalComponent } from 'src/app/features/complaints/submit-complaint-modal/submit-complaint-modal.component';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
 
 @Component({
   selector: 'app-order-list',
@@ -51,6 +53,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
     private orderFacade: OrderFacade,
     private authService: AuthService,
     private imagePathService: ImagePathService,
+    private signalR: SignalRService,
     private route: ActivatedRoute,
     private router: Router
   ) {
@@ -67,6 +70,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
         this.openCreateModal(0, mangoTypeId);
       }
     });
+    this.subscribeToRealtime();
   }
 
   ngOnDestroy(): void {
@@ -167,6 +171,21 @@ export class OrderListComponent implements OnInit, OnDestroy {
     this.filter.pageNumber = 1;
     this.filter.pageSize = size;
     this.load();
+  }
+
+  private subscribeToRealtime(): void {
+    this.subs.sink = this.signalR.orderCreated$.subscribe((p) => {
+      this.load();
+      this.toast('info', `New order ${p.orderNumber} placed.`);
+    });
+    this.subs.sink = this.signalR.orderStatusUpdated$.subscribe((p) => {
+      this.load();
+      this.toast('info', `Order ${p.orderNumber} status: ${p.status}.`);
+    });
+  }
+
+  private toast(icon: 'success' | 'info' | 'warning' | 'error', title: string): void {
+    Swal.fire({ toast: true, position: 'top-end', icon, title, showConfirmButton: false, timer: 3500, timerProgressBar: true });
   }
 
   openFeedback(order: OrderDto): void {

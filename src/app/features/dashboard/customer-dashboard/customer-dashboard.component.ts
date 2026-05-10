@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SubSink } from 'subsink';
 import { CustomerDashboardDto, DashboardServiceProxy } from 'src/app/services/client-proxy';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
 
 @Component({
   selector: 'app-customer-dashboard',
@@ -16,11 +17,13 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
   constructor(
     private dashboardProxy: DashboardServiceProxy,
     private router: Router,
+    private signalR: SignalRService,
     private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.load();
+    this.subscribeToRealtime();
   }
 
   load(): void {
@@ -48,6 +51,15 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
 
   getPaymentStatusLabel(status: any): string {
     return EnumLabelUtils.getPaymentStatusLabel(status);
+  }
+
+  private subscribeToRealtime(): void {
+    // Order status change affects the customer's active order summary
+    this.subs.sink = this.signalR.orderStatusUpdated$.subscribe(() => this.load());
+    // Payment receipt updates due amount / paid amount
+    this.subs.sink = this.signalR.paymentReceived$.subscribe(() => this.load());
+    // Catalog changes affect the available mangoes widget
+    this.subs.sink = this.signalR.catalogUpdated$.subscribe(() => this.load());
   }
 
   ngOnDestroy(): void {

@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubSink } from 'subsink';
 import { GetAllPaymentDto, PaymentServiceProxy } from 'src/app/services/client-proxy';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
 import { RecordPaymentModalComponent } from '../record-payment-modal/record-payment-modal.component';
 import { ViewPaymentModalComponent } from '../view-payment-modal/view-payment-modal.component';
 
@@ -19,11 +20,13 @@ export class PaymentListComponent implements OnInit, OnDestroy {
   constructor(
     private paymentProxy: PaymentServiceProxy,
     private modalService: NgbModal,
+    private signalR: SignalRService,
     private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.load();
+    this.subs.sink = this.signalR.paymentReceived$.subscribe(() => this.load());
   }
 
   load(): void {

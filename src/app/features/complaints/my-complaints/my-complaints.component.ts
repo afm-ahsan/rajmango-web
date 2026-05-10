@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubSink } from 'subsink';
+import Swal from 'sweetalert2';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
 import { ComplaintService } from '../complaint.service';
 import { ComplaintDto } from '../models/complaint.model';
 import { SubmitComplaintModalComponent } from '../submit-complaint-modal/submit-complaint-modal.component';
@@ -18,11 +20,20 @@ export class MyComplaintsComponent implements OnInit, OnDestroy {
   constructor(
     private complaintService: ComplaintService,
     private modalService: NgbModal,
+    private signalR: SignalRService,
     private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.load();
+    this.subs.sink = this.signalR.complaintStatusUpdated$.subscribe((p) => {
+      this.load();
+      Swal.fire({
+        toast: true, position: 'top-end', icon: 'info',
+        title: `Complaint #${p.complaintId} status updated to: ${p.status}`,
+        showConfirmButton: false, timer: 4000, timerProgressBar: true,
+      });
+    });
   }
 
   load(): void {
