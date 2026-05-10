@@ -21,6 +21,7 @@ import { NgxPrintModule } from 'ngx-print';
 import { AppDataEmptyComponent } from './components/app-data-empty/app-data-empty.component';
 import { LoaderComponent } from './components/loader/loader.component';
 import { MangoCardComponent } from './components/mango-card/mango-card.component';
+import { MangoDetailModalComponent } from './components/mango-detail-modal/mango-detail-modal.component';
 import { SortableHeaderComponent } from './components/sortable-header/sortable-header.component';
 import { PermissionDirective } from './directives/permission.directive';
 import { YesNoPipe } from './pipes/yes-no.pipe';
@@ -52,6 +53,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     PrintModalComponent,
     SortableHeaderComponent,
     MangoCardComponent,
+    MangoDetailModalComponent,
     AppDataEmptyComponent,
     PermissionDirective,
   ],
@@ -70,6 +72,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     PrintModalComponent,
     SortableHeaderComponent,    
     MangoCardComponent,
+    MangoDetailModalComponent,
     AppDataEmptyComponent,
     PermissionDirective,
   ],

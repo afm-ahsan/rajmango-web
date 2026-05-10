@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MangoAvailabilityDto, MangoAvailabilityServiceProxy } from 'src/app/services/client-proxy';
-import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { GetAllMangoTypeDto, MangoTypeServiceProxy } from 'src/app/services/client-proxy';
 import { SubSink } from 'subsink';
 
 @Component({
@@ -11,10 +10,10 @@ import { SubSink } from 'subsink';
 export class CatalogListComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   isLoading = false;
-  catalog: MangoAvailabilityDto[] = [];
+  catalog: any[] = [];
 
   constructor(
-    private proxy: MangoAvailabilityServiceProxy,
+    private mangoTypeProxy: MangoTypeServiceProxy,
     private router: Router,
     private cdRef: ChangeDetectorRef
   ) {}
@@ -25,9 +24,17 @@ export class CatalogListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.subs.sink = this.proxy.getActive().subscribe({
+    this.subs.sink = this.mangoTypeProxy.get().subscribe({
       next: (res) => {
-        this.catalog = res.data ?? [];
+        const types: GetAllMangoTypeDto[] = res.data ?? [];
+        this.catalog = types.map((dto) => ({
+          id: dto.id,
+          name: dto.name,
+          image: this.resolveImage(dto.imagePath),
+          price: dto.pricePerKg,
+          isAvailable: dto.isAvailable,
+          sweetness: this.resolveSweetness(dto.mangoGrade as number),
+        }));
         this.isLoading = false;
         this.cdRef.detectChanges();
       },
@@ -38,18 +45,21 @@ export class CatalogListComponent implements OnInit, OnDestroy {
     });
   }
 
-  getStatusLabel(status: number): string {
-    return EnumLabelUtils.getMangoAvailabilityStatusLabel(status);
+  private resolveImage(imagePath: string | undefined): string {
+    if (!imagePath) return 'assets/media/mangos/default.jpg';
+    const filename = imagePath.split('/').pop() ?? 'default.jpg';
+    return `assets/media/mangos/${filename}`;
   }
 
-  getStatusBadgeClass(status: number): string {
-    const classes: Record<number, string> = {
-      0: 'badge-light-primary',
-      1: 'badge-light-success',
-      2: 'badge-light-warning',
-      3: 'badge-light-danger',
+  private resolveSweetness(grade: number): string {
+    const map: Record<number, string> = {
+      0: 'Low',
+      1: 'Medium',
+      2: 'High',
+      3: 'Very High',
+      4: 'Premium',
     };
-    return classes[status] ?? 'badge-light-secondary';
+    return map[grade] ?? 'Medium';
   }
 
   placeOrder(): void {
