@@ -1,0 +1,57 @@
+<div class="post d-flex flex-column-fluid">
+  <div class="container-xxl">
+    <div class="card">
+      <div class="card-header border-0 pt-6">
+        <div class="card-title">
+          <h3 class="card-label fw-bold fs-5">My Complaints</h3>
+        </div>
+        <div class="card-toolbar">
+          <button class="btn btn-primary" (click)="openSubmit()">
+            <i class="bi bi-plus-lg me-1"></i> New Complaint
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body py-4">
+
+        <div *ngIf="isLoading" class="d-flex justify-content-center py-10">
+          <span class="spinner-border text-primary" role="status"></span>
+        </div>
+
+        <ng-container *ngIf="!isLoading">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle fs-6 gy-5">
+              <thead>
+                <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                  <th>Order #</th>
+                  <th>Category</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Admin Note</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody class="text-gray-600 fw-bold">
+                <tr *ngFor="let c of complaints">
+                  <td class="fw-bold">{{ c.orderNumber }}</td>
+                  <td>{{ getCategoryLabel(c.category) }}</td>
+                  <td class="mw-200px text-truncate">{{ c.description }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="getStatusBadge(c.status)">{{ getStatusLabel(c.status) }}</span>
+                  </td>
+                  <td>{{ c.adminNote || '—' }}</td>
+                  <td>{{ c.createdAt | date:'dd MMM yyyy' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ng-container *ngIf="!complaints.length">
+            <div class="text-center text-muted py-10">You have no complaints yet.</div>
+          </ng-container>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+</div>

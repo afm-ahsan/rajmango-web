@@ -1,9 +1,12 @@
+import { ComplaintCategory } from "../enums/complaint-category.enum";
+import { ComplaintStatus } from "../enums/complaint-status.enum";
 import { CrateType } from "../enums/crate-type.enum";
 import { CustomerType } from "../enums/customer-type.enum";
 import { DeliveryStatus } from "../enums/delivery-status.enum";
 import { MangoType } from "../enums/mango-type.enum";
 import { OrderStatus } from "../enums/order-status.enum";
 import { PaymentStatus } from "../enums/payment_status.enum";
+import { PolicyType } from "../enums/policy-type.enum";
 
 export class EnumLabelUtils {
   static getCrateTypeLabel(type: CrateType): string {
@@ -68,5 +71,52 @@ export class EnumLabelUtils {
       3: 'Ended',
     };
     return labels[status] ?? `Status ${status}`;
+  }
+
+  static getComplaintCategoryLabel(category: ComplaintCategory | number): string {
+    const labels: Record<number, string> = {
+      0: 'Wrong Item',
+      1: 'Damaged Item',
+      2: 'Late Delivery',
+      3: 'Missing Item',
+      4: 'Payment Issue',
+      5: 'Quality Issue',
+      6: 'Other',
+    };
+    return labels[category as number] ?? 'Unknown';
+  }
+
+  static getComplaintStatusLabel(status: ComplaintStatus | number): string {
+    const labels: Record<number, string> = {
+      0: 'Submitted',
+      1: 'Under Review',
+      2: 'Resolved',
+      3: 'Rejected',
+      4: 'Closed',
+    };
+    return labels[status as number] ?? 'Unknown';
+  }
+
+  static getComplaintStatusBadgeClass(status: ComplaintStatus | number): string {
+    const classes: Record<number, string> = {
+      0: 'badge-light-warning',
+      1: 'badge-light-primary',
+      2: 'badge-light-success',
+      3: 'badge-light-danger',
+      4: 'badge-light-secondary',
+    };
+    return classes[status as number] ?? 'badge-light-secondary';
+  }
+
+  static getPolicyTypeLabel(type: PolicyType | number): string {
+    const labels: Record<number, string> = {
+      0: 'Order Policy',
+      1: 'Payment Policy',
+      2: 'Refund Policy',
+      3: 'Delivery Policy',
+      4: 'Complaint Policy',
+      5: 'Privacy Policy',
+    };
+    return labels[type as number] ?? 'Policy';
   }
 }

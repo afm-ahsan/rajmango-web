@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import * as moment from 'moment';
 import { SubSink } from 'subsink';
 import {
@@ -8,6 +9,7 @@ import {
   ReportServiceProxy,
 } from 'src/app/services/client-proxy';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-report-page',
@@ -29,8 +31,11 @@ export class ReportPageComponent implements OnInit, OnDestroy {
   paymentReport: PaymentSummaryReportDto | null = null;
   expenseReport: ExpenseSummaryReportDto | null = null;
 
+  isExporting = false;
+
   constructor(
     private reportProxy: ReportServiceProxy,
+    private http: HttpClient,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -112,6 +117,31 @@ export class ReportPageComponent implements OnInit, OnDestroy {
 
   getPaymentMethodLabel(method: any): string {
     return EnumLabelUtils.getPaymentMethodLabel(method);
+  }
+
+  exportReport(): void {
+    const type = this.activeTab;
+    const from = this.fromDate;
+    const to = this.toDate;
+    if (!from || !to) return;
+
+    const url = `${environment.apis.default.url}/api/reports/${type}/export?from=${from}&to=${to}`;
+    this.isExporting = true;
+    this.http.get(url, { responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${type}_report_${from}_${to}.xlsx`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        this.isExporting = false;
+        this.cdRef.detectChanges();
+      },
+      error: () => {
+        this.isExporting = false;
+        this.cdRef.detectChanges();
+      },
+    });
   }
 
   ngOnDestroy(): void {

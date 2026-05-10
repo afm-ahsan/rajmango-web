@@ -16,6 +16,8 @@ import { DeleteOrderModalComponent } from '../delete-order-modal/delete-order-mo
 import { OrderDto } from '../models/order-dto.model';
 import { OrderFacade } from '../order.facade';
 import { ViewOrderModalComponent } from '../view-order-modal/view-order-modal.component';
+import { SubmitFeedbackModalComponent } from 'src/app/features/feedback/submit-feedback-modal/submit-feedback-modal.component';
+import { SubmitComplaintModalComponent } from 'src/app/features/complaints/submit-complaint-modal/submit-complaint-modal.component';
 
 @Component({
   selector: 'app-order-list',
@@ -165,6 +167,18 @@ export class OrderListComponent implements OnInit, OnDestroy {
     this.filter.pageNumber = 1;
     this.filter.pageSize = size;
     this.load();
+  }
+
+  openFeedback(order: OrderDto): void {
+    const ref = this.modalService.open(SubmitFeedbackModalComponent, { size: 'md' });
+    ref.componentInstance.orderId = order.id;
+    ref.componentInstance.orderNumber = order.orderNumber;
+  }
+
+  openComplaint(order: OrderDto): void {
+    const ref = this.modalService.open(SubmitComplaintModalComponent, { size: 'md' });
+    ref.componentInstance.orderId = order.id;
+    ref.componentInstance.orderNumber = order.orderNumber;
   }
 
   // 6. Utility Methods

@@ -1,0 +1,40 @@
+<div class="container-xxl">
+
+  <div *ngIf="isLoading" class="d-flex justify-content-center py-10">
+    <span class="spinner-border text-primary" role="status"></span>
+  </div>
+
+  <ng-container *ngIf="!isLoading && policies.length">
+    <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6">
+      <li class="nav-item" *ngFor="let tab of tabOptions">
+        <ng-container *ngIf="policyExists(tab.type)">
+          <a
+            class="nav-link"
+            [class.active]="activeTab === tab.type"
+            href="javascript:void(0)"
+            (click)="setTab(tab.type)"
+          >{{ tab.label }}</a>
+        </ng-container>
+      </li>
+    </ul>
+
+    <ng-container *ngIf="activePolicy() as policy">
+      <div class="card">
+        <div class="card-header border-0 pt-6">
+          <h3 class="card-title fw-bold fs-4">{{ policy.title }}</h3>
+          <div class="card-toolbar">
+            <span class="text-muted fs-7">Last updated: {{ policy.updatedAt ? (policy.updatedAt | date:'dd MMM yyyy') : '—' }}</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="fs-6 text-gray-700" style="white-space: pre-wrap">{{ policy.content }}</div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading && !policies.length">
+    <div class="text-center text-muted py-10">No policies available yet.</div>
+  </ng-container>
+
+</div>

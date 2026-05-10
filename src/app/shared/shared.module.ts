@@ -26,6 +26,8 @@ import { QuickOrderModalComponent } from './components/quick-order-modal/quick-o
 import { SortableHeaderComponent } from './components/sortable-header/sortable-header.component';
 import { PermissionDirective } from './directives/permission.directive';
 import { YesNoPipe } from './pipes/yes-no.pipe';
+import { SubmitFeedbackModalComponent } from '../features/feedback/submit-feedback-modal/submit-feedback-modal.component';
+import { SubmitComplaintModalComponent } from '../features/complaints/submit-complaint-modal/submit-complaint-modal.component';
 
 @NgModule({
   imports: [
@@ -58,6 +60,8 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     QuickOrderModalComponent,
     AppDataEmptyComponent,
     PermissionDirective,
+    SubmitFeedbackModalComponent,
+    SubmitComplaintModalComponent,
   ],
   exports: [
     TreePipe,
@@ -77,6 +81,8 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     MangoDetailModalComponent,
     AppDataEmptyComponent,
     PermissionDirective,
+    SubmitFeedbackModalComponent,
+    SubmitComplaintModalComponent,
   ],
 })
 export class SharedModule {}

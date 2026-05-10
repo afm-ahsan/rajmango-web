@@ -43,6 +43,24 @@
   </a>
 </div>
 
+<div class="menu-item">
+  <a class="menu-link without-sub" routerLink="/complaints/mine" routerLinkActive="active">
+    <span class="menu-icon">
+      <span [inlineSVG]="'./assets/media/icons/duotune/general/gen044.svg'" class="svg-icon svg-icon-2"></span>
+    </span>
+    <span class="menu-title">My Complaints</span>
+  </a>
+</div>
+
+<div class="menu-item">
+  <a class="menu-link without-sub" routerLink="/policies/view" routerLinkActive="active">
+    <span class="menu-icon">
+      <span [inlineSVG]="'./assets/media/icons/duotune/general/gen005.svg'" class="svg-icon svg-icon-2"></span>
+    </span>
+    <span class="menu-title">Policies</span>
+  </a>
+</div>
+
 <ng-container *ngIf="isAdmin">
 
 <div class="menu-item">
@@ -138,6 +156,30 @@
           <span [inlineSVG]="'./assets/media/icons/duotune/graphs/gra001.svg'" class="svg-icon svg-icon-2"></span>
         </span>
         <span class="menu-title">Reports</span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/feedback/feedback-list" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/communication/com012.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title">Feedback</span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/complaints/all" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/general/gen044.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title">Complaints</span>
+      </a>
+    </div>
+    <div class="menu-item">
+      <a class="menu-link without-sub" routerLink="/policies/manage" routerLinkActive="active">
+        <span class="menu-icon">
+          <span [inlineSVG]="'./assets/media/icons/duotune/general/gen005.svg'" class="svg-icon svg-icon-2"></span>
+        </span>
+        <span class="menu-title">Policies</span>
       </a>
     </div>
   </div>

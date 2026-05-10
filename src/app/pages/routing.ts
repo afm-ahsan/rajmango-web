@@ -102,7 +102,22 @@ const Routing: Routes = [
     loadChildren: () =>
       import('../features/reports/report.module').then((m) => m.ReportModule),
   },
-  
+  {
+    path: 'feedback',
+    loadChildren: () =>
+      import('../features/feedback/feedback.module').then((m) => m.FeedbackModule),
+  },
+  {
+    path: 'complaints',
+    loadChildren: () =>
+      import('../features/complaints/complaint.module').then((m) => m.ComplaintModule),
+  },
+  {
+    path: 'policies',
+    loadChildren: () =>
+      import('../features/policies/policy.module').then((m) => m.PolicyModule),
+  },
+
 {
     path: '',
     redirectTo: '/dashboard/customer',

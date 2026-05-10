@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <h5 class="modal-title fw-bold">Update Complaint Status</h5>
+  <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <div class="mb-4">
+    <div class="text-muted fs-7">Order: <strong>{{ complaint.orderNumber }}</strong></div>
+    <div class="text-muted fs-7">Category: <strong>{{ getCategoryLabel(complaint.category) }}</strong></div>
+    <div class="mt-2 p-3 bg-light-secondary rounded fs-7">{{ complaint.description }}</div>
+  </div>
+
+  <form [formGroup]="form">
+    <div class="mb-4">
+      <label class="form-label fw-semibold required">Status</label>
+      <select class="form-select form-select-solid" formControlName="status">
+        <option *ngFor="let s of statusOptions" [value]="s.value">{{ s.label }}</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Admin Note <span class="text-muted fs-7">(optional)</span></label>
+      <textarea class="form-control form-control-solid" rows="3" formControlName="adminNote" placeholder="Add a note for the customer..."></textarea>
+      <div *ngIf="form.get('adminNote')?.hasError('maxlength')" class="text-danger fs-7 mt-1">Note must be under 500 characters.</div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-light" (click)="modal.dismiss()">Cancel</button>
+  <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isSaving">
+    <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
+    Save
+  </button>
+</div>
