@@ -2,9 +2,11 @@ export interface MangoTypeInputDto {
   id: number;
   name: string;
   description: string;
-  pricePerKg: number;
   imagePath: string;
-  isAvailable: boolean;
+  region: string;
+  averageWeight: string;
+  mangoGrade: number;
+  sweetnessLevel: number;
   sequence: number;
   isDeleted: boolean;
   createdBy: number | null;
@@ -14,4 +16,3 @@ export interface MangoTypeInputDto {
   updatedAt: Date | null;
   deletedAt: Date | null;
 }
-  

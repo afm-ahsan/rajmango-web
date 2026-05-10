@@ -50,16 +50,49 @@
                        formControlName="description"></textarea>
               </div>
             </div>
+            <!-- Region -->
             <div class="form-group row mt-2">
-                <label class="col-3 col-form-label text-lg-right"><b>PricePerKg<span class="text-danger">*</span>:</b></label>
-                <div class="col-9">
-                    <input type="number" class="form-control" name="pricePerKg"
-                        placeholder="Price/Kg" autocomplete="off" formControlName="pricePerKg" />
-                    <div class="invalid-feedback" *ngIf="controlHasError('required', 'pricePerKg')">
-                        Price per kg is required
-                    </div>
+              <label class="col-3 col-form-label text-lg-right"><b>Region:</b></label>
+              <div class="col-9">
+                <input type="text" class="form-control" name="region"
+                  placeholder="e.g. Rajshahi, Chapai" autocomplete="off" formControlName="region" />
+              </div>
+            </div>
+            <!-- Average Weight -->
+            <div class="form-group row mt-2">
+              <label class="col-3 col-form-label text-lg-right"><b>Avg. Weight:</b></label>
+              <div class="col-9">
+                <input type="text" class="form-control" name="averageWeight"
+                  placeholder="e.g. 300g - 500g" autocomplete="off" formControlName="averageWeight" />
+              </div>
+            </div>
+            <!-- Mango Grade -->
+            <div class="form-group row mt-2">
+              <label class="col-3 col-form-label text-lg-right"><b>Grade:</b></label>
+              <div class="col-9">
+                <select class="form-select" formControlName="mangoGrade">
+                  <option *ngFor="let g of gradeOptions" [value]="g.id">{{ g.label }}</option>
+                </select>
+              </div>
+            </div>
+            <!-- Sweetness Level -->
+            <div class="form-group row mt-2">
+              <label class="col-3 col-form-label text-lg-right">
+                <b>Sweetness<span class="text-danger">*</span>:</b>
+              </label>
+              <div class="col-9">
+                <select class="form-select"
+                        formControlName="sweetnessLevel"
+                        [class.is-invalid]="isControlInvalid('sweetnessLevel')"
+                        [class.is-valid]="isControlValid('sweetnessLevel')">
+                  <option [value]="0" disabled>-- Select sweetness level --</option>
+                  <option *ngFor="let s of sweetnessLevelOptions" [value]="s.id">{{ s.label }}</option>
+                </select>
+                <div class="invalid-feedback" *ngIf="controlHasError('required', 'sweetnessLevel') || controlHasError('min', 'sweetnessLevel')">
+                  Sweetness level is required
                 </div>
-            </div>    
+              </div>
+            </div>
             <!-- Image Upload -->
             <div class="form-group row mt-2">
               <label class="col-3 col-form-label text-lg-right"><b>Image:</b></label>
@@ -70,13 +103,6 @@
                     <img [src]="createImagePath(mangoTypeDto.imagePath)" alt="Mango Type Image" class="rounded preview-image" />
                   </div>
                 </div>
-              </div>
-            </div>
-            <!-- Is Available -->
-            <div class="form-group row mt-2">
-              <label class="col-3 col-form-label text-lg-right"><b>Is Available:</b></label>
-              <div class="col-9 mt-4">
-                <input type="checkbox" formControlName="isAvailable" />
               </div>
             </div>
           </form>

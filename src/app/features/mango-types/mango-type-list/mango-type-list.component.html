@@ -60,13 +60,18 @@
                       {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
                     </span>
                   </th>
-                  <th (click)="onSort('pricePerKg')">PricePerKg
-                    <span *ngIf="filter.sortBy === 'pricePerKg'">
+                  <th (click)="onSort('region')">Region
+                    <span *ngIf="filter.sortBy === 'region'">
                       {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
                     </span>
                   </th>
-                  <th (click)="onSort('isAvailable')">Available
-                    <span *ngIf="filter.sortBy === 'isAvailable'">
+                  <th (click)="onSort('mangoGrade')">Grade
+                    <span *ngIf="filter.sortBy === 'mangoGrade'">
+                      {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
+                    </span>
+                  </th>
+                  <th (click)="onSort('sweetnessLevel')">Sweetness
+                    <span *ngIf="filter.sortBy === 'sweetnessLevel'">
                       {{ filter.sortOrder === 'asc' ? '▲' : '▼' }}
                     </span>
                   </th>
@@ -98,8 +103,9 @@
                   </a>
                 </td>
                 <td>{{ mangoType.description }}</td>
-                <td>{{ mangoType.pricePerKg }}</td>
-                <td>{{ mangoType.isAvailable | yesNo }}</td>
+                <td>{{ mangoType.region }}</td>
+                <td>{{ mangoType.mangoGrade }}</td>
+                <td>{{ getSweetnessLabel(mangoType.sweetnessLevel) }}</td>
                 <td class="text-center">
                   <a
                     href="javascript:void(0)"

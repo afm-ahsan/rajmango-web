@@ -6,6 +6,7 @@ import { ImagePathService } from 'src/app/shared/services/image-path.service';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { FilterUtils } from 'src/app/shared/utils/filter-utils';
 import { SubSink } from 'subsink';
+import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { CreateMangoTypeModalComponent } from '../create-mango-type-modal/create-mango-type-modal.component';
 import { DeleteMangoTypeModalComponent } from '../delete-mango-type-modal/delete-mango-type-modal.component';
 import { MangoTypeFacade } from '../mango-type.facade';
@@ -135,5 +136,9 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
   // 6. Utility Methods
   getImagePath(serverPath: string): string {
     return this.imagePathService.createFullPath(serverPath);
+  }
+
+  getSweetnessLabel(level: number): string {
+    return EnumLabelUtils.getSweetnessLevelLabel(level);
   }
 }

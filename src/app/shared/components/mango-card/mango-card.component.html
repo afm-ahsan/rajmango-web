@@ -6,12 +6,12 @@
     <h5 class="card-title">{{ mango.name }}</h5>
     <p class="text-muted mb-1">Price: {{ mango.price | currency:'BDT' }}</p>
     <p class="mb-1">
-      Availability:
-      <span class="badge" [ngClass]="mango.isAvailable ? 'bg-success' : 'bg-secondary'">
-        {{ mango.isAvailable ? 'Available' : 'Unavailable' }}
+      <span class="badge" [ngClass]="mango.statusBadgeClass || (mango.isAvailable ? 'badge-light-success' : 'badge-light-dark')">
+        {{ mango.availabilityLabel || (mango.isAvailable ? 'Available' : 'Unavailable') }}
       </span>
     </p>
     <p class="mb-1">Sweetness: <strong>{{ mango.sweetness }}</strong></p>
+    <p *ngIf="mango.region" class="mb-1 text-muted small">Region: {{ mango.region }}</p>
     <div class="progress mt-2" style="height: 5px;">
       <div
         class="progress-bar bg-warning"

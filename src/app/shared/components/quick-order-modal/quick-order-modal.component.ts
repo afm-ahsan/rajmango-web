@@ -131,7 +131,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     }
 
     const mangoType = this.getMangoType(mangoTypeId);
-    const unitPrice = mangoType?.pricePerKg || 0;
+    const unitPrice = this.mango?.price || 0;
     const crateWeight = DomainUtils.getCrateWeight(crateType);
     const totalPrice = quantity * unitPrice * crateWeight;
 

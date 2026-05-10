@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { environment } from 'src/environments/environment';
 import { SubSink } from 'subsink';
 import { MangoTypeService } from '../mango-type.service';
@@ -39,8 +40,12 @@ export class ViewMangoTypeModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  public createImagePath = (serverPath: string) => { 
-    return `${environment.apis.default.url}/${serverPath}`; 
+  getSweetnessLabel(level: number): string {
+    return EnumLabelUtils.getSweetnessLevelLabel(level);
+  }
+
+  public createImagePath = (serverPath: string) => {
+    return `${environment.apis.default.url}/${serverPath}`;
   }
 
   ngOnDestroy(): void {

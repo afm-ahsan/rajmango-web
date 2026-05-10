@@ -1,5 +1,12 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { GetAllMangoTypeDto, MangoTypeServiceProxy } from 'src/app/services/client-proxy';
+import { forkJoin } from 'rxjs';
+import {
+  MangoAvailabilityDto,
+  MangoAvailabilityServiceProxy,
+  MangoAvailabilityStatus,
+} from 'src/app/services/client-proxy';
+import { MangoTypeService } from 'src/app/features/mango-types/mango-type.service';
+import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { SubSink } from 'subsink';
 import { SignalRService } from 'src/app/shared/services/signalr.service';
 
@@ -13,7 +20,8 @@ export class CatalogListComponent implements OnInit, OnDestroy {
   catalog: any[] = [];
 
   constructor(
-    private mangoTypeProxy: MangoTypeServiceProxy,
+    private mangoTypeService: MangoTypeService,
+    private availabilityProxy: MangoAvailabilityServiceProxy,
     private signalR: SignalRService,
     private cdRef: ChangeDetectorRef
   ) {}
@@ -25,17 +33,40 @@ export class CatalogListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.subs.sink = this.mangoTypeProxy.get().subscribe({
-      next: (res) => {
-        const types: GetAllMangoTypeDto[] = res.data ?? [];
-        this.catalog = types.map((dto) => ({
-          id: dto.id,
-          name: dto.name,
-          image: this.resolveImage(dto.imagePath),
-          price: dto.pricePerKg,
-          isAvailable: dto.isAvailable,
-          sweetness: this.resolveSweetness(dto.mangoGrade as number),
-        }));
+    this.subs.sink = forkJoin([
+      this.mangoTypeService.list(),
+      this.availabilityProxy.get(),
+    ]).subscribe({
+      next: ([typesRes, availRes]) => {
+        const types: any[] = typesRes.data ?? [];
+        const availabilities: MangoAvailabilityDto[] = availRes.data ?? [];
+
+        this.catalog = types.map((type) => {
+          const avail = this.bestAvailability(availabilities, type.id);
+          return {
+            id: type.id,
+            mangoTypeId: type.id,
+            name: type.name,
+            image: this.resolveImage(type.imagePath),
+            description: type.description,
+            region: type.region,
+            averageWeight: type.averageWeight,
+            sweetness: EnumLabelUtils.getSweetnessLevelLabel(type.sweetnessLevel ?? 0),
+            price: avail?.pricePerKg ?? null,
+            availabilityStatus: avail?.status ?? null,
+            availabilityLabel: avail
+              ? EnumLabelUtils.getMangoAvailabilityStatusLabel(avail.status)
+              : 'Not Listed',
+            statusBadgeClass: avail
+              ? EnumLabelUtils.getMangoAvailabilityStatusBadgeClass(avail.status)
+              : 'badge-light-dark',
+            isAvailable:
+              avail?.status === MangoAvailabilityStatus._1 ||
+              avail?.status === MangoAvailabilityStatus._2,
+            seasonYear: avail?.seasonYear ?? null,
+            availabilityNotes: avail?.notes ?? null,
+          };
+        });
         this.isLoading = false;
         this.cdRef.detectChanges();
       },
@@ -46,15 +77,22 @@ export class CatalogListComponent implements OnInit, OnDestroy {
     });
   }
 
+  private bestAvailability(
+    availabilities: MangoAvailabilityDto[],
+    mangoTypeId: number
+  ): MangoAvailabilityDto | undefined {
+    const forType = availabilities.filter((a) => a.mangoTypeId === mangoTypeId);
+    if (!forType.length) return undefined;
+    const priority: Record<number, number> = { 1: 0, 2: 1, 0: 2, 3: 3 };
+    return forType.sort(
+      (a, b) => (priority[a.status] ?? 9) - (priority[b.status] ?? 9)
+    )[0];
+  }
+
   private resolveImage(imagePath: string | undefined): string {
     if (!imagePath) return 'assets/media/mangos/default.jpg';
     const filename = imagePath.split('/').pop() ?? 'default.jpg';
     return `assets/media/mangos/${filename}`;
-  }
-
-  private resolveSweetness(grade: number): string {
-    const map: Record<number, string> = { 0: 'Low', 1: 'Medium', 2: 'High', 3: 'Very High', 4: 'Premium' };
-    return map[grade] ?? 'Medium';
   }
 
   ngOnDestroy(): void {

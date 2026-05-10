@@ -5,13 +5,13 @@ import { WidgetsModule } from 'src/app/_metronic/partials';
 import { HomeComponent } from './home.component';
 import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { MangoTypeServiceProxy } from 'src/app/services/client-proxy';
+import { MangoAvailabilityServiceProxy } from 'src/app/services/client-proxy';
 
 
 
 @NgModule({
   declarations: [HomeComponent],
-  providers: [MangoTypeServiceProxy],
+  providers: [MangoAvailabilityServiceProxy],
   imports: [
     CommonModule,
     NgbModule,

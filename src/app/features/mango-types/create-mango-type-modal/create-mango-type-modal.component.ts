@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, first, of } from 'rxjs';
 import { FileService } from 'src/app/shared/services/file-service.service';
+import { DropdownService } from 'src/app/shared/services/dropdown.service';
+import { DropdownModel } from 'src/app/shared/models/dropdown.model';
 import { environment } from 'src/environments/environment';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
@@ -28,6 +30,8 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
   oldImagePath: string;
   isLoading = false;
   location = 'MangoType';
+  gradeOptions: DropdownModel[] = [];
+  sweetnessLevelOptions: DropdownModel[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -35,9 +39,12 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
     private fileService: FileService,
     private authService: AuthService,
     private mangoTypeService: MangoTypeService,
+    private dropdownService: DropdownService,
   ) {}
 
   ngOnInit(): void {
+    this.gradeOptions = this.dropdownService.getMangoGradeOptions();
+    this.sweetnessLevelOptions = this.dropdownService.getSweetnessLevelOptions();
     this.loadForm();
     this.loadData();
   }
@@ -75,11 +82,13 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
         ]),
       ],
       description: [this.mangoTypeDto.description],
-      pricePerKg: [this.mangoTypeDto.pricePerKg,
-         Validators.compose([
-          Validators.required,
-        ])],
-      isAvailable: [this.mangoTypeDto.isAvailable],
+      region: [this.mangoTypeDto.region],
+      averageWeight: [this.mangoTypeDto.averageWeight],
+      mangoGrade: [this.mangoTypeDto.mangoGrade ?? 0],
+      sweetnessLevel: [
+        this.mangoTypeDto.sweetnessLevel ?? 0,
+        Validators.compose([Validators.required, Validators.min(1)]),
+      ],
     });
   }
 
@@ -131,8 +140,10 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
     const formData = this.formGroup.value;
     this.mangoTypeInputDto.name = formData.name;
     this.mangoTypeInputDto.description = formData.description;
-    this.mangoTypeInputDto.pricePerKg = formData.pricePerKg;
-    this.mangoTypeInputDto.isAvailable = formData.isAvailable;
+    this.mangoTypeInputDto.region = formData.region;
+    this.mangoTypeInputDto.averageWeight = formData.averageWeight;
+    this.mangoTypeInputDto.mangoGrade = formData.mangoGrade;
+    this.mangoTypeInputDto.sweetnessLevel = +formData.sweetnessLevel;
 
     if(this.newImagePath){
       this.mangoTypeInputDto.imagePath = this.newImagePath;
@@ -155,11 +166,13 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
       id: 0,
       name: '',
       description: '',
-      pricePerKg: 0,
       imagePath: '',
+      region: '',
+      averageWeight: '',
+      mangoGrade: 0,
+      sweetnessLevel: 0,
       sequence: 0,
-      isAvailable: true,
-      isDeleted: true,
+      isDeleted: false,
       createdBy: null,
       updatedBy: null,
       deletedBy: null,

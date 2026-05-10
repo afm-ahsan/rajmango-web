@@ -63,6 +63,26 @@ export class DropdownService {
     ];
   }
 
+  getSweetnessLevelOptions(): DropdownModel[] {
+    return [
+      { id: 1, label: 'Low' },
+      { id: 2, label: 'Medium' },
+      { id: 3, label: 'High' },
+      { id: 4, label: 'Very High' },
+    ];
+  }
+
+  getMangoGradeOptions(): DropdownModel[] {
+    return [
+      { id: 0, label: 'Low' },
+      { id: 1, label: 'Medium' },
+      { id: 2, label: 'High' },
+      { id: 3, label: 'Very High' },
+      { id: 4, label: 'Premium' },
+      { id: 5, label: 'Ultra Premium' },
+    ];
+  }
+
   getMangoAvailabilityStatusOptions(): DropdownModel[] {
     return [
       { id: 0, label: 'Upcoming' },

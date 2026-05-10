@@ -30,16 +30,30 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>PricePerKg:</b></label>
+                    <label class="col-3 col-form-label text-lg-right"><b>Region:</b></label>
                     <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ mangoTypeDto.pricePerKg }}</label>
+                        <label class="col-form-label text-lg-left">{{ mangoTypeDto.region || '—' }}</label>
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Is Available:</b></label>
+                    <label class="col-3 col-form-label text-lg-right"><b>Avg. Weight:</b></label>
                     <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ mangoTypeDto.isAvailable? "Yes": "No" }}</label>
+                        <label class="col-form-label text-lg-left">{{ mangoTypeDto.averageWeight || '—' }}</label>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-3 col-form-label text-lg-right"><b>Grade:</b></label>
+                    <div class="col-9">
+                        <label class="col-form-label text-lg-left">{{ mangoTypeDto.mangoGrade }}</label>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-3 col-form-label text-lg-right"><b>Sweetness:</b></label>
+                    <div class="col-9">
+                        <label class="col-form-label text-lg-left">{{ getSweetnessLabel(mangoTypeDto.sweetnessLevel) }}</label>
                     </div>
                 </div>
 

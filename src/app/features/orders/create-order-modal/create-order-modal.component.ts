@@ -15,6 +15,7 @@ import { minOrderKgValidator } from 'src/app/shared/validators/order-validators'
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../auth';
+import { MangoAvailabilityServiceProxy, MangoAvailabilityDto } from 'src/app/services/client-proxy';
 import { CourierAreaMapService } from '../../couriers/courier-area-map/courier-area-map.service';
 import { CourierStationService } from '../../couriers/courier-station/courier-station.service';
 import { AvailableCourierDto } from '../../couriers/courier-station/models/available-courier.dto';
@@ -50,6 +51,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   availableStations: AvailableCourierDto[] = [];
   stationCheckRequired = false;
   isFallbackMode = false;
+  private priceMap: Record<number, number> = {};
 
   constructor(
     private fb: FormBuilder,
@@ -60,9 +62,9 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     private loaderService: LoaderService,
     private dropdownService: DropdownService,
     private mangoTypeService: MangoTypeService,
+    private availabilityProxy: MangoAvailabilityServiceProxy,
     private courierService: CourierStationService,
     private courierAreaService: CourierAreaMapService,
-    
   ) {}
 
   ngOnInit(): void {
@@ -105,12 +107,18 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
 
     this.subs.sink = forkJoin({
         mangoTypes: this.mangoTypeService.list(),
-        courierAreas: this.courierAreaService.getDropdown()  // <-- Load area map
+        courierAreas: this.courierAreaService.getDropdown(),
+        availabilities: this.availabilityProxy.getActive(),
       }).pipe(
-      switchMap(({ mangoTypes, courierAreas }) => {
+      switchMap(({ mangoTypes, courierAreas, availabilities }) => {
         this.mangoTypes = mangoTypes.data;
         this.mangoTypeOptions = this.dropdownService.mapToEntityDropdown(this.mangoTypes, 'id', 'name');
         this.courierAreaOptions = courierAreas.data;
+        const activeAvail: MangoAvailabilityDto[] = availabilities.data ?? [];
+        this.priceMap = activeAvail.reduce((map, a) => {
+          map[a.mangoTypeId] = a.pricePerKg;
+          return map;
+        }, {} as Record<number, number>);
 
         if (!this.id) {
           this.orderDto = this.initObject();
@@ -192,8 +200,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     }
     
     const mangoType = this.getMangoType(mangoTypeId);
-    const unitPrice = mangoType?.pricePerKg || 0;
-        
+    const unitPrice = this.priceMap[mangoTypeId] || 0;
     const crateWeight = DomainUtils.getCrateWeight(crateType);
     const totalPrice = quantity * unitPrice * crateWeight;
 

@@ -119,4 +119,36 @@ export class EnumLabelUtils {
     };
     return labels[type as number] ?? 'Policy';
   }
+
+  static getMangoGradeLabel(grade: number): string {
+    const labels: Record<number, string> = {
+      0: 'Low',
+      1: 'Medium',
+      2: 'High',
+      3: 'Very High',
+      4: 'Premium',
+      5: 'Ultra Premium',
+    };
+    return labels[grade] ?? 'Unknown';
+  }
+
+  static getSweetnessLevelLabel(level: number): string {
+    const labels: Record<number, string> = {
+      1: 'Low',
+      2: 'Medium',
+      3: 'High',
+      4: 'Very High',
+    };
+    return labels[level] ?? '—';
+  }
+
+  static getMangoAvailabilityStatusBadgeClass(status: number): string {
+    const classes: Record<number, string> = {
+      0: 'badge-light-dark',
+      1: 'badge-light-success',
+      2: 'badge-light-warning',
+      3: 'badge-light-danger',
+    };
+    return classes[status] ?? 'badge-light-dark';
+  }
 }
