@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -10,10 +9,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class MangoDetailModalComponent {
   @Input() mango: any;
 
-constructor(public activeModal: NgbActiveModal, private router: Router) {}
+  constructor(public activeModal: NgbActiveModal) {}
 
   getSweetnessWidth(level: string): string {
-    switch (level.toLowerCase()) {
+    switch ((level ?? '').toLowerCase()) {
       case 'very high': return '100%';
       case 'high': return '80%';
       case 'medium-high': return '60%';
@@ -23,8 +22,7 @@ constructor(public activeModal: NgbActiveModal, private router: Router) {}
     }
   }
 
-  goToOrderList(): void {
-    this.activeModal.close();
-    this.router.navigate(['/orders/order-list']);
+  proceedToOrder(): void {
+    this.activeModal.close({ action: 'order' });
   }
 }

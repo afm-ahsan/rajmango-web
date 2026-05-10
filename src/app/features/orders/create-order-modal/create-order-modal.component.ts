@@ -33,6 +33,7 @@ import { OrderService } from '../order.service';
 })
 export class CreateOrderModalComponent implements OnInit, OnDestroy {
   @Input() id: number;
+  @Input() mangoTypeId: number = 0;
 
   mangoTypes: MangoTypeDto[] = [];
   mangoTypeOptions: EntityDropdownModel[] = [];
@@ -159,12 +160,12 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         note: firstItem?.note
       });
     } else{
-      this.orderForm.patchValue({ 
-        mangoType: 0, 
-        crateType: 0, 
+      this.orderForm.patchValue({
+        mangoType: this.mangoTypeId || 0,
+        crateType: 0,
         area: '0',
-        quantity: 1, 
-        note: '' 
+        quantity: 1,
+        note: ''
       });
     }
 

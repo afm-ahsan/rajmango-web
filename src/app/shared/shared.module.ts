@@ -22,6 +22,7 @@ import { AppDataEmptyComponent } from './components/app-data-empty/app-data-empt
 import { LoaderComponent } from './components/loader/loader.component';
 import { MangoCardComponent } from './components/mango-card/mango-card.component';
 import { MangoDetailModalComponent } from './components/mango-detail-modal/mango-detail-modal.component';
+import { QuickOrderModalComponent } from './components/quick-order-modal/quick-order-modal.component';
 import { SortableHeaderComponent } from './components/sortable-header/sortable-header.component';
 import { PermissionDirective } from './directives/permission.directive';
 import { YesNoPipe } from './pipes/yes-no.pipe';
@@ -54,6 +55,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
     SortableHeaderComponent,
     MangoCardComponent,
     MangoDetailModalComponent,
+    QuickOrderModalComponent,
     AppDataEmptyComponent,
     PermissionDirective,
   ],

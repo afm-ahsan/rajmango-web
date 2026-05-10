@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
@@ -47,7 +48,9 @@ export class OrderListComponent implements OnInit, OnDestroy {
     private loaderService: LoaderService,
     private orderFacade: OrderFacade,
     private authService: AuthService,
-    private imagePathService: ImagePathService
+    private imagePathService: ImagePathService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.filter.userId = this.authService.getLoggedUserId();
   }
@@ -55,6 +58,13 @@ export class OrderListComponent implements OnInit, OnDestroy {
   // 3. Lifecycle Hooks
   ngOnInit(): void {
     this.load();
+    this.route.queryParams.subscribe((params) => {
+      const mangoTypeId = +params['mangoTypeId'];
+      if (mangoTypeId) {
+        this.router.navigate([], { queryParams: {}, replaceUrl: true });
+        this.openCreateModal(0, mangoTypeId);
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -67,13 +77,20 @@ export class OrderListComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     const dto = FilterUtils.createPagedRequest(this.filter, this.searchVal);
     this.subs.sink = this.orderFacade.getPagedWithCount(dto)
-      .subscribe(([data, count]) => {
-        this.orders = data;
-        this.totalCount = count;
-        this.isLoading = false;
-        this.loaderService.hide();
-        this.cdRef.detectChanges();
-        MenuComponent.reinitialization();
+      .subscribe({
+        next: ([data, count]) => {
+          this.orders = data;
+          this.totalCount = count;
+          this.isLoading = false;
+          this.loaderService.hide();
+          this.cdRef.detectChanges();
+          MenuComponent.reinitialization();
+        },
+        error: () => {
+          this.isLoading = false;
+          this.loaderService.hide();
+          this.cdRef.detectChanges();
+        },
       });
   }
 
@@ -86,16 +103,20 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   create(): void {
-    this.edit(0);
+    this.openCreateModal(0);
   }
 
   edit(id: number): void {
+    this.openCreateModal(id);
+  }
+
+  openCreateModal(id: number, mangoTypeId: number = 0): void {
     const modalRef = this.modalService.open(CreateOrderModalComponent, { size: 'lg' });
     modalRef.componentInstance.id = id;
+    modalRef.componentInstance.mangoTypeId = mangoTypeId;
     modalRef.result.then(
       (result: 'success' | 'dismissed') => {
-        if (result === 'success') 
-          this.load();
+        if (result === 'success') this.load();
       },
       (error: any) => console.warn('Modal dismissed:', error)
     );

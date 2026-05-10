@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MangoDetailModalComponent } from '../mango-detail-modal/mango-detail-modal.component';
-import { Router } from '@angular/router';
+import { QuickOrderModalComponent } from '../quick-order-modal/quick-order-modal.component';
 
 @Component({
   selector: 'app-mango-card',
@@ -11,10 +11,10 @@ import { Router } from '@angular/router';
 export class MangoCardComponent {
   @Input() mango: any;
 
-constructor(private modalService: NgbModal, private router: Router) {}
-  
+  constructor(private modalService: NgbModal) {}
+
   getSweetnessWidth(level: string): string {
-    switch (level.toLowerCase()) {
+    switch ((level ?? '').toLowerCase()) {
       case 'very high': return '100%';
       case 'high': return '80%';
       case 'medium-high': return '60%';
@@ -24,18 +24,22 @@ constructor(private modalService: NgbModal, private router: Router) {}
     }
   }
 
-  orderNow(mango: any) {
-    console.log('Ordering:', mango.name);
-    // You can integrate your modal, cart service, or router navigation here
-  }
-
   openOrderModal(): void {
-    const modalRef = this.modalService.open(MangoDetailModalComponent, { size: 'md' });
-    modalRef.componentInstance.mango = this.mango;
+    const ref = this.modalService.open(MangoDetailModalComponent, { size: 'md' });
+    ref.componentInstance.mango = this.mango;
+    ref.result.then(
+      (result) => {
+        if (result?.action === 'order') {
+          this.openQuickOrder();
+        }
+      },
+      () => {}
+    );
   }
 
-  goToOrderList(): void {
-    this.router.navigate(['/orders/order-list']);
+  openQuickOrder(): void {
+    if (!this.mango?.isAvailable) return;
+    const ref = this.modalService.open(QuickOrderModalComponent, { size: 'md' });
+    ref.componentInstance.mango = this.mango;
   }
-
 }

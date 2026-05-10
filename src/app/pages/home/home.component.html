@@ -17,7 +17,15 @@
 
 <!-- Mango Grid -->
 <div class="container mb-7">
-  <div class="row g-4">
+  <div *ngIf="isLoading" class="d-flex justify-content-center py-10">
+    <span class="spinner-border text-primary" role="status"></span>
+  </div>
+
+  <div *ngIf="!isLoading && !mangoList.length" class="text-center py-10 text-muted fs-6">
+    No mangoes available at this time.
+  </div>
+
+  <div class="row g-4" *ngIf="!isLoading && mangoList.length">
     <div class="col-sm-6 col-lg-4" *ngFor="let mango of mangoList">
       <app-mango-card [mango]="mango"></app-mango-card>
     </div>

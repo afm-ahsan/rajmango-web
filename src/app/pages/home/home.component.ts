@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { GetAllMangoTypeDto, MangoTypeServiceProxy } from 'src/app/services/client-proxy';
+import { SubSink } from 'subsink';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit, OnDestroy {
   carouselImages: string[] = [
     'assets/media/carousel/img2.jpg',
     'assets/media/carousel/img3.jpg',
@@ -18,54 +20,54 @@ export class HomeComponent {
     'assets/media/carousel/img10.jpg',
   ];
 
-  mangoList = [
-    {
-      id: 1,
-      name: 'Gopalbhog',
-      image: 'assets/media/mangos/gopalbhog.jpg',
-      price: 130,
-      isAvailable: true,
-      sweetness: 'High'
-    },
-    {
-      id: 2,
-      name: 'Himsagor',
-      image: 'assets/media/mangos/himsagor.jpg',
-      price: 130,
-      isAvailable: true,
-      sweetness: 'Very High'
-    },
-    {
-      id: 3,
-      name: 'Langra',
-      image: 'assets/media/mangos/langra.jpg',
-      price: 130,
-      isAvailable: false,
-      sweetness: 'High'
-    },
-    {
-      id: 4,
-      name: 'Amrupali',
-      image: 'assets/media/mangos/amrupali.jpg',
-      price: 130,
-      isAvailable: false,
-      sweetness: 'High'
-    },
-    {
-      id: 5,
-      name: 'Brindabon',
-      image: 'assets/media/mangos/brindabon.jpg',
-      price: 125,
-      isAvailable: false,
-      sweetness: 'Medium-High'
-    },
-    {
-      id: 6,
-      name: 'Fazli',
-      image: 'assets/media/mangos/fazli.jpg',
-      price: 100,
-      isAvailable: false,
-      sweetness: 'Medium'
-    }
-  ];
+  mangoList: any[] = [];
+  isLoading = false;
+  subs = new SubSink();
+
+  constructor(
+    private mangoTypeProxy: MangoTypeServiceProxy,
+    private cdRef: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.loadMangoTypes();
+  }
+
+  private loadMangoTypes(): void {
+    this.isLoading = true;
+    this.subs.sink = this.mangoTypeProxy.get().subscribe({
+      next: (res) => {
+        const types: GetAllMangoTypeDto[] = res.data ?? [];
+        this.mangoList = types.map((dto) => ({
+          id: dto.id,
+          name: dto.name,
+          image: this.resolveImage(dto.imagePath),
+          price: dto.pricePerKg,
+          isAvailable: dto.isAvailable,
+          sweetness: this.resolveSweetness(dto.mangoGrade as number),
+        }));
+        this.isLoading = false;
+        this.cdRef.detectChanges();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.cdRef.detectChanges();
+      },
+    });
+  }
+
+  private resolveImage(imagePath: string | undefined): string {
+    if (!imagePath) return 'assets/media/mangos/default.jpg';
+    const filename = imagePath.split('/').pop() ?? 'default.jpg';
+    return `assets/media/mangos/${filename}`;
+  }
+
+  private resolveSweetness(grade: number): string {
+    const map: Record<number, string> = { 0: 'Low', 1: 'Medium', 2: 'High', 3: 'Very High', 4: 'Premium' };
+    return map[grade] ?? 'Medium';
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
 }
