@@ -29,7 +29,7 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
   newImagePath: string;
   oldImagePath: string;
   isLoading = false;
-  location = 'MangoType';
+  location = 'mango-types';
   gradeOptions: DropdownModel[] = [];
   sweetnessLevelOptions: DropdownModel[] = [];
 

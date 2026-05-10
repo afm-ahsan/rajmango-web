@@ -13,4 +13,5 @@ export interface SubmitFeedbackRequest {
   orderId: number;
   rating: number;
   note: string;
+  imagePaths?: string[];
 }

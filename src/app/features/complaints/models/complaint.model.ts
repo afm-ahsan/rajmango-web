@@ -20,6 +20,7 @@ export interface SubmitComplaintRequest {
   orderId: number;
   category: ComplaintCategory;
   description: string;
+  imagePaths?: string[];
 }
 
 export interface UpdateComplaintStatusRequest {

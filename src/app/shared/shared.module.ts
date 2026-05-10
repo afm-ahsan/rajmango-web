@@ -28,6 +28,7 @@ import { PermissionDirective } from './directives/permission.directive';
 import { YesNoPipe } from './pipes/yes-no.pipe';
 import { SubmitFeedbackModalComponent } from '../features/feedback/submit-feedback-modal/submit-feedback-modal.component';
 import { SubmitComplaintModalComponent } from '../features/complaints/submit-complaint-modal/submit-complaint-modal.component';
+import { MultiUploadComponent } from './components/multi-upload/multi-upload.component';
 
 @NgModule({
   imports: [
@@ -62,6 +63,7 @@ import { SubmitComplaintModalComponent } from '../features/complaints/submit-com
     PermissionDirective,
     SubmitFeedbackModalComponent,
     SubmitComplaintModalComponent,
+    MultiUploadComponent,
   ],
   exports: [
     TreePipe,
@@ -83,6 +85,7 @@ import { SubmitComplaintModalComponent } from '../features/complaints/submit-com
     PermissionDirective,
     SubmitFeedbackModalComponent,
     SubmitComplaintModalComponent,
+    MultiUploadComponent,
   ],
 })
 export class SharedModule {}

@@ -1,17 +1,18 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { SubSink } from 'subsink';
 import {
   MyProfileDto,
   ProfileServiceProxy,
-  UpdateMyProfileCommand,
   UserAddressDto,
   UserAddressServiceProxy,
 } from 'src/app/services/client-proxy';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { AddressModalComponent } from '../address-modal/address-modal.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-profile-page',
@@ -26,9 +27,11 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   profile: MyProfileDto | null = null;
   addresses: UserAddressDto[] = [];
   profileForm: FormGroup;
+  profileImagePath: string = '';
 
   constructor(
     private fb: FormBuilder,
+    private http: HttpClient,
     private profileProxy: ProfileServiceProxy,
     private addressProxy: UserAddressServiceProxy,
     private modalService: NgbModal,
@@ -53,6 +56,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.profile = res?.data ?? null;
         if (this.profile) {
+          this.profileImagePath = (this.profile as any).imagePath ?? '';
           this.profileForm.patchValue({
             firstName: this.profile.firstName ?? '',
             lastName: this.profile.lastName ?? '',
@@ -84,32 +88,49 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     });
   }
 
+  onAvatarUploaded(event: any): void {
+    if (event?.imagePath) {
+      this.profileImagePath = event.imagePath;
+      this.cdRef.detectChanges();
+    }
+  }
+
+  avatarUrl(): string {
+    if (this.profileImagePath) {
+      return `${environment.apis.default.url}/${this.profileImagePath}`;
+    }
+    return 'assets/media/avatars/blank.png';
+  }
+
   saveProfile(): void {
     this.profileForm.markAllAsTouched();
     if (this.profileForm.invalid) return;
 
     const v = this.profileForm.value;
-    const command = new UpdateMyProfileCommand({
+    const payload: any = {
       firstName: v.firstName,
       lastName: v.lastName,
       phoneNumber: v.phoneNumber,
-      currentPassword: v.currentPassword || undefined,
-      newPassword: v.newPassword || undefined,
-    });
+      imagePath: this.profileImagePath || undefined,
+    };
+    if (v.currentPassword) payload.currentPassword = v.currentPassword;
+    if (v.newPassword) payload.newPassword = v.newPassword;
 
     this.isSavingProfile = true;
-    this.subs.sink = this.profileProxy.update(command).subscribe({
-      next: () => {
-        this.isSavingProfile = false;
-        this.profileForm.patchValue({ currentPassword: '', newPassword: '' });
-        Swal.fire('Success', 'Profile updated successfully.', 'success');
-        this.loadProfile();
-      },
-      error: () => {
-        this.isSavingProfile = false;
-        Swal.fire('Failed', 'Failed to update profile.', 'error');
-      },
-    });
+    this.subs.sink = this.http
+      .put(`${environment.apis.default.url}/api/profile`, payload)
+      .subscribe({
+        next: () => {
+          this.isSavingProfile = false;
+          this.profileForm.patchValue({ currentPassword: '', newPassword: '' });
+          Swal.fire('Success', 'Profile updated successfully.', 'success');
+          this.loadProfile();
+        },
+        error: () => {
+          this.isSavingProfile = false;
+          Swal.fire('Failed', 'Failed to update profile.', 'error');
+        },
+      });
   }
 
   isInvalid(name: string): boolean {

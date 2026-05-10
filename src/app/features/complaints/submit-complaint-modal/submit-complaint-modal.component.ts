@@ -16,6 +16,7 @@ export class SubmitComplaintModalComponent implements OnInit {
 
   form!: FormGroup;
   isSaving = false;
+  uploadedImagePaths: string[] = [];
 
   categoryOptions = [
     { value: ComplaintCategory.WrongItem, label: EnumLabelUtils.getComplaintCategoryLabel(ComplaintCategory.WrongItem) },
@@ -33,6 +34,10 @@ export class SubmitComplaintModalComponent implements OnInit {
     private complaintService: ComplaintService,
     private cdRef: ChangeDetectorRef
   ) {}
+
+  onImagesChanged(paths: string[]): void {
+    this.uploadedImagePaths = paths;
+  }
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -52,6 +57,7 @@ export class SubmitComplaintModalComponent implements OnInit {
       orderId: +this.form.value.orderId,
       category: +this.form.value.category,
       description: this.form.value.description,
+      imagePaths: this.uploadedImagePaths.length ? this.uploadedImagePaths : undefined,
     }).subscribe({
       next: (res: any) => {
         this.isSaving = false;

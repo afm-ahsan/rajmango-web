@@ -39,6 +39,12 @@
       </div>
     </div>
 
+    <!-- Images (optional, max 3) -->
+    <div class="mb-5">
+      <label class="form-label fw-semibold">Photos <span class="text-muted fs-7">(optional, up to 3)</span></label>
+      <app-multi-upload location="feedbacks" [maxImages]="3" (imagesChanged)="onImagesChanged($event)"></app-multi-upload>
+    </div>
+
   </form>
 </div>
 

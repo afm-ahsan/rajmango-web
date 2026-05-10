@@ -15,6 +15,7 @@ export class SubmitFeedbackModalComponent implements OnInit {
   form!: FormGroup;
   isSaving = false;
   selectedRating = 0;
+  uploadedImagePaths: string[] = [];
 
   constructor(
     public modal: NgbActiveModal,
@@ -28,6 +29,10 @@ export class SubmitFeedbackModalComponent implements OnInit {
       rating: [0, [Validators.required, Validators.min(1), Validators.max(5)]],
       note: ['', Validators.maxLength(500)],
     });
+  }
+
+  onImagesChanged(paths: string[]): void {
+    this.uploadedImagePaths = paths;
   }
 
   setRating(value: number): void {
@@ -46,6 +51,7 @@ export class SubmitFeedbackModalComponent implements OnInit {
       orderId: this.orderId,
       rating: this.form.value.rating,
       note: this.form.value.note,
+      imagePaths: this.uploadedImagePaths.length ? this.uploadedImagePaths : undefined,
     }).subscribe({
       next: (res: any) => {
         this.isSaving = false;

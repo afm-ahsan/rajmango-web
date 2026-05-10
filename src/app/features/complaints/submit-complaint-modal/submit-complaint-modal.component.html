@@ -32,6 +32,12 @@
       <div *ngIf="form.get('description')?.hasError('maxlength')" class="text-danger fs-7 mt-1">Description must be under 1000 characters.</div>
     </div>
 
+    <!-- Images (optional) -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Photos <span class="text-muted fs-7">(optional)</span></label>
+      <app-multi-upload location="complaints" (imagesChanged)="onImagesChanged($event)"></app-multi-upload>
+    </div>
+
   </form>
 </div>
 

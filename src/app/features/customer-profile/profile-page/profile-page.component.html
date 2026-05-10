@@ -16,6 +16,20 @@
           </div>
 
           <form *ngIf="!isProfileLoading" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+
+            <!-- Avatar upload -->
+            <div class="d-flex align-items-center gap-5 mb-7">
+              <div class="symbol symbol-80px symbol-circle">
+                <img [src]="avatarUrl()" alt="Profile photo" class="rounded-circle" style="width:80px;height:80px;object-fit:cover;" />
+              </div>
+              <div>
+                <p class="fw-semibold text-muted mb-1 fs-7">Profile Photo</p>
+                <app-upload location="users" (uploadFinished)="onAvatarUploaded($event)"></app-upload>
+              </div>
+            </div>
+
+            <div class="separator separator-dashed my-5"></div>
+
             <div *ngIf="profile" class="row mb-7">
               <div class="col-lg-4 mb-4">
                 <span class="fw-semibold text-muted d-block">Email</span>
