@@ -10,6 +10,8 @@ import { FileService } from '../../services/file-service.service';
 })
 export class UploadComponent implements OnInit {
   @Input() location: string;
+  @Input() prefix?: string;
+  @Input() entityId?: number;
   @Output() public uploadFinished = new EventEmitter();
   progress: number = 0;
   message: string = '';
@@ -30,13 +32,12 @@ export class UploadComponent implements OnInit {
     let fileToUpload = <File>files[0];
     this.fileName = fileToUpload.name;
     const formData = new FormData();
-    formData.append(this.location, fileToUpload, fileToUpload.name);
+    formData.append('file', fileToUpload, fileToUpload.name);
 
     this.working = true;
     this.message = '';
 
-    //this.fileService.upload(formData).subscribe((event: any) => {
-    this.fileService.upload(formData)
+    this.fileService.upload(formData, { domain: this.location, prefix: this.prefix, entityId: this.entityId })
       .subscribe({
         next: (event: any) => {
           if (event.type === HttpEventType.UploadProgress){
@@ -80,7 +81,8 @@ export class UploadComponent implements OnInit {
           });
   }  
 
-  public createImgPath = (serverPath: string) => { 
-    return `${environment.apis.default.url}/${serverPath}`; 
+  public createImgPath = (serverPath: string) => {
+    const clean = serverPath.startsWith('/') ? serverPath.slice(1) : serverPath;
+    return `${environment.apis.default.url}/${clean}`;
   }
 }

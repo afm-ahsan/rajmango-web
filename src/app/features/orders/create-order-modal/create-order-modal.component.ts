@@ -108,7 +108,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     this.subs.sink = forkJoin({
         mangoTypes: this.mangoTypeService.list(),
         courierAreas: this.courierAreaService.getDropdown(),
-        availabilities: this.availabilityProxy.getActive(),
+        availabilities: this.availabilityProxy.get(),
       }).pipe(
       switchMap(({ mangoTypes, courierAreas, availabilities }) => {
         this.mangoTypes = mangoTypes.data;

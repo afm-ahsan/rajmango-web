@@ -191,7 +191,8 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
   };
 
   createImagePath = (serverPath: string) => {
-    return `${environment.apis.default.url}/${serverPath}`;
+    const clean = serverPath.startsWith('/') ? serverPath.slice(1) : serverPath;
+    return `${environment.apis.default.url}/${clean}`;
   };
 
   deleteFile () {

@@ -7,6 +7,7 @@ import {
 } from 'src/app/services/client-proxy';
 import { MangoTypeService } from 'src/app/features/mango-types/mango-type.service';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { ImagePathService } from 'src/app/shared/services/image-path.service';
 import { SubSink } from 'subsink';
 import { SignalRService } from 'src/app/shared/services/signalr.service';
 
@@ -36,7 +37,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private mangoTypeService: MangoTypeService,
     private availabilityProxy: MangoAvailabilityServiceProxy,
     private signalR: SignalRService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private imagePathService: ImagePathService
   ) {}
 
   ngOnInit(): void {
@@ -104,8 +106,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   private resolveImage(imagePath: string | undefined): string {
     if (!imagePath) return 'assets/media/mangos/default.jpg';
-    const filename = imagePath.split('/').pop() ?? 'default.jpg';
-    return `assets/media/mangos/${filename}`;
+    return this.imagePathService.createFullPath(imagePath);
   }
 
   ngOnDestroy(): void {

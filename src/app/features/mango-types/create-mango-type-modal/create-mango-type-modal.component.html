@@ -97,7 +97,7 @@
             <div class="form-group row mt-2">
               <label class="col-3 col-form-label text-lg-right"><b>Image:</b></label>
               <div class="col-9 mt-2">
-                <app-upload [location]="location" (uploadFinished)="uploadFinished($event)"></app-upload>
+                <app-upload [location]="location" [entityId]="mangoTypeDto.id || undefined" (uploadFinished)="uploadFinished($event)"></app-upload>
                 <div *ngIf="mangoTypeDto.imagePath?.length">
                   <div class="overflow-hidden mt-2">
                     <img [src]="createImagePath(mangoTypeDto.imagePath)" alt="Mango Type Image" class="rounded preview-image" />

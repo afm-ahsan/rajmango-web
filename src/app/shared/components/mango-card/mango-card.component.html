@@ -1,6 +1,7 @@
 <div class="card mango-card h-100 text-center border-0 shadow-sm">
   <a href="javasript:void(0)" class="image-link" (click)="openOrderModal()">
-    <img [src]="mango.image" class="card-img-top" [alt]="mango.name" />
+    <img [src]="mango.image" class="card-img-top" [alt]="mango.name"
+         (error)="$any($event.target).src='assets/media/mangos/default.jpg'" />
   </a>
   <div class="card-body">
     <h5 class="card-title">{{ mango.name }}</h5>

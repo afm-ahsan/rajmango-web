@@ -15,6 +15,8 @@ interface UploadedFile {
 export class MultiUploadComponent {
   @Input() location: string = '';
   @Input() maxImages: number = 3;
+  @Input() prefix?: string;
+  @Input() entityId?: number;
   @Output() imagesChanged = new EventEmitter<string[]>();
 
   uploads: UploadedFile[] = [];
@@ -35,10 +37,10 @@ export class MultiUploadComponent {
 
     const file: File = files[0];
     const formData = new FormData();
-    formData.append(this.location, file, file.name);
+    formData.append('file', file, file.name);
 
     this.isUploading = true;
-    this.fileService.upload(formData).subscribe({
+    this.fileService.upload(formData, { domain: this.location, prefix: this.prefix, entityId: this.entityId }).subscribe({
       next: (event: any) => {
         if (event.type === HttpEventType.Response) {
           this.uploads.push({ path: event.body.imagePath, fileName: file.name });
@@ -57,6 +59,7 @@ export class MultiUploadComponent {
   }
 
   imgUrl(serverPath: string): string {
-    return `${environment.apis.default.url}/${serverPath}`;
+    const clean = serverPath.startsWith('/') ? serverPath.slice(1) : serverPath;
+    return `${environment.apis.default.url}/${clean}`;
   }
 }

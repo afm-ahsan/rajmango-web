@@ -4,7 +4,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { SubSink } from 'subsink';
 import { CreatePaymentCommand, PaymentMethod, PaymentServiceProxy } from 'src/app/services/client-proxy';
-import { AuthService } from '../../auth';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
 import { DropdownService } from 'src/app/shared/services/dropdown.service';
 import { dropdownRequiredValidator } from 'src/app/shared/validators/dropdown-validators';
@@ -25,7 +24,6 @@ export class RecordPaymentModalComponent implements OnInit, OnDestroy {
     public modal: NgbActiveModal,
     private fb: FormBuilder,
     private paymentProxy: PaymentServiceProxy,
-    private authService: AuthService,
     private dropdownService: DropdownService
   ) {}
 
@@ -61,7 +59,6 @@ export class RecordPaymentModalComponent implements OnInit, OnDestroy {
       paidAmount: +v.paidAmount,
       paymentMethod: +v.paymentMethod as PaymentMethod,
       transactionId: v.transactionId || undefined,
-      createdBy: this.authService.getLoggedUserId(),
     });
 
     this.isLoading = true;

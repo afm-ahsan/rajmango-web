@@ -50,9 +50,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   createImgPath(serverPath: string | null | undefined): string {
-    return serverPath
-      ? `${environment.apis.default.url}/${serverPath}`
-      : './assets/media/avatars/300-1.jpg';
+    if (!serverPath) return './assets/media/avatars/300-1.jpg';
+    const clean = serverPath.startsWith('/') ? serverPath.slice(1) : serverPath;
+    return `${environment.apis.default.url}/${clean}`;
   }
 
   ngOnDestroy(): void {

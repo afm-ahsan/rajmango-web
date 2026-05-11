@@ -1,12 +1,12 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { SubSink } from 'subsink';
 import {
   MyProfileDto,
   ProfileServiceProxy,
+  UpdateMyProfileCommand,
   UserAddressDto,
   UserAddressServiceProxy,
 } from 'src/app/services/client-proxy';
@@ -31,7 +31,6 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
     private profileProxy: ProfileServiceProxy,
     private addressProxy: UserAddressServiceProxy,
     private modalService: NgbModal,
@@ -56,7 +55,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.profile = res?.data ?? null;
         if (this.profile) {
-          this.profileImagePath = (this.profile as any).imagePath ?? '';
+          this.profileImagePath = this.profile.imagePath ?? '';
           this.profileForm.patchValue({
             firstName: this.profile.firstName ?? '',
             lastName: this.profile.lastName ?? '',
@@ -97,7 +96,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
 
   avatarUrl(): string {
     if (this.profileImagePath) {
-      return `${environment.apis.default.url}/${this.profileImagePath}`;
+      const clean = this.profileImagePath.startsWith('/') ? this.profileImagePath.slice(1) : this.profileImagePath;
+      return `${environment.apis.default.url}/${clean}`;
     }
     return 'assets/media/avatars/blank.png';
   }
@@ -117,9 +117,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     if (v.newPassword) payload.newPassword = v.newPassword;
 
     this.isSavingProfile = true;
-    this.subs.sink = this.http
-      .put(`${environment.apis.default.url}/api/profile`, payload)
-      .subscribe({
+    const cmd = new UpdateMyProfileCommand(payload);
+    this.subs.sink = this.profileProxy.update(cmd).subscribe({
         next: () => {
           this.isSavingProfile = false;
           this.profileForm.patchValue({ currentPassword: '', newPassword: '' });

@@ -29,6 +29,7 @@ import { YesNoPipe } from './pipes/yes-no.pipe';
 import { SubmitFeedbackModalComponent } from '../features/feedback/submit-feedback-modal/submit-feedback-modal.component';
 import { SubmitComplaintModalComponent } from '../features/complaints/submit-complaint-modal/submit-complaint-modal.component';
 import { MultiUploadComponent } from './components/multi-upload/multi-upload.component';
+import { CreateOrderModalComponent } from '../features/orders/create-order-modal/create-order-modal.component';
 
 @NgModule({
   imports: [
@@ -64,6 +65,7 @@ import { MultiUploadComponent } from './components/multi-upload/multi-upload.com
     SubmitFeedbackModalComponent,
     SubmitComplaintModalComponent,
     MultiUploadComponent,
+    CreateOrderModalComponent,
   ],
   exports: [
     TreePipe,
