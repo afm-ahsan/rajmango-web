@@ -2,11 +2,10 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, first, of } from 'rxjs';
-import { PermissionModel } from 'src/app/shared/models/permission.model';
+import { FeatureModel, PermissionModel } from 'src/app/shared/models/permission.model';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
-import * as _ from 'underscore';
 import { AuthService } from '../../auth/services/auth.service';
 import { RoleDto } from '../models/role-dto.model';
 import { RoleInputDto } from '../models/role-input-dto.model';
@@ -19,6 +18,7 @@ import { RoleService } from '../role.service';
 })
 export class CreateRoleModalComponent implements OnInit, OnDestroy {
   @Input() id: number;
+
   roleInputDto: RoleInputDto = {} as RoleInputDto;
   permissionList: PermissionModel[] = [];
   roleDto: RoleDto = {} as RoleDto;
@@ -35,40 +35,42 @@ export class CreateRoleModalComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadPermission();
+    this.loadPermissions();
     this.loadEntity();
     this.loadForm();
   }
 
-  loadPermission() {
+  // ─── Data loading ─────────────────────────────────────────────────
+
+  loadPermissions(): void {
     this.permissionList = this.permissionService.getPermissionList();
   }
 
-  loadEntity() {
+  loadEntity(): void {
     if (!this.id) {
       this.roleDto = this.initObject();
       this.loadForm();
-    } else {
-      this.isLoading = true;
-      this.subs.sink = this.roleService
-        .getItem(this.id)
-        .pipe(
-          first(),
-          catchError((errorMessage) => {
-            this.modal.dismiss(errorMessage);
-            return of(this.initObject());
-          })
-        )
-        //.subscribe((roleDto: RoleDto) => {
-        .subscribe((roleDto: any) => {
-          this.isLoading = false;
-          this.roleDto = roleDto.data;
-          this.loadForm();
-        });
+      return;
     }
+    this.isLoading = true;
+    this.subs.sink = this.roleService
+      .getItem(this.id)
+      .pipe(
+        first(),
+        catchError((err) => {
+          this.modal.dismiss(err);
+          return of({ data: this.initObject() });
+        })
+      )
+      .subscribe((res: any) => {
+        this.isLoading = false;
+        this.roleDto = res.data;
+        this.applyExistingPermissions();
+        this.loadForm();
+      });
   }
 
-  loadForm() {
+  loadForm(): void {
     this.formGroup = this.fb.group({
       name: [
         this.roleDto.name,
@@ -79,20 +81,26 @@ export class CreateRoleModalComponent implements OnInit, OnDestroy {
         ]),
       ],
       description: [this.roleDto.description],
-      isActive: [this.roleDto.isActive],
-      permissions: this.permissionList,
-      //permissions: [this.roleDto.permissionDto],
-      //selectAll: selectAllControl,
+      isActive: [this.roleDto.isActive ?? true],
     });
   }
 
-  // addPermissionFormControl(){
-  //   const formControls = this.permissionList.map(
-  //     (control) => new FormControl(false)
-  //   );
-  // }
+  // Overlay saved role permissions onto the fresh permission list
+  private applyExistingPermissions(): void {
+    if (!this.roleDto?.permissions?.length) return;
+    for (const group of this.permissionList) {
+      for (const feature of group.featureModels) {
+        feature.hasAccess = this.hasFeatureAccess(feature.id);
+        for (const action of feature.actionModels) {
+          action.hasAccess = this.hasActionAccess(feature.id, action.id);
+        }
+      }
+    }
+  }
 
-  save() {
+  // ─── Save ─────────────────────────────────────────────────────────
+
+  save(): void {
     this.prepareData();
     if (this.roleDto.id) {
       this.edit();
@@ -101,40 +109,34 @@ export class CreateRoleModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  edit() {
-    this.subs.sink = this.roleService
-      .update(this.id, this.roleInputDto)
-      .subscribe(
-        (respone: RoleDto) => {
-          this.roleDto = respone;
-          Swal.fire('SUCCESS', 'Data updated successfully.', 'success');
-          this.modal.close();
-        },
-        (error) => {
-          this.modal.dismiss(error);
-          Swal.fire('Failed', 'Data update failed.', 'error');
-          return of(this.initObject());
-        }
-      );
-  }
-
-  create() {
-    this.subs.sink = this.roleService.create(this.roleInputDto).subscribe(
-      (res: RoleDto) => {
-        this.roleDto = res;
-        Swal.fire('SUCCESS', 'Data saved successfully.', 'success');
+  edit(): void {
+    this.subs.sink = this.roleService.update(this.id, this.roleInputDto).subscribe(
+      (res: any) => {
+        Swal.fire('Updated', 'Role updated successfully.', 'success');
         this.modal.close();
       },
-      (error) => {
-        this.modal.dismiss(error);
-        Swal.fire('Failed', 'Role creation failed.', 'error');
-        return of(this.initObject());
+      (err) => {
+        Swal.fire('Failed', 'Role update failed.', 'error');
+        this.modal.dismiss(err);
       }
     );
   }
 
-  prepareData() {
-    const loggerUesrId = this.authService.getLoggedUserId();
+  create(): void {
+    this.subs.sink = this.roleService.create(this.roleInputDto).subscribe(
+      (res: any) => {
+        Swal.fire('Created', 'Role created successfully.', 'success');
+        this.modal.close();
+      },
+      (err) => {
+        Swal.fire('Failed', 'Role creation failed.', 'error');
+        this.modal.dismiss(err);
+      }
+    );
+  }
+
+  prepareData(): void {
+    const loggedUserId = this.authService.getLoggedUserId();
     const formData = this.formGroup.value;
     this.roleInputDto.name = formData.name;
     this.roleInputDto.description = formData.description;
@@ -144,20 +146,20 @@ export class CreateRoleModalComponent implements OnInit, OnDestroy {
       this.roleInputDto.id = this.roleDto.id;
       this.roleInputDto.createdBy = this.roleDto.createdBy;
       this.roleInputDto.createdAt = this.roleDto.createdAt;
-      this.roleInputDto.updatedBy = loggerUesrId;
+      this.roleInputDto.updatedBy = loggedUserId;
     } else {
-      this.roleInputDto.createdBy = loggerUesrId;
+      this.roleInputDto.createdBy = loggedUserId;
     }
   }
 
-  initObject() {
-    const EMPTY_ENTITY: RoleDto = {
+  initObject(): RoleDto {
+    return {
       id: 0,
       name: '',
       description: '',
       permissions: [],
       isActive: true,
-      isDeleted: true,
+      isDeleted: false,
       createdBy: null,
       updatedBy: null,
       deletedBy: null,
@@ -165,148 +167,127 @@ export class CreateRoleModalComponent implements OnInit, OnDestroy {
       updatedAt: null,
       deletedAt: null,
     };
-    return EMPTY_ENTITY;
   }
 
-  onChanges(): void {
-    // Subscribe to changes on the selectAll checkbox
-    // this.formGroup.get('selectAll').valueChanges.subscribe((bool) => {
-    //   this.formGroup
-    //     .get('permissions')
-    //     .patchValue(Array(this.permissionDto.length).fill(bool), {
-    //       emitEvent: false,
-    //     });
-    // });
-    // Subscribe to changes on the music preference checkboxes
-    // this.formGroup.get('permissions').valueChanges.subscribe((val) => {
-    //   const allSelected = val.every((bool) => bool);
-    //   if (this.formGroup.get('selectAll').value !== allSelected) {
-    //     this.formGroup
-    //       .get('selectAll')
-    //       .patchValue(allSelected, { emitEvent: false });
-    //   }
-    // });
-    //   addTag() {
-    //     const tagControl = this.newGameForm.get('tagControl');
-    //     this.addTagToSelectedList(tagControl.value);
-    //     tagControl.setValue('');
-    //   }
-    // setMax() {
-    //   this.sendForm.patchValue({
-    //       amount: this.sendForm.get('token').value === this.aService.activeChain['symbol'] ? this.unstaked : this.token_balance
-    //   });
-    // }
+  // ─── Lookup helpers (read saved role permissions) ─────────────────
+
+  private hasFeatureAccess(featureId: number): boolean {
+    for (const group of this.roleDto.permissions ?? []) {
+      for (const f of group.featureModels) {
+        if (f.id === featureId) return f.hasAccess;
+      }
+    }
+    return false;
   }
 
-  hasFeatureAccess(id: number) {
-    var hasAccess = false;
-    _.each(this.roleDto.permissions, (item) => {
-      _.each(item.featureModels, (permission) => {
-        if (permission.id == id) {
-          hasAccess = permission.hasAccess;
+  private hasActionAccess(featureId: number, actionId: number): boolean {
+    for (const group of this.roleDto.permissions ?? []) {
+      for (const f of group.featureModels) {
+        if (f.id === featureId) {
+          const action = f.actionModels.find((a) => a.id === actionId);
+          return action?.hasAccess ?? false;
         }
-      });
-    });
-    return hasAccess;
+      }
+    }
+    return false;
   }
 
-  hasActionAccess(id: number, actionId: number) {
-    var hasAccess = false;
-    _.each(this.roleDto.permissions, (item) => {
-      _.each(item.featureModels, (permission) => {
-        if (permission.id == id) {
-          _.each(permission.actionModels, (action) => {
-            if (action.id == actionId) {
-              hasAccess = action.hasAccess;
-            }
-          });
+  // ─── Select-All (global) ──────────────────────────────────────────
+
+  get isAllChecked(): boolean {
+    return this.permissionList.every((g) =>
+      g.featureModels.every((f) => f.hasAccess && f.actionModels.every((a) => a.hasAccess))
+    );
+  }
+
+  get isAllIndeterminate(): boolean {
+    const anyOn = this.permissionList.some((g) =>
+      g.featureModels.some((f) => f.hasAccess || f.actionModels.some((a) => a.hasAccess))
+    );
+    return anyOn && !this.isAllChecked;
+  }
+
+  onCheckAll(event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    for (const group of this.permissionList) {
+      for (const feature of group.featureModels) {
+        feature.hasAccess = checked;
+        for (const action of feature.actionModels) {
+          action.hasAccess = checked;
         }
-      });
-    });
-    return hasAccess;
+      }
+    }
   }
 
-  onCheckAll($event: any) {
-    let val = $event.target.checked;
-    _.each(this.permissionList, (item) => {
-      _.each(item.featureModels, (permission) => {
-        permission.hasAccess = val;
-        _.each(permission.actionModels, (action) => {
-          action.hasAccess = val;
-        });
-      });
-    });
+  // ─── Group-level select ───────────────────────────────────────────
 
-    _.each(this.roleDto.permissions, (item) => {
-      _.each(item.featureModels, (permission) => {
-        permission.hasAccess = val;
-        _.each(permission.actionModels, (action) => {
-          action.hasAccess = val;
-        });
-      });
-    });
-
-    const formData = this.formGroup.value;
-    var name = formData.name;
-    var description = formData.description;
-    var isActive = formData.isActive;
-
-    this.formGroup.reset();
-    this.formGroup.patchValue({
-      name: name,
-      description: description,
-      isActive: isActive,
-    });
+  isGroupAllChecked(group: PermissionModel): boolean {
+    return group.featureModels.every(
+      (f) => f.hasAccess && f.actionModels.every((a) => a.hasAccess)
+    );
   }
 
-  onCheckChange(id: number, $event: any) {
-    let val = $event.target.checked;
-    _.each(this.permissionList, (item) => {
-      _.each(item.featureModels, (permission) => {
-        if (permission.id == id) {
-          permission.hasAccess = val;
-        }
-      });
-    });
+  isGroupIndeterminate(group: PermissionModel): boolean {
+    const anyOn = group.featureModels.some(
+      (f) => f.hasAccess || f.actionModels.some((a) => a.hasAccess)
+    );
+    return anyOn && !this.isGroupAllChecked(group);
   }
 
-  onActionCheckChange(id: number, actionId: number, $event: any) {
-    let val = $event.target.checked;
-    _.each(this.permissionList, (item) => {
-      _.each(item.featureModels, (permission) => {
-        if (permission.id == id) {
-          _.each(permission.actionModels, (action) => {
-            if (action.id == actionId) {
-              action.hasAccess = val;
-            }
-          });
-        }
-      });
-    });
+  onGroupCheckAll(group: PermissionModel, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    for (const feature of group.featureModels) {
+      feature.hasAccess = checked;
+      for (const action of feature.actionModels) {
+        action.hasAccess = checked;
+      }
+    }
+  }
+
+  // ─── Feature-level select (auto-toggles actions) ──────────────────
+
+  isFeatureIndeterminate(feature: FeatureModel): boolean {
+    if (!feature.actionModels.length) return false;
+    const anyOn = feature.actionModels.some((a) => a.hasAccess);
+    return anyOn && !feature.actionModels.every((a) => a.hasAccess);
+  }
+
+  onFeatureChange(feature: FeatureModel, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    feature.hasAccess = checked;
+    for (const action of feature.actionModels) {
+      action.hasAccess = checked;
+    }
+  }
+
+  // ─── Action-level select (auto-updates parent) ────────────────────
+
+  onActionChange(feature: FeatureModel, actionId: number, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    const action = feature.actionModels.find((a) => a.id === actionId);
+    if (action) action.hasAccess = checked;
+    // parent feature = true when at least one action is on
+    feature.hasAccess = feature.actionModels.some((a) => a.hasAccess);
+  }
+
+  // ─── Form helpers ─────────────────────────────────────────────────
+
+  isControlValid(controlName: string): boolean {
+    const c = this.formGroup.controls[controlName];
+    return c.valid && (c.dirty || c.touched);
+  }
+
+  isControlInvalid(controlName: string): boolean {
+    const c = this.formGroup.controls[controlName];
+    return c.invalid && (c.dirty || c.touched);
+  }
+
+  controlHasError(validation: string, controlName: string): boolean {
+    const c = this.formGroup.controls[controlName];
+    return c.hasError(validation) && (c.dirty || c.touched);
   }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
-  }
-
-  // helpers for View
-  isControlValid(controlName: string): boolean {
-    const control = this.formGroup.controls[controlName];
-    return control.valid && (control.dirty || control.touched);
-  }
-
-  isControlInvalid(controlName: string): boolean {
-    const control = this.formGroup.controls[controlName];
-    return control.invalid && (control.dirty || control.touched);
-  }
-
-  controlHasError(validation: string, controlName: string | number): boolean {
-    const control = this.formGroup.controls[controlName];
-    return control.hasError(validation) && (control.dirty || control.touched);
-  }
-
-  isControlTouched(controlName: string | number): boolean {
-    const control = this.formGroup.controls[controlName];
-    return control.dirty || control.touched;
   }
 }

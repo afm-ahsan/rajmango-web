@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { AppPermissions } from 'src/app/core/constants/app-permissions';
 import { UserPermissionKey } from 'src/app/core/constants/user-permission-keys.enum';
 import { UserAccessModel } from '../models/user-access.model';
 
@@ -20,33 +21,79 @@ export class UserPermissionService {
     this.currentPermissionSubject.next(permission);
   }
 
+  clearPermissions(): void {
+    this.currentPermissionSubject.next(null);
+  }
+
   hasAccess(key: UserPermissionKey): boolean {
     return !!this.currentPermission?.[key];
   }
 
-  // When backend sends a structured permissions object, replace `true` with `!!userPermissions.<key>`.
-  preparePermissionModel(userPermissions: Partial<UserAccessModel>): UserAccessModel {
+  /**
+   * Builds the frontend UserAccessModel from the backend login response.
+   *
+   * Source: GetAuthUserDto.permissionJson — a JSON-serialised string[] of
+   * flat permission strings matching RajMango.Shared.Permissions.
+   * e.g. '["user.view","order.view","mango.type.manage"]'
+   *
+   * Special case: '["ALL"]' is used by system_admin → every flag is true.
+   *
+   * @param permissionJson  Raw JSON string from GetAuthUserDto.permissionJson
+   */
+  preparePermissionModel(permissionJson: string | null | undefined): UserAccessModel {
+    const grants = this.parsePermissionJson(permissionJson);
+    const isAll  = grants.has(AppPermissions.ALL);
+    const can    = (p: string): boolean => isAll || grants.has(p);
+
     return {
-      hasDashboardAccess: true,
-      hasHomeAccess: true,
-      hasAdminAccess: true,       // TODO: !!userPermissions.hasAdminAccess when backend sends role flag
+      // ─── Visible to all authenticated users ─────────────────────
+      hasHomeAccess:    true,
+      hasDashboardAccess: can(AppPermissions.Dashboard.AdminView) || can(AppPermissions.Dashboard.CustomerView),
+      hasMangoCatalogAccess: can(AppPermissions.MangoTypes.View),
+      hasOrderAccess:    can(AppPermissions.Orders.View),
+      hasComplaintsAccess: can(AppPermissions.Complaints.Submit) || can(AppPermissions.Complaints.AdminView),
+      hasPoliciesAccess: can(AppPermissions.Policies.View),
 
-      hasOrderAccess: true,
+      // ─── Admin section gate (shows admin accordion in sidebar) ───
+      hasAdminAccess: can(AppPermissions.Dashboard.AdminView),
 
-      hasCourierAccess: true,
-      hasCourierProviderAccess: true,
-      hasCourierStationsAccess: true,
-      hasAreaMapAccess: true,
+      // ─── Admin — Operations ──────────────────────────────────────
+      hasMangoTypeAccess:         can(AppPermissions.MangoTypes.Manage),
+      hasMangoAvailabilityAccess: can(AppPermissions.MangoAvailability.Manage),
+      hasCustomersAccess:         can(AppPermissions.Customers.View),
 
-      hasMangoTypeAccess: true,
-      hasMangoAvailabilityAccess: true,
-      hasExpenseTypeAccess: true,
-      hasExpensesAccess: true,
-      hasUsersAccess: true,
-      hasUserRolesAccess: true,
-      hasCustomersAccess: true,
-      hasPaymentsAccess: true,
-      hasReportAccess: true,
+      // ─── Admin — Finance ─────────────────────────────────────────
+      hasPaymentsAccess:    can(AppPermissions.Payments.View),
+      hasExpenseTypeAccess: can(AppPermissions.ExpenseTypes.View),
+      hasExpensesAccess:    can(AppPermissions.Expenses.View),
+
+      // ─── Logistics (all courier sub-features share courier.view) ─
+      hasCourierAccess:         can(AppPermissions.Couriers.View),
+      hasCourierProviderAccess: can(AppPermissions.Couriers.View),
+      hasCourierStationsAccess: can(AppPermissions.Couriers.View),
+      hasAreaMapAccess:         can(AppPermissions.Couriers.View),
+
+      // ─── Customer Relations ──────────────────────────────────────
+      hasFeedbackAccess: can(AppPermissions.Feedback.AdminView),
+
+      // ─── Reports / Users ─────────────────────────────────────────
+      hasReportAccess:    can(AppPermissions.Reports.View),
+      hasUsersAccess:     can(AppPermissions.Users.View),
+      hasUserRolesAccess: can(AppPermissions.Roles.View),
     };
+  }
+
+  /** Parses the raw permissionJson string into a Set<string>. Never throws. */
+  parsePermissionJson(permissionJson: string | null | undefined): Set<string> {
+    if (!permissionJson) return new Set();
+    try {
+      const parsed = JSON.parse(permissionJson);
+      if (Array.isArray(parsed)) {
+        return new Set<string>(parsed.filter((p: any) => typeof p === 'string'));
+      }
+    } catch {
+      // malformed JSON — treat as no permissions
+    }
+    return new Set();
   }
 }

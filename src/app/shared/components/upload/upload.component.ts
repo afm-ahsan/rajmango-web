@@ -57,21 +57,19 @@ export class UploadComponent implements OnInit {
     });
   }
 
-  deleteFile = (fileName: string) => {
-    if (fileName.length === 0) {
-      return;
-    }
-    
+  deleteFile = () => {
+    if (!this.imagePath) return;
+
     this.working = true;
     this.message = '';
 
-    this.fileService.delete(fileName, this.location)
+    this.fileService.delete(this.imagePath)
         .subscribe({
-            next: data => {
-              console.log(data);
+            next: () => {
               this.message = 'Image Deleted';
               this.imagePath = '';
-              this.uploadFinished.emit(this.imagePath);
+              this.fileName = '';
+              this.uploadFinished.emit(null);
             },
             error: error => {
                 console.error('There was an error!', error);
@@ -79,7 +77,7 @@ export class UploadComponent implements OnInit {
         }).add(() => {
             this.working = false;
           });
-  }  
+  }
 
   public createImgPath = (serverPath: string) => {
     const clean = serverPath.startsWith('/') ? serverPath.slice(1) : serverPath;

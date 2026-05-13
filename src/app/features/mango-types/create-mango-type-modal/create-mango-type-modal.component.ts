@@ -195,25 +195,13 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
     return `${environment.apis.default.url}/${clean}`;
   };
 
-  deleteFile () {
-    if (this.oldImagePath.length === 0) {
-      return;
-    }
+  deleteFile(): void {
+    if (!this.oldImagePath) return;
 
-    var imagePaths = this.oldImagePath.split('\\');
-    var fileName = imagePaths[imagePaths.length-1];
-
-    this.fileService
-      .delete(fileName, this.location)
-      .subscribe({
-        next: (data) => {
-          console.log(data);
-        },
-        error: (error) => {
-          console.error('There was an error!', error);
-        },
-      });
-  };
+    this.fileService.delete(this.oldImagePath).subscribe({
+      error: (error) => console.error('File delete failed:', error),
+    });
+  }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();

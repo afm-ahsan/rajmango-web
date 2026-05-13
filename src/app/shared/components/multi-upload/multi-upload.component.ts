@@ -53,7 +53,7 @@ export class MultiUploadComponent {
 
   remove(index: number): void {
     const upload = this.uploads[index];
-    this.fileService.delete(upload.fileName, this.location).subscribe();
+    this.fileService.delete(upload.path).subscribe();
     this.uploads.splice(index, 1);
     this.imagesChanged.emit(this.uploadedPaths);
   }

@@ -59,6 +59,8 @@ export class AuthService implements OnDestroy {
   logout(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userIdKey);
+    this.permissionService.clearPermissions();
+    this.currentUserSubject.next(undefined);
     this.router.navigate(['/auth/login']);
   }
 
@@ -90,7 +92,7 @@ export class AuthService implements OnDestroy {
     return this.authHttpService.getUserByToken(auth.authToken).pipe(
       map((response: any) => {
         if (response?.messages?.[0]?.includes('Valid Token')) {
-          this.permissionService.currentPermission = this.permissionService.preparePermissionModel(auth.permissions);
+          this.permissionService.currentPermission = this.permissionService.preparePermissionModel(auth.permissionJson);
           this.currentUserSubject.next(auth);
         } else {
           this.logout();

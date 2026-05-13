@@ -29,7 +29,6 @@ export class PermissionGuard implements CanActivate {
       return true;
     }
 
-    // Optionally redirect to an unauthorized or home page
-    return this.router.createUrlTree(['/unauthorized']);
+    return this.router.createUrlTree(['/error/403']);
   }
 }

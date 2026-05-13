@@ -1,22 +1,38 @@
 export enum UserPermissionKey {
-  HasDashboardAccess = 'hasDashboardAccess',
-  HasHomeAccess = 'hasHomeAccess',
-  HasAdminAccess = 'hasAdminAccess',
+  // ─── Core ──────────────────────────────────────────────────────────
+  HasDashboardAccess    = 'hasDashboardAccess',
+  HasHomeAccess         = 'hasHomeAccess',
+  HasAdminAccess        = 'hasAdminAccess',
+  HasMangoCatalogAccess = 'hasMangoCatalogAccess',
 
-  HasOrderAccess = 'hasOrderAccess',
+  // ─── Operations ────────────────────────────────────────────────────
+  HasOrderAccess             = 'hasOrderAccess',
+  HasMangoTypeAccess         = 'hasMangoTypeAccess',
+  HasMangoAvailabilityAccess = 'hasMangoAvailabilityAccess',
+  HasCustomersAccess         = 'hasCustomersAccess',
 
-  HasCourierAccess = 'hasCourierAccess',
+  // ─── Finance ───────────────────────────────────────────────────────
+  HasPaymentsAccess    = 'hasPaymentsAccess',
+  HasExpenseTypeAccess = 'hasExpenseTypeAccess',
+  HasExpensesAccess    = 'hasExpensesAccess',
+
+  // ─── Logistics ─────────────────────────────────────────────────────
+  HasCourierAccess         = 'hasCourierAccess',
   HasCourierProviderAccess = 'hasCourierProviderAccess',
   HasCourierStationsAccess = 'hasCourierStationsAccess',
-  HasAreaMapAccess = 'hasAreaMapAccess',
+  HasAreaMapAccess         = 'hasAreaMapAccess',
 
-  HasMangoTypeAccess = 'hasMangoTypeAccess',
-  HasMangoAvailabilityAccess = 'hasMangoAvailabilityAccess',
-  HasExpenseTypeAccess = 'hasExpenseTypeAccess',
-  HasExpensesAccess = 'hasExpensesAccess',
-  HasUsersAccess = 'hasUsersAccess',
-  HasUserRolesAccess = 'hasUserRolesAccess',
-  HasCustomersAccess = 'hasCustomersAccess',
-  HasPaymentsAccess = 'hasPaymentsAccess',
+  // ─── Customer Relations ────────────────────────────────────────────
+  HasFeedbackAccess   = 'hasFeedbackAccess',
+  HasComplaintsAccess = 'hasComplaintsAccess',
+
+  // ─── Content ───────────────────────────────────────────────────────
+  HasPoliciesAccess = 'hasPoliciesAccess',
+
+  // ─── Reports ───────────────────────────────────────────────────────
   HasReportAccess = 'hasReportAccess',
+
+  // ─── Administration ────────────────────────────────────────────────
+  HasUsersAccess     = 'hasUsersAccess',
+  HasUserRolesAccess = 'hasUserRolesAccess',
 }

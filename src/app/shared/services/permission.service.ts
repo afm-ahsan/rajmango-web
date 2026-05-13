@@ -16,680 +16,236 @@ export class PermissionService {
     return this.http.get(`${this.apiUrl}`);
   }
 
-  //static permission list
-  public getPermissionList(){
-    var permissionList: PermissionModel[] = [
-      //permissionList.push(
+  public getPermissionList(): PermissionModel[] {
+    return [
+      // ─── Operations ───────────────────────────────────────────────────
       {
-        area: '',
+        area: 'Operations',
         featureModels: [
           {
             id: 1,
-            title: 'Home',
-            hasAccess: false,
-            actionModels: [],
-          },
-        ],
-      },
-      {
-        area: 'GC Reservation',
-        featureModels: [
-          {
-            id: 2,
-            title: 'Reservation',
-            hasAccess: false,
-            actionModels: [],
-          },
-        ],
-      },
-      {
-        area: 'GC Reservation',
-        featureModels: [
-          {
-            id: 3,
-            title: 'GC Premises',
+            title: 'Orders',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'BookConventionHall', hasAccess: false },
-              { id: 2, action: 'BookVipSuite', hasAccess: false },
-              { id: 3, action: 'BookFamilySuite', hasAccess: false },
-              { id: 4, action: 'BookDeluxRoom', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
+              { id: 5, action: 'Approve', hasAccess: false },
+              { id: 6, action: 'Export', hasAccess: false },
+            ],
+          },
+          {
+            id: 2,
+            title: 'Mango Types',
+            hasAccess: false,
+            actionModels: [
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
+            ],
+          },
+          {
+            id: 3,
+            title: 'Mango Availability',
+            hasAccess: false,
+            actionModels: [
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
+            ],
+          },
+          {
+            id: 4,
+            title: 'Customers',
+            hasAccess: false,
+            actionModels: [
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
+              { id: 5, action: 'Export', hasAccess: false },
             ],
           },
         ],
       },
+
+      // ─── Finance ──────────────────────────────────────────────────────
       {
-        area: '',
-        featureModels: [
-          {
-            id: 4,
-            title: 'Manage Sales',
-            hasAccess: false,
-            actionModels: [],
-          },
-        ],
-      },
-      {
-        area: 'RSO',
+        area: 'Finance',
         featureModels: [
           {
             id: 5,
-            title: 'Remove Sale Order',
+            title: 'Payments',
             hasAccess: false,
-            actionModels: [],
+            actionModels: [
+              { id: 1, action: 'View',    hasAccess: false },
+              { id: 2, action: 'Create',  hasAccess: false },
+              { id: 3, action: 'Update',  hasAccess: false },
+              { id: 4, action: 'Approve', hasAccess: false },
+              { id: 5, action: 'Export',  hasAccess: false },
+            ],
           },
-        ],
-      },
-      {
-        area: 'Portal Area',
-        featureModels: [
           {
             id: 6,
-            title: 'Restaurant',
+            title: 'Expense Types',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
             ],
           },
-        ],
-      },
-      {
-        area: 'Portal Area',
-        featureModels: [
           {
             id: 7,
-            title: 'Billing in Restaurant',
+            title: 'Expenses',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 1, action: 'View',    hasAccess: false },
+              { id: 2, action: 'Create',  hasAccess: false },
+              { id: 3, action: 'Update',  hasAccess: false },
+              { id: 4, action: 'Delete',  hasAccess: false },
+              { id: 5, action: 'Approve', hasAccess: false },
+              { id: 6, action: 'Export',  hasAccess: false },
             ],
           },
         ],
       },
+
+      // ─── Logistics ────────────────────────────────────────────────────
       {
-        area: 'Portal Area',
+        area: 'Logistics',
         featureModels: [
           {
             id: 8,
-            title: 'Kitchen',
+            title: 'Courier Providers',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
             ],
           },
-        ],
-      },
-      {
-        area: 'Portal Area',
-        featureModels: [
           {
             id: 9,
-            title: 'Bakery',
+            title: 'Courier Stations',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
             ],
           },
-        ],
-      },
-      {
-        area: 'Food Area',
-        featureModels: [
           {
             id: 10,
-            title: 'Manage Food Category',
+            title: 'Area Mapping',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
             ],
           },
         ],
       },
+
+      // ─── Customer Relations ───────────────────────────────────────────
       {
-        area: 'Food Area',
+        area: 'Customer Relations',
         featureModels: [
           {
             id: 11,
-            title: 'Manage Food Item',
+            title: 'Feedback',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Delete', hasAccess: false },
+              { id: 3, action: 'Export', hasAccess: false },
             ],
           },
-        ],
-      },
-      {
-        area: 'Food Area',
-        featureModels: [
           {
             id: 12,
-            title: 'Manage Modifiers',
+            title: 'Complaints',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
               { id: 2, action: 'Update', hasAccess: false },
               { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 4, action: 'Export', hasAccess: false },
             ],
           },
         ],
       },
+
+      // ─── Content ──────────────────────────────────────────────────────
       {
-        area: 'Food Area',
+        area: 'Content',
         featureModels: [
           {
             id: 13,
-            title: 'Manage Ingredients',
+            title: 'Policies',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
             ],
           },
         ],
       },
+
+      // ─── Reports ──────────────────────────────────────────────────────
       {
-        area: 'Expense Area',
+        area: 'Reports',
         featureModels: [
           {
             id: 14,
-            title: 'Manage Expense Type',
+            title: 'Reports',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Export', hasAccess: false },
             ],
           },
         ],
       },
+
+      // ─── Administration ───────────────────────────────────────────────
       {
-        area: 'Expense Area',
+        area: 'Administration',
         featureModels: [
           {
             id: 15,
-            title: 'Manage Expenses',
+            title: 'Users',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
+              { id: 5, action: 'Assign', hasAccess: false },
             ],
           },
-        ],
-      },
-      {
-        area: 'People Area',
-        featureModels: [
           {
             id: 16,
-            title: 'Manage Users',
+            title: 'Role Management',
             hasAccess: false,
             actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'People Area',
-        featureModels: [
-          {
-            id: 17,
-            title: 'Manage User Roles',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'People Area',
-        featureModels: [
-          {
-            id: 18,
-            title: 'Manage Customers',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'People Area',
-        featureModels: [
-          {
-            id: 36,
-            title: 'Chef',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Report Area',
-        featureModels: [
-          {
-            id: 19,
-            title: 'Overall Report',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Report Area',
-        featureModels: [
-          {
-            id: 20,
-            title: 'Tax Report',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Report Area',
-        featureModels: [
-          {
-            id: 21,
-            title: 'Exponse Report',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Report Area',
-        featureModels: [
-          {
-            id: 22,
-            title: 'Stock Alerts',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Advance Area',
-        featureModels: [
-          {
-            id: 23,
-            title: 'Imports and Exports',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Advance Area',
-        featureModels: [
-          {
-            id: 24,
-            title: 'Manage Service Table',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Advance Area',
-        featureModels: [
-          {
-            id: 25,
-            title: 'Manage Payment Methods',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Advance Area',
-        featureModels: [
-          {
-            id: 26,
-            title: 'Manage Pickup Points',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Advance Area',
-        featureModels: [
-          {
-            id: 27,
-            title: 'Database Backup',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Advance Area',
-        featureModels: [
-          {
-            id: 28,
-            title: 'Manage Language',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Configuration Area',
-        featureModels: [
-          {
-            id: 29,
-            title: 'General Configuration',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Configuration Area',
-        featureModels: [
-          {
-            id: 30,
-            title: 'Appearance Configuration',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Configuration Area',
-        featureModels: [
-          {
-            id: 31,
-            title: 'Localization Configuration',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Configuration Area',
-        featureModels: [
-          {
-            id: 32,
-            title: 'Outgoing Mail Configuration',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Configuration Area',
-        featureModels: [
-          {
-            id: 33,
-            title: 'Authentication Configuration',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Configuration Area',
-        featureModels: [
-          {
-            id: 34,
-            title: 'Captcha Configuration',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'Configuration Area',
-        featureModels: [
-          {
-            id: 35,
-            title: 'Printer Configuration',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'GC Inventory',
-        featureModels: [
-          {
-            id: 37,
-            title: 'Store',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'GC Inventory',
-        featureModels: [
-          {
-            id: 38,
-            title: 'Brand',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'GC Inventory',
-        featureModels: [
-          {
-            id: 39,
-            title: 'Category',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'GC Inventory',
-        featureModels: [
-          {
-            id: 40,
-            title: 'Vendor',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'GC Inventory',
-        featureModels: [
-          {
-            id: 41,
-            title: 'Product',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'GC Inventory',
-        featureModels: [
-          {
-            id: 42,
-            title: 'Order',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
-            ],
-          },
-        ],
-      },
-      {
-        area: 'GC Inventory',
-        featureModels: [
-          {
-            id: 43,
-            title: 'Report',
-            hasAccess: false,
-            actionModels: [
-              { id: 1, action: 'Create', hasAccess: false },
-              { id: 2, action: 'Update', hasAccess: false },
-              { id: 3, action: 'Delete', hasAccess: false },
-              { id: 4, action: 'View', hasAccess: false },
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
             ],
           },
         ],
       },
     ];
-
-    return permissionList;
   }
 }

@@ -95,7 +95,7 @@ export class CatalogListComponent implements OnInit, OnDestroy {
   }
 
   private resolveImage(imagePath: string | undefined): string {
-    if (!imagePath) return 'assets/media/mangos/default.jpg';
+    if (!imagePath) return 'assets/media/avatars/blank.png';
     return this.imagePathService.createFullPath(imagePath);
   }
 

@@ -38,7 +38,7 @@ export class ErrorMessageService {
   }
 
   private showForbidden(): void {
-    Swal.fire('Forbidden', 'You are not authorized to perform this action.', 'warning');
+    Swal.fire('Access Denied', 'You don\'t have permission to access this resource.', 'warning');
   }
 
   private showTimeout(): void {

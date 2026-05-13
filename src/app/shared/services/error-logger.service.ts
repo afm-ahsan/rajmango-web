@@ -33,11 +33,11 @@ export class ErrorLoggerService {
       message: error.message || 'Unknown HTTP error',
       status: error.status,
       url: error.url,
-      error,
       timestamp: new Date()
     };
 
-    this.log(summary, LogLevel.Error);
+    const level = error.status >= 500 ? LogLevel.Error : LogLevel.Warn;
+    this.log(summary, level);
   }
 
   private formatMessage(input: unknown): string {

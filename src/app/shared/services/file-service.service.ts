@@ -24,33 +24,25 @@ export class FileService {
     if (options?.prefix)    params = params.set('prefix',   options.prefix);
     if (options?.entityId)  params = params.set('entityId', String(options.entityId));
 
-    return this.http.post(`${this.apiUrl}/upload-image`, formData, {
+    return this.http.post(`${this.apiUrl}/upload`, formData, {
         reportProgress: true,
         observe: 'events',
         params,
     });
   }
 
-  public download(fileUrl: string) { 
-    return this.http.get(`${this.apiUrl}/download?fileUrl=${fileUrl}`, {
+  public download(relativePath: string) {
+    return this.http.get(`${this.apiUrl}/download`, {
       reportProgress: true,
       observe: 'events',
-      responseType: 'blob'
-    }); 
+      responseType: 'blob',
+      params: new HttpParams().set('relativePath', relativePath),
+    });
   }
 
-  // public delete(filePath: string) {
-  //   return this.http.post(`${this.apiUrl}/delete`, filePath, {
-  //       reportProgress: true,
-  //       observe: 'events',
-  //   });
-  // }
-
-  public delete(fileName: string, location: string): Observable<any>{
-    return this.http.delete(`${this.apiUrl}/delete-image/${fileName}/${location}`);
-  }
-
-  public getPhotos() { 
-    return this.http.get(`${this.apiUrl}/getPhotos`); 
+  public delete(relativePath: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete`, {
+      params: new HttpParams().set('relativePath', relativePath),
+    });
   }
 }
