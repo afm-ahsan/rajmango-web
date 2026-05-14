@@ -32,16 +32,16 @@ export class UserPermissionService {
   /**
    * Builds the frontend UserAccessModel from the backend login response.
    *
-   * Source: GetAuthUserDto.permissionJson — a JSON-serialised string[] of
-   * flat permission strings matching RajMango.Shared.Permissions.
-   * e.g. '["user.view","order.view","mango.type.manage"]'
+   * Source: GetAuthUserDto.permissions — a flat string array of permission strings
+   * matching RajMango.Shared.Permissions.
+   * e.g. ["user.view", "order.view", "mango.type.manage"]
    *
-   * Special case: '["ALL"]' is used by system_admin → every flag is true.
+   * Special case: ["ALL"] is used by system_admin → every flag is true.
    *
-   * @param permissionJson  Raw JSON string from GetAuthUserDto.permissionJson
+   * @param permissions  Flat string array of permission strings from GetAuthUserDto.permissions
    */
-  preparePermissionModel(permissionJson: string | null | undefined): UserAccessModel {
-    const grants = this.parsePermissionJson(permissionJson);
+  preparePermissionModel(permissions: string[] | null | undefined): UserAccessModel {
+    const grants = new Set(permissions ?? []);
     const isAll  = grants.has(AppPermissions.ALL);
     const can    = (p: string): boolean => isAll || grants.has(p);
 
@@ -81,19 +81,5 @@ export class UserPermissionService {
       hasUsersAccess:     can(AppPermissions.Users.View),
       hasUserRolesAccess: can(AppPermissions.Roles.View),
     };
-  }
-
-  /** Parses the raw permissionJson string into a Set<string>. Never throws. */
-  parsePermissionJson(permissionJson: string | null | undefined): Set<string> {
-    if (!permissionJson) return new Set();
-    try {
-      const parsed = JSON.parse(permissionJson);
-      if (Array.isArray(parsed)) {
-        return new Set<string>(parsed.filter((p: any) => typeof p === 'string'));
-      }
-    } catch {
-      // malformed JSON — treat as no permissions
-    }
-    return new Set();
   }
 }

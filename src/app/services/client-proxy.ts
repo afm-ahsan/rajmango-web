@@ -13366,7 +13366,7 @@ export class GetAuthUserDto implements IGetAuthUserDto {
     roles!: AuthUserRole[] | undefined;
     roleId!: number | undefined;
     permissionJson!: string | undefined;
-    permissions!: PermissionModel[] | undefined;
+    permissions!: string[] | undefined;
 
     constructor(data?: IGetAuthUserDto) {
         if (data) {
@@ -13398,7 +13398,7 @@ export class GetAuthUserDto implements IGetAuthUserDto {
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
                 for (let item of _data["permissions"])
-                    this.permissions!.push(PermissionModel.fromJS(item));
+                    this.permissions!.push(item);
             }
         }
     }
@@ -13431,7 +13431,7 @@ export class GetAuthUserDto implements IGetAuthUserDto {
         if (Array.isArray(this.permissions)) {
             data["permissions"] = [];
             for (let item of this.permissions)
-                data["permissions"].push(item ? item.toJSON() : <any>undefined);
+                data["permissions"].push(item);
         }
         return data;
     }
@@ -13457,7 +13457,7 @@ export interface IGetAuthUserDto {
     roles: AuthUserRole[] | undefined;
     roleId: number | undefined;
     permissionJson: string | undefined;
-    permissions: PermissionModel[] | undefined;
+    permissions: string[] | undefined;
 }
 
 export class GetAuthUserQuery implements IGetAuthUserQuery {

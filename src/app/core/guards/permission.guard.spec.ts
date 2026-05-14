@@ -33,7 +33,7 @@ describe('PermissionGuard', () => {
   it('allows navigation when user has the required permission', () => {
     // Admin user has dashboard.admin.view → hasAdminAccess = true
     permissionService.currentPermission = permissionService.preparePermissionModel(
-      JSON.stringify([AppPermissions.Dashboard.AdminView, AppPermissions.MangoTypes.Manage])
+      [AppPermissions.Dashboard.AdminView, AppPermissions.MangoTypes.Manage]
     );
 
     const route = mockRouteWithPermission(UserPermissionKey.HasMangoTypeAccess);
@@ -45,11 +45,11 @@ describe('PermissionGuard', () => {
   it('redirects to /error/403 when user lacks the required permission', () => {
     // General user has only customer permissions
     permissionService.currentPermission = permissionService.preparePermissionModel(
-      JSON.stringify([
+      [
         AppPermissions.Orders.View,
         AppPermissions.Dashboard.CustomerView,
         AppPermissions.Complaints.Submit,
-      ])
+      ]
     );
 
     const route = mockRouteWithPermission(UserPermissionKey.HasMangoTypeAccess);
@@ -71,7 +71,7 @@ describe('PermissionGuard', () => {
 
   it('allows navigation for ALL permission (system_admin)', () => {
     permissionService.currentPermission = permissionService.preparePermissionModel(
-      JSON.stringify([AppPermissions.ALL])
+      [AppPermissions.ALL]
     );
 
     const route = mockRouteWithPermission(UserPermissionKey.HasUserRolesAccess);
@@ -102,7 +102,7 @@ describe('UserPermissionService.preparePermissionModel', () => {
   });
 
   it('grants all access for ALL sentinel', () => {
-    const model = service.preparePermissionModel(JSON.stringify(['ALL']));
+    const model = service.preparePermissionModel(['ALL']);
     expect(model.hasAdminAccess).toBe(true);
     expect(model.hasMangoTypeAccess).toBe(true);
     expect(model.hasUsersAccess).toBe(true);
@@ -119,7 +119,7 @@ describe('UserPermissionService.preparePermissionModel', () => {
       AppPermissions.Dashboard.CustomerView,
       AppPermissions.Complaints.Submit,
     ];
-    const model = service.preparePermissionModel(JSON.stringify(generalPerms));
+    const model = service.preparePermissionModel(generalPerms);
 
     expect(model.hasOrderAccess).toBe(true);
     expect(model.hasMangoCatalogAccess).toBe(true);
@@ -143,7 +143,7 @@ describe('UserPermissionService.preparePermissionModel', () => {
       AppPermissions.Reports.View,
       AppPermissions.Users.View,
     ];
-    const model = service.preparePermissionModel(JSON.stringify(adminPerms));
+    const model = service.preparePermissionModel(adminPerms);
 
     expect(model.hasAdminAccess).toBe(true);
     expect(model.hasMangoTypeAccess).toBe(true);
@@ -152,7 +152,7 @@ describe('UserPermissionService.preparePermissionModel', () => {
     expect(model.hasUsersAccess).toBe(true);
   });
 
-  it('returns all-false access model for null permissionJson', () => {
+  it('returns all-false access model for null or empty permissions', () => {
     const model = service.preparePermissionModel(null);
 
     // Static true fields remain true
@@ -162,11 +162,5 @@ describe('UserPermissionService.preparePermissionModel', () => {
     expect(model.hasAdminAccess).toBe(false);
     expect(model.hasMangoTypeAccess).toBe(false);
     expect(model.hasOrderAccess).toBe(false);
-  });
-
-  it('returns safe defaults for malformed JSON', () => {
-    const model = service.preparePermissionModel('{not-valid-json}');
-    expect(model.hasAdminAccess).toBe(false);
-    expect(model.hasHomeAccess).toBe(true); // always true
   });
 });
