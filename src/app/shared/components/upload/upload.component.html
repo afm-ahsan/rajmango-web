@@ -2,7 +2,7 @@
     <div class="col-6">
       <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
       <!-- <button type="button" class="btn btn-success" (click)="file.click()">Upload File</button> -->
-      <button class="btn-light" (click)="file.click()">Upload File</button>
+      <button type="button" class="btn btn-light" (click)="file.click()">Upload File</button>
     </div>
     <div class="col-6">
       <!-- <span class="upload" *ngIf="progress > 0">

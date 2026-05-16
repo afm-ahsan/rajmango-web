@@ -11,4 +11,5 @@ export interface AppUserModel {
   isLocked: boolean;
   isActive: boolean;
   pic: string;
+  imagePath?: string | null;
 }

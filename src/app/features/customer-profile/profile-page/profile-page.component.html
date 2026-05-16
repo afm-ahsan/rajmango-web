@@ -19,12 +19,50 @@
 
             <!-- Avatar upload -->
             <div class="d-flex align-items-center gap-5 mb-7">
-              <div class="symbol symbol-80px symbol-circle">
-                <img [src]="avatarUrl()" alt="Profile photo" class="rounded-circle" style="width:80px;height:80px;object-fit:cover;" />
+              <!-- Circular avatar — single image with built-in error fallback -->
+              <div class="symbol symbol-circle" style="width:80px;height:80px;flex-shrink:0;">
+                <img
+                  [src]="avatarUrl()"
+                  alt="Profile photo"
+                  class="rounded-circle"
+                  style="width:80px;height:80px;object-fit:cover;border:2px solid #e4e6ef;"
+                  (error)="onAvatarError($event)" />
               </div>
+
+              <!-- Controls -->
               <div>
-                <p class="fw-semibold text-muted mb-1 fs-7">Profile Photo</p>
-                <app-upload location="users" (uploadFinished)="onAvatarUploaded($event)"></app-upload>
+                <p class="fw-semibold text-muted mb-2 fs-7">Profile Photo</p>
+
+                <!-- Hidden file input -->
+                <input type="file" #photoInput accept="image/jpeg,image/png,image/webp"
+                  style="display:none"
+                  (change)="onPhotoSelected($event)" />
+
+                <div class="d-flex align-items-center gap-3">
+                  <!-- Upload button -->
+                  <button type="button"
+                    class="btn btn-sm btn-light btn-active-light-primary"
+                    (click)="photoInput.click()"
+                    [disabled]="isUploadingPhoto">
+                    <span *ngIf="!isUploadingPhoto">
+                      <i class="bi bi-camera-fill me-1 fs-8"></i>Upload Photo
+                    </span>
+                    <span *ngIf="isUploadingPhoto">
+                      <span class="spinner-border spinner-border-sm me-1" role="status"></span>Uploading…
+                    </span>
+                  </button>
+
+                  <!-- Remove link — only when a server-side photo is saved -->
+                  <a *ngIf="hasProfilePhoto && !isUploadingPhoto"
+                    href="javascript:void(0)"
+                    class="text-danger fs-7 text-decoration-none"
+                    (click)="removePhoto()">
+                    Remove
+                  </a>
+                </div>
+
+                <!-- Inline error only; success comes via Swal from saveProfile() -->
+                <small *ngIf="photoError" class="text-danger mt-1 d-block">{{ photoError }}</small>
               </div>
             </div>
 

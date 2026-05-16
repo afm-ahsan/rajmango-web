@@ -48,13 +48,15 @@ export class UploadComponent implements OnInit {
           else if (event.type === HttpEventType.Response) {
             this.message = 'Image Uploaded.';
             this.imagePath = event.body.imagePath;
+            this.working = false;
             this.uploadFinished.emit(event.body);
           }
         },
-        error: (err: HttpErrorResponse) => console.log(err)
-      }).add(() => {
-      this.working = false;
-    });
+        error: (err: HttpErrorResponse) => {
+          this.message = err?.error?.message ?? err?.message ?? 'Upload failed.';
+          this.working = false;
+        }
+      });
   }
 
   deleteFile = () => {
@@ -69,14 +71,14 @@ export class UploadComponent implements OnInit {
               this.message = 'Image Deleted';
               this.imagePath = '';
               this.fileName = '';
+              this.working = false;
               this.uploadFinished.emit(null);
             },
-            error: error => {
-                console.error('There was an error!', error);
+            error: (err: HttpErrorResponse) => {
+                this.message = err?.error?.message ?? err?.message ?? 'Delete failed.';
+                this.working = false;
             }
-        }).add(() => {
-            this.working = false;
-          });
+        });
   }
 
   public createImgPath = (serverPath: string) => {
