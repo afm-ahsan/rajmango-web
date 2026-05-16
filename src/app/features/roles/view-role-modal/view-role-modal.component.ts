@@ -31,9 +31,9 @@ export class ViewRoleModalComponent implements OnInit, OnDestroy {
         this.roleDto = roleDto.data;
         this.isLoading = false;
       },
-      (error: any) => {
-        console.log(error);
+      () => {
         this.isLoading = false;
+        this.modal.dismiss();
       }
     );
   }

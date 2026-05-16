@@ -32,9 +32,9 @@ export class ViewExpenseModalComponent implements OnInit, OnDestroy {
         this.expenseDto = expenseDto.data;
         this.isLoading = false;
       },
-      (error: any) => {
-        console.log(error);
+      () => {
         this.isLoading = false;
+        this.modal.dismiss();
       }
     );
   }

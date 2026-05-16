@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { delay, tap, catchError, of, finalize } from 'rxjs';
+import { finalize } from 'rxjs';
 import { SubSink } from 'subsink';
 import { RoleService } from '../role.service';
 
@@ -26,17 +26,12 @@ export class DeleteRoleModalComponent implements OnInit, OnDestroy {
     this.subs.sink = this.roleService
       .delete(this.id)
       .pipe(
-        delay(1000), // Remove it from your code (just for showing loading)
-        tap(() => this.modal.close()),
-        catchError((error) => {
-          this.modal.dismiss(error);
-          return of(undefined);
-        }),
-        finalize(() => {
-          this.isLoading = false;
-        })
+        finalize(() => { this.isLoading = false; })
       )
-      .subscribe();
+      .subscribe({
+        next: () => this.modal.close('success'),
+        error: (err) => this.modal.dismiss(err)
+      });
   }
 
   ngOnDestroy(): void {

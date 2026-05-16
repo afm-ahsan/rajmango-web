@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, delay, finalize, of, tap } from 'rxjs';
+import { finalize } from 'rxjs';
 import { SubSink } from 'subsink';
 import { ExpenseTypeService } from '../expense-type.service';
 
@@ -26,17 +26,12 @@ export class DeleteExpenseTypeModalComponent implements OnInit, OnDestroy {
     this.subs.sink = this.expenseTypeService
       .delete(this.id)
       .pipe(
-        delay(1000), // Remove it from your code (just for showing loading)
-        tap(() => this.modal.close()),
-        catchError((error) => {
-          this.modal.dismiss(error);
-          return of(undefined);
-        }),
-        finalize(() => {
-          this.isLoading = false;
-        })
+        finalize(() => { this.isLoading = false; })
       )
-      .subscribe();
+      .subscribe({
+        next: () => this.modal.close('success'),
+        error: (err) => this.modal.dismiss(err)
+      });
   }
 
   ngOnDestroy(): void {

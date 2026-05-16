@@ -100,9 +100,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       () => {
         this.load();
       },
-      (error: any) => {
-        console.log(error);
-      }
+      () => {}
     );
   }
 
@@ -113,9 +111,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       () => {
         this.load();
       },
-      (error: any) => {
-        console.log(error);
-      }
+      () => {}
     );
   }
 

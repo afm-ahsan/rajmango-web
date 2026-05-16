@@ -31,9 +31,9 @@ export class ViewPaymentTypeModalComponent implements OnInit, OnDestroy {
         this.paymentMethodDto = paymentMethodDto.data;
         this.isLoading = false;
       },
-      (error: any) => {
-        console.log(error);
+      () => {
         this.isLoading = false;
+        this.modal.dismiss();
       }
     );
   }

@@ -153,7 +153,7 @@ export class PaymentModalComponent implements OnInit, OnDestroy {
       type: 0,
       cardType: '',
       walletTransactionId: '',
-      isDeleted: true,
+      isDeleted: false,
       createdBy: null,
       updatedBy: null,
       deletedBy: null,
@@ -165,8 +165,6 @@ export class PaymentModalComponent implements OnInit, OnDestroy {
   }
 
   onMethodChange($event: any) {
-    let val = $event.target.value;
-    console.log(val);
     this.isCashPayment = false;
     this.isCardPayment = false;
     this.isMobileWallet = false;

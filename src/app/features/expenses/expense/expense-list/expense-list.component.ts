@@ -110,9 +110,7 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
       () => {
         this.load();
       },
-      (error: any) => {
-        console.log(error);
-      }
+      () => {}
     );
   }
 
@@ -123,9 +121,7 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
       () => {
         this.load();
       },
-      (error: any) => {
-        console.log(error);
-      }
+      () => {}
     );
   }
 

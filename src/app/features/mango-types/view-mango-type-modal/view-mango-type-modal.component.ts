@@ -33,9 +33,9 @@ export class ViewMangoTypeModalComponent implements OnInit, OnDestroy {
         this.mangoTypeDto = response.data;
         this.isLoading = false;
       },
-      error: (error: any) => {
-        console.log(error);
+      error: () => {
         this.isLoading = false;
+        this.modal.dismiss();
       }
     });
   }

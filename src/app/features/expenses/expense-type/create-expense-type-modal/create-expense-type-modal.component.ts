@@ -141,7 +141,7 @@ export class CreateExpenseTypeModalComponent implements OnInit, OnDestroy {
       name: '',
       description: '',
       isActive: true,
-      isDeleted: true,
+      isDeleted: false,
       createdBy: null,
       updatedBy: null,
       deletedBy: null,

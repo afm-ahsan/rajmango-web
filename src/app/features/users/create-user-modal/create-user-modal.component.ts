@@ -49,7 +49,6 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
   }
 
   onRoleSelected(e: any) {
-    console.log(e.target.value);
     var item = _.find(this.roles, (item) => {
       return item.id == parseInt(e.target.value);
     });
@@ -136,21 +135,16 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
           Validators.compose([Validators.required]),
         ],
         password: [
-          this.userDto.password,
-          Validators.compose([
-            Validators.required,
-            Validators.minLength(6),
-            Validators.maxLength(16),
-          ]),
+          '',
+          this.userDto.id
+            ? Validators.compose([Validators.minLength(6), Validators.maxLength(16)])
+            : Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(16)]),
         ],
-
         cPassword: [
           '',
-          Validators.compose([
-            Validators.required,
-            Validators.minLength(6),
-            Validators.maxLength(16),
-          ]),
+          this.userDto.id
+            ? Validators.compose([Validators.minLength(6), Validators.maxLength(16)])
+            : Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(16)]),
         ],
         isActive: [this.userDto.isActive],
         roleId: [this.userDto.roleId],
@@ -212,7 +206,9 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
     this.userInputDto.lastName = formData.lastName;
     this.userInputDto.email = formData.email;
     this.userInputDto.phoneNumber = formData.phoneNumber;
-    this.userInputDto.password = formData.password;
+    if (!this.userDto.id || formData.password) {
+      this.userInputDto.password = formData.password;
+    }
     this.userInputDto.isActive = formData.isActive;
     this.userInputDto.roleId = formData.roleId;
     if (this.userDto.id) {
@@ -241,7 +237,7 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
       accessFailedCount: 0,
       roleId: 0,
       isActive: true,
-      isDeleted: true,
+      isDeleted: false,
       createdBy: null,
       updatedBy: null,
       deletedBy: null,

@@ -184,9 +184,8 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
   }
 
   uploadFinished = (event: any) => {
-    if (event){
+    if (event) {
       this.newImagePath = event.imagePath;
-      this.mangoTypeDto.imagePath = '';
     }
   };
 

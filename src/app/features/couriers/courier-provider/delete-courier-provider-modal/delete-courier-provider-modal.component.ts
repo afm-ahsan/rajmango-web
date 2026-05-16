@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, delay, finalize, of } from 'rxjs';
+import { catchError, finalize, of } from 'rxjs';
 import { SubSink } from 'subsink';
 import { CourierProviderService } from '../courier-provider.service';
 
@@ -35,7 +35,6 @@ export class DeleteCourierProviderModalComponent implements OnInit, OnDestroy {
     this.subs.sink = this.courierProviderService
       .delete(this.id)
       .pipe(
-        delay(600), // Optional: purely for UI feedback, can remove in production
         catchError((error) => {
           this.modal.dismiss(error);
           return of(null);

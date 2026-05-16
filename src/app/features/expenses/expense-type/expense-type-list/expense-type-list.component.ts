@@ -86,9 +86,7 @@ export class ExpenseTypeListComponent implements OnInit, OnDestroy {
       () => {
         this.load();
       },
-      (error: any) => {
-        console.log(error);
-      }
+      () => {}
     );
   }
 
@@ -99,9 +97,7 @@ export class ExpenseTypeListComponent implements OnInit, OnDestroy {
       () => {
         this.load();
       },
-      (error: any) => {
-        console.log(error);
-      }
+      () => {}
     );
   }
 

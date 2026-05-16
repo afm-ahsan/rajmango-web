@@ -170,7 +170,7 @@ export class CreateExpenseModalComponent implements OnInit, OnDestroy {
       expenseTypeId: 0,
       amount: 0,
       isActive: true,
-      isDeleted: true,
+      isDeleted: false,
       createdBy: null,
       updatedBy: null,
       deletedBy: null,

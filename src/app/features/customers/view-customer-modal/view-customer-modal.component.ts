@@ -32,9 +32,9 @@ export class ViewCustomerModalComponent implements OnInit, OnDestroy {
         this.customerDto = customerDto.data;
         this.isLoading = false;
       },
-      (error: any) => {
-        console.log(error);
+      () => {
         this.isLoading = false;
+        this.modal.dismiss();
       }
     );
   }

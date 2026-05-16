@@ -32,9 +32,9 @@ export class ViewUserModalComponent implements OnInit, OnDestroy {
         this.userDto = userDto.data;
         this.isLoading = false;
       },
-      (error: any) => {
-        console.log(error);
+      () => {
         this.isLoading = false;
+        this.modal.dismiss();
       }
     );
   }

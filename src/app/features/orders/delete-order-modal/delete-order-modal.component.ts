@@ -1,7 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, finalize, of, tap } from 'rxjs';
-import { LoaderService } from 'src/app/shared/services/loader.service';
+import { finalize } from 'rxjs';
 import { SubSink } from 'subsink';
 import { OrderService } from '../order.service';
 
@@ -17,7 +16,6 @@ export class DeleteOrderModalComponent implements OnInit, OnDestroy {
 
   constructor(
     private orderService: OrderService,
-    private loaderService: LoaderService,
     public modal: NgbActiveModal
   ) {}
 
@@ -25,22 +23,15 @@ export class DeleteOrderModalComponent implements OnInit, OnDestroy {
 
   delete(): void {
     this.isLoading = true;
-    this.loaderService.show();
-
     this.subs.sink = this.orderService
       .delete(this.id)
       .pipe(
-        tap(() => this.modal.close('success')),
-        catchError((error) => {
-          this.modal.dismiss(error);
-          return of(undefined);
-        }),
-        finalize(() => {
-          this.isLoading = false;
-          this.loaderService.hide();
-        })
+        finalize(() => { this.isLoading = false; })
       )
-      .subscribe();
+      .subscribe({
+        next: () => this.modal.close('success'),
+        error: (err) => this.modal.dismiss(err)
+      });
   }
 
   ngOnDestroy(): void {
