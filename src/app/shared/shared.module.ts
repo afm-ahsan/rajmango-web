@@ -9,7 +9,6 @@ import { DataLoadingEmptyComponent } from './components/data-loading-empty/data-
 import { DownloadComponent } from './components/download/download.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { PaymentModalComponent } from './components/payment-modal/payment-modal.component';
-import { PrintModalComponent } from './components/print-modal/print-modal.component';
 import { SingleFileUploadComponent } from './components/single-file-upload/single-file-upload.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { CheckChildrenDirective } from './directives/check-children.directive';
@@ -55,7 +54,6 @@ import { CreateOrderModalComponent } from '../features/orders/create-order-modal
     CheckChildrenDirective,
     DataLoadingEmptyComponent,
     SingleFileUploadComponent,
-    PrintModalComponent,
     SortableHeaderComponent,
     MangoCardComponent,
     MangoDetailModalComponent,
@@ -79,7 +77,6 @@ import { CreateOrderModalComponent } from '../features/orders/create-order-modal
     CheckChildrenDirective,
     DataLoadingEmptyComponent,
     SingleFileUploadComponent,
-    PrintModalComponent,
     SortableHeaderComponent,    
     MangoCardComponent,
     MangoDetailModalComponent,
