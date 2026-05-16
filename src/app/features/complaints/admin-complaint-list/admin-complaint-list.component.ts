@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from 'rxjs';
 import { SubSink } from 'subsink';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { SignalRService } from 'src/app/shared/services/signalr.service';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 import { ComplaintService } from '../complaint.service';
 import { ComplaintDto } from '../models/complaint.model';
 import { UpdateStatusModalComponent } from '../update-status-modal/update-status-modal.component';
@@ -19,6 +21,7 @@ export class AdminComplaintListComponent implements OnInit, OnDestroy {
   constructor(
     private complaintService: ComplaintService,
     private modalService: NgbModal,
+    private loaderService: LoaderService,
     private signalR: SignalRService,
     private cdRef: ChangeDetectorRef
   ) {}
@@ -31,15 +34,16 @@ export class AdminComplaintListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.subs.sink = this.complaintService.getAll().subscribe({
+    this.loaderService.show();
+    this.subs.sink = this.complaintService.getAll().pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.loaderService.hide();
+        this.cdRef.detectChanges();
+      })
+    ).subscribe({
       next: (res: any) => {
         this.complaints = res?.data ?? [];
-        this.isLoading = false;
-        this.cdRef.detectChanges();
-      },
-      error: () => {
-        this.isLoading = false;
-        this.cdRef.detectChanges();
       },
     });
   }

@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { GetAllRoleDto, RoleServiceProxy } from 'src/app/services/client-proxy';
 import { FilterModel } from 'src/app/shared/models/filter.model';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SubSink } from 'subsink';
 import { CreateRoleModalComponent } from '../create-role-modal/create-role-modal.component';
 import { DeleteRoleModalComponent } from '../delete-role-modal/delete-role-modal.component';
@@ -32,6 +34,7 @@ export class RoleListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
+    private loaderService: LoaderService,
     private roleProxy: RoleServiceProxy
   ) {}
 
@@ -41,17 +44,18 @@ export class RoleListComponent implements OnInit, OnDestroy {
 
   load() {
     this.isLoading = true;
-    this.subs.sink = this.roleProxy.get().subscribe({
+    this.loaderService.show();
+    this.subs.sink = this.roleProxy.get().pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.loaderService.hide();
+        this.cdRef.detectChanges();
+        MenuComponent.reinitialization();
+      })
+    ).subscribe({
       next: (res) => {
         this.roles = res.data ?? [];
         this.totalCount = this.roles.length;
-        this.isLoading = false;
-        this.cdRef.detectChanges();
-        MenuComponent.reinitialization();
-      },
-      error: () => {
-        this.isLoading = false;
-        this.cdRef.detectChanges();
       },
     });
   }
@@ -93,9 +97,10 @@ export class RoleListComponent implements OnInit, OnDestroy {
       size: 'md',
     });
     modalRef.componentInstance.id = id;
-    modalRef.result.then(() => {
-      this.load();
-    });
+    modalRef.result.then(
+      () => { this.load(); },
+      () => {}
+    );
   }
 
   pageChanged($event: any) {

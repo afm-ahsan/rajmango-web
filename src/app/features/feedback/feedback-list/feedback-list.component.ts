@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { finalize } from 'rxjs';
 import { SubSink } from 'subsink';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 import { FeedbackDto } from '../models/feedback.model';
 import { FeedbackService } from '../feedback.service';
 
@@ -14,6 +16,7 @@ export class FeedbackListComponent implements OnInit, OnDestroy {
 
   constructor(
     private feedbackService: FeedbackService,
+    private loaderService: LoaderService,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -23,15 +26,16 @@ export class FeedbackListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.subs.sink = this.feedbackService.getAll().subscribe({
+    this.loaderService.show();
+    this.subs.sink = this.feedbackService.getAll().pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.loaderService.hide();
+        this.cdRef.detectChanges();
+      })
+    ).subscribe({
       next: (res: any) => {
         this.feedbacks = res?.data ?? [];
-        this.isLoading = false;
-        this.cdRef.detectChanges();
-      },
-      error: () => {
-        this.isLoading = false;
-        this.cdRef.detectChanges();
       },
     });
   }

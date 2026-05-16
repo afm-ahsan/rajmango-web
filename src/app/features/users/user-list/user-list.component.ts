@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { AppUserDto, UserServiceProxy } from 'src/app/services/client-proxy';
 import { FilterModel } from 'src/app/shared/models/filter.model';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SubSink } from 'subsink';
 import _ from 'underscore';
 import { RoleDto } from '../../roles/models/role-dto.model';
@@ -36,6 +38,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
+    private loaderService: LoaderService,
     private userProxy: UserServiceProxy,
     private roleService: RoleService
   ) {}
@@ -47,17 +50,18 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   load() {
     this.isLoading = true;
-    this.subs.sink = this.userProxy.get().subscribe({
+    this.loaderService.show();
+    this.subs.sink = this.userProxy.get().pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.loaderService.hide();
+        this.cdRef.detectChanges();
+        MenuComponent.reinitialization();
+      })
+    ).subscribe({
       next: (res) => {
         this.users = res.data ?? [];
         this.totalCount = this.users.length;
-        this.isLoading = false;
-        this.cdRef.detectChanges();
-        MenuComponent.reinitialization();
-      },
-      error: () => {
-        this.isLoading = false;
-        this.cdRef.detectChanges();
       },
     });
   }
@@ -121,9 +125,10 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
     modalRef.componentInstance.id = id;
     modalRef.componentInstance.roleName = this.getRoleName(roleId);
-    modalRef.result.then(() => {
-      this.load();
-    });
+    modalRef.result.then(
+      () => { this.load(); },
+      () => {}
+    );
   }
 
   pageChanged($event: any) {

@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SubSink } from 'subsink';
 import { PolicyType } from 'src/app/shared/enums/policy-type.enum';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 import { PolicyService } from '../policy.service';
 import { PolicyDto } from '../models/policy.model';
 
@@ -30,6 +32,7 @@ export class AdminPolicyListComponent implements OnInit, OnDestroy {
 
   constructor(
     private policyService: PolicyService,
+    private loaderService: LoaderService,
     private fb: FormBuilder,
     private cdRef: ChangeDetectorRef
   ) {}
@@ -50,15 +53,16 @@ export class AdminPolicyListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.subs.sink = this.policyService.getAll().subscribe({
+    this.loaderService.show();
+    this.subs.sink = this.policyService.getAll().pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.loaderService.hide();
+        this.cdRef.detectChanges();
+      })
+    ).subscribe({
       next: (res: any) => {
         this.policies = res?.data ?? [];
-        this.isLoading = false;
-        this.cdRef.detectChanges();
-      },
-      error: () => {
-        this.isLoading = false;
-        this.cdRef.detectChanges();
       },
     });
   }

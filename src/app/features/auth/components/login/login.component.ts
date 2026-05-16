@@ -13,7 +13,7 @@ import { AuthFacade } from '../../auth.facade';
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   hasError = false;
-  returnUrl = '/';
+  returnUrl = '/home';
 
   readonly isLoading$ = this._authFacade.isLoading$;
   private readonly _destroy$ = new Subject<void>();
@@ -25,13 +25,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     private _router: Router
   ) {
     if (this._authFacade.currentUserValue) {
-      this._router.navigate(['/']);
+      this._router.navigate(['/home']);
     }
   }
 
   ngOnInit(): void {
     this._initForm();
-    this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
   }
 
   ngOnDestroy(): void {

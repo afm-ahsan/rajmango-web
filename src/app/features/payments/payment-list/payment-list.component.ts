@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from 'rxjs';
 import { SubSink } from 'subsink';
 import { GetAllPaymentDto, PaymentServiceProxy } from 'src/app/services/client-proxy';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SignalRService } from 'src/app/shared/services/signalr.service';
 import { RecordPaymentModalComponent } from '../record-payment-modal/record-payment-modal.component';
 import { ViewPaymentModalComponent } from '../view-payment-modal/view-payment-modal.component';
@@ -20,6 +22,7 @@ export class PaymentListComponent implements OnInit, OnDestroy {
   constructor(
     private paymentProxy: PaymentServiceProxy,
     private modalService: NgbModal,
+    private loaderService: LoaderService,
     private signalR: SignalRService,
     private cdRef: ChangeDetectorRef
   ) {}
@@ -31,15 +34,16 @@ export class PaymentListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.subs.sink = this.paymentProxy.get().subscribe({
+    this.loaderService.show();
+    this.subs.sink = this.paymentProxy.get().pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.loaderService.hide();
+        this.cdRef.detectChanges();
+      })
+    ).subscribe({
       next: (res: any) => {
         this.payments = res?.data ?? [];
-        this.isLoading = false;
-        this.cdRef.detectChanges();
-      },
-      error: () => {
-        this.isLoading = false;
-        this.cdRef.detectChanges();
       },
     });
   }

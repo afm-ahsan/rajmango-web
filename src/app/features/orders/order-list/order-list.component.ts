@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
@@ -83,19 +84,18 @@ export class OrderListComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     const dto = FilterUtils.createPagedRequest(this.filter, this.searchVal);
     this.subs.sink = this.orderFacade.getPagedWithCount(dto)
-      .subscribe({
-        next: ([data, count]) => {
-          this.orders = data;
-          this.totalCount = count;
+      .pipe(
+        finalize(() => {
           this.isLoading = false;
           this.loaderService.hide();
           this.cdRef.detectChanges();
           MenuComponent.reinitialization();
-        },
-        error: () => {
-          this.isLoading = false;
-          this.loaderService.hide();
-          this.cdRef.detectChanges();
+        })
+      )
+      .subscribe({
+        next: ([data, count]) => {
+          this.orders = data;
+          this.totalCount = count;
         },
       });
   }

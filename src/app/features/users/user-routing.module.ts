@@ -17,8 +17,8 @@ const routes: Routes = [
         path: 'user-view',
         component: ViewUserModalComponent,
       },
-      { path: '', redirectTo: 'users', pathMatch: 'full' },
-      { path: '**', redirectTo: 'users', pathMatch: 'full' },
+      { path: '', redirectTo: 'user-list', pathMatch: 'full' },
+      { path: '**', redirectTo: 'user-list', pathMatch: 'full' },
     ],
   },
 ];

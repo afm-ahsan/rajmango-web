@@ -16,6 +16,29 @@ export class PermissionService {
     return this.http.get(`${this.apiUrl}`);
   }
 
+  private readonly permissionMap: { [featureId: number]: { [actionId: number]: string } } = {
+    1:  { 1: 'order.view',               2: 'order.create',                3: 'order.update',                4: 'order.delete',                5: 'order.approve'             },
+    2:  { 1: 'mango.type.view',           2: 'mango.type.manage',           3: 'mango.type.manage',           4: 'mango.type.manage'                                           },
+    3:  { 1: 'mango.availability.view',   2: 'mango.availability.manage',   3: 'mango.availability.manage',   4: 'mango.availability.manage'                                   },
+    4:  { 1: 'customer.view',             2: 'customer.create',             3: 'customer.update',             4: 'customer.delete'                                             },
+    5:  { 1: 'payment.view',              2: 'payment.create',              3: 'payment.update',              4: 'payment.delete'                                              },
+    6:  { 1: 'expense.type.view',         2: 'expense.type.create',         3: 'expense.type.update',         4: 'expense.type.delete'                                         },
+    7:  { 1: 'expense.view',              2: 'expense.create',              3: 'expense.update',              4: 'expense.delete'                                              },
+    8:  { 1: 'courier-provider.view',     2: 'courier-provider.create',     3: 'courier-provider.update',     4: 'courier-provider.delete'                                     },
+    9:  { 1: 'courier-station.view',      2: 'courier-station.create',      3: 'courier-station.update',      4: 'courier-station.delete'                                      },
+    10: { 1: 'courier-area-map.view',     2: 'courier-area-map.create',     3: 'courier-area-map.update',     4: 'courier-area-map.delete'                                     },
+    11: { 1: 'feedback.admin.view'                                                                                                                                             },
+    12: { 1: 'complaint.admin.view',      2: 'complaint.admin.manage'                                                                                                         },
+    13: { 1: 'policy.view',               2: 'policy.manage',               3: 'policy.manage',               4: 'policy.manage'                                               },
+    14: { 1: 'report.view'                                                                                                                                                     },
+    15: { 1: 'user.view',                 2: 'user.create',                 3: 'user.update',                 4: 'user.delete',                 5: 'user.permission.grant'     },
+    16: { 1: 'role.view',                 2: 'role.create',                 3: 'role.update',                 4: 'role.delete'                                                 },
+  };
+
+  getPermissionString(featureId: number, actionId: number): string | null {
+    return this.permissionMap[featureId]?.[actionId] ?? null;
+  }
+
   public getPermissionList(): PermissionModel[] {
     return [
       // ─── Operations ───────────────────────────────────────────────────

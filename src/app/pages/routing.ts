@@ -140,7 +140,7 @@ const Routing: Routes = [
   // ─── Fallback ────────────────────────────────────────────────────────
   {
     path: '',
-    redirectTo: '/dashboard/customer',
+    redirectTo: '/home',
     pathMatch: 'full',
   },
   {

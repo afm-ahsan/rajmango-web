@@ -17,8 +17,8 @@ const routes: Routes = [
         path: 'customer-view',
         component: ViewCustomerModalComponent,
       },
-      { path: '', redirectTo: 'customers', pathMatch: 'full' },
-      { path: '**', redirectTo: 'customers', pathMatch: 'full' },
+      { path: '', redirectTo: 'customer-list', pathMatch: 'full' },
+      { path: '**', redirectTo: 'customer-list', pathMatch: 'full' },
     ],
   },
 ];

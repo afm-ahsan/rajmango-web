@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { FilterModel } from 'src/app/shared/models/filter.model';
 import { ImagePathService } from 'src/app/shared/services/image-path.service';
@@ -60,13 +61,19 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     const dto = FilterUtils.createPagedRequest(this.filter, this.searchVal);
     this.subs.sink = this.mangoTypeFacade.getPagedWithCount(dto)
-      .subscribe(([data, count]) => {
-        this.mangoTypes = data;
-        this.totalCount = count;
-        this.isLoading = false;
-        this.loaderService.hide();
-        this.cdRef.detectChanges();
-        MenuComponent.reinitialization();
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.loaderService.hide();
+          this.cdRef.detectChanges();
+          MenuComponent.reinitialization();
+        })
+      )
+      .subscribe({
+        next: ([data, count]) => {
+          this.mangoTypes = data;
+          this.totalCount = count;
+        },
       });
   }
 

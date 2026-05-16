@@ -17,8 +17,8 @@ const routes: Routes = [
         path: 'role-view',
         component: ViewRoleModalComponent,
       },
-      { path: '', redirectTo: 'roles', pathMatch: 'full' },
-      { path: '**', redirectTo: 'roles', pathMatch: 'full' },
+      { path: '', redirectTo: 'role-list', pathMatch: 'full' },
+      { path: '**', redirectTo: 'role-list', pathMatch: 'full' },
     ],
   },
 ];

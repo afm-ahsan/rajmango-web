@@ -1,11 +1,9 @@
-import { PermissionModel } from "src/app/shared/models/permission.model";
-
 export interface RoleInputDto {
   id: number;
   name: string;
   description: string;
   isActive: boolean;
-  permissions: PermissionModel[];
+  permissions: string[];
   isDeleted: boolean;
   createdBy: number | null;
   updatedBy: number | null;
@@ -14,4 +12,3 @@ export interface RoleInputDto {
   updatedAt: Date | null;
   deletedAt: Date | null;
 }
-  

@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
 import { FilterModel } from 'src/app/shared/models/filter.model';
 import { PagedAndSortedDto } from 'src/app/shared/models/pagedAndSorted.model';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SubSink } from 'subsink';
 import _ from 'underscore';
 import { CreateCustomerModalComponent } from '../create-customer-modal/create-customer-modal.component';
@@ -42,6 +44,7 @@ export class CustomerListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
+    private loaderService: LoaderService,
     private customerService: CustomerService
   ) {}
 
@@ -51,25 +54,30 @@ export class CustomerListComponent implements OnInit, OnDestroy {
 
   load() {
     this.isLoading = true;
-    //this.filter.limit = this.filter.pageSize;
-    //this.filter.offset = (this.filter.pageNo - 1) * this.filter.pageSize;
-    var pagedAndSortedDto: PagedAndSortedDto = {
+    this.loaderService.show();
+    const pagedAndSortedDto: PagedAndSortedDto = {
       pageNumber: this.filter.pageNumber,
       pageSize: this.filter.pageSize,
       sortBy: this.filter.sortBy,
-      sortOrder:  this.filter.sortOrder,
+      sortOrder: this.filter.sortOrder,
       filter: '',
       userId: 0,
     };
 
     this.subs.sink = this.customerService
       .getAll(pagedAndSortedDto)
-      .subscribe((response: any) => {
-        this.isLoading = false;
-        this.customers = response.data;
-        console.log(response);
-        this.cdRef.detectChanges();
-        MenuComponent.reinitialization();
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.loaderService.hide();
+          this.cdRef.detectChanges();
+          MenuComponent.reinitialization();
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.customers = response.data;
+        },
       });
   }
 
@@ -111,9 +119,10 @@ export class CustomerListComponent implements OnInit, OnDestroy {
     });
     modalRef.componentInstance.id = id;
     modalRef.componentInstance.customerType = this.getCustomerType(customerType);
-    modalRef.result.then(() => {
-      this.load();
-    });
+    modalRef.result.then(
+      () => { this.load(); },
+      () => {}
+    );
   }
 
   getCustomerType(customerTypeId: number) {

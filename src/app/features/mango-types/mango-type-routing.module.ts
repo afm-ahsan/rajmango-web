@@ -17,8 +17,8 @@ const routes: Routes = [
         path: 'mango-type-view',
         component: ViewMangoTypeModalComponent,
       },
-      { path: '', redirectTo: 'mango-types', pathMatch: 'full' },
-      { path: '**', redirectTo: 'mango-types', pathMatch: 'full' },
+      { path: '', redirectTo: 'mango-type-list', pathMatch: 'full' },
+      { path: '**', redirectTo: 'mango-type-list', pathMatch: 'full' },
     ],
   },
 ];

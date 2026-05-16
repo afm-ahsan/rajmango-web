@@ -85,15 +85,17 @@ export class CreateRoleModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Overlay saved role permissions onto the fresh permission list
+  // Overlay saved role permissions (flat string[]) onto the checkbox tree
   private applyExistingPermissions(): void {
-    if (!this.roleDto?.permissions?.length) return;
+    const savedPerms = new Set<string>(this.roleDto.permissions ?? []);
+    if (!savedPerms.size) return;
     for (const group of this.permissionList) {
       for (const feature of group.featureModels) {
-        feature.hasAccess = this.hasFeatureAccess(feature.id);
         for (const action of feature.actionModels) {
-          action.hasAccess = this.hasActionAccess(feature.id, action.id);
+          const perm = this.permissionService.getPermissionString(feature.id, action.id);
+          action.hasAccess = !!perm && savedPerms.has(perm);
         }
+        feature.hasAccess = feature.actionModels.some(a => a.hasAccess);
       }
     }
   }
@@ -141,7 +143,20 @@ export class CreateRoleModalComponent implements OnInit, OnDestroy {
     this.roleInputDto.name = formData.name;
     this.roleInputDto.description = formData.description;
     this.roleInputDto.isActive = formData.isActive;
-    this.roleInputDto.permissions = this.permissionList;
+
+    const selectedPerms = new Set<string>();
+    for (const group of this.permissionList) {
+      for (const feature of group.featureModels) {
+        for (const action of feature.actionModels) {
+          if (action.hasAccess) {
+            const perm = this.permissionService.getPermissionString(feature.id, action.id);
+            if (perm) selectedPerms.add(perm);
+          }
+        }
+      }
+    }
+    this.roleInputDto.permissions = Array.from(selectedPerms);
+
     if (this.roleDto.id) {
       this.roleInputDto.id = this.roleDto.id;
       this.roleInputDto.createdBy = this.roleDto.createdBy;
@@ -167,29 +182,6 @@ export class CreateRoleModalComponent implements OnInit, OnDestroy {
       updatedAt: null,
       deletedAt: null,
     };
-  }
-
-  // ─── Lookup helpers (read saved role permissions) ─────────────────
-
-  private hasFeatureAccess(featureId: number): boolean {
-    for (const group of this.roleDto.permissions ?? []) {
-      for (const f of group.featureModels) {
-        if (f.id === featureId) return f.hasAccess;
-      }
-    }
-    return false;
-  }
-
-  private hasActionAccess(featureId: number, actionId: number): boolean {
-    for (const group of this.roleDto.permissions ?? []) {
-      for (const f of group.featureModels) {
-        if (f.id === featureId) {
-          const action = f.actionModels.find((a) => a.id === actionId);
-          return action?.hasAccess ?? false;
-        }
-      }
-    }
-    return false;
   }
 
   // ─── Select-All (global) ──────────────────────────────────────────

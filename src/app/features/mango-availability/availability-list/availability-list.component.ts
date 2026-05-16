@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SubSink } from 'subsink';
 import { MangoAvailabilityDto, MangoAvailabilityServiceProxy } from 'src/app/services/client-proxy';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 import { AvailabilityModalComponent } from '../availability-modal/availability-modal.component';
 
 @Component({
@@ -18,6 +20,7 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
   constructor(
     private proxy: MangoAvailabilityServiceProxy,
     private modalService: NgbModal,
+    private loaderService: LoaderService,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -27,15 +30,16 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.subs.sink = this.proxy.get().subscribe({
+    this.loaderService.show();
+    this.subs.sink = this.proxy.get().pipe(
+      finalize(() => {
+        this.isLoading = false;
+        this.loaderService.hide();
+        this.cdRef.detectChanges();
+      })
+    ).subscribe({
       next: (res: any) => {
         this.items = res?.data ?? [];
-        this.isLoading = false;
-        this.cdRef.detectChanges();
-      },
-      error: () => {
-        this.isLoading = false;
-        this.cdRef.detectChanges();
       },
     });
   }

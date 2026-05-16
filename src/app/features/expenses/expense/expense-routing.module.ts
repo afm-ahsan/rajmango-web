@@ -17,8 +17,8 @@ const routes: Routes = [
         path: 'expense-view',
         component: ViewExpenseModalComponent,
       },
-      { path: '', redirectTo: 'expenses', pathMatch: 'full' },
-      { path: '**', redirectTo: 'expenses', pathMatch: 'full' },
+      { path: '', redirectTo: 'expense-list', pathMatch: 'full' },
+      { path: '**', redirectTo: 'expense-list', pathMatch: 'full' },
     ],
   },
 ];

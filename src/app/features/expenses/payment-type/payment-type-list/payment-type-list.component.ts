@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { SubSink } from 'subsink';
 import { PaymentMethodDto } from '../models/payment-method-dto.model';
@@ -8,6 +9,7 @@ import { ViewPaymentTypeModalComponent } from '../view-payment-type-modal/view-p
 import { CreatePaymentTypeModalComponent } from '../create-payment-type-modal/create-payment-type-modal.component';
 import { DeletePaymentTypeModalComponent } from '../delete-payment-type-modal/delete-payment-type-modal.component';
 import { FilterModel } from 'src/app/shared/models/filter.model';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 import { PagedAndSortedDto } from 'src/app/shared/models/pagedAndSorted.model';
 
 @Component({
@@ -34,6 +36,7 @@ export class PaymentTypeListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
+    private loaderService: LoaderService,
     private paymentTypeService: PaymentTypeService
   ) {}
 
@@ -43,25 +46,30 @@ export class PaymentTypeListComponent implements OnInit, OnDestroy {
 
   load() {
     this.isLoading = true;
-    //this.filter.limit = this.filter.pageSize;
-    //this.filter.offset = (this.filter.pageNo - 1) * this.filter.pageSize;
-    var pagedAndSortedDto: PagedAndSortedDto = {
+    this.loaderService.show();
+    const pagedAndSortedDto: PagedAndSortedDto = {
       pageNumber: this.filter.pageNumber,
       pageSize: this.filter.pageSize,
       sortBy: this.filter.sortBy,
-      sortOrder:  this.filter.sortOrder,
+      sortOrder: this.filter.sortOrder,
       filter: '',
       userId: 0,
     };
 
     this.subs.sink = this.paymentTypeService
       .getAll(pagedAndSortedDto)
-      .subscribe((response: any) => {
-        this.isLoading = false;
-        this.paymentMethods = response.data;
-        console.log(response);
-        this.cdRef.detectChanges();
-        MenuComponent.reinitialization();
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.loaderService.hide();
+          this.cdRef.detectChanges();
+          MenuComponent.reinitialization();
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.paymentMethods = response.data;
+        },
       });
   }
 
@@ -102,9 +110,10 @@ export class PaymentTypeListComponent implements OnInit, OnDestroy {
       size: 'md',
     });
     modalRef.componentInstance.id = id;
-    modalRef.result.then(() => {
-      this.load();
-    });
+    modalRef.result.then(
+      () => { this.load(); },
+      () => {}
+    );
   }
 
   pageChanged($event: any) {
