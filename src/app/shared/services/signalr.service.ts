@@ -61,6 +61,12 @@ export class SignalRService implements OnDestroy {
   private readonly hubUrl = `${environment.apis.default.url}/hubs/rajmango`;
   private readonly tokenKey = `${environment.appVersion}-${environment.USERDATA_KEY}`;
 
+  // Guards against the async disconnect/reconnect race:
+  // - isStopping: stop() is in flight; don't create a new connection yet
+  // - reconnectAfterStop: connect() was requested while stopping; retry once stop completes
+  private isStopping = false;
+  private reconnectAfterStop = false;
+
   // Connection state
   readonly state$ = new BehaviorSubject<SignalRConnectionState>('disconnected');
 
@@ -92,7 +98,12 @@ export class SignalRService implements OnDestroy {
   // ── Private: connection lifecycle ──────────────────────────────────────────
 
   private connect(): void {
-    if (this.connection) return; // already active
+    // If a stop() is in flight, defer until it completes to avoid orphaned connections.
+    if (this.isStopping) {
+      this.reconnectAfterStop = true;
+      return;
+    }
+    if (this.connection) return; // already connected or connecting
 
     const token = this.readToken();
     if (!token) return;
@@ -121,9 +132,15 @@ export class SignalRService implements OnDestroy {
 
   private disconnect(): void {
     if (!this.connection) return;
+    this.isStopping = true;
     this.connection.stop().finally(() => {
       this.connection = null;
+      this.isStopping = false;
       this.state$.next('disconnected');
+      if (this.reconnectAfterStop) {
+        this.reconnectAfterStop = false;
+        this.connect();
+      }
     });
   }
 
@@ -134,6 +151,12 @@ export class SignalRService implements OnDestroy {
     this.connection.onclose(() => {
       this.connection = null;
       this.state$.next('disconnected');
+      // If the close was not triggered by our own stop() call (e.g. auto-reconnect
+      // exhausted all attempts) and the user is still authenticated, restart the
+      // connection so the hub comes back without requiring a logout/login cycle.
+      if (!this.isStopping && this.authService.currentUserValue) {
+        this.connect();
+      }
     });
   }
 
