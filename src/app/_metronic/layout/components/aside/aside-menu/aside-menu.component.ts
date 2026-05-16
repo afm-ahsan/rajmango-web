@@ -14,6 +14,9 @@ export class AsideMenuComponent implements OnInit {
   ngOnInit(): void {}
 
   // ─── Core ──────────────────────────────────────────────────────────
+  get canViewHome(): boolean {
+    return this.permissionService.hasAccess(UserPermissionKey.HasHomeAccess);
+  }
   get canViewAdminSection(): boolean {
     return this.permissionService.hasAccess(UserPermissionKey.HasAdminAccess);
   }

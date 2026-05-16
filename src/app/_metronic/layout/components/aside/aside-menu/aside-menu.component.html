@@ -2,6 +2,16 @@
      CUSTOMER SECTION — visible to all authenticated users
      ════════════════════════════════════════════════════════════════ -->
 
+<!-- Home -->
+<div class="menu-item" *ngIf="canViewHome">
+  <a class="menu-link without-sub" routerLink="/home" routerLinkActive="active">
+    <span class="menu-icon">
+      <span [inlineSVG]="'./assets/media/icons/duotune/general/gen025.svg'" class="svg-icon svg-icon-2"></span>
+    </span>
+    <span class="menu-title">Home</span>
+  </a>
+</div>
+
 <!-- Dashboard (always visible) -->
 <div class="menu-item">
   <a class="menu-link without-sub" routerLink="/dashboard/customer" routerLinkActive="active">
