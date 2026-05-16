@@ -1,62 +1,38 @@
 <div class="modal-content">
-  <!-- Modal Header -->
   <div class="modal-header">
-    <h5 class="modal-title whiteFontColor">Courier Provider Details</h5>
+    <h2 class="modal-title">Courier Provider Details</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
-
-  <!-- Modal Body with Overlay Spinner -->
-  <div class="modal-body overlay overlay-block cursor-default">
-    <ng-container *ngIf="isLoading">
-      <div class="overlay-layer bg-transparent">
-        <div class="spinner spinner-lg spinner-success"></div>
+  <div class="modal-body py-6 px-lg-8">
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
+    </div>
+    <div *ngIf="!isLoading && courierProviderDto" class="row g-4">
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Name</div>
+        <div class="fw-semibold fs-6">{{ courierProviderDto.name || '—' }}</div>
       </div>
-    </ng-container>
-
-    <ng-container *ngIf="courierProviderDto">
-      <div class="row mb-3">
-        <label class="col-4 fw-bold text-start">Name:</label>
-        <div class="col-8">
-          <span class="form-text text-wrap">{{ courierProviderDto.name }}</span>
-        </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Support Phone</div>
+        <div class="fw-semibold fs-6">{{ courierProviderDto.supportPhone || '—' }}</div>
       </div>
-
-      <div class="row mb-3">
-        <label class="col-4 fw-bold text-start">Description:</label>
-        <div class="col-8">
-          <span class="form-text text-wrap">{{ courierProviderDto.description || '—' }}</span>
-        </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Email</div>
+        <div class="fw-semibold fs-6">{{ courierProviderDto.email || '—' }}</div>
       </div>
-
-      <div class="row mb-3">
-        <label class="col-4 fw-bold text-start">Support Phone:</label>
-        <div class="col-8">
-          <span class="form-text text-wrap">{{ courierProviderDto.supportPhone || '—' }}</span>
-        </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Status</div>
+        <span class="badge" [ngClass]="courierProviderDto.isActive ? 'bg-success' : 'bg-danger'">
+          {{ courierProviderDto.isActive ? 'Active' : 'Inactive' }}
+        </span>
       </div>
-
-      <div class="row mb-3">
-        <label class="col-4 fw-bold text-start">Email:</label>
-        <div class="col-8">
-          <span class="form-text text-wrap">{{ courierProviderDto.email || '—' }}</span>
-        </div>
+      <div class="col-12">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Description</div>
+        <div class="fw-semibold fs-6">{{ courierProviderDto.description || '—' }}</div>
       </div>
-
-      <div class="row mb-3">
-        <label class="col-4 fw-bold text-start">Is Active:</label>
-        <div class="col-8">
-          <span class="badge" [ngClass]="courierProviderDto.isActive ? 'bg-success' : 'bg-danger'">
-            {{ courierProviderDto.isActive ? 'Yes' : 'No' }}
-          </span>
-        </div>
-      </div>
-    </ng-container>
+    </div>
   </div>
-
-  <!-- Modal Footer -->
-  <div class="modal-footer justify-content-end">
-    <button type="button" class="btn btn-light d-flex align-items-center" (click)="modal.dismiss()">
-      <i class="bi bi-x-circle me-2 fs-5 text-danger"></i>
-      Close
-    </button>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.dismiss()">Close</button>
   </div>
 </div>

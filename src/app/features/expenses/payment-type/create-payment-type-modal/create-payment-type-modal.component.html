@@ -1,65 +1,40 @@
 <div class="modal-content">
-    <div class="modal-header">
-        <div class="modal-title h4 whiteFontColor" id="example-modal-sizes-title-lg">
-            <ng-container *ngIf="paymentTypeDto">
-                <ng-container *ngIf="paymentTypeDto.id" class="font-weight-bold"><strong>Edit
-                        Payment Type</strong></ng-container>
-                <ng-container *ngIf="!paymentTypeDto.id" class="font-weight-bold"><strong>Add
-                        Payment Type</strong></ng-container>
-            </ng-container>
+  <div class="modal-header">
+    <h2 class="modal-title">{{ paymentTypeDto.id ? 'Edit Payment Type' : 'Add Payment Type' }}</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body py-6 px-lg-8">
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
+    </div>
+    <form *ngIf="!isLoading" [formGroup]="formGroup">
+      <div class="row g-4">
+        <div class="col-12">
+          <label class="form-label fw-semibold required">Name</label>
+          <input type="text" class="form-control form-control-solid" formControlName="name"
+            placeholder="Payment type name" autocomplete="off" />
+          <div *ngIf="controlHasError('required', 'name')" class="text-danger fs-7 mt-1">Name is required.</div>
+          <div *ngIf="controlHasError('minlength', 'name')" class="text-danger fs-7 mt-1">Name must be at least 2 characters.</div>
+          <div *ngIf="controlHasError('maxlength', 'name')" class="text-danger fs-7 mt-1">Name must be at most 50 characters.</div>
         </div>
-    </div>
-    <div class="overlay overlay-block cursor-default modal-body">
-        <ng-container *ngIf="isLoading">
-            <div class="overlay-layer bg-transparent">
-                <div class="spinner spinner-lg spinner-success"></div>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="paymentTypeDto">
-            <form action="#" class="form form-label-right" [formGroup]="formGroup">
-                <!-- Payment Type Name -->
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Title:</b></label>
-                    <div class="col-9">
-                        <input type="text" class="form-control form-control-lg form-control-solid" name="name"
-                            placeholder="Payment Type" autocomplete="off"
-                            [class.is-invalid]="isControlInvalid('name')"
-                            [class.is-valid]="isControlValid('name')" formControlName="name" />
-                        <div class="valid-feedback" *ngIf="isControlValid('name')">
-                            Payment type was entered correct
-                        </div>
-                        <div class="invalid-feedback" *ngIf="controlHasError('required', 'name')">
-                            Payment type is required
-                        </div>
-                        <div class="invalid-feedback" *ngIf="controlHasError('minlength', 'name')">
-                            Payment type should have at least 2 characters
-                        </div>
-                        <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'name')">
-                            Payment type should have maximum 50 characters
-                        </div>
-                    </div>
-                </div>
-                <!-- Payment Type Description -->
-                <div class="form-group row mt-2">
-                    <label class="col-3 col-form-label text-lg-right"><b>Description:</b></label>
-                    <div class="col-9">
-                        <input type="text" class="form-control form-control-lg form-control-solid"
-                            name="description" placeholder="Payment Type Description" autocomplete="off"
-                            formControlName="description" />
-                    </div>
-                </div>
-                <!-- Is Active -->
-                <div class="form-group row mt-2">
-                    <label class="col-3 col-form-label text-lg-right"><b>Is Active:</b></label>
-                    <div class="col-9 mt-4">
-                        <input type="checkbox" formControlName="isActive" />
-                    </div>
-                </div>
-            </form>
-        </ng-container>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">Cancel</button>
-        <button class="btn btn-primary btn-elevate" (click)="save()" [disabled]="formGroup.invalid">Save</button>
-    </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Description</label>
+          <input type="text" class="form-control form-control-solid" formControlName="description"
+            placeholder="Optional description" autocomplete="off" />
+        </div>
+        <div class="col-12">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" formControlName="isActive" id="isActiveCheck" />
+            <label class="form-check-label fw-semibold" for="isActiveCheck">Active</label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light me-3" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="formGroup.invalid || isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>Save
+    </button>
+  </div>
 </div>

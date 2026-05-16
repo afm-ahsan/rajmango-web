@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, of, finalize } from 'rxjs';
+import { finalize } from 'rxjs';
 import { SubSink } from 'subsink';
 import { CourierStationService } from '../courier-station.service';
 
@@ -10,7 +10,7 @@ import { CourierStationService } from '../courier-station.service';
   styleUrls: ['./delete-courier-station-modal.component.scss']
 })
 export class DeleteCourierStationModalComponent implements OnInit, OnDestroy {
-  @Input() id!: string;
+  @Input() id: string;
 
   isLoading = false;
   private subs = new SubSink();
@@ -20,31 +20,16 @@ export class DeleteCourierStationModalComponent implements OnInit, OnDestroy {
     public modal: NgbActiveModal
   ) {}
 
-  ngOnInit(): void {
-    // Component init logic (if needed)
-  }
+  ngOnInit(): void {}
 
   delete(): void {
-    if (!this.id) {
-      this.modal.dismiss('Invalid courier station ID');
-      return;
-    }
-
     this.isLoading = true;
-
     this.subs.sink = this.courierStationService
       .delete(this.id)
-      .pipe(
-        catchError((error) => {
-          this.modal.dismiss(error);
-          return of(null);
-        }),
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe(() => {
-        this.modal.close('success');
+      .pipe(finalize(() => { this.isLoading = false; }))
+      .subscribe({
+        next: () => this.modal.close('success'),
+        error: (err) => this.modal.dismiss(err)
       });
   }
 

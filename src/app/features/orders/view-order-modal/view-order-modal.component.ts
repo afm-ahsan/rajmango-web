@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { SubSink } from 'subsink';
 import { OrderDto } from '../models/order-dto.model';
@@ -21,8 +20,7 @@ export class ViewOrderModalComponent implements OnInit, OnDestroy {
 
   constructor(
     public modal: NgbActiveModal,
-    private orderService: OrderService,
-    private loaderService: LoaderService
+    private orderService: OrderService
   ) {}
 
   ngOnInit(): void {
@@ -35,19 +33,14 @@ export class ViewOrderModalComponent implements OnInit, OnDestroy {
 
   private loadOrder(): void {
     this.isLoading = true;
-    this.loaderService.show();
-
     this.subs.sink = this.orderService.getById(this.id).subscribe({
       next: (response) => {
         this.orderDto = response.data;
         this.enrichOrderDetails();
         this.isLoading = false;
-        this.loaderService.hide();
       },
-      error: (error) => {
-        console.error('Failed to load order:', error);
+      error: () => {
         this.isLoading = false;
-        this.loaderService.hide();
       }
     });
   }

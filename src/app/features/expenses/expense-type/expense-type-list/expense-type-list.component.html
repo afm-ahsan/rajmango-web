@@ -1,193 +1,111 @@
-<!--begin::Post-->
-<div class="post d-flex flex-column-fluid" id="kt_post">
-    <!--begin::Container-->
-    <div id="kt_content_container" class="container-xxl">
-        <!--begin::Card-->
-        <div class="card">
-            <!--begin::Card header-->
-            <div class="card-header border-0 pt-6">
-                <!--begin::Card title-->
-                <div class="card-title">
-                    <!--begin::Search-->
-                    <div class="d-flex align-items-center position-relative my-1">
-                        <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
-                        <span class="svg-icon svg-icon-1 position-absolute ms-6"
-                            [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'" [cacheSVG]="true">
-                        </span>
-                        <!--end::Svg Icon-->
-                        <input type="text" data-kt-user-expenseType-filter="search"
-                            class="form-control form-control-solid w-250px ps-14" placeholder="Search expense type" />
-                    </div>
-                    <!--end::Search-->
-                </div>
-                <!--begin::Card title-->
-                <!--begin::Card toolbar-->
-                <div class="card-toolbar">
-                    <!--begin::Toolbar-->
-                    <div class="d-flex justify-content-end" data-kt-user-expense-type-toolbar="base">
-                        <!--begin::Filter-->
-                        <!--<button type="button" class="btn btn-light-primary me-3" data-kt-menu-trigger="click"
-                            data-kt-menu-placement="bottom-end">-->
-                            <!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
-                            <!--<span class="svg-icon svg-icon-2"
-                                [inlineSVG]="'./assets/media/icons/duotune/general/gen031.svg'" [cacheSVG]="true">
-                            </span>-->
-                            <!--end::Svg Icon--><!--Filter</button>-->
-                        <!--begin::Menu 1-->
-                        <div class="menu menu-sub menu-sub-dropdown w-300px w-md-325px" data-kt-menu="true">
-                            <!--begin::Header-->
-                            <div class="px-7 py-5">
-                                <div class="fs-5 text-dark fw-bolder">Filter Options</div>
-                            </div>
-                            <!--end::Header-->
-                            <!--begin::Separator-->
-                            <div class="separator border-gray-200"></div>
-                            <!--end::Separator-->
-                            <!--begin::Content-->
-                            <div class="px-7 py-5" data-kt-user-expense-type-filter="form">
-                                <!--begin::Input group-->
-                                <div class="mb-10">
-                                    <label class="form-label fs-6 fw-bold">Category:</label>
-                                    <select class="form-select form-select-solid fw-bolder" data-kt-select2="true"
-                                        data-placeholder="Select option" data-allow-clear="true"
-                                        data-kt-user-expense-type-filter="role" data-hide-search="true">
-                                        <option></option>
-                                        <option value="tblName">Name</option>
-                                        <option value="isActive">Active</option>
-                                    </select>
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Actions-->
-                                <div class="d-flex justify-content-end">
-                                    <button type="reset"
-                                        class="btn btn-light btn-active-light-primary fw-bold me-2 px-6"
-                                        data-kt-menu-dismiss="true" data-kt-user-expense-type-filter="reset">Reset</button>
-                                    <button type="submit" class="btn btn-primary fw-bold px-6"
-                                        data-kt-menu-dismiss="true" data-kt-user-expense-type-filter="filter">Apply</button>
-                                </div>
-                                <!--end::Actions-->
-                            </div>
-                            <!--end::Content-->
-                        </div>
-                        <!--end::Menu 1-->
-                        <!--end::Filter-->
-                        <!--begin::Export-->
-                        <!--<button type="button" class="btn btn-light-primary me-3" data-bs-toggle="modal"
-                            data-bs-target="#kt_modal_export">-->
-                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr078.svg-->
-                            <!--<span class="svg-icon svg-icon-2"
-                                [inlineSVG]="'./assets/media/icons/duotune/arrows/arr078.svg'" [cacheSVG]="true">
-                            </span>-->
-                            <!--end::Svg Icon--><!--Export</button>-->
-                        <!--end::Export-->
-                        <!--begin::Add user-->
-                        <button type="button" class="btn btn-primary" (click)="create()">
-                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
-                            <span class="svg-icon svg-icon-2"
-                                [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'" [cacheSVG]="true">
-                            </span>
-                            <!--end::Svg Icon-->Add Expense Types</button>
-                        <!--end::Add user-->
-                    </div>
-                    <!--end::Toolbar-->
-                </div>
-                <!--end::Card toolbar-->
-            </div>
-            <!--end::Card header-->
-            <!--begin::Card body-->
-            <div class="card-body py-4">
-                <div class="table-responsive ">
-                    <!--begin::Category-->
-                    <table class="table table-striped table-hover align-middle fs-6 gy-5" id="kt_expense-type">
-                        <!--begin::Category head-->
-                        <thead>
-                            <!--begin::Category row-->
-                            <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
-                                <!--<th class="w-10px pe-2">
-                                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                                        <input class="form-check-input" type="checkbox" data-kt-check="true"
-                                            data-kt-check-target="#kt_expense-type .form-check-input" value="1" />
-                                    </div>
-                                </th>-->
-                                <th>Title</th>
-                                <th>Description</th>
-                                <th>Active</th>
-                                <th class="text-center">Actions</th>
-                            </tr>
-                            <!--end::Category row-->
-                        </thead>
-                        <!--end::Category head-->
-                        <!--begin::Category body-->
-                        <tbody class="text-gray-600 fw-bold">
-                            <!--begin::Category row-->
-                            <tr *ngFor="let expenseType of expenseTypes">
-                                <!--begin::Checkbox-->
-                                <!--<td>
-                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="1" />
-                                    </div>
-                                </td>-->
-                                <!--end::Checkbox-->                                
-                                <td>
-                                    <div class="d-flex flex-column">
-                                        <a href="" class="text-gray-800 text-hover-primary mb-1">{{expenseType.name}}</a>
-                                    </div>
-                                </td>
-                                <td>{{expenseType.description}}</td>
-                                <td>{{expenseType.isActive}}</td>
-                                <!--begin::Action=-->
-                                <td class="text-center">
-                                    <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
-                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions
-                                        <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-                                        <span class="svg-icon svg-icon-5 m-0"
-                                            [inlineSVG]="'./assets/media/icons/duotune/arrows/arr072.svg'"
-                                            [cacheSVG]="true">
-                                        </span>
-                                        <!--end::Svg Icon--></a>
-                                    <!--begin::Menu-->
-                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
-                                        data-kt-menu="true">
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="javascript:" class="menu-link px-3"
-                                                (click)="edit(expenseType.id)">Edit</a>
-                                        </div>
-                                        <div class="menu-item px-3">
-                                            <a href="javascript:" class="menu-link px-3"
-                                                (click)="view(expenseType.id)">View</a>
-                                        </div>
-                                        <div class="menu-item px-3">
-                                            <a href="javascript:" class="menu-link px-3"
-                                                (click)="delete(expenseType.id)">Delete</a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                    </div>
-                                    <!--end::Menu-->
-                                </td>
-                                <!--end::Action=-->
-                            </tr>
-                            <!--end::Category row-->
-                        </tbody>
-                        <!--end::Category body-->
-                    </table>
-                    <!--end::Category-->
-                </div>
+﻿<!--begin::Expense Type List-->
+<div class="post d-flex flex-column-fluid" id="kt_expense_type">
+  <div id="kt_content_container" class="container-xxl">
+    <div class="card">
 
-                <app-pagination [collectionSize]="totalCount" [pageSize]="filter.pageSize"
-                    [pageNumber]="filter.pageNumber" (pageChange)="pageChanged($event)"
-                    (pageSizeChange)="pageSizeChanged($event)">
-                </app-pagination>
-            </div>
-            <!--end::Card body-->
-            <div class="card-body">
-                <ng-container *ngIf="!expenseTypes.length && !isLoading">
-                    <app-data-loading-empty></app-data-loading-empty>
-                </ng-container>
-            </div>
+      <!--begin::Header-->
+      <div class="card-header border-0 pt-6 justify-content-between align-items-center gap-3">
+        <div class="card-title">
+          <div class="d-flex align-items-center position-relative">
+            <i class="bi bi-search fs-3 position-absolute ms-3 text-muted"></i>
+            <input
+              type="search"
+              class="form-control form-control-solid w-100 w-sm-250px ps-10"
+              placeholder="Search Expense Type"
+              (input)="onSearchChange($event)"
+            />
+          </div>
         </div>
-        <!--end::Card-->
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-sm btn-primary" (click)="create()">
+            <i class="bi bi-plus-circle me-2"></i>Add Expense Type
+          </button>
+        </div>
+      </div>
+      <!--end::Header-->
+
+      <!--begin::Loading-->
+      <div class="card-body d-flex justify-content-center align-items-center" *ngIf="isLoading" style="min-height: 200px;">
+        <span class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </span>
+      </div>
+      <!--end::Loading-->
+
+      <!--begin::Body-->
+      <div class="card-body py-4" *ngIf="!isLoading && expenseTypes.length > 0">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle fs-6 gy-5">
+            <thead>
+              <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                <th>Name</th>
+                <th>Description</th>
+                <th>Active</th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-600 fw-semibold">
+              <tr *ngFor="let expenseType of expenseTypes">
+                <td>
+                  <a href="javascript:void(0)" (click)="view(expenseType.id)" class="text-gray-800 text-hover-primary">
+                    {{ expenseType.name }}
+                  </a>
+                </td>
+                <td>{{ expenseType.description }}</td>
+                <td>
+                  <span class="badge" [ngClass]="expenseType.isActive ? 'bg-success' : 'bg-danger'">
+                    {{ expenseType.isActive ? 'Yes' : 'No' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-light btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                    Actions <i class="bi bi-three-dots-vertical ms-2"></i>
+                  </button>
+                  <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="edit(expenseType.id)">
+                        <i class="bi bi-pencil-square me-2 text-primary"></i>Edit
+                      </a>
+                    </div>
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="view(expenseType.id)">
+                        <i class="bi bi-eye me-2 text-info"></i>View
+                      </a>
+                    </div>
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3 text-danger" (click)="delete(expenseType.id)">
+                        <i class="bi bi-trash me-2"></i>Delete
+                      </a>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <app-pagination
+          [collectionSize]="totalCount"
+          [pageSize]="filter.pageSize"
+          [pageNumber]="filter.pageNumber"
+          (pageChange)="pageChanged($event)"
+          (pageSizeChange)="pageSizeChanged($event)">
+        </app-pagination>
+      </div>
+      <!--end::Body-->
+
+      <!--begin::Empty-->
+      <div class="card-body" *ngIf="!isLoading && !expenseTypes.length">
+        <app-data-empty
+          icon="bi-tag"
+          title="No Expense Types Found"
+          message="Try adjusting your search or add a new expense type to get started."
+          buttonText="Add Expense Type"
+          (buttonClick)="create()">
+        </app-data-empty>
+      </div>
+      <!--end::Empty-->
+
     </div>
-    <!--end::Container-->
+  </div>
 </div>
-<!--end::Post-->
+<!--end::Expense Type List-->

@@ -4,7 +4,6 @@ import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { GetAllRoleDto, RoleServiceProxy } from 'src/app/services/client-proxy';
 import { FilterModel } from 'src/app/shared/models/filter.model';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SubSink } from 'subsink';
 import { CreateRoleModalComponent } from '../create-role-modal/create-role-modal.component';
 import { DeleteRoleModalComponent } from '../delete-role-modal/delete-role-modal.component';
@@ -16,7 +15,7 @@ import { DeleteRoleModalComponent } from '../delete-role-modal/delete-role-modal
 })
 export class RoleListComponent implements OnInit, OnDestroy {
   subs = new SubSink();
-  isLoading: boolean;
+  isLoading = false;
   roles: GetAllRoleDto[] = [];
   totalCount = 0;
   filter: FilterModel = {
@@ -33,7 +32,6 @@ export class RoleListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
-    private loaderService: LoaderService,
     private roleProxy: RoleServiceProxy
   ) {}
 
@@ -43,11 +41,9 @@ export class RoleListComponent implements OnInit, OnDestroy {
 
   load() {
     this.isLoading = true;
-    this.loaderService.show();
     this.subs.sink = this.roleProxy.get().pipe(
       finalize(() => {
         this.isLoading = false;
-        this.loaderService.hide();
         this.cdRef.detectChanges();
         MenuComponent.reinitialization();
       })

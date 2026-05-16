@@ -1,159 +1,142 @@
-<!--begin::Mango  Type-->
-<div class="post d-flex flex-column-fluid" id="kt_mango_type">
-  <!--begin::Container-->
+﻿<!--begin::Order List-->
+<div class="post d-flex flex-column-fluid" id="kt_orders">
   <div id="kt_content_container" class="container-xxl">
-    <!--begin::Card-->
     <div class="card">
-      <!--begin::Card header-->
-      <div class="card-header border-0 pt-6">
-        <!--begin::Card title-->
+
+      <!--begin::Header-->
+      <div class="card-header border-0 pt-6 justify-content-between align-items-center gap-3">
         <div class="card-title">
-          <div class="d-flex align-items-center position-relative my-1">
-            <span
-              class="svg-icon svg-icon-1 position-absolute ms-6"
-              [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
-              [cacheSVG]="true"
-            ></span>
+          <div class="d-flex align-items-center position-relative">
+            <i class="bi bi-search fs-3 position-absolute ms-3 text-muted"></i>
             <input
               type="search"
-              class="form-control form-control-solid w-250px ps-14"
-              placeholder="Search order"
+              class="form-control form-control-solid w-100 w-sm-250px ps-10"
+              placeholder="Search Order"
               (input)="onSearchChange($event)"
             />
           </div>
         </div>
-        <!--end::Card title-->
-
-        <!--begin::Card toolbar-->
         <div class="card-toolbar">
-          <div class="d-flex justify-content-end" data-kt-user-order-toolbar="base">
-            <!--begin::Add mango type button-->
-            <button type="button" class="btn btn-primary" (click)="create()">
-              <span
-                class="svg-icon svg-icon-2"
-                [inlineSVG]="'./assets/media/icons/duotune/arrows/arr075.svg'"
-                [cacheSVG]="true"
-              ></span>
-              New Order
-            </button>
-          </div>
+          <button type="button" class="btn btn-sm btn-primary" (click)="create()">
+            <i class="bi bi-plus-circle me-2"></i>New Order
+          </button>
         </div>
-        <!--end::Card toolbar-->
       </div>
-      <!--end::Card header-->
+      <!--end::Header-->
 
-      <!--begin::Card body-->
-      <div class="card-body py-4">
+      <!--begin::Loading-->
+      <div class="card-body d-flex justify-content-center align-items-center" *ngIf="isLoading" style="min-height: 200px;">
+        <span class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </span>
+      </div>
+      <!--end::Loading-->
 
-        <!--begin::Loading-->
-        <div *ngIf="isLoading" class="d-flex justify-content-center py-10">
-          <span class="spinner-border text-primary" role="status"></span>
-        </div>
-        <!--end::Loading-->
-
-        <ng-container *ngIf="!isLoading">
-          <div class="table-responsive">
-            <table class="table table-striped table-hover align-middle fs-6 gy-5" id="kt_category">
-              <thead>
-                <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
-                  <th (click)="onSort('orderNumber')">Order Number
-                    <span *ngIf="filter.sortBy === 'orderNumber'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                  </th>
-                  <th (click)="onSort('orderDate')">Order Date
-                    <span *ngIf="filter.sortBy === 'orderDate'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                  </th>
-                  <th (click)="onSort('totalQuantity')">Total Quantity
-                    <span *ngIf="filter.sortBy === 'totalQuantity'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                  </th>
-                  <th (click)="onSort('totalAmount')">Total Amount
-                    <span *ngIf="filter.sortBy === 'totalAmount'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                  </th>
-                  <th (click)="onSort('orderStatus')">Order Status
-                    <span *ngIf="filter.sortBy === 'orderStatus'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                  </th>
-                  <th (click)="onSort('paymentStatus')">Payment Status
-                    <span *ngIf="filter.sortBy === 'paymentStatus'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                  </th>
-                  <th (click)="onSort('isDelivered')">Delivered
-                    <span *ngIf="filter.sortBy === 'isDelivered'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                  </th>
-                  <th class="text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="text-gray-600 fw-bold">
-                <tr *ngFor="let order of orders">
-                  <td>
-                    <a href="javascript:" (click)="view(order.id)" class="text-gray-800 text-hover-primary mb-1 d-block">
-                      {{ order.orderNumber }}
-                    </a>
-                  </td>
-                  <td>{{ order.orderDate | date }}</td>
-                  <td>{{ order.totalQuantity }} Kg</td>
-                  <td>{{ order.totalAmount }}</td>
-                  <td>{{ getOrderStatusLabel(order.orderStatus) }}</td>
-                  <td>{{ getPaymentStatusLabel(order.paymentStatus) }}</td>
-                  <td>{{ order.isDelivered | yesNo }}</td>
-                  <td class="text-center">
-                    <a
-                      href="javascript:void(0)"
-                      class="btn btn-light btn-active-light-primary btn-sm"
-                      data-kt-menu-trigger="click"
-                      data-kt-menu-placement="bottom-end"
-                    >
-                      Actions
-                      <span
-                        class="svg-icon svg-icon-5 m-0"
-                        [inlineSVG]="'./assets/media/icons/duotune/arrows/arr072.svg'"
-                        [cacheSVG]="true"
-                      ></span>
-                    </a>
-                    <div
-                      class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-150px py-4"
-                      data-kt-menu="true"
-                    >
-                      <div class="menu-item px-3">
-                        <a class="menu-link px-3" (click)="edit(order.id)">Edit</a>
-                      </div>
-                      <div class="menu-item px-3">
-                        <a class="menu-link px-3" (click)="view(order.id)">View</a>
-                      </div>
-                      <div class="menu-item px-3">
-                        <a class="menu-link px-3" (click)="delete(order.id)">Delete</a>
-                      </div>
-                      <ng-container *ngIf="order.isDelivered">
-                        <div class="separator my-2"></div>
-                        <div class="menu-item px-3">
-                          <a class="menu-link px-3 text-success" (click)="openFeedback(order)">Give Feedback</a>
-                        </div>
-                        <div class="menu-item px-3">
-                          <a class="menu-link px-3 text-danger" (click)="openComplaint(order)">File Complaint</a>
-                        </div>
-                      </ng-container>
+      <!--begin::Body-->
+      <div class="card-body py-4" *ngIf="!isLoading && orders.length > 0">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover align-middle fs-6 gy-5">
+            <thead>
+              <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
+                <th class="cursor-pointer" (click)="onSort('orderNumber')">Order Number
+                  <span *ngIf="filter.sortBy === 'orderNumber'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                </th>
+                <th class="cursor-pointer" (click)="onSort('orderDate')">Order Date
+                  <span *ngIf="filter.sortBy === 'orderDate'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                </th>
+                <th class="cursor-pointer" (click)="onSort('totalQuantity')">Total Qty
+                  <span *ngIf="filter.sortBy === 'totalQuantity'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                </th>
+                <th class="cursor-pointer" (click)="onSort('totalAmount')">Total Amount
+                  <span *ngIf="filter.sortBy === 'totalAmount'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                </th>
+                <th class="cursor-pointer" (click)="onSort('orderStatus')">Order Status
+                  <span *ngIf="filter.sortBy === 'orderStatus'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                </th>
+                <th class="cursor-pointer" (click)="onSort('paymentStatus')">Payment Status
+                  <span *ngIf="filter.sortBy === 'paymentStatus'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                </th>
+                <th class="cursor-pointer" (click)="onSort('isDelivered')">Delivered
+                  <span *ngIf="filter.sortBy === 'isDelivered'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                </th>
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-600 fw-semibold">
+              <tr *ngFor="let order of orders">
+                <td>
+                  <a href="javascript:void(0)" (click)="view(order.id)" class="text-gray-800 text-hover-primary">
+                    {{ order.orderNumber }}
+                  </a>
+                </td>
+                <td>{{ order.orderDate | date }}</td>
+                <td>{{ order.totalQuantity }} Kg</td>
+                <td>{{ order.totalAmount }}</td>
+                <td>{{ getOrderStatusLabel(order.orderStatus) }}</td>
+                <td>{{ getPaymentStatusLabel(order.paymentStatus) }}</td>
+                <td>{{ order.isDelivered | yesNo }}</td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-light btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                    Actions <i class="bi bi-three-dots-vertical ms-2"></i>
+                  </button>
+                  <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-150px py-4" data-kt-menu="true">
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="edit(order.id)">
+                        <i class="bi bi-pencil-square me-2 text-primary"></i>Edit
+                      </a>
                     </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <app-pagination
-            [collectionSize]="totalCount"
-            [pageSize]="filter.pageSize"
-            [pageNumber]="filter.pageNumber"
-            (pageChange)="pageChanged($event)"
-            (pageSizeChange)="pageSizeChanged($event)"
-          ></app-pagination>
-
-          <ng-container *ngIf="!orders.length">
-            <app-data-loading-empty></app-data-loading-empty>
-          </ng-container>
-        </ng-container>
-
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="view(order.id)">
+                        <i class="bi bi-eye me-2 text-info"></i>View
+                      </a>
+                    </div>
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3 text-danger" (click)="delete(order.id)">
+                        <i class="bi bi-trash me-2"></i>Delete
+                      </a>
+                    </div>
+                    <ng-container *ngIf="order.isDelivered">
+                      <div class="separator my-2"></div>
+                      <div class="menu-item px-3">
+                        <a class="menu-link px-3 text-success" (click)="openFeedback(order)">
+                          <i class="bi bi-star me-2"></i>Give Feedback
+                        </a>
+                      </div>
+                      <div class="menu-item px-3">
+                        <a class="menu-link px-3 text-warning" (click)="openComplaint(order)">
+                          <i class="bi bi-exclamation-triangle me-2"></i>File Complaint
+                        </a>
+                      </div>
+                    </ng-container>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <app-pagination
+          [collectionSize]="totalCount"
+          [pageSize]="filter.pageSize"
+          [pageNumber]="filter.pageNumber"
+          (pageChange)="pageChanged($event)"
+          (pageSizeChange)="pageSizeChanged($event)">
+        </app-pagination>
       </div>
-      <!--end::Card body-->
+      <!--end::Body-->
+
+      <!--begin::Empty-->
+      <div class="card-body" *ngIf="!isLoading && !orders.length">
+        <app-data-empty
+          icon="bi-bag"
+          title="No Orders Found"
+          message="Create a new order to get started."
+          buttonText="New Order"
+          (buttonClick)="create()">
+        </app-data-empty>
+      </div>
+      <!--end::Empty-->
+
     </div>
-    <!--end::Card-->
   </div>
-  <!--end::Container-->
 </div>
-<!--end::Post-->
+<!--end::Order List-->

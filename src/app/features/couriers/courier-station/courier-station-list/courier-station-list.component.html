@@ -1,17 +1,17 @@
-<!--begin::Courier Station List-->
+﻿<!--begin::Courier Station List-->
 <div class="post d-flex flex-column-fluid" id="kt_courier_station">
   <div id="kt_content_container" class="container-xxl">
     <div class="card">
 
       <!--begin::Header-->
-      <div class="card-header border-0 pt-6 justify-content-between align-items-center">
+      <div class="card-header border-0 pt-6 justify-content-between align-items-center gap-3">
         <!-- Search -->
         <div class="card-title">
           <div class="d-flex align-items-center position-relative">
             <i class="bi bi-search fs-3 position-absolute ms-3 text-muted"></i>
             <input
               type="search"
-              class="form-control form-control-solid w-250px ps-10"
+              class="form-control form-control-solid w-100 w-sm-250px ps-10"
               placeholder="Search Courier Station"
               (input)="onSearchChange($event)"
             />
@@ -19,7 +19,7 @@
         </div>
 
         <!-- Toolbar -->
-        <div>
+        <div class="card-toolbar">
           <button type="button" class="btn btn-sm btn-primary" (click)="create()">
             <i class="bi bi-plus-circle me-2"></i>
             Add Courier Station
@@ -39,73 +39,38 @@
       <!--begin::Body-->
       <div class="card-body py-4" *ngIf="!isLoading && courierStations.length > 0">
         <div class="table-responsive" style="overflow-x: auto;">
-            <table class="table table-striped table-hover align-middle fs-6 gy-5 w-100">
+            <table class="table table-striped table-hover align-middle fs-6 gy-5">
                 <thead>
                     <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
-                    <th class="text-nowrap" style="width: 150px;" (click)="onSort('name')">
-                    <span class="d-flex align-items-center gap-1">
-                        <i class="bi bi-fonts text-primary fs-5"></i>
-                        NAME
-                        <span *ngIf="filter.sortBy === 'name'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                    </span>
-                    </th>
-                    <th class="text-nowrap" style="width: 180px;">
-                    <span class="d-flex align-items-center gap-1">
-                        <i class="bi bi-building text-secondary fs-5"></i> PROVIDER
-                    </span>
-                    </th>
-                    <th class="text-nowrap" style="width: 220px;" (click)="onSort('addressLine')">
-                    <span class="d-flex align-items-center gap-1">
-                        <i class="bi bi-geo-alt text-warning fs-5"></i> ADDRESS
-                        <span *ngIf="filter.sortBy === 'addressLine'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                    </span>
-                    </th>
-                    <th class="text-nowrap" style="width: 100px;" (click)="onSort('city')">
-                    <span class="d-flex align-items-center gap-1">
-                        <i class="bi bi-globe text-info fs-5"></i> CITY
-                        <span *ngIf="filter.sortBy === 'city'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                    </span>
-                    </th>
-                    <th class="text-nowrap" style="width: 100px;" (click)="onSort('area')">
-                    <span class="d-flex align-items-center gap-1">
-                        <i class="bi bi-signpost text-info fs-5"></i> AREA
-                        <span *ngIf="filter.sortBy === 'area'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                    </span>
-                    </th>
-                    <th class="text-nowrap" style="width: 120px;" (click)="onSort('supportPhone1')">
-                    <span class="d-flex align-items-center gap-1">
-                        <i class="bi bi-telephone text-success fs-5"></i> PHONE 1
-                        <span *ngIf="filter.sortBy === 'supportPhone1'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                    </span>
-                    </th>
-                    <th class="text-nowrap" style="width: 120px;" (click)="onSort('supportPhone2')">
-                    <span class="d-flex align-items-center gap-1">
-                        <i class="bi bi-telephone-outbound text-success fs-5"></i> PHONE 2
-                        <span *ngIf="filter.sortBy === 'supportPhone2'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                    </span>
-                    </th>
-                    <th class="text-nowrap" style="width: 120px;" (click)="onSort('googleMapUrl')">
-                    <span class="d-flex align-items-center gap-1">
-                        <i class="bi bi-map text-dark fs-5"></i> MAP URL
-                        <span *ngIf="filter.sortBy === 'googleMapUrl'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                    </span>
-                    </th>
-                    <!-- <th class="text-nowrap" style="width: 180px;" (click)="onSort('email')">
-                    <span class="d-flex align-items-center gap-1">
-                        <i class="bi bi-envelope text-danger fs-5"></i> EMAIL
-                        <span *ngIf="filter.sortBy === 'email'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                    </span>
-                    </th> -->
-                    <th class="text-nowrap" style="width: 25px;" (click)="onSort('isActive')">
-                    <span class="d-flex align-items-center gap-1">
-                        <i class="bi bi-toggle-on text-success fs-5"></i> ACTIVE
-                        <span *ngIf="filter.sortBy === 'isActive'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                    </span>
-                    </th>
-                    <th class="text-center text-nowrap" style="width: 120px;">Actions</th>
-                </tr>
+                      <th class="cursor-pointer" (click)="onSort('name')">
+                        Name <span *ngIf="filter.sortBy === 'name'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th>Provider</th>
+                      <th class="cursor-pointer" (click)="onSort('addressLine')">
+                        Address <span *ngIf="filter.sortBy === 'addressLine'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th class="cursor-pointer" (click)="onSort('city')">
+                        City <span *ngIf="filter.sortBy === 'city'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th class="cursor-pointer" (click)="onSort('area')">
+                        Area <span *ngIf="filter.sortBy === 'area'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th class="cursor-pointer" (click)="onSort('supportPhone1')">
+                        Phone 1 <span *ngIf="filter.sortBy === 'supportPhone1'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th class="cursor-pointer" (click)="onSort('supportPhone2')">
+                        Phone 2 <span *ngIf="filter.sortBy === 'supportPhone2'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th class="cursor-pointer" (click)="onSort('googleMapUrl')">
+                        Map URL <span *ngIf="filter.sortBy === 'googleMapUrl'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th class="cursor-pointer" (click)="onSort('isActive')">
+                        Active <span *ngIf="filter.sortBy === 'isActive'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                      </th>
+                      <th class="text-center">Actions</th>
+                    </tr>
             </thead>
-            <tbody class="text-gray-700 fw-semibold">
+            <tbody class="text-gray-600 fw-semibold">
               <tr *ngFor="let station of courierStations">
                 <td>
                   <a href="javascript:void(0)" (click)="view(station.id)" class="text-hover-primary">

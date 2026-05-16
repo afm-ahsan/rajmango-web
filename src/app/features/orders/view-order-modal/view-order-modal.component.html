@@ -1,65 +1,47 @@
 <div class="modal-content">
-  <!-- Modal Header -->
   <div class="modal-header">
-    <h4 class="modal-title whiteFontColor" id="example-modal-sizes-title-lg">
-      <strong *ngIf="orderDto?.id">Order Details</strong>
-    </h4>
+    <h2 class="modal-title">Order Details</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
-
-  <!-- Modal Body -->
-  <div class="modal-body overlay overlay-block cursor-default">
-    <!-- Loader -->
-    <div *ngIf="isLoading" class="overlay-layer bg-transparent">
-      <div class="spinner spinner-lg spinner-success"></div>
+  <div class="modal-body py-6 px-lg-8">
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
     </div>
-
-    <!-- Order Info -->
-    <div *ngIf="orderDto">
-      <form class="form form-label-right">
-        <div class="form-group row">
-          <label class="col-3 col-form-label text-lg-right"><b>Order Number:</b></label>
-          <div class="col-9">
-            <label class="col-form-label">{{ orderDto.orderNumber }}</label>
-          </div>
+    <div *ngIf="!isLoading && orderDto">
+      <div class="row g-4 mb-6">
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Number</div>
+          <div class="fw-semibold fs-6">{{ orderDto.orderNumber }}</div>
         </div>
-
-        <div class="form-group row">
-          <label class="col-3 col-form-label text-lg-right"><b>Total Quantity:</b></label>
-          <div class="col-9">
-            <label class="col-form-label">{{ orderDto.totalQuantity }}</label>
-          </div>
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Quantity</div>
+          <div class="fw-semibold fs-6">{{ orderDto.totalQuantity }}</div>
         </div>
-
-        <div class="form-group row">
-          <label class="col-3 col-form-label text-lg-right"><b>Total Amount:</b></label>
-          <div class="col-9">
-            <label class="col-form-label">{{ orderDto.totalAmount | number }}</label>
-          </div>
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Amount</div>
+          <div class="fw-bold fs-6">{{ orderDto.totalAmount | number }}</div>
         </div>
-      </form>
-
-      <!-- Order Details Table -->
-      <hr *ngIf="orderDto.orderDetails.length > 0" />
-      <div class="table-responsive-sm" *ngIf="orderDto.orderDetails.length > 0">
+      </div>
+      <div class="table-responsive" *ngIf="orderDto.orderDetails.length > 0">
         <table class="table table-striped align-middle">
           <thead>
             <tr>
               <th>#</th>
               <th>Mango Type</th>
               <th>Crate Type</th>
-              <th class="text-end">Quantity</th>
+              <th class="text-end">Qty</th>
               <th class="text-end">Unit Price</th>
-              <th class="text-end">Total Price</th>
+              <th class="text-end">Total</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let order of orderDto.orderDetails; index as i">
+            <tr *ngFor="let item of orderDto.orderDetails; index as i">
               <td>{{ i + 1 }}</td>
-              <td>{{ order.mangoName }}</td>
-              <td>{{ order.crateName }}</td>
-              <td class="text-end">{{ order.quantity | number }}</td>
-              <td class="text-end">{{ order.unitPrice }}</td>
-              <td class="text-end">{{ order.totalPrice }}</td>
+              <td>{{ item.mangoName }}</td>
+              <td>{{ item.crateName }}</td>
+              <td class="text-end">{{ item.quantity | number }}</td>
+              <td class="text-end">{{ item.unitPrice }}</td>
+              <td class="text-end">{{ item.totalPrice }}</td>
             </tr>
             <tr class="table-light fw-bold">
               <td colspan="5" class="text-end">Total:</td>
@@ -70,11 +52,7 @@
       </div>
     </div>
   </div>
-
-  <!-- Modal Footer -->
   <div class="modal-footer">
-    <button type="button" class="btn btn-light shadow-sm px-4 py-2 d-flex align-items-center gap-2" (click)="modal.dismiss()">
-      <i class="fas fa-window-close"></i> Close
-    </button>
+    <button type="button" class="btn btn-light" (click)="modal.dismiss()">Close</button>
   </div>
 </div>

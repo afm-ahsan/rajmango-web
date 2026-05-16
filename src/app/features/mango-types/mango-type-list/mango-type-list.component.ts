@@ -4,7 +4,6 @@ import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { FilterModel } from 'src/app/shared/models/filter.model';
 import { ImagePathService } from 'src/app/shared/services/image-path.service';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 import { FilterUtils } from 'src/app/shared/utils/filter-utils';
 import { SubSink } from 'subsink';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
@@ -41,7 +40,6 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
-    private loaderService: LoaderService,
     private mangoTypeFacade: MangoTypeFacade,
     private imagePathService: ImagePathService
   ) {}
@@ -58,13 +56,11 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
   // 4. Public Methods
   load(): void {
     this.isLoading = true;
-    this.loaderService.show();
     const dto = FilterUtils.createPagedRequest(this.filter, this.searchVal);
     this.subs.sink = this.mangoTypeFacade.getPagedWithCount(dto)
       .pipe(
         finalize(() => {
           this.isLoading = false;
-          this.loaderService.hide();
           this.cdRef.detectChanges();
           MenuComponent.reinitialization();
         })
@@ -89,7 +85,7 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
         //if (result === 'success') 
         this.load();
       },
-      (error: any) => console.warn('Modal dismissed:', error)
+      () => {}
     );
   }
 
@@ -101,7 +97,7 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
         //if (result === 'success') 
         this.load();
       },
-      (error: any) => console.warn('Modal dismissed:', error)
+      () => {}
     );
   }
 
@@ -113,7 +109,7 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
         if (result === 'success') 
           this.load();
       },
-      (error: any) => console.warn('Modal dismissed:', error)
+      () => {}
     );
   }
 

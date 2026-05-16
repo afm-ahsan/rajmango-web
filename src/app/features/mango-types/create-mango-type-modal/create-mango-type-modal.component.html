@@ -1,115 +1,68 @@
 <div class="modal-content">
-    <div class="modal-header">
-        <div class="modal-title h4 whiteFontColor" id="example-modal-sizes-title-lg">
-            <ng-container *ngIf="mangoTypeDto">
-                <ng-container *ngIf="mangoTypeDto.id" class="font-weight-bold"><strong>Edit Mango Type</strong></ng-container>
-                <ng-container *ngIf="!mangoTypeDto.id" class="font-weight-bold"><strong>Add Mango Type</strong></ng-container>
-            </ng-container>
-        </div>
-    </div>
-    <div class="overlay overlay-block cursor-default modal-body">
-        <ng-container *ngIf="isLoading">
-            <div class="overlay-layer bg-transparent">
-                <div class="spinner spinner-lg spinner-success"></div>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="mangoTypeDto">
-          <form action="#" class="form form-label-right" [formGroup]="formGroup">            
-            <!-- Mango Type Name -->
-            <div class="form-group row mt-2">
-              <label class="col-3 col-form-label text-lg-right"><b>Name<span class="text-danger">*</span>:</b></label>
-              <div class="col-9">
-                <input type="text"
-                       class="form-control"
-                       name="name"
-                       placeholder="Mango Type Name"
-                       autocomplete="off"
-                       [class.is-invalid]="isControlInvalid('name')"
-                       [class.is-valid]="isControlValid('name')"
-                       formControlName="name" />
-                <div class="valid-feedback" *ngIf="isControlValid('name')">
-                  Mango Type name was entered correct
-                </div>
-                <div class="invalid-feedback" *ngIf="controlHasError('required', 'name')">
-                  Mango Type name is required
-                </div>
-                <div class="invalid-feedback" *ngIf="controlHasError('maxlength', 'name')">
-                  Mango Type name should have maximum 256 characters
-                </div>
-              </div>
-            </div>
-            <!-- Mango Type Description -->
-            <div class="form-group row mt-2">
-              <label class="col-3 col-form-label text-lg-right"><b>Description:</b></label>
-              <div class="col-9">
-                <textarea
-                       class="form-control"
-                       name="description"
-                       placeholder="Mango Type Description"
-                       autocomplete="off"
-                       formControlName="description"></textarea>
-              </div>
-            </div>
-            <!-- Region -->
-            <div class="form-group row mt-2">
-              <label class="col-3 col-form-label text-lg-right"><b>Region:</b></label>
-              <div class="col-9">
-                <input type="text" class="form-control" name="region"
-                  placeholder="e.g. Rajshahi, Chapai" autocomplete="off" formControlName="region" />
-              </div>
-            </div>
-            <!-- Average Weight -->
-            <div class="form-group row mt-2">
-              <label class="col-3 col-form-label text-lg-right"><b>Avg. Weight:</b></label>
-              <div class="col-9">
-                <input type="text" class="form-control" name="averageWeight"
-                  placeholder="e.g. 300g - 500g" autocomplete="off" formControlName="averageWeight" />
-              </div>
-            </div>
-            <!-- Mango Grade -->
-            <div class="form-group row mt-2">
-              <label class="col-3 col-form-label text-lg-right"><b>Grade:</b></label>
-              <div class="col-9">
-                <select class="form-select" formControlName="mangoGrade">
-                  <option *ngFor="let g of gradeOptions" [value]="g.id">{{ g.label }}</option>
-                </select>
-              </div>
-            </div>
-            <!-- Sweetness Level -->
-            <div class="form-group row mt-2">
-              <label class="col-3 col-form-label text-lg-right">
-                <b>Sweetness<span class="text-danger">*</span>:</b>
-              </label>
-              <div class="col-9">
-                <select class="form-select"
-                        formControlName="sweetnessLevel"
-                        [class.is-invalid]="isControlInvalid('sweetnessLevel')"
-                        [class.is-valid]="isControlValid('sweetnessLevel')">
-                  <option [value]="0" disabled>-- Select sweetness level --</option>
-                  <option *ngFor="let s of sweetnessLevelOptions" [value]="s.id">{{ s.label }}</option>
-                </select>
-                <div class="invalid-feedback" *ngIf="controlHasError('required', 'sweetnessLevel') || controlHasError('min', 'sweetnessLevel')">
-                  Sweetness level is required
-                </div>
-              </div>
-            </div>
-            <!-- Image Upload -->
-            <div class="form-group row mt-2">
-              <label class="col-3 col-form-label text-lg-right"><b>Image:</b></label>
-              <div class="col-9 mt-2">
-                <app-upload [location]="location" [entityId]="mangoTypeDto.id || undefined" (uploadFinished)="uploadFinished($event)"></app-upload>
-                <div *ngIf="mangoTypeDto.imagePath?.length">
-                  <div class="overflow-hidden mt-2">
-                    <img [src]="createImagePath(mangoTypeDto.imagePath)" alt="Mango Type Image" class="rounded preview-image" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </ng-container>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()">Cancel</button>
-        <button class="btn btn-primary btn-elevate" (click)="save()" [disabled]="formGroup.invalid">Save</button>
-    </div>
+  <div class="modal-header">
+    <h2 class="modal-title">{{ mangoTypeDto.id ? 'Edit Mango Type' : 'Add Mango Type' }}</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
+  <div class="modal-body py-6 px-lg-8">
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
+    </div>
+    <form *ngIf="!isLoading" [formGroup]="formGroup">
+      <div class="row g-4">
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Name</label>
+          <input type="text" class="form-control form-control-solid" formControlName="name"
+            placeholder="Mango type name" autocomplete="off" />
+          <div *ngIf="controlHasError('required', 'name')" class="text-danger fs-7 mt-1">Name is required.</div>
+          <div *ngIf="controlHasError('maxlength', 'name')" class="text-danger fs-7 mt-1">Name must be at most 256 characters.</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Region</label>
+          <input type="text" class="form-control form-control-solid" formControlName="region"
+            placeholder="e.g. Rajshahi, Chapai" autocomplete="off" />
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Avg. Weight</label>
+          <input type="text" class="form-control form-control-solid" formControlName="averageWeight"
+            placeholder="e.g. 300g - 500g" autocomplete="off" />
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Grade</label>
+          <select class="form-select form-select-solid" formControlName="mangoGrade">
+            <option *ngFor="let g of gradeOptions" [value]="g.id">{{ g.label }}</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Sweetness Level</label>
+          <select class="form-select form-select-solid" formControlName="sweetnessLevel"
+            [class.is-invalid]="isControlInvalid('sweetnessLevel')">
+            <option [value]="0" disabled>-- Select sweetness level --</option>
+            <option *ngFor="let s of sweetnessLevelOptions" [value]="s.id">{{ s.label }}</option>
+          </select>
+          <div *ngIf="controlHasError('required', 'sweetnessLevel') || controlHasError('min', 'sweetnessLevel')"
+            class="text-danger fs-7 mt-1">Sweetness level is required.</div>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Description</label>
+          <textarea class="form-control form-control-solid" formControlName="description"
+            placeholder="Mango type description" rows="3"></textarea>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Image</label>
+          <app-upload [location]="location" [entityId]="mangoTypeDto.id || undefined"
+            (uploadFinished)="uploadFinished($event)"></app-upload>
+          <div *ngIf="mangoTypeDto.imagePath.length" class="mt-2">
+            <img [src]="createImagePath(mangoTypeDto.imagePath)" alt="Mango Type Image"
+              class="rounded preview-image" />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light me-3" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="formGroup.invalid || isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>Save
+    </button>
+  </div>
+</div>

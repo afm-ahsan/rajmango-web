@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize, of, switchMap, tap } from 'rxjs';
 import { AuthService } from 'src/app/features/auth';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import { CourierProviderService } from '../../courier-provider/courier-provider.service';
@@ -32,8 +31,7 @@ export class CreateCourierStationModalComponent implements OnInit, OnDestroy {
     private courierProviderService: CourierProviderService,
     private courierStationService: CourierStationService,
     private cdRef: ChangeDetectorRef,
-    private authService: AuthService,
-    private loaderService: LoaderService
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -157,12 +155,10 @@ export class CreateCourierStationModalComponent implements OnInit, OnDestroy {
   
   startLoading(): void {
     this.isLoading = true;
-    this.loaderService.show();
   }
 
   completeLoading(): void {
     this.isLoading = false;
-    this.loaderService.hide();
   }
 
   isControlInvalid(controlName: string): boolean {

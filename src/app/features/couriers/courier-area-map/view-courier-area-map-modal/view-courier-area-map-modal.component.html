@@ -1,39 +1,24 @@
 <div class="modal-content">
-  <!-- Modal Header -->
   <div class="modal-header">
-    <h5 class="modal-title whiteFontColor">Courier Area Map Details</h5>
+    <h2 class="modal-title">Courier Area Map Details</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
-
-  <!-- Modal Body with Overlay Spinner -->
-  <div class="modal-body overlay overlay-block cursor-default">
-    <ng-container *ngIf="isLoading">
-      <div class="overlay-layer bg-transparent">
-        <div class="spinner spinner-lg spinner-success"></div>
+  <div class="modal-body py-6 px-lg-8">
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
+    </div>
+    <div *ngIf="!isLoading && courierAreaMapDto" class="row g-4">
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Area</div>
+        <div class="fw-semibold fs-6">{{ courierAreaMapDto.area || '—' }}</div>
       </div>
-    </ng-container>
-
-    <ng-container *ngIf="courierAreaMapDto">
-      <div class="row mb-3">
-        <label class="col-4 fw-bold text-start">Area:</label>
-        <div class="col-8">
-          <span class="form-text text-wrap">{{ courierAreaMapDto.area }}</span>
-        </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Courier Station</div>
+        <div class="fw-semibold fs-6">{{ courierAreaMapDto.courierStationName || '—' }}</div>
       </div>
-
-      <div class="row mb-3">
-        <label class="col-4 fw-bold text-start">Courier Station:</label>
-        <div class="col-8">
-          <span class="form-text text-wrap">{{ courierAreaMapDto.courierStationName || '—' }}</span>
-        </div>
-      </div>
-    </ng-container>
+    </div>
   </div>
-
-  <!-- Modal Footer -->
-  <div class="modal-footer justify-content-end">
-    <button type="button" class="btn btn-light d-flex align-items-center" (click)="modal.dismiss()">
-      <i class="bi bi-x-circle me-2 fs-5 text-danger"></i>
-      Close
-    </button>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.dismiss()">Close</button>
   </div>
 </div>

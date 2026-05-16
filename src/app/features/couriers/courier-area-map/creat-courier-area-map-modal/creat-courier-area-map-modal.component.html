@@ -1,76 +1,37 @@
 <div class="modal-content">
-  <!-- Header -->
   <div class="modal-header">
-    <h5 class="modal-title text-dark fw-bold">
-      {{ courierAreaMapDto?.id ? 'Edit Courier Area Map' : 'Add Courier Area Map' }}
-    </h5>
+    <h2 class="modal-title">{{ courierAreaMapDto.id ? 'Edit Courier Area Map' : 'Add Courier Area Map' }}</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
-
-  <!-- Body -->
-  <div class="modal-body overlay overlay-block cursor-default">
-    <ng-container *ngIf="isLoading">
-      <div class="overlay-layer bg-transparent">
-        <div class="spinner spinner-lg spinner-success"></div>
-      </div>
-    </ng-container>
-
-    <!-- Form -->
-    <form *ngIf="courierAreaMapDto" [formGroup]="formGroup" class="form">
-
-      <!-- Courier Station Dropdown -->
-      <div class="form-group row mb-3">
-        <label for="courierStationId" class="col-3 col-form-label fw-semibold">
-          Courier Station <small class="text-muted">(required)</small>
-        </label>
-        <div class="col-9">
-          <select
-            id="courierStationId"
-            class="form-select"
-            formControlName="courierStationId"
-            [class.is-invalid]="isControlInvalid('courierStationId')"
-            [class.is-valid]="isControlValid('courierStationId')">
+  <div class="modal-body py-6 px-lg-8">
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
+    </div>
+    <form *ngIf="!isLoading" [formGroup]="formGroup">
+      <div class="row g-4">
+        <div class="col-12">
+          <label class="form-label fw-semibold required">Courier Station</label>
+          <select class="form-select form-select-solid" formControlName="courierStationId"
+            [class.is-invalid]="isControlInvalid('courierStationId')">
             <option value="0" disabled>Select a courier station</option>
-            <option *ngFor="let station of courierStationOptions" [value]="station.id">
-              {{ station.name }}
-            </option>
+            <option *ngFor="let station of courierStationOptions" [value]="station.id">{{ station.name }}</option>
           </select>
-          <div *ngIf="controlHasError('required', 'courierStationId')" class="invalid-feedback">
-            Courier station is required.
-          </div>
+          <div *ngIf="controlHasError('required', 'courierStationId')" class="text-danger fs-7 mt-1">Courier station is required.</div>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold required">Area</label>
+          <input type="text" class="form-control form-control-solid" formControlName="area"
+            placeholder="Area name" [class.is-invalid]="isControlInvalid('area')" />
+          <div *ngIf="controlHasError('required', 'area')" class="text-danger fs-7 mt-1">Area is required.</div>
+          <div *ngIf="controlHasError('maxlength', 'area')" class="text-danger fs-7 mt-1">Area must be at most 100 characters.</div>
         </div>
       </div>
-
-      <!-- Name -->
-      <div class="form-group row mb-3">
-        <label for="area" class="col-3 col-form-label fw-semibold">
-          Area <small class="text-muted">(required)</small>
-        </label>
-        <div class="col-9">
-          <input id="area" type="text" class="form-control" formControlName="area" placeholder="Courier Areap Name"
-            [class.is-invalid]="isControlInvalid('area')" />
-          <div *ngIf="controlHasError('required', 'area')" class="invalid-feedback">Required</div>
-          <div *ngIf="controlHasError('maxlength', 'area')" class="invalid-feedback">Max 100 chars</div>
-        </div>
-      </div>      
     </form>
   </div>
-
-    <!-- Footer with Save Loader -->
-    <div class="modal-footer justify-content-end">
-        <button type="button" class="btn btn-light d-flex align-items-center" (click)="modal.dismiss()">
-            <i class="bi bi-x-circle me-2 fs-5 text-danger"></i>
-            Cancel
-        </button>
-
-        <button
-            type="button"
-            class="btn btn-primary d-flex align-items-center position-relative"
-            (click)="save()"
-            [disabled]="formGroup.invalid || isSubmitting">
-            <i class="bi bi-save me-2 fs-5"></i>
-            <span *ngIf="!isSubmitting">Save</span>
-            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-            <span *ngIf="isSubmitting">Saving...</span>
-        </button>
-    </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light me-3" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="formGroup.invalid || isSubmitting">
+      <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>Save
+    </button>
+  </div>
 </div>

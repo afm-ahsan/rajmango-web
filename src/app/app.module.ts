@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { appInitFactory } from './core/factories/app-init.factory';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { InlineSVGModule } from 'ng-inline-svg-2';
 import { ClipboardModule } from 'ngx-clipboard';
@@ -66,4 +66,9 @@ import { environment } from 'src/environments/environment';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+  constructor(modalConfig: NgbModalConfig) {
+    modalConfig.scrollable = true;
+    modalConfig.centered = true;
+  }
+}

@@ -4,7 +4,6 @@ import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { FilterModel } from 'src/app/shared/models/filter.model';
 import { PagedAndSortedDto } from 'src/app/shared/models/pagedAndSorted.model';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SubSink } from 'subsink';
 import _ from 'underscore';
 import { ExpenseTypeService } from '../../expense-type/expense-type.service';
@@ -22,10 +21,11 @@ import { ViewExpenseModalComponent } from '../view-expense-modal/view-expense-mo
 })
 export class ExpenseListComponent implements OnInit, OnDestroy {
   subs = new SubSink();
-  isLoading: boolean;
+  isLoading = false;
+  searchVal = '';
   expenses: ExpenseDto[] = [];
   expenseTypes: ExpenseTypeDto[] = [];
-  totalCount = 10;
+  totalCount = 0;
   filter: FilterModel = {
     offset: 0,
     limit: 0,
@@ -40,7 +40,6 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
-    private loaderService: LoaderService,
     private expenseService: ExpenseService,
     private expenseTypeService: ExpenseTypeService
   ) {}
@@ -52,31 +51,35 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
 
   load() {
     this.isLoading = true;
-    this.loaderService.show();
     const pagedAndSortedDto: PagedAndSortedDto = {
       pageNumber: this.filter.pageNumber,
       pageSize: this.filter.pageSize,
       sortBy: this.filter.sortBy,
       sortOrder: this.filter.sortOrder,
-      filter: '',
+      filter: this.searchVal,
       userId: 0,
     };
-
     this.subs.sink = this.expenseService
       .getAll(pagedAndSortedDto)
       .pipe(
         finalize(() => {
           this.isLoading = false;
-          this.loaderService.hide();
           this.cdRef.detectChanges();
           MenuComponent.reinitialization();
         })
       )
       .subscribe({
         next: (response: any) => {
-          this.expenses = response.data;
+          this.expenses = response.data ?? [];
+          this.totalCount = response.totalCount ?? this.expenses.length;
         },
       });
+  }
+
+  onSearchChange(event: Event): void {
+    this.searchVal = (event.target as HTMLInputElement).value;
+    this.filter.pageNumber = 1;
+    this.load();
   }
 
   loadExpenseType() {

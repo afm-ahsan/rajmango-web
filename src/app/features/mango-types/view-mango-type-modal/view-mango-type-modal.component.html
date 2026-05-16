@@ -1,77 +1,45 @@
 <div class="modal-content">
-    <div class="modal-header">
-        <div class="modal-title h4 whiteFontColor" id="example-modal-sizes-title-lg">
-            <ng-container *ngIf="mangoTypeDto">
-                <ng-container *ngIf="mangoTypeDto.id" class="font-weight-bold">
-                    <strong>Mango Type Details</strong>
-                </ng-container>
-            </ng-container>
-        </div>
+  <div class="modal-header">
+    <h2 class="modal-title">Mango Type Details</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body py-6 px-lg-8">
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
     </div>
-    <div class="overlay overlay-block cursor-default modal-body">
-        <ng-container *ngIf="isLoading">
-            <div class="overlay-layer bg-transparent">
-                <div class="spinner spinner-lg spinner-success"></div>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="mangoTypeDto">
-            <form action="#" class="form form-label-right">
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Name:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ mangoTypeDto.name }}</label>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Description:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ mangoTypeDto.description }}</label>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Region:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ mangoTypeDto.region || '—' }}</label>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Avg. Weight:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ mangoTypeDto.averageWeight || '—' }}</label>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Grade:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ mangoTypeDto.mangoGrade }}</label>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Sweetness:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ getSweetnessLabel(mangoTypeDto.sweetnessLevel) }}</label>
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Image:</b></label>
-                    <div class="col-9">
-                        <div *ngIf="mangoTypeDto.imagePath?.length">
-                            <div class="overflow-hidden mt-2">
-                                <img [src]="createImagePath(mangoTypeDto.imagePath)" alt="MangoType Image" class="rounded preview-image" />
-                            </div>       
-                        </div>
-                    </div>
-                </div>                
-            </form>
-        </ng-container>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()"><i class="fas fa-window-close"></i>Close</button>
+    <div *ngIf="!isLoading && mangoTypeDto" class="row g-4">
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Name</div>
+        <div class="fw-semibold fs-6">{{ mangoTypeDto.name || '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Region</div>
+        <div class="fw-semibold fs-6">{{ mangoTypeDto.region || '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Grade</div>
+        <div class="fw-semibold fs-6">{{ mangoTypeDto.mangoGrade || '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Avg. Weight</div>
+        <div class="fw-semibold fs-6">{{ mangoTypeDto.averageWeight || '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Sweetness</div>
+        <div class="fw-semibold fs-6">{{ getSweetnessLabel(mangoTypeDto.sweetnessLevel) }}</div>
+      </div>
+      <div class="col-12">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Description</div>
+        <div class="fw-semibold fs-6">{{ mangoTypeDto.description || '—' }}</div>
+      </div>
+      <div class="col-12" *ngIf="mangoTypeDto.imagePath.length">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Image</div>
+        <img [src]="createImagePath(mangoTypeDto.imagePath)" alt="Mango type image"
+          class="rounded" style="max-height: 200px; max-width: 100%;" />
+      </div>
     </div>
   </div>
-  
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.dismiss()">Close</button>
+  </div>
+</div>

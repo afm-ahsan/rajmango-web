@@ -1,112 +1,65 @@
 <div class="modal-content">
-  <!-- Header -->
   <div class="modal-header">
-    <h5 class="modal-title text-dark fw-bold">
-      Courier Station Details
-    </h5>
+    <h2 class="modal-title">Courier Station Details</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
-
-  <!-- Body -->
-  <div class="modal-body overlay overlay-block cursor-default">
-    <ng-container *ngIf="isLoading">
-      <div class="overlay-layer bg-transparent">
-        <div class="spinner spinner-lg spinner-success"></div>
+  <div class="modal-body py-6 px-lg-8">
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
+    </div>
+    <div *ngIf="!isLoading && courierStationDto" class="row g-4">
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Courier Provider</div>
+        <div class="fw-semibold fs-6">{{ courierStationDto.courierProviderName || '—' }}</div>
       </div>
-    </ng-container>
-
-    <ng-container *ngIf="courierStationDto && !isLoading">
-      <!-- Provider -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Courier Provider:</label>
-        <div class="col-9">{{ courierStationDto.courierProviderName || '—' }}</div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Station Name</div>
+        <div class="fw-semibold fs-6">{{ courierStationDto.name || '—' }}</div>
       </div>
-
-      <!-- Name -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Station Name:</label>
-        <div class="col-9">{{ courierStationDto.name || '—' }}</div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">City</div>
+        <div class="fw-semibold fs-6">{{ courierStationDto.city || '—' }}</div>
       </div>
-
-      <!-- Address -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Address:</label>
-        <div class="col-9 text-wrap">{{ courierStationDto.addressLine || '—' }}</div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Area</div>
+        <div class="fw-semibold fs-6">{{ courierStationDto.area || '—' }}</div>
       </div>
-
-      <!-- City -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">City:</label>
-        <div class="col-9">{{ courierStationDto.city || '—' }}</div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Primary Phone</div>
+        <div class="fw-semibold fs-6">{{ courierStationDto.supportPhone1 || '—' }}</div>
       </div>
-
-      <!-- Area -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Area:</label>
-        <div class="col-9">{{ courierStationDto.area || '—' }}</div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Alternate Phone</div>
+        <div class="fw-semibold fs-6">{{ courierStationDto.supportPhone2 || '—' }}</div>
       </div>
-
-      <!-- Phone 1 -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Phone 1:</label>
-        <div class="col-9">{{ courierStationDto.supportPhone1 || '—' }}</div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Email</div>
+        <div class="fw-semibold fs-6">{{ courierStationDto.email || '—' }}</div>
       </div>
-
-      <!-- Phone 2 -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Phone 2:</label>
-        <div class="col-9">{{ courierStationDto.supportPhone2 || '—' }}</div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Status</div>
+        <span class="badge" [ngClass]="courierStationDto.isActive ? 'bg-success' : 'bg-danger'">
+          {{ courierStationDto.isActive ? 'Active' : 'Inactive' }}
+        </span>
       </div>
-
-      <!-- Email -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Email:</label>
-        <div class="col-9">{{ courierStationDto.email || '—' }}</div>
-      </div>
-
-      <!-- Latitude -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Latitude:</label>
-        <div class="col-9">{{ courierStationDto.latitude ?? '—' }}</div>
-      </div>
-
-      <!-- Longitude -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Longitude:</label>
-        <div class="col-9">{{ courierStationDto.longitude ?? '—' }}</div>
-      </div>
-
-      <!-- Google Map URL -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Map URL:</label>
-        <div class="col-9">
-          <a *ngIf="courierStationDto.googleMapUrl"
-             [href]="courierStationDto.googleMapUrl"
-             target="_blank"
-             rel="noopener noreferrer"
-             class="text-primary text-decoration-underline">
-            Open Map
-          </a>
-          <span *ngIf="!courierStationDto.googleMapUrl">—</span>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Coordinates</div>
+        <div class="fw-semibold fs-6">
+          {{ courierStationDto.latitude ?? '—' }}, {{ courierStationDto.longitude ?? '—' }}
         </div>
       </div>
-
-      <!-- Is Active -->
-      <div class="row mb-3">
-        <label class="col-3 fw-semibold text-start">Active:</label>
-        <div class="col-9">
-          <span class="badge" [ngClass]="courierStationDto.isActive ? 'bg-success' : 'bg-danger'">
-            {{ courierStationDto.isActive ? 'Yes' : 'No' }}
-          </span>
-        </div>
+      <div class="col-12 col-md-6" *ngIf="courierStationDto.googleMapUrl">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Map</div>
+        <a [href]="courierStationDto.googleMapUrl" target="_blank" rel="noopener noreferrer"
+          class="fw-semibold fs-6 text-primary">Open Map</a>
       </div>
-    </ng-container>
+      <div class="col-12">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Address</div>
+        <div class="fw-semibold fs-6">{{ courierStationDto.addressLine || '—' }}</div>
+      </div>
+    </div>
   </div>
-
-  <!-- Footer -->
-  <div class="modal-footer justify-content-end">
-    <button type="button" class="btn btn-light d-flex align-items-center" (click)="modal.dismiss()">
-      <i class="bi bi-x-circle me-2 fs-5 text-danger"></i>
-      Close
-    </button>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.dismiss()">Close</button>
   </div>
 </div>

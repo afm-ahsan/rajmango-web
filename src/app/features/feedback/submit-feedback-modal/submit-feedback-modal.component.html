@@ -1,57 +1,39 @@
-<div class="modal-header">
-  <h5 class="modal-title fw-bold">Submit Feedback</h5>
-  <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
-</div>
-
-<div class="modal-body">
-  <p class="text-muted mb-4">Order: <strong>{{ orderNumber }}</strong></p>
-
-  <form [formGroup]="form">
-
-    <!-- Rating -->
-    <div class="mb-5">
-      <label class="form-label fw-semibold required">Rating</label>
-      <div class="d-flex gap-2 fs-2">
-        <span
-          *ngFor="let s of [1,2,3,4,5]"
-          (click)="setRating(s)"
-          style="cursor:pointer"
-          [class.text-warning]="s <= selectedRating"
-          [class.text-muted]="s > selectedRating"
-        >&#9733;</span>
+<div class="modal-content">
+  <div class="modal-header">
+    <h2 class="modal-title">Submit Feedback</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body py-6 px-lg-8">
+    <p class="text-muted mb-4">Order: <strong>{{ orderNumber }}</strong></p>
+    <form [formGroup]="form">
+      <div class="row g-4">
+        <div class="col-12">
+          <label class="form-label fw-semibold required">Rating</label>
+          <div class="d-flex gap-2 fs-2">
+            <span *ngFor="let s of [1,2,3,4,5]" (click)="setRating(s)" style="cursor:pointer"
+              [class.text-warning]="s <= selectedRating" [class.text-muted]="s > selectedRating">&#9733;</span>
+          </div>
+          <div *ngIf="form.get('rating')?.touched && form.get('rating')?.hasError('min')"
+            class="text-danger fs-7 mt-1">Please select a rating.</div>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Note <span class="text-muted fs-7">(optional)</span></label>
+          <textarea class="form-control form-control-solid" rows="3" formControlName="note"
+            placeholder="Share your experience..."></textarea>
+          <div *ngIf="form.get('note')?.hasError('maxlength')" class="text-danger fs-7 mt-1">
+            Note must be under 500 characters.</div>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Photos <span class="text-muted fs-7">(optional, up to 3)</span></label>
+          <app-multi-upload location="feedbacks" [maxImages]="3" (imagesChanged)="onImagesChanged($event)"></app-multi-upload>
+        </div>
       </div>
-      <div *ngIf="form.get('rating')?.touched && form.get('rating')?.hasError('min')" class="text-danger fs-7 mt-1">
-        Please select a rating.
-      </div>
-    </div>
-
-    <!-- Note -->
-    <div class="mb-5">
-      <label class="form-label fw-semibold">Note <span class="text-muted fs-7">(optional)</span></label>
-      <textarea
-        class="form-control form-control-solid"
-        rows="3"
-        formControlName="note"
-        placeholder="Share your experience..."
-      ></textarea>
-      <div *ngIf="form.get('note')?.hasError('maxlength')" class="text-danger fs-7 mt-1">
-        Note must be under 500 characters.
-      </div>
-    </div>
-
-    <!-- Images (optional, max 3) -->
-    <div class="mb-5">
-      <label class="form-label fw-semibold">Photos <span class="text-muted fs-7">(optional, up to 3)</span></label>
-      <app-multi-upload location="feedbacks" [maxImages]="3" (imagesChanged)="onImagesChanged($event)"></app-multi-upload>
-    </div>
-
-  </form>
-</div>
-
-<div class="modal-footer">
-  <button type="button" class="btn btn-light" (click)="modal.dismiss()">Cancel</button>
-  <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isSaving">
-    <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
-    Submit Feedback
-  </button>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light me-3" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isSaving">
+      <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>Submit Feedback
+    </button>
+  </div>
 </div>

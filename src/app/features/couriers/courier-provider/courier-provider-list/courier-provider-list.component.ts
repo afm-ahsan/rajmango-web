@@ -85,11 +85,8 @@ export class CourierProviderListComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(CreateCourierProviderModalComponent, { size: 'md' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(
-      (result: 'success' | 'dismissed') => {
-        //if (result === 'success') 
-          this.load();
-      },
-      (error: any) => console.warn('Modal dismissed:', error)
+      (result: string) => { if (result === 'success') this.load(); },
+      () => {}
     );
   }
 
@@ -97,11 +94,8 @@ export class CourierProviderListComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(DeleteCourierProviderModalComponent);
     modalRef.componentInstance.id = id;
     modalRef.result.then(
-      (result: 'success' | 'dismissed') => {
-        //if (result === 'success') 
-          this.load();
-      },
-      (error: any) => console.warn('Modal dismissed:', error)
+      (result: string) => { if (result === 'success') this.load(); },
+      () => {}
     );
   }
 
@@ -109,11 +103,8 @@ export class CourierProviderListComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ViewCourierProviderModalComponent, { size: 'md' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(
-      (result: 'success' | 'dismissed') => {
-        //if (result === 'success') 
-          this.load();
-      },
-      (error: any) => console.warn('Modal dismissed:', error)
+      (result: string) => { if (result === 'success') this.load(); },
+      () => {}
     );
   }
 

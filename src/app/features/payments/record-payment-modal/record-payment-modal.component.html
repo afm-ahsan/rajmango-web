@@ -1,62 +1,46 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h4 class="modal-title whiteFontColor">
-      <strong>Record Payment</strong>
-    </h4>
+    <h2 class="modal-title">Record Payment</h2>
+    <button type="button" class="btn-close" (click)="cancel()"></button>
   </div>
-
-  <div class="modal-body">
-    <form [formGroup]="form" class="form form-label-right">
-
-      <!-- Order ID -->
-      <div class="form-group mt-3">
-        <label><b>Order ID <span class="text-danger">*</span></b></label>
-        <input type="number" formControlName="orderId" class="form-control"
-          [class.is-invalid]="isInvalid('orderId')" placeholder="Enter order ID" />
-        <div class="invalid-feedback" *ngIf="hasError('orderId', 'required')">Order ID is required.</div>
-        <div class="invalid-feedback" *ngIf="hasError('orderId', 'min')">Order ID must be a valid number.</div>
+  <div class="modal-body py-6 px-lg-8">
+    <form [formGroup]="form">
+      <div class="row g-4">
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Order ID</label>
+          <input type="number" class="form-control form-control-solid" formControlName="orderId"
+            [class.is-invalid]="isInvalid('orderId')" placeholder="Enter order ID" />
+          <div *ngIf="hasError('orderId', 'required')" class="text-danger fs-7 mt-1">Order ID is required.</div>
+          <div *ngIf="hasError('orderId', 'min')" class="text-danger fs-7 mt-1">Order ID must be a valid number.</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Paid Amount</label>
+          <input type="number" class="form-control form-control-solid" formControlName="paidAmount"
+            [class.is-invalid]="isInvalid('paidAmount')" placeholder="0.00" step="0.01" />
+          <div *ngIf="hasError('paidAmount', 'required')" class="text-danger fs-7 mt-1">Paid amount is required.</div>
+          <div *ngIf="hasError('paidAmount', 'min')" class="text-danger fs-7 mt-1">Amount must be greater than zero.</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Payment Method</label>
+          <select class="form-select form-select-solid" formControlName="paymentMethod"
+            [class.is-invalid]="isInvalid('paymentMethod')">
+            <option value="0">Select Method</option>
+            <option *ngFor="let opt of paymentMethodOptions" [value]="opt.id">{{ opt.label }}</option>
+          </select>
+          <div *ngIf="isInvalid('paymentMethod')" class="text-danger fs-7 mt-1">Payment method is required.</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Transaction ID</label>
+          <input type="text" class="form-control form-control-solid" formControlName="transactionId"
+            placeholder="bKash/bank transaction reference" />
+        </div>
       </div>
-
-      <!-- Paid Amount -->
-      <div class="form-group mt-3">
-        <label><b>Paid Amount <span class="text-danger">*</span></b></label>
-        <input type="number" formControlName="paidAmount" class="form-control"
-          [class.is-invalid]="isInvalid('paidAmount')" placeholder="0.00" step="0.01" />
-        <div class="invalid-feedback" *ngIf="hasError('paidAmount', 'required')">Paid amount is required.</div>
-        <div class="invalid-feedback" *ngIf="hasError('paidAmount', 'min')">Amount must be greater than zero.</div>
-      </div>
-
-      <!-- Payment Method -->
-      <div class="form-group mt-3">
-        <label><b>Payment Method <span class="text-danger">*</span></b></label>
-        <select formControlName="paymentMethod" class="form-control form-select"
-          [class.is-invalid]="isInvalid('paymentMethod')">
-          <option value="0">Select Method</option>
-          <option *ngFor="let opt of paymentMethodOptions" [value]="opt.id">{{ opt.label }}</option>
-        </select>
-        <div class="invalid-feedback" *ngIf="isInvalid('paymentMethod')">Payment method is required.</div>
-      </div>
-
-      <!-- Transaction ID -->
-      <div class="form-group mt-3">
-        <label><b>Transaction ID</b></label>
-        <input type="text" formControlName="transactionId" class="form-control"
-          placeholder="Optional — bKash/bank transaction reference" />
-      </div>
-
     </form>
   </div>
-
   <div class="modal-footer">
-    <div class="d-flex justify-content-end gap-3">
-      <button type="button" class="btn btn-light border shadow-sm px-4" (click)="cancel()">
-        <i class="bi bi-x-lg"></i> Cancel
-      </button>
-      <button type="button" class="btn btn-primary shadow-sm px-4"
-        [disabled]="isLoading" (click)="save()">
-        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1"></span>
-        <i *ngIf="!isLoading" class="bi bi-save"></i> Save
-      </button>
-    </div>
+    <button type="button" class="btn btn-light me-3" (click)="cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>Save
+    </button>
   </div>
 </div>

@@ -1,88 +1,65 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h4 class="modal-title whiteFontColor"><strong>{{ title }}</strong></h4>
+    <h2 class="modal-title">{{ title }}</h2>
+    <button type="button" class="btn-close" (click)="cancel()"></button>
   </div>
-
-  <div class="modal-body">
+  <div class="modal-body py-6 px-lg-8">
     <form [formGroup]="form">
-      <div class="row mb-5">
-        <div class="col-md-6 mb-5">
-          <label class="form-label required">Mango Type</label>
-          <select class="form-select form-select-lg"
-            formControlName="mangoTypeId"
+      <div class="row g-4">
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Mango Type</label>
+          <select class="form-select form-select-solid" formControlName="mangoTypeId"
             [class.is-invalid]="isInvalid('mangoTypeId')"
             [attr.disabled]="isEdit ? true : null">
             <option [value]="0">-- Select Mango Type --</option>
             <option *ngFor="let opt of mangoTypeOptions" [value]="opt.id">{{ opt.label }}</option>
           </select>
-          <div *ngIf="isInvalid('mangoTypeId')" class="invalid-feedback">Mango type is required.</div>
+          <div *ngIf="isInvalid('mangoTypeId')" class="text-danger fs-7 mt-1">Mango type is required.</div>
         </div>
-        <div class="col-md-6 mb-5">
-          <label class="form-label required">Season Year</label>
-          <input type="number" class="form-control form-control-lg"
-            formControlName="seasonYear"
-            [class.is-invalid]="isInvalid('seasonYear')"
-            placeholder="e.g. 2025" />
-          <div *ngIf="isInvalid('seasonYear')" class="invalid-feedback">Valid season year is required.</div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Season Year</label>
+          <input type="number" class="form-control form-control-solid" formControlName="seasonYear"
+            [class.is-invalid]="isInvalid('seasonYear')" placeholder="e.g. 2025" />
+          <div *ngIf="isInvalid('seasonYear')" class="text-danger fs-7 mt-1">Valid season year is required.</div>
         </div>
-      </div>
-
-      <div class="row mb-5">
-        <div class="col-md-6 mb-5">
-          <label class="form-label required">Start Date</label>
-          <input type="date" class="form-control form-control-lg"
-            formControlName="startDate"
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Start Date</label>
+          <input type="date" class="form-control form-control-solid" formControlName="startDate"
             [class.is-invalid]="isInvalid('startDate')" />
-          <div *ngIf="isInvalid('startDate')" class="invalid-feedback">Start date is required.</div>
+          <div *ngIf="isInvalid('startDate')" class="text-danger fs-7 mt-1">Start date is required.</div>
         </div>
-        <div class="col-md-6 mb-5">
-          <label class="form-label required">End Date</label>
-          <input type="date" class="form-control form-control-lg"
-            formControlName="endDate"
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">End Date</label>
+          <input type="date" class="form-control form-control-solid" formControlName="endDate"
             [class.is-invalid]="isInvalid('endDate')" />
-          <div *ngIf="isInvalid('endDate')" class="invalid-feedback">End date is required.</div>
+          <div *ngIf="isInvalid('endDate')" class="text-danger fs-7 mt-1">End date is required.</div>
         </div>
-      </div>
-
-      <div class="row mb-5">
-        <div class="col-md-6 mb-5">
-          <label class="form-label required">Price per Kg (৳)</label>
-          <input type="number" class="form-control form-control-lg"
-            formControlName="pricePerKg"
-            [class.is-invalid]="isInvalid('pricePerKg')"
-            placeholder="0.00" step="0.01" />
-          <div *ngIf="isInvalid('pricePerKg')" class="invalid-feedback">Price per kg must be greater than zero.</div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Price per Kg (৳)</label>
+          <input type="number" class="form-control form-control-solid" formControlName="pricePerKg"
+            [class.is-invalid]="isInvalid('pricePerKg')" placeholder="0.00" step="0.01" />
+          <div *ngIf="isInvalid('pricePerKg')" class="text-danger fs-7 mt-1">Price per kg must be greater than zero.</div>
         </div>
-        <div class="col-md-6 mb-5">
-          <label class="form-label required">Status</label>
-          <select class="form-select form-select-lg"
-            formControlName="status"
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Status</label>
+          <select class="form-select form-select-solid" formControlName="status"
             [class.is-invalid]="isInvalid('status')">
             <option *ngFor="let opt of statusOptions" [value]="opt.id">{{ opt.label }}</option>
           </select>
-          <div *ngIf="isInvalid('status')" class="invalid-feedback">Status is required.</div>
+          <div *ngIf="isInvalid('status')" class="text-danger fs-7 mt-1">Status is required.</div>
         </div>
-      </div>
-
-      <div class="mb-5">
-        <label class="form-label">Notes</label>
-        <textarea class="form-control" formControlName="notes" rows="3"
-          placeholder="Optional notes about this availability record"></textarea>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Notes</label>
+          <textarea class="form-control form-control-solid" formControlName="notes" rows="3"
+            placeholder="Optional notes about this availability record"></textarea>
+        </div>
       </div>
     </form>
   </div>
-
   <div class="modal-footer">
-    <button type="button" class="btn btn-light border shadow-sm px-4 me-2"
-      (click)="cancel()" [disabled]="isLoading">
-      <i class="bi bi-x-lg"></i> Cancel
-    </button>
-    <button type="button" class="btn btn-primary px-4"
-      (click)="save()" [disabled]="isLoading">
-      <span *ngIf="!isLoading"><i class="bi bi-check-lg me-1"></i> Save</span>
-      <span *ngIf="isLoading">
-        <span class="spinner-border spinner-border-sm me-2"></span> Saving...
-      </span>
+    <button type="button" class="btn btn-light me-3" (click)="cancel()" [disabled]="isLoading">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>Save
     </button>
   </div>
 </div>

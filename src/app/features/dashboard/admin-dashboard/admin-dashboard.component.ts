@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { finalize } from 'rxjs';
 import { SubSink } from 'subsink';
 import { AdminDashboardDto, DashboardServiceProxy } from 'src/app/services/client-proxy';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SignalRService } from 'src/app/shared/services/signalr.service';
 
 @Component({
@@ -16,7 +15,6 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private dashboardProxy: DashboardServiceProxy,
-    private loaderService: LoaderService,
     private signalR: SignalRService,
     private cdRef: ChangeDetectorRef
   ) {}
@@ -28,11 +26,9 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.loaderService.show();
     this.subs.sink = this.dashboardProxy.getAdminDashboard().pipe(
       finalize(() => {
         this.isLoading = false;
-        this.loaderService.hide();
         this.cdRef.detectChanges();
       })
     ).subscribe({

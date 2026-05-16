@@ -4,7 +4,6 @@ import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { AppUserDto, UserServiceProxy } from 'src/app/services/client-proxy';
 import { FilterModel } from 'src/app/shared/models/filter.model';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SubSink } from 'subsink';
 import _ from 'underscore';
 import { RoleDto } from '../../roles/models/role-dto.model';
@@ -20,7 +19,7 @@ import { ViewUserModalComponent } from '../view-user-modal/view-user-modal.compo
 })
 export class UserListComponent implements OnInit, OnDestroy {
   subs = new SubSink();
-  isLoading: boolean;
+  isLoading = false;
   users: AppUserDto[] = [];
   roles: RoleDto[] = [];
   totalCount = 0;
@@ -38,7 +37,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
-    private loaderService: LoaderService,
     private userProxy: UserServiceProxy,
     private roleService: RoleService
   ) {}
@@ -50,11 +48,9 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   load() {
     this.isLoading = true;
-    this.loaderService.show();
     this.subs.sink = this.userProxy.get().pipe(
       finalize(() => {
         this.isLoading = false;
-        this.loaderService.hide();
         this.cdRef.detectChanges();
         MenuComponent.reinitialization();
       })

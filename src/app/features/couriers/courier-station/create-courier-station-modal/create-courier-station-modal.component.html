@@ -1,164 +1,91 @@
 <div class="modal-content">
-  <!-- Header -->
   <div class="modal-header">
-    <h5 class="modal-title text-dark fw-bold">
-      {{ courierStationDto?.id ? 'Edit Courier Station' : 'Add Courier Station' }}
-    </h5>
+    <h2 class="modal-title">{{ courierStationDto.id ? 'Edit Courier Station' : 'Add Courier Station' }}</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
-
-  <!-- Body -->
-  <div class="modal-body overlay overlay-block cursor-default">
-    <ng-container *ngIf="isLoading">
-      <div class="overlay-layer bg-transparent">
-        <div class="spinner spinner-lg spinner-success"></div>
-      </div>
-    </ng-container>
-
-    <!-- Form -->
-    <form *ngIf="courierStationDto" [formGroup]="formGroup" class="form">
-
-      <!-- Courier Provider Dropdown -->
-      <div class="form-group row mb-3">
-        <label for="courierProviderId" class="col-3 col-form-label fw-semibold">
-          Courier Provider <small class="text-muted">(required)</small>
-        </label>
-        <div class="col-9">
-          <select
-            id="courierProviderId"
-            class="form-select"
-            formControlName="courierProviderId"
-            [class.is-invalid]="isControlInvalid('courierProviderId')"
-            [class.is-valid]="isControlValid('courierProviderId')">
-            <option value="0" disabled>Select a courier provider</option>
-            <option *ngFor="let provider of courierProviderOptions" [value]="provider.id">
-              {{ provider.name }}
-            </option>
-          </select>
-          <div *ngIf="controlHasError('required', 'courierProviderId')" class="invalid-feedback">
-            Provider is required.
-          </div>
-        </div>
-      </div>
-
-      <!-- Name -->
-      <div class="form-group row mb-3">
-        <label for="name" class="col-3 col-form-label fw-semibold">
-          Station Name <small class="text-muted">(required)</small>
-        </label>
-        <div class="col-9">
-          <input id="name" type="text" class="form-control" formControlName="name" placeholder="Courier Station Name"
-            [class.is-invalid]="isControlInvalid('name')" />
-          <div *ngIf="controlHasError('required', 'name')" class="invalid-feedback">Required</div>
-          <div *ngIf="controlHasError('maxlength', 'name')" class="invalid-feedback">Max 100 chars</div>
-        </div>
-      </div>
-
-      <!-- Address Line -->
-      <div class="form-group row mb-3">
-        <label for="addressLine" class="col-3 col-form-label fw-semibold">
-          Address <small class="text-muted">(required)</small>
-        </label>
-        <div class="col-9">
-          <textarea id="addressLine" class="form-control" rows="2" formControlName="addressLine"
-            placeholder="Full address" [class.is-invalid]="isControlInvalid('addressLine')"></textarea>
-          <div *ngIf="controlHasError('required', 'addressLine')" class="invalid-feedback">Required</div>
-        </div>
-      </div>
-
-      <!-- City & Area -->
-      <div class="form-group row mb-3">
-        <label class="col-3 col-form-label fw-semibold">
-          City / Area <small class="text-muted">(required)</small>
-        </label>
-        <div class="col-4 pe-1">
-          <input id="city" type="text" class="form-control" formControlName="city" placeholder="City"
-            [class.is-invalid]="isControlInvalid('city')" />
-        </div>
-        <div class="col-5 ps-1">
-          <input id="area" type="text" class="form-control" formControlName="area" placeholder="Area"
-            [class.is-invalid]="isControlInvalid('area')" />
-        </div>
-      </div>
-
-      <!-- Support Phones -->
-      <div class="form-group row mb-3">
-        <label class="col-3 col-form-label fw-semibold">
-          Phones <small class="text-muted">(required)</small>
-        </label>
-        <div class="col-4 pe-1">
-          <input id="supportPhone1" type="text" class="form-control" formControlName="supportPhone1"
-            placeholder="Primary phone" [class.is-invalid]="isControlInvalid('supportPhone1')" />
-        </div>
-        <div class="col-5 ps-1">
-          <input id="supportPhone2" type="text" class="form-control" formControlName="supportPhone2"
-            placeholder="Alternate (optional)" />
-        </div>
-      </div>
-
-      <!-- Email -->
-      <div class="form-group row mb-3">
-        <label for="email" class="col-3 col-form-label fw-semibold">Email</label>
-        <div class="col-9">
-          <input id="email" type="email" class="form-control" formControlName="email" placeholder="example@email.com"
-            [class.is-invalid]="controlHasError('email', 'email')" />
-          <div *ngIf="controlHasError('email', 'email')" class="invalid-feedback">Invalid email</div>
-        </div>
-      </div>
-
-      <!-- Latitude / Longitude -->
-      <div class="form-group row mb-3">
-        <label class="col-3 col-form-label text-lg-start fw-bold">Coordinates:</label>
-        <div class="col-4">
-            <input
-            type="number"
-            step="any"
-            class="form-control"
-            formControlName="latitude"
-            placeholder="Latitude (e.g. 23.7806)" />
-        </div>
-        <div class="col-5">
-            <input
-            type="number"
-            step="any"
-            class="form-control"
-            formControlName="longitude"
-            placeholder="Longitude (e.g. 90.2792)" />
-        </div>
+  <div class="modal-body py-6 px-lg-8">
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
     </div>
-
-      <!-- Google Map URL -->
-      <div class="form-group row mb-3">
-        <label for="googleMapUrl" class="col-3 col-form-label fw-semibold">Map URL</label>
-        <div class="col-9">
-          <textarea id="googleMapUrl" class="form-control" rows="2" formControlName="googleMapUrl"
-            placeholder="Google Maps link"></textarea>
+    <form *ngIf="!isLoading" [formGroup]="formGroup">
+      <div class="row g-4">
+        <div class="col-12">
+          <label class="form-label fw-semibold required">Courier Provider</label>
+          <select class="form-select form-select-solid" formControlName="courierProviderId"
+            [class.is-invalid]="isControlInvalid('courierProviderId')">
+            <option value="0" disabled>Select a courier provider</option>
+            <option *ngFor="let provider of courierProviderOptions" [value]="provider.id">{{ provider.name }}</option>
+          </select>
+          <div *ngIf="controlHasError('required', 'courierProviderId')" class="text-danger fs-7 mt-1">Provider is required.</div>
         </div>
-      </div>
-
-      <!-- Is Active -->
-      <div class="form-group row align-items-center mb-3">
-        <label for="isActive" class="col-3 col-form-label fw-semibold">Is Active</label>
-        <div class="col-9">
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Station Name</label>
+          <input type="text" class="form-control form-control-solid" formControlName="name"
+            placeholder="Courier station name" [class.is-invalid]="isControlInvalid('name')" />
+          <div *ngIf="controlHasError('required', 'name')" class="text-danger fs-7 mt-1">Name is required.</div>
+          <div *ngIf="controlHasError('maxlength', 'name')" class="text-danger fs-7 mt-1">Name must be at most 100 characters.</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Email</label>
+          <input type="email" class="form-control form-control-solid" formControlName="email"
+            placeholder="example@email.com" [class.is-invalid]="controlHasError('email', 'email')" />
+          <div *ngIf="controlHasError('email', 'email')" class="text-danger fs-7 mt-1">Invalid email.</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Primary Phone</label>
+          <input type="text" class="form-control form-control-solid" formControlName="supportPhone1"
+            placeholder="Primary phone" [class.is-invalid]="isControlInvalid('supportPhone1')" />
+          <div *ngIf="controlHasError('required', 'supportPhone1')" class="text-danger fs-7 mt-1">Primary phone is required.</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Alternate Phone</label>
+          <input type="text" class="form-control form-control-solid" formControlName="supportPhone2"
+            placeholder="Alternate phone (optional)" />
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">City</label>
+          <input type="text" class="form-control form-control-solid" formControlName="city"
+            placeholder="City" [class.is-invalid]="isControlInvalid('city')" />
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Area</label>
+          <input type="text" class="form-control form-control-solid" formControlName="area"
+            placeholder="Area" />
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Latitude</label>
+          <input type="number" step="any" class="form-control form-control-solid" formControlName="latitude"
+            placeholder="e.g. 23.7806" />
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Longitude</label>
+          <input type="number" step="any" class="form-control form-control-solid" formControlName="longitude"
+            placeholder="e.g. 90.2792" />
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold required">Address</label>
+          <textarea class="form-control form-control-solid" formControlName="addressLine"
+            placeholder="Full address" rows="2" [class.is-invalid]="isControlInvalid('addressLine')"></textarea>
+          <div *ngIf="controlHasError('required', 'addressLine')" class="text-danger fs-7 mt-1">Address is required.</div>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Google Map URL</label>
+          <textarea class="form-control form-control-solid" formControlName="googleMapUrl"
+            placeholder="Google Maps link" rows="2"></textarea>
+        </div>
+        <div class="col-12">
           <div class="form-check form-switch">
-            <input id="isActive" type="checkbox" class="form-check-input" formControlName="isActive" />
-            <label class="form-check-label ms-2" for="isActive">
-              {{ formGroup.get('isActive')?.value ? 'Yes' : 'No' }}
-            </label>
+            <input class="form-check-input" type="checkbox" formControlName="isActive" id="isActiveCheck" />
+            <label class="form-check-label fw-semibold" for="isActiveCheck">Active</label>
           </div>
         </div>
       </div>
     </form>
   </div>
-
-  <!-- Footer with Save Loader -->
-   <div class="modal-footer justify-content-end">
-    <button type="button" class="btn btn-light d-flex align-items-center" (click)="modal.dismiss()">
-      <i class="bi bi-x-circle me-2 fs-5 text-danger"></i>
-      Cancel
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light me-3" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="formGroup.invalid || isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>Save
     </button>
-    <button type="button" class="btn btn-primary d-flex align-items-center" (click)="save()" [disabled]="formGroup.invalid">
-      <i class="bi bi-save me-2 fs-5"></i>
-      Save
-    </button>    
   </div>
 </div>

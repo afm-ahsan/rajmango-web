@@ -4,7 +4,6 @@ import { finalize } from 'rxjs';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SignalRService } from 'src/app/shared/services/signalr.service';
 import { ComplaintService } from '../complaint.service';
 import { ComplaintDto } from '../models/complaint.model';
@@ -22,7 +21,6 @@ export class MyComplaintsComponent implements OnInit, OnDestroy {
   constructor(
     private complaintService: ComplaintService,
     private modalService: NgbModal,
-    private loaderService: LoaderService,
     private signalR: SignalRService,
     private cdRef: ChangeDetectorRef
   ) {}
@@ -41,11 +39,9 @@ export class MyComplaintsComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.loaderService.show();
     this.subs.sink = this.complaintService.getMine().pipe(
       finalize(() => {
         this.isLoading = false;
-        this.loaderService.hide();
         this.cdRef.detectChanges();
       })
     ).subscribe({

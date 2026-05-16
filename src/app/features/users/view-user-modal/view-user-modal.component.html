@@ -1,72 +1,46 @@
 <div class="modal-content">
-    <div class="modal-header">
-        <div class="modal-title h4 whiteFontColor" id="example-modal-sizes-title-lg">
-            <ng-container *ngIf="userDto">
-                <ng-container *ngIf="userDto.id" class="font-weight-bold">
-                    <strong>Food User Details</strong>
-                </ng-container>
-            </ng-container>
-        </div>
+  <div class="modal-header">
+    <h2 class="modal-title">User Details</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body py-6 px-lg-8">
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
     </div>
-    <div class="overlay overlay-block cursor-default modal-body">
-        <ng-container *ngIf="isLoading">
-            <div class="overlay-layer bg-transparent">
-                <div class="spinner spinner-lg spinner-success"></div>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="userDto">
-            <form action="#" class="form form-label-right">
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>User Name:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ userDto.userName }}</label>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="form-group row">
-                        <label class="col-3 col-form-label text-lg-right"><b>First Name:</b></label>
-                        <div class="col-9">
-                            <label class="col-form-label text-lg-left">{{ userDto.firstName }}</label>
-                        </div>
-                    </div>
-                </div>                
-                <div class="form-group row">
-                    <div class="form-group row">
-                        <label class="col-3 col-form-label text-lg-right"><b>Last Name:</b></label>
-                        <div class="col-9">
-                            <label class="col-form-label text-lg-left">{{ userDto.lastName }}</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Email:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ userDto.email }}</label>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Phone:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ userDto.phoneNumber }}</label>
-                    </div>
-                </div>                
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Role:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ roleName }}</label>
-                    </div>
-                </div>                
-                <div class="form-group row">
-                    <label class="col-3 col-form-label text-lg-right"><b>Is Active:</b></label>
-                    <div class="col-9">
-                        <label class="col-form-label text-lg-left">{{ userDto.isActive }}</label>
-                    </div>
-                </div>
-            </form>
-        </ng-container>
+    <div *ngIf="!isLoading && userDto" class="row g-4">
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Username</div>
+        <div class="fw-semibold fs-6">{{ userDto.userName || '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Email</div>
+        <div class="fw-semibold fs-6">{{ userDto.email || '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">First Name</div>
+        <div class="fw-semibold fs-6">{{ userDto.firstName || '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Last Name</div>
+        <div class="fw-semibold fs-6">{{ userDto.lastName || '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Phone</div>
+        <div class="fw-semibold fs-6">{{ userDto.phoneNumber || '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Role</div>
+        <div class="fw-semibold fs-6">{{ roleName || '—' }}</div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Status</div>
+        <span class="badge" [ngClass]="userDto.isActive ? 'bg-success' : 'bg-danger'">
+          {{ userDto.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-light btn-elevate mr-2" (click)="modal.dismiss()"><i
-                class="fas fa-window-close"></i>Close</button>
-    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.dismiss()">Close</button>
+  </div>
 </div>

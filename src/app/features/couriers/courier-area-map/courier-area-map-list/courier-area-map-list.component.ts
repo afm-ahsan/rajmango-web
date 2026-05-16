@@ -102,8 +102,8 @@ export class CourierAreaMapListComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(component, { size: 'md' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(
-      (result: 'success' | 'dismissed') => this.load(),
-      (error: any) => console.warn('Modal dismissed:', error)
+      (result: string) => { if (result === 'success') this.load(); },
+      () => {}
     );
   }
 

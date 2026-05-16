@@ -1,67 +1,53 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h4 class="modal-title whiteFontColor"><strong>{{ title }}</strong></h4>
+    <h2 class="modal-title">{{ title }}</h2>
+    <button type="button" class="btn-close" (click)="cancel()"></button>
   </div>
-
-  <div class="modal-body">
+  <div class="modal-body py-6 px-lg-8">
     <form [formGroup]="form">
-      <div class="mb-5">
-        <label class="form-label required">Address Line</label>
-        <input type="text" class="form-control form-control-lg"
-          formControlName="addressLine"
-          [class.is-invalid]="isInvalid('addressLine')" />
-        <div *ngIf="isInvalid('addressLine')" class="invalid-feedback">Address line is required.</div>
-      </div>
-
-      <div class="row mb-5">
-        <div class="col-md-6 mb-5">
-          <label class="form-label required">City</label>
-          <input type="text" class="form-control form-control-lg"
-            formControlName="city"
+      <div class="row g-4">
+        <div class="col-12">
+          <label class="form-label fw-semibold required">Address Line</label>
+          <input type="text" class="form-control form-control-solid" formControlName="addressLine"
+            [class.is-invalid]="isInvalid('addressLine')" />
+          <div *ngIf="isInvalid('addressLine')" class="text-danger fs-7 mt-1">Address line is required.</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">City</label>
+          <input type="text" class="form-control form-control-solid" formControlName="city"
             [class.is-invalid]="isInvalid('city')" />
-          <div *ngIf="isInvalid('city')" class="invalid-feedback">City is required.</div>
+          <div *ngIf="isInvalid('city')" class="text-danger fs-7 mt-1">City is required.</div>
         </div>
-        <div class="col-md-6 mb-5">
-          <label class="form-label">Area</label>
-          <input type="text" class="form-control form-control-lg" formControlName="area" />
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Area</label>
+          <input type="text" class="form-control form-control-solid" formControlName="area" />
         </div>
-      </div>
-
-      <div class="row mb-5">
-        <div class="col-md-6 mb-5">
-          <label class="form-label">Postal Code</label>
-          <input type="text" class="form-control form-control-lg" formControlName="postalCode" />
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Postal Code</label>
+          <input type="text" class="form-control form-control-solid" formControlName="postalCode" />
         </div>
-        <div class="col-md-6 mb-5">
-          <label class="form-label required">Address Type</label>
-          <select class="form-select form-select-lg"
-            formControlName="addressType"
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold required">Address Type</label>
+          <select class="form-select form-select-solid" formControlName="addressType"
             [class.is-invalid]="isInvalid('addressType')">
             <option [value]="0">-- Select Type --</option>
             <option *ngFor="let opt of addressTypeOptions" [value]="opt.id">{{ opt.label }}</option>
           </select>
-          <div *ngIf="isInvalid('addressType')" class="invalid-feedback">Address type is required.</div>
+          <div *ngIf="isInvalid('addressType')" class="text-danger fs-7 mt-1">Address type is required.</div>
         </div>
-      </div>
-
-      <div class="mb-5 form-check form-switch">
-        <input type="checkbox" class="form-check-input" id="isPrimary" formControlName="isPrimary" />
-        <label class="form-check-label" for="isPrimary">Set as Primary Address</label>
+        <div class="col-12">
+          <div class="form-check form-switch">
+            <input type="checkbox" class="form-check-input" id="isPrimary" formControlName="isPrimary" />
+            <label class="form-check-label fw-semibold" for="isPrimary">Set as Primary Address</label>
+          </div>
+        </div>
       </div>
     </form>
   </div>
-
   <div class="modal-footer">
-    <button type="button" class="btn btn-light border shadow-sm px-4 me-2"
-      (click)="cancel()" [disabled]="isLoading">
-      <i class="bi bi-x-lg"></i> Cancel
-    </button>
-    <button type="button" class="btn btn-primary px-4"
-      (click)="save()" [disabled]="isLoading">
-      <span *ngIf="!isLoading"><i class="bi bi-check-lg me-1"></i> Save</span>
-      <span *ngIf="isLoading">
-        <span class="spinner-border spinner-border-sm me-2"></span> Saving...
-      </span>
+    <button type="button" class="btn btn-light me-3" (click)="cancel()" [disabled]="isLoading">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>Save
     </button>
   </div>
 </div>

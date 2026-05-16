@@ -7,7 +7,6 @@ import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
 import { DropdownModel, EntityDropdownModel } from 'src/app/shared/models/dropdown.model';
 import { DropdownService } from 'src/app/shared/services/dropdown.service';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 import { DomainUtils } from 'src/app/shared/utils/domain-utils';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { dropdownRequiredValidator } from 'src/app/shared/validators/dropdown-validators';
@@ -59,7 +58,6 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private orderService: OrderService,
     private cdRef: ChangeDetectorRef,
-    private loaderService: LoaderService,
     private dropdownService: DropdownService,
     private mangoTypeService: MangoTypeService,
     private availabilityProxy: MangoAvailabilityServiceProxy,
@@ -103,7 +101,6 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
 
   loadData(): void {
     this.isLoading = true;
-    this.loaderService.show();
 
     this.subs.sink = forkJoin({
         mangoTypes: this.mangoTypeService.list(),
@@ -178,12 +175,10 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     }
 
     this.isLoading = false;
-    this.loaderService.hide();
   }
 
   private handleLoadError(): void {
     this.isLoading = false;
-    this.loaderService.hide();
     Swal.fire('Failed', 'Failed to load data.', 'error');
   }
 
