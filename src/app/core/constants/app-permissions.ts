@@ -56,6 +56,27 @@ export const AppPermissions = {
     Delete: 'courier.delete',
   },
 
+  CourierProviders: {
+    View:   'courier-provider.view',
+    Create: 'courier-provider.create',
+    Update: 'courier-provider.update',
+    Delete: 'courier-provider.delete',
+  },
+
+  CourierStations: {
+    View:   'courier-station.view',
+    Create: 'courier-station.create',
+    Update: 'courier-station.update',
+    Delete: 'courier-station.delete',
+  },
+
+  CourierAreaMaps: {
+    View:   'courier-area-map.view',
+    Create: 'courier-area-map.create',
+    Update: 'courier-area-map.update',
+    Delete: 'courier-area-map.delete',
+  },
+
   Customers: {
     View:   'customer.view',
     Create: 'customer.create',

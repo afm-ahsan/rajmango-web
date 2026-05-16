@@ -67,11 +67,15 @@ export class UserPermissionService {
       hasExpenseTypeAccess: can(AppPermissions.ExpenseTypes.View),
       hasExpensesAccess:    can(AppPermissions.Expenses.View),
 
-      // ─── Logistics (all courier sub-features share courier.view) ─
-      hasCourierAccess:         can(AppPermissions.Couriers.View),
-      hasCourierProviderAccess: can(AppPermissions.Couriers.View),
-      hasCourierStationsAccess: can(AppPermissions.Couriers.View),
-      hasAreaMapAccess:         can(AppPermissions.Couriers.View),
+      // ─── Logistics ───────────────────────────────────────────────
+      hasCourierProviderAccess: can(AppPermissions.CourierProviders.View) || can(AppPermissions.Couriers.View),
+      hasCourierStationsAccess: can(AppPermissions.CourierStations.View)  || can(AppPermissions.Couriers.View),
+      hasAreaMapAccess:         can(AppPermissions.CourierAreaMaps.View)  || can(AppPermissions.Couriers.View),
+      hasCourierAccess:
+        can(AppPermissions.CourierProviders.View) ||
+        can(AppPermissions.CourierStations.View)  ||
+        can(AppPermissions.CourierAreaMaps.View)  ||
+        can(AppPermissions.Couriers.View),
 
       // ─── Customer Relations ──────────────────────────────────────
       hasFeedbackAccess: can(AppPermissions.Feedback.AdminView),

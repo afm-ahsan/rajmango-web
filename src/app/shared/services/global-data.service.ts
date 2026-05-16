@@ -1,24 +1,23 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { RestaurantOrderDto } from '../../restaurant/models/restaurant-order-dto.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GlobalDataService {
-  currentOrderSubject$: Observable<RestaurantOrderDto | undefined>;
-  currentOrderSubject: BehaviorSubject<RestaurantOrderDto | undefined>;
+  currentOrderSubject$: Observable<any>;
+  currentOrderSubject: BehaviorSubject<any>;
 
   constructor() {
-    this.currentOrderSubject = new BehaviorSubject<RestaurantOrderDto | undefined>(undefined);
+    this.currentOrderSubject = new BehaviorSubject<any>(undefined);
     this.currentOrderSubject$ = this.currentOrderSubject.asObservable();
   }
 
-  get currentRestaurantOrder(): RestaurantOrderDto | undefined {
+  get currentRestaurantOrder(): any {
     return this.currentOrderSubject.value;
   }
 
-  updateCurrentRestaurantOrder(orderDto: RestaurantOrderDto) {
+  updateCurrentRestaurantOrder(orderDto: any) {
     this.currentOrderSubject.next(orderDto);
   }
 }
