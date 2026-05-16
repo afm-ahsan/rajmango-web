@@ -115,10 +115,10 @@
           </div>
 
           <div class="col-md-8 d-flex justify-content-end gap-2">
-            <button type="button" class="btn btn-primary" (click)="addOrder()">
+            <button type="button" class="btn btn-primary btn-sm" (click)="addOrder()">
               <i class="bi bi-plus-lg"></i> Add
             </button>
-            <button type="button" class="btn btn-secondary" (click)="reset()">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="reset()">
               <i class="bi bi-arrow-counterclockwise"></i> Reset
             </button>
           </div>
@@ -166,13 +166,11 @@
   </div>
 
   <div class="modal-footer">
-    <div class="d-flex justify-content-end gap-3 mt-4">
-      <button type="button" class="btn btn-light border shadow-sm px-4 py-2" (click)="cancel()">
-        <i class="bi bi-x-lg"></i> Cancel
-      </button>
-      <button type="button" class="btn btn-primary shadow-sm px-4 py-2" [disabled]="isSaveDisabled" (click)="save()">
-        <i class="bi bi-save"></i> Place Order
-      </button>
-    </div>
+    <button type="button" class="btn btn-light btn-sm me-3" (click)="cancel()">
+      <i class="bi bi-x-lg"></i> Cancel
+    </button>
+    <button type="button" class="btn btn-primary btn-sm" [disabled]="isSaveDisabled" (click)="save()">
+      <i class="bi bi-save"></i> Place Order
+    </button>
   </div>
 </div>

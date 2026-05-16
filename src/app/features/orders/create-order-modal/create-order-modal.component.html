@@ -17,21 +17,25 @@
               <option value="0">Select Mango Type</option>
               <option *ngFor="let item of mangoTypeOptions" [value]="item.id">{{ item.name }}</option>
             </select>
+            <div *ngIf="isControlInvalid('mangoType')" class="text-danger fs-7 mt-1">Please select a mango type.</div>
           </div>
           <div class="col-12 col-md-6">
             <label class="form-label fw-semibold required">Crate Type</label>
             <select class="form-select form-select-solid" formControlName="crateType"
               [class.is-invalid]="isControlInvalid('crateType')">
               <option value="0">Select Crate Type</option>
-              <option *ngFor="let item of crateTypeOptions" [value]="item.label">{{ item.label }}</option>
+              <option *ngFor="let item of crateTypeOptions" [value]="item.id">{{ item.label }}</option>
             </select>
+            <div *ngIf="isControlInvalid('crateType')" class="text-danger fs-7 mt-1">Please select a crate type.</div>
           </div>
           <div class="col-12">
             <label class="form-label fw-semibold required">Delivery Area</label>
-            <select class="form-select form-select-solid" formControlName="area" (change)="onAreaChanged()">
+            <select class="form-select form-select-solid" formControlName="area"
+              [class.is-invalid]="isControlInvalid('area')" (change)="onAreaChanged()">
               <option value="0">Select Your Area</option>
               <option *ngFor="let area of courierAreaOptions" [value]="area.name">{{ area.name }}</option>
             </select>
+            <div *ngIf="isControlInvalid('area')" class="text-danger fs-7 mt-1">Please select a delivery area.</div>
           </div>
           <div class="col-12" *ngIf="!isFallbackMode && availableStations.length > 0">
             <label class="form-label fw-semibold required">Courier Station</label>
@@ -42,12 +46,22 @@
                 {{ station.providerName }} - {{ station.stationName }} ({{ station.area }})
               </option>
             </select>
+            <div *ngIf="isControlInvalid('courierStationId')" class="text-danger fs-7 mt-1">Please select a courier station.</div>
           </div>
           <div class="col-12" *ngIf="isFallbackMode">
             <label class="form-label fw-semibold required">Manual Delivery Address</label>
             <textarea class="form-control form-control-solid" formControlName="fallbackAddress"
+              [class.is-invalid]="isControlInvalid('fallbackAddress')"
               rows="3" placeholder="Enter your full delivery address"></textarea>
             <div class="text-muted fs-7 mt-1">No matching courier found. Provide address manually.</div>
+            <div *ngIf="isControlInvalid('fallbackAddress')" class="text-danger fs-7 mt-1">
+              Please enter a delivery address (at least 10 characters).
+            </div>
+          </div>          
+          <div class="col-12">
+            <label class="form-label fw-semibold">Note</label>
+            <textarea class="form-control form-control-solid" formControlName="note"
+              placeholder="Optional note" rows="2" maxlength="512"></textarea>
           </div>
           <div class="col-12 col-md-4">
             <label class="form-label fw-semibold required">Quantity (kg)</label>
@@ -66,11 +80,6 @@
             <button type="button" class="btn btn-light btn-sm" (click)="reset()">
               <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
             </button>
-          </div>
-          <div class="col-12">
-            <label class="form-label fw-semibold">Note</label>
-            <textarea class="form-control form-control-solid" formControlName="note"
-              placeholder="Optional note" rows="2" maxlength="512"></textarea>
           </div>
         </div>
       </form>
@@ -112,7 +121,7 @@
     </ng-container>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light me-3" (click)="cancel()">Cancel</button>
-    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="isSaveDisabled">Save</button>
+    <button type="button" class="btn btn-light btn-sm me-3" (click)="cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary btn-sm" (click)="save()" [disabled]="isSaveDisabled">Save</button>
   </div>
 </div>

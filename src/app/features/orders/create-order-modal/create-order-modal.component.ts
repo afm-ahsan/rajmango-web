@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, of, switchMap } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
@@ -46,6 +47,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   crateTypeOptions: DropdownModel[] = [];
   subs = new SubSink();
   isLoading = false;
+  isSubmitting = false;
   orderDateObject: Date;
   availableStations: AvailableCourierDto[] = [];
   stationCheckRequired = false;
@@ -183,14 +185,17 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   }
 
   addOrder(): void {
-    const formValue = this.orderForm.value;
+    ['mangoType', 'crateType', 'quantity'].forEach(name =>
+      this.orderForm.get(name)?.markAsTouched()
+    );
 
+    const formValue = this.orderForm.value;
     const mangoTypeId = +formValue.mangoType;
     const crateType = +formValue.crateType;
     const quantity = +formValue.quantity;
 
     if (!mangoTypeId || !crateType || quantity <= 0) {
-      Swal.fire('Invalid Input', 'Please fill out all required fields correctly.', 'warning');
+      this.cdRef.detectChanges();
       return;
     }
     
@@ -335,31 +340,41 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
 }
 
   private edit(): void {
-    this.subs.sink = this.orderService.update(this.id, this.orderInputDto).subscribe({
-      next: (response: OrderDto) => {
-        this.orderDto = response;
-        Swal.fire('SUCCESS', 'Data updated successfully.', 'success');
-        this.modal.close('success');
+    this.isSubmitting = true;
+    this.subs.sink = this.orderService.update(this.id, this.orderInputDto).pipe(
+      finalize(() => { this.isSubmitting = false; this.cdRef.detectChanges(); })
+    ).subscribe({
+      next: (res: any) => {
+        if (res?.succeeded) {
+          Swal.fire('SUCCESS', 'Order updated successfully.', 'success');
+          this.modal.close('success');
+        } else {
+          const msg = res?.messages?.join('\n') ?? 'Order update failed.';
+          Swal.fire('Update Failed', msg, 'warning');
+        }
       },
-      error: (error) => {
-        this.modal.dismiss(error);
-        Swal.fire('FAILED', 'Data update failed.', 'error');
-        of(this.initObject());
+      error: () => {
+        Swal.fire('FAILED', 'Order update failed.', 'error');
       }
     });
   }
 
   private create(): void {
-    this.subs.sink = this.orderService.create(this.orderInputDto).subscribe({
-      next: (res: OrderDto) => {
-        this.orderDto = res;
-        Swal.fire('SUCCESS', 'Data saved successfully.', 'success');
-        this.modal.close('success');
+    this.isSubmitting = true;
+    this.subs.sink = this.orderService.create(this.orderInputDto).pipe(
+      finalize(() => { this.isSubmitting = false; this.cdRef.detectChanges(); })
+    ).subscribe({
+      next: (res: any) => {
+        if (res?.succeeded) {
+          Swal.fire('SUCCESS', 'Order created successfully.', 'success');
+          this.modal.close('success');
+        } else {
+          const msg = res?.messages?.join('\n') ?? 'Order creation failed.';
+          Swal.fire('Order Not Placed', msg, 'warning');
+        }
       },
-      error: (error) => {
-        this.modal.dismiss(error);
+      error: () => {
         Swal.fire('FAILED', 'Order creation failed.', 'error');
-        of(this.initObject());
       }
     });
   }
@@ -421,7 +436,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   }
     
     get isSaveDisabled(): boolean {
-    return !this.orderForm || !this.orderForm.valid || this.orderDetails.length === 0;
+    return !this.orderForm || !this.orderForm.valid || this.orderDetails.length === 0 || this.isSubmitting;
   }
 
   onAreaChanged(): void {

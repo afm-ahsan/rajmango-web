@@ -8,8 +8,8 @@
     <p class="fs-6 text-gray-600 mb-0">Are you sure you want to permanently delete this expense type?</p>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light me-3" (click)="modal.dismiss()" [disabled]="isLoading">Cancel</button>
-    <button type="button" class="btn btn-danger" (click)="delete()" [disabled]="isLoading">
+    <button type="button" class="btn btn-light btn-sm me-3" (click)="modal.dismiss()" [disabled]="isLoading">Cancel</button>
+    <button type="button" class="btn btn-danger btn-sm" (click)="delete()" [disabled]="isLoading">
       <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>Delete
     </button>
   </div>

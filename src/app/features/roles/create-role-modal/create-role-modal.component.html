@@ -188,7 +188,7 @@
 
   <!-- ── Footer ───────────────────────────────────────────────────── -->
   <div class="modal-footer">
-    <button type="button" class="btn btn-light" [disabled]="isSaving" (click)="modal.dismiss()">
+    <button type="button" class="btn btn-light btn-sm" [disabled]="isSaving" (click)="modal.dismiss()">
       {{ isViewMode ? 'Close' : 'Cancel' }}
     </button>
 
@@ -200,7 +200,7 @@
     <button
       *ngIf="!isViewMode"
       type="button"
-      class="btn btn-primary"
+      class="btn btn-primary btn-sm"
       (click)="save()"
       [disabled]="formGroup?.invalid || isSaving || isLoading">
       <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>

@@ -49,8 +49,8 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light me-3" (click)="modal.dismiss()">Cancel</button>
-    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="formGroup.invalid || isLoading">
+    <button type="button" class="btn btn-light btn-sm me-3" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-primary btn-sm" (click)="save()" [disabled]="formGroup.invalid || isLoading">
       <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>Save
     </button>
   </div>
