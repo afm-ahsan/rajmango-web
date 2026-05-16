@@ -1,24 +1,28 @@
 <div class="modal-content">
 
   <!-- ── Header ───────────────────────────────────────────────────── -->
-  <div class="modal-header bg-primary">
-    <h5 class="modal-title text-white fw-bold mb-0">
-      <ng-container *ngIf="roleDto.id">Edit Role</ng-container>
-      <ng-container *ngIf="!roleDto.id">Add Role</ng-container>
+  <div class="modal-header" [class.bg-primary]="!isViewMode" [class.bg-light]="isViewMode">
+    <h5 class="modal-title fw-bold mb-0" [class.text-white]="!isViewMode" [class.text-dark]="isViewMode">
+      {{ modalTitle }}
     </h5>
-    <button type="button" class="btn-close btn-close-white" (click)="modal.dismiss()"></button>
+    <button type="button" class="btn-close" [class.btn-close-white]="!isViewMode" (click)="modal.dismiss()"></button>
   </div>
 
   <!-- ── Body ─────────────────────────────────────────────────────── -->
   <div class="modal-body p-0">
 
+    <!--
+      BODY LOADER — shown only while fetching role data for edit/view.
+      Never shown at the same time as the button loader.
+    -->
     <ng-container *ngIf="isLoading">
-      <div class="d-flex justify-content-center py-10">
-        <span class="spinner-border text-primary" role="status"></span>
+      <div class="d-flex flex-column align-items-center justify-content-center py-12">
+        <span class="spinner-border text-primary mb-3" role="status"></span>
+        <span class="text-muted fs-7">Loading role details…</span>
       </div>
     </ng-container>
 
-    <ng-container *ngIf="!isLoading && roleDto">
+    <ng-container *ngIf="!isLoading && formGroup">
       <form [formGroup]="formGroup" class="form">
 
         <!-- Role metadata -->
@@ -27,7 +31,7 @@
 
             <!-- Name -->
             <div class="col-12 col-md-6">
-              <label class="form-label fw-semibold required">Role Name</label>
+              <label class="form-label fw-semibold" [class.required]="!isViewMode">Role Name</label>
               <input
                 type="text"
                 class="form-control form-control-solid"
@@ -61,10 +65,14 @@
           </div>
         </div>
 
-        <!-- Permissions header with global select-all -->
+        <!-- Permissions header -->
         <div class="d-flex align-items-center justify-content-between px-6 py-3 border-bottom bg-light-subtle">
-          <span class="fw-bold text-dark fs-6">Permissions</span>
-          <div class="form-check form-check-sm form-check-custom form-check-solid">
+          <span class="fw-bold text-dark fs-6">
+            Permissions
+            <span *ngIf="isViewMode" class="badge badge-light-primary ms-2 fs-8">Read-only</span>
+          </span>
+          <!-- Global select-all (edit/create only) -->
+          <div class="form-check form-check-sm form-check-custom form-check-solid" *ngIf="!isViewMode">
             <input
               type="checkbox"
               class="form-check-input"
@@ -82,19 +90,24 @@
 
             <!-- Group header -->
             <div class="permission-group-header d-flex align-items-center gap-3">
-              <div class="form-check form-check-sm form-check-custom form-check-solid">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  [id]="'group-' + group.area"
-                  (change)="onGroupCheckAll(group, $event)"
-                  [checked]="isGroupAllChecked(group)"
-                  [indeterminate]="isGroupIndeterminate(group)" />
-                <label class="form-check-label fw-bold text-uppercase text-primary fs-8 ls-1"
-                       [for]="'group-' + group.area">
-                  {{ group.area }}
-                </label>
-              </div>
+              <ng-container *ngIf="!isViewMode">
+                <div class="form-check form-check-sm form-check-custom form-check-solid">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    [id]="'group-' + group.area"
+                    (change)="onGroupCheckAll(group, $event)"
+                    [checked]="isGroupAllChecked(group)"
+                    [indeterminate]="isGroupIndeterminate(group)" />
+                  <label class="form-check-label fw-bold text-uppercase text-primary fs-8 ls-1"
+                         [for]="'group-' + group.area">
+                    {{ group.area }}
+                  </label>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="isViewMode">
+                <span class="fw-bold text-uppercase text-primary fs-8 ls-1">{{ group.area }}</span>
+              </ng-container>
             </div>
 
             <!-- Features in group -->
@@ -102,44 +115,65 @@
                  class="permission-feature-row"
                  [class.border-bottom-0]="lastFeature && lastGroup">
 
-              <!-- Feature checkbox -->
+              <!-- Feature label -->
               <div class="permission-feature-label">
-                <div class="form-check form-check-sm form-check-custom form-check-solid">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    [id]="'feat-' + feature.id"
-                    (change)="onFeatureChange(feature, $event)"
-                    [checked]="feature.hasAccess"
-                    [indeterminate]="isFeatureIndeterminate(feature)" />
-                  <label class="form-check-label fw-semibold text-gray-800 fs-7" [for]="'feat-' + feature.id">
-                    {{ feature.title }}
-                  </label>
-                </div>
-              </div>
-
-              <!-- Action chips -->
-              <div class="permission-actions">
-                <div *ngFor="let action of feature.actionModels"
-                     class="permission-action-chip"
-                     [class.chip-active]="action.hasAccess">
+                <ng-container *ngIf="!isViewMode">
                   <div class="form-check form-check-sm form-check-custom form-check-solid">
                     <input
                       type="checkbox"
                       class="form-check-input"
-                      [id]="'act-' + feature.id + '-' + action.id"
-                      (change)="onActionChange(feature, action.id, $event)"
-                      [checked]="action.hasAccess" />
-                    <label class="form-check-label text-gray-600 fs-8"
-                           [for]="'act-' + feature.id + '-' + action.id">
-                      {{ action.action }}
+                      [id]="'feat-' + feature.id"
+                      (change)="onFeatureChange(feature, $event)"
+                      [checked]="feature.hasAccess"
+                      [indeterminate]="isFeatureIndeterminate(feature)" />
+                    <label class="form-check-label fw-semibold text-gray-800 fs-7" [for]="'feat-' + feature.id">
+                      {{ feature.title }}
                     </label>
                   </div>
-                </div>
+                </ng-container>
+                <ng-container *ngIf="isViewMode">
+                  <span class="fw-semibold fs-7"
+                        [class.text-gray-800]="feature.hasAccess"
+                        [class.text-gray-400]="!feature.hasAccess">
+                    {{ feature.title }}
+                  </span>
+                </ng-container>
+              </div>
+
+              <!-- Action chips (edit/create mode) -->
+              <div class="permission-actions">
+                <ng-container *ngIf="!isViewMode">
+                  <div *ngFor="let action of feature.actionModels"
+                       class="permission-action-chip"
+                       [class.chip-active]="action.hasAccess">
+                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        [id]="'act-' + feature.id + '-' + action.id"
+                        (change)="onActionChange(feature, action.id, $event)"
+                        [checked]="action.hasAccess" />
+                      <label class="form-check-label text-gray-600 fs-8"
+                             [for]="'act-' + feature.id + '-' + action.id">
+                        {{ action.action }}
+                      </label>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <!-- View mode: granted actions as badges, none = muted label -->
+                <ng-container *ngIf="isViewMode">
+                  <ng-container *ngFor="let action of feature.actionModels">
+                    <span *ngIf="action.hasAccess" class="badge badge-light-success fs-8 me-1">
+                      {{ action.action }}
+                    </span>
+                  </ng-container>
+                  <span *ngIf="!feature.hasAccess" class="text-muted fs-8 fst-italic">No access</span>
+                </ng-container>
               </div>
 
             </div>
-            <!-- /feature -->
+            <!-- /feature row -->
 
           </div>
           <!-- /group -->
@@ -154,9 +188,23 @@
 
   <!-- ── Footer ───────────────────────────────────────────────────── -->
   <div class="modal-footer">
-    <button type="button" class="btn btn-light" (click)="modal.dismiss()">Cancel</button>
-    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="formGroup.invalid">
-      Save Role
+    <button type="button" class="btn btn-light" [disabled]="isSaving" (click)="modal.dismiss()">
+      {{ isViewMode ? 'Close' : 'Cancel' }}
+    </button>
+
+    <!--
+      SAVE BUTTON — shown only in create/edit mode.
+      Button spinner (isSaving) is the ONLY loader during submit.
+      Body loader (isLoading) is never true at the same time as isSaving.
+    -->
+    <button
+      *ngIf="!isViewMode"
+      type="button"
+      class="btn btn-primary"
+      (click)="save()"
+      [disabled]="formGroup?.invalid || isSaving || isLoading">
+      <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      {{ isSaving ? (roleDto.id ? 'Updating…' : 'Creating…') : 'Save Role' }}
     </button>
   </div>
 

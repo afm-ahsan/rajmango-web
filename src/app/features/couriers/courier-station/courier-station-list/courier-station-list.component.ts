@@ -4,7 +4,6 @@ import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { FilterModel } from 'src/app/shared/models/filter.model';
 import { ImagePathService } from 'src/app/shared/services/image-path.service';
-import { LoaderService } from 'src/app/shared/services/loader.service';
 import { FilterUtils } from 'src/app/shared/utils/filter-utils';
 import { SubSink } from 'subsink';
 import { CourierStationFacade } from '../courier-station.facade';
@@ -41,7 +40,6 @@ export class CourierStationListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
-    private loaderService: LoaderService,
     private courierStationFacade: CourierStationFacade,
     private imagePathService: ImagePathService
   ) {}
@@ -58,20 +56,24 @@ export class CourierStationListComponent implements OnInit, OnDestroy {
   // 4. Public Methods
   load(): void {
     this.isLoading = true;
-    this.loaderService.show();
     const dto = FilterUtils.createPagedRequest(this.filter, this.searchVal);
     this.subs.sink = this.courierStationFacade.getPagedWithCount(dto)
       .pipe(
         finalize(() => {
           this.isLoading = false;
-          this.loaderService.hide();
           this.cdRef.detectChanges();
           MenuComponent.reinitialization();
         })
       )
-      .subscribe(([data, count]) => {
-        this.courierStations = data;
-        this.totalCount = count;
+      .subscribe({
+        next: ([data, count]) => {
+          this.courierStations = data;
+          this.totalCount = count;
+        },
+        error: () => {
+          this.courierStations = [];
+          this.totalCount = 0;
+        }
       });
   }
 

@@ -8,7 +8,6 @@ import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SubSink } from 'subsink';
 import { CreateRoleModalComponent } from '../create-role-modal/create-role-modal.component';
 import { DeleteRoleModalComponent } from '../delete-role-modal/delete-role-modal.component';
-import { ViewRoleModalComponent } from '../view-role-modal/view-role-modal.component';
 
 @Component({
   selector: 'app-role-list',
@@ -61,41 +60,29 @@ export class RoleListComponent implements OnInit, OnDestroy {
   }
 
   create() {
-    this.edit(0);
+    this.openModal(0, 'create');
   }
 
   edit(id: number): void {
-    const modalRef = this.modalService.open(CreateRoleModalComponent, {
-      size: 'md',
-    });
+    this.openModal(id, 'edit');
+  }
+
+  view(id: number): void {
+    this.openModal(id, 'view');
+  }
+
+  private openModal(id: number, mode: 'create' | 'edit' | 'view'): void {
+    const modalRef = this.modalService.open(CreateRoleModalComponent, { size: 'md' });
     modalRef.componentInstance.id = id;
+    modalRef.componentInstance.mode = mode;
     modalRef.result.then(
-      () => {
-        this.load();
-      },
-      (error: any) => {
-        console.log(error);
-      }
+      () => { this.load(); },
+      () => {}
     );
   }
 
   delete(id: number): void {
     const modalRef = this.modalService.open(DeleteRoleModalComponent);
-    modalRef.componentInstance.id = id;
-    modalRef.result.then(
-      () => {
-        this.load();
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
-  }
-
-  view(id: number): void {
-    const modalRef = this.modalService.open(ViewRoleModalComponent, {
-      size: 'md',
-    });
     modalRef.componentInstance.id = id;
     modalRef.result.then(
       () => { this.load(); },
