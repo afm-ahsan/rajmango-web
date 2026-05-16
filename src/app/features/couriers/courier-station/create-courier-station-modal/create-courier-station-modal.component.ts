@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { of, switchMap, tap } from 'rxjs';
+import { finalize, of, switchMap, tap } from 'rxjs';
 import { AuthService } from 'src/app/features/auth';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SubSink } from 'subsink';
@@ -117,15 +117,15 @@ export class CreateCourierStationModalComponent implements OnInit, OnDestroy {
       ? this.courierStationService.update(this.id, this.createDto)
       : this.courierStationService.create(this.createDto);
 
-    this.subs.sink = request$.subscribe({
+    this.subs.sink = request$.pipe(
+      finalize(() => this.completeLoading())
+    ).subscribe({
       next: (response: CourierStationDto) => {
         this.courierStationDto = response;
-        this.completeLoading();
         Swal.fire('SUCCESS', `Data ${this.id ? 'updated' : 'saved'} successfully.`, 'success');
         this.modal.close('success');
       },
       error: (error) => {
-        this.completeLoading();
         this.modal.dismiss(error);
         Swal.fire('Failed', `Courier Station ${this.id ? 'update' : 'creation'} failed.`, 'error');
       }

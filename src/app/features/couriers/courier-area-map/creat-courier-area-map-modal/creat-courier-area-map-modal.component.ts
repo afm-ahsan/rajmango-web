@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { of, switchMap, tap } from 'rxjs';
+import { finalize, of, switchMap, tap } from 'rxjs';
 import { AuthService } from 'src/app/features/auth';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { SubSink } from 'subsink';
@@ -90,22 +90,22 @@ export class CreatCourierAreaMapModalComponent implements OnInit, OnDestroy {
     if (!this.formGroup || this.formGroup.invalid) return;
 
     this.isSubmitting = true;
-    this.loaderService.show();
+    this.startLoading();
     this.prepareDto();
 
     const request$ = this.id
       ? this.courierAreaMapService.update(this.id, this.createDto)
       : this.courierAreaMapService.create(this.createDto);
 
-    this.subs.sink = request$.subscribe({
+    this.subs.sink = request$.pipe(
+      finalize(() => { this.isSubmitting = false; this.completeLoading(); })
+    ).subscribe({
       next: (response: CourierAreaMapDto) => {
         this.courierAreaMapDto = response;
-        this.loaderService.hide();
         Swal.fire('SUCCESS', `Data ${this.id ? 'updated' : 'saved'} successfully.`, 'success');
         this.modal.close('success');
       },
       error: (error) => {
-        this.loaderService.hide();
         this.modal.dismiss(error);
         Swal.fire('Failed', `Courier AreaMap ${this.id ? 'update' : 'creation'} failed.`, 'error');
       }

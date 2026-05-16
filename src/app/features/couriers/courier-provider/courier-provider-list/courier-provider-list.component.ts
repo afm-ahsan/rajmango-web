@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { FilterModel } from 'src/app/shared/models/filter.model';
 import { ImagePathService } from 'src/app/shared/services/image-path.service';
@@ -60,13 +61,17 @@ export class CourierProviderListComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     const dto = FilterUtils.createPagedRequest(this.filter, this.searchVal);
     this.subs.sink = this.courierProviderFacade.getPagedWithCount(dto)
+      .pipe(
+        finalize(() => {
+          this.isLoading = false;
+          this.loaderService.hide();
+          this.cdRef.detectChanges();
+          MenuComponent.reinitialization();
+        })
+      )
       .subscribe(([data, count]) => {
         this.courierProviders = data;
         this.totalCount = count;
-        this.isLoading = false;
-        this.loaderService.hide();
-        this.cdRef.detectChanges();
-        MenuComponent.reinitialization(); // Required to rebind dropdown menu actions
       });
   }
 

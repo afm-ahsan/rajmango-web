@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, first, of } from 'rxjs';
+import { catchError, finalize, first, of } from 'rxjs';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 
@@ -59,11 +59,11 @@ export class CreateCourierProviderModalComponent implements OnInit, OnDestroy {
         first(),
         catchError(error => {
           this.modal.dismiss(error);
-          return of(this.getDefaultProvider());
-        })
+          return of({ data: this.getDefaultProvider() });
+        }),
+        finalize(() => this.isLoading = false)
       )
       .subscribe((response: any) => {
-        this.isLoading = false;
         this.courierProviderDto = response.data;
         this.formGroup.patchValue(this.courierProviderDto);
       });
@@ -72,12 +72,15 @@ export class CreateCourierProviderModalComponent implements OnInit, OnDestroy {
   save(): void {
     if (this.formGroup.invalid) return;
 
+    this.isLoading = true;
     this.prepareDto();
     const request$ = this.id ?
       this.courierProviderService.update(this.id, this.dto) :
       this.courierProviderService.create(this.dto);
 
-    this.subs.sink = request$.subscribe({
+    this.subs.sink = request$.pipe(
+      finalize(() => this.isLoading = false)
+    ).subscribe({
       next: (response: CourierProviderDto) => {
         this.courierProviderDto = response;
         Swal.fire('SUCCESS', `Data ${this.id ? 'updated' : 'saved'} successfully.`, 'success');
