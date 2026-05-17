@@ -11,3 +11,10 @@
     }
   }
 }
+
+.link-auth-disabled {
+  opacity: 0.45;
+  pointer-events: none !important;
+  cursor: default;
+  text-decoration: none;
+}

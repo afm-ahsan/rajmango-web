@@ -13,9 +13,9 @@ import { AuthFacade } from '../../auth.facade';
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   hasError = false;
+  isSubmitting = false;
   returnUrl = '/home';
 
-  readonly isLoading$ = this._authFacade.isLoading$;
   private readonly _destroy$ = new Subject<void>();
 
   constructor(
@@ -70,19 +70,27 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   submit(): void {
-    if (this.loginForm.invalid) return;
+    if (this.loginForm.invalid || this.isSubmitting) return;
 
     this.hasError = false;
+    this.isSubmitting = true;
 
     this._authFacade
       .login(this.email?.value, this.password?.value)
       .pipe(takeUntil(this._destroy$))
-      .subscribe((user) => {
-        if (user) {
-          this._router.navigate([this.returnUrl]);
-        } else {
+      .subscribe({
+        next: (user) => {
+          if (user) {
+            this._router.navigate([this.returnUrl]);
+          } else {
+            this.hasError = true;
+            this.isSubmitting = false;
+          }
+        },
+        error: () => {
           this.hasError = true;
-        }
+          this.isSubmitting = false;
+        },
       });
   }
 

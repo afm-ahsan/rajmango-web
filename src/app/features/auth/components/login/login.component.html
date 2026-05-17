@@ -66,9 +66,12 @@
           Password
         </label>
         <a
-          routerLink="/auth/forgot-password"
+          [routerLink]="isSubmitting ? null : '/auth/forgot-password'"
           class="link-primary fs-6 fw-bolder"
           id="kt_login_forgot"
+          [class.link-auth-disabled]="isSubmitting"
+          [attr.tabindex]="isSubmitting ? -1 : 0"
+          [attr.aria-disabled]="isSubmitting ? 'true' : null"
         >
           Forgot Password?
         </a>
@@ -102,10 +105,10 @@
     <button
       type="submit"
       class="btn btn-lg btn-primary w-100 mb-5"
-      [disabled]="loginForm.invalid"
-      [attr.aria-busy]="(isLoading$ | async) ? 'true' : 'false'"
+      [disabled]="loginForm.invalid || isSubmitting"
+      [attr.aria-busy]="isSubmitting ? 'true' : 'false'"
     >
-      <ng-container *ngIf="isLoading$ | async; else submitLabel">
+      <ng-container *ngIf="isSubmitting; else submitLabel">
         <span class="indicator-progress d-block">
           Please wait...
           <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -120,9 +123,12 @@
     <div class="text-gray-400 fw-bold fs-5 mt-5">
       New Here? Please Register
       <a
-        routerLink="/auth/registration"
+        [routerLink]="isSubmitting ? null : '/auth/registration'"
         class="link-primary fw-bolder"
         id="kt_login_signup"
+        [class.link-auth-disabled]="isSubmitting"
+        [attr.tabindex]="isSubmitting ? -1 : 0"
+        [attr.aria-disabled]="isSubmitting ? 'true' : null"
       >
         {{ "AUTH.GENERAL.SIGNUP_BUTTON" | translate }}
       </a>
