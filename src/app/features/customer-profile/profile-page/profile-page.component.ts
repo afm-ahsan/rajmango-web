@@ -232,14 +232,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
         this.profileForm.patchValue({ currentPassword: '', newPassword: '' });
         Swal.fire('Success', 'Profile updated successfully.', 'success');
 
-        // Sync imagePath into auth state so header avatar updates immediately.
-        const current = this.authService.currentUserValue;
-        if (current) {
-          this.authService.currentUserValue = {
-            ...current,
-            imagePath: this.profileImagePath || null,
-          };
-        }
+        // Persist new imagePath to localStorage and emit via currentUser$
+        // so header/dropdown avatar updates immediately and survives refresh.
+        this.authService.patchStoredUser({ imagePath: this.profileImagePath || null });
 
         // Best-effort: delete the old physical file now that the new path is
         // persisted. A failure here is non-blocking — just log a warning.

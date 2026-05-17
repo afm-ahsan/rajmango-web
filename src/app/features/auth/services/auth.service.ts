@@ -92,6 +92,16 @@ export class AuthService implements OnDestroy {
     return this.authHttpService.getUserByToken(auth.authToken).pipe(
       map((response: any) => {
         if (response?.messages?.[0]?.includes('Valid Token')) {
+          // Merge any fresh fields the /me endpoint returns back into the
+          // cached auth object so localStorage never serves stale data.
+          const fresh = response?.data;
+          if (fresh) {
+            if (fresh.imagePath !== undefined) auth.imagePath = fresh.imagePath;
+            if (fresh.firstName !== undefined) auth.firstName = fresh.firstName;
+            if (fresh.lastName  !== undefined) auth.lastName  = fresh.lastName;
+            if (fresh.email     !== undefined) auth.email     = fresh.email;
+            this.setAuthToLocalStorage(auth);
+          }
           this.permissionService.currentPermission = this.permissionService.preparePermissionModel(auth.permissions);
           this.currentUserSubject.next(auth);
         } else {
@@ -101,6 +111,19 @@ export class AuthService implements OnDestroy {
       }),
       finalize(() => this.isLoadingSubject.next(false))
     );
+  }
+
+  /**
+   * Patches specific fields on the stored auth object, persists the change to
+   * localStorage, and emits the updated user via currentUser$.
+   * Use this wherever profile data changes (e.g. after photo upload/remove).
+   */
+  patchStoredUser(patch: Partial<AppUserModel>): void {
+    const auth = this.getAuthFromLocalStorage();
+    if (!auth) return;
+    const updated = { ...auth, ...patch };
+    this.setAuthToLocalStorage(updated);
+    this.currentUserSubject.next(updated);
   }
 
   getLoggedUserId(): number {

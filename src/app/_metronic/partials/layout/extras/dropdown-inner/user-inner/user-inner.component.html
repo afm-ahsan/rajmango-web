@@ -3,7 +3,7 @@
   <div class="menu-item px-3">
     <div class="menu-content d-flex align-items-center px-3">
       <div class="symbol symbol-50px me-5">
-        <img [src]="createImgPath(user.imagePath)" alt="User Avatar" class="img-fluid rounded-circle" />
+        <img [src]="createImgPath(user.imagePath)" (error)="onAvatarError($event)" alt="Avatar" class="img-fluid rounded-circle" />
       </div>
       <div class="d-flex flex-column">
         <span class="fw-bold fs-5 d-flex align-items-center">
@@ -34,6 +34,9 @@
   <!-- Profile -->
   <div class="menu-item px-5">
     <a routerLink="/customer-profile/profile" class="menu-link px-5">
+      <span class="menu-icon">
+        <span [inlineSVG]="'./assets/media/icons/duotune/communication/com006.svg'" class="svg-icon svg-icon-4"></span>
+      </span>
       <span class="menu-title">My Profile</span>
     </a>
   </div>
@@ -41,22 +44,21 @@
   <!-- Orders -->
   <div class="menu-item px-5">
     <a routerLink="/orders/order-list" class="menu-link px-5">
+      <span class="menu-icon">
+        <span [inlineSVG]="'./assets/media/icons/duotune/ecommerce/ecm002.svg'" class="svg-icon svg-icon-4"></span>
+      </span>
       <span class="menu-title">My Orders</span>
     </a>
   </div>
-
-  <!-- Support -->
-  <!-- <div class="menu-item px-5">
-    <a routerLink="/support" class="menu-link px-5">
-      <span class="menu-title">Support</span>
-    </a>
-  </div> -->
 
   <div class="separator my-2"></div>
 
   <!-- Logout -->
   <div class="menu-item px-5">
     <a (click)="logout()" class="menu-link px-5 cursor-pointer">
+      <span class="menu-icon">
+        <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr069.svg'" class="svg-icon svg-icon-4"></span>
+      </span>
       <span class="menu-title">Sign Out</span>
     </a>
   </div>
