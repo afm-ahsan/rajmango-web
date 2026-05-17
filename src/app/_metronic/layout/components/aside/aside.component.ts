@@ -49,13 +49,23 @@ export class AsideComponent implements OnInit, OnDestroy {
   }
 
   menuReinitialization() {
+    const scrollEl = this.ktAsideScroll?.nativeElement as HTMLElement | undefined;
+    const savedScrollTop = scrollEl ? scrollEl.scrollTop : 0;
+
     setTimeout(() => {
       MenuComponent.reinitialization();
       DrawerComponent.reinitialization();
       ToggleComponent.reinitialization();
       ScrollComponent.reinitialization();
-      if (this.ktAsideScroll && this.ktAsideScroll.nativeElement) {
-        this.ktAsideScroll.nativeElement.scrollTop = 0;
+
+      if (scrollEl) {
+        // Restore position instead of resetting to zero on every navigation
+        scrollEl.scrollTop = savedScrollTop;
+        // Scroll active item into view only if it is outside the visible area
+        const activeLink = scrollEl.querySelector<HTMLElement>('.menu-link.active');
+        if (activeLink) {
+          activeLink.scrollIntoView({ block: 'nearest' });
+        }
       }
     }, 50);
   }
