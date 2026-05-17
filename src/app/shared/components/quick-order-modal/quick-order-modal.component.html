@@ -5,14 +5,13 @@
     </h4>
   </div>
 
-  <div class="overlay overlay-block cursor-default modal-body">
-    <ng-container *ngIf="isLoading; else formContent">
-      <div class="overlay-layer bg-transparent">
-        <div class="spinner spinner-lg spinner-success"></div>
-      </div>
-    </ng-container>
+  <div class="modal-body">
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-8">
+      <span class="spinner-border text-primary" role="status"></span>
+    </div>
 
-    <ng-template #formContent>
+    <ng-container *ngIf="!isLoading">
       <form [formGroup]="orderForm" class="form form-label-right">
         <!-- Row: Mango Type + Crate Type -->
         <div class="form-group row mt-2">
@@ -162,7 +161,7 @@
           </tbody>
         </table>
       </div>
-    </ng-template>
+    </ng-container>
   </div>
 
   <div class="modal-footer">

@@ -142,6 +142,28 @@ export class EnumLabelUtils {
     return labels[level] ?? '—';
   }
 
+  static getMangoGradeBadgeClass(grade: number): string {
+    const classes: Record<number, string> = {
+      0: 'badge-light-secondary',
+      1: 'badge-light-info',
+      2: 'badge-light-primary',
+      3: 'badge-light-warning',
+      4: 'badge-light-success',
+      5: 'badge-light-danger',
+    };
+    return classes[grade] ?? 'badge-light-secondary';
+  }
+
+  static getSweetnessLevelBadgeClass(level: number): string {
+    const classes: Record<number, string> = {
+      1: 'badge-light-secondary',
+      2: 'badge-light-info',
+      3: 'badge-light-warning',
+      4: 'badge-light-success',
+    };
+    return classes[level] ?? 'badge-light-secondary';
+  }
+
   static getMangoAvailabilityStatusBadgeClass(status: number): string {
     const classes: Record<number, string> = {
       0: 'badge-light-dark',

@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { strongPasswordValidator } from 'src/app/shared/validators/password.validator';
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
@@ -62,7 +63,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       lastName: ['', [Validators.required]],
       phoneNumber: ['', [Validators.required]],
       currentPassword: [''],
-      newPassword: [''],
+      newPassword: ['', [Validators.minLength(6), Validators.maxLength(20), strongPasswordValidator()]],
     });
     this.loadProfile();
     this.loadAddresses();

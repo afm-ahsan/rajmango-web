@@ -1,46 +1,89 @@
 <div class="modal-content">
-  <div class="modal-header">
-    <h2 class="modal-title">User Details</h2>
+
+  <!-- Header -->
+  <div class="modal-header border-0 pb-0">
+    <h2 class="modal-title fs-5 fw-bold">User Details</h2>
     <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
-  <div class="modal-body py-6 px-lg-8">
-    <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+
+  <!-- Body -->
+  <div class="modal-body pt-4 px-lg-8">
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="d-flex justify-content-center py-8">
       <span class="spinner-border text-primary" role="status"></span>
     </div>
-    <div *ngIf="!isLoading && userDto" class="row g-4">
-      <div class="col-12 col-md-6">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Username</div>
-        <div class="fw-semibold fs-6">{{ userDto.userName || '—' }}</div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Email</div>
-        <div class="fw-semibold fs-6">{{ userDto.email || '—' }}</div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">First Name</div>
-        <div class="fw-semibold fs-6">{{ userDto.firstName || '—' }}</div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Last Name</div>
-        <div class="fw-semibold fs-6">{{ userDto.lastName || '—' }}</div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Phone</div>
-        <div class="fw-semibold fs-6">{{ userDto.phoneNumber || '—' }}</div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Role</div>
-        <div class="fw-semibold fs-6">{{ roleName || '—' }}</div>
-      </div>
-      <div class="col-12 col-md-6">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Status</div>
-        <span class="badge" [ngClass]="userDto.isActive ? 'bg-success' : 'bg-danger'">
+
+    <ng-container *ngIf="!isLoading && userDto">
+
+      <!-- Profile header -->
+      <div class="d-flex flex-column align-items-center text-center pb-6">
+        <div class="vu-avatar mb-4">
+          <img
+            [src]="avatarUrl()"
+            [alt]="fullName"
+            class="vu-avatar__img"
+            (error)="onAvatarError($event)" />
+        </div>
+        <h3 class="fw-bold fs-4 mb-1">{{ fullName }}</h3>
+        <div class="text-muted fs-7 mb-3">
+          <span *ngIf="userDto.userName">&#64;{{ userDto.userName }}</span>
+          <span *ngIf="userDto.userName && userDto.email" class="mx-1">·</span>
+          <span *ngIf="userDto.email">{{ userDto.email }}</span>
+        </div>
+        <span class="badge fs-7 px-3 py-2"
+          [ngClass]="userDto.isActive ? 'badge-light-success' : 'badge-light-danger'">
           {{ userDto.isActive ? 'Active' : 'Inactive' }}
         </span>
       </div>
-    </div>
+
+      <div class="separator separator-dashed mb-6"></div>
+
+      <!-- Details grid -->
+      <div class="row g-5 mb-2">
+        <div class="col-12 col-sm-6">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Username</div>
+          <div class="fw-semibold fs-6">{{ userDto.userName || '—' }}</div>
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Email</div>
+          <div class="fw-semibold fs-6 text-break">{{ userDto.email || '—' }}</div>
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">First Name</div>
+          <div class="fw-semibold fs-6">{{ userDto.firstName || '—' }}</div>
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Last Name</div>
+          <div class="fw-semibold fs-6">{{ userDto.lastName || '—' }}</div>
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Phone</div>
+          <div class="fw-semibold fs-6">{{ userDto.phoneNumber || '—' }}</div>
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Role</div>
+          <div class="fw-semibold fs-6">{{ displayRoleName }}</div>
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Status</div>
+          <span class="badge fs-7"
+            [ngClass]="userDto.isActive ? 'badge-light-success' : 'badge-light-danger'">
+            {{ userDto.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
+        <div class="col-12 col-sm-6" *ngIf="userDto.createdAt">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Created</div>
+          <div class="fw-semibold fs-6">{{ userDto.createdAt | date:'dd MMM yyyy' }}</div>
+        </div>
+      </div>
+
+    </ng-container>
   </div>
-  <div class="modal-footer">
+
+  <!-- Footer -->
+  <div class="modal-footer border-0 pt-0">
     <button type="button" class="btn btn-light btn-sm" (click)="modal.dismiss()">Close</button>
   </div>
+
 </div>

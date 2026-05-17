@@ -1,0 +1,37 @@
+<div class="container-xxl">
+
+  <!-- Back -->
+  <div class="mb-6">
+    <button type="button" class="btn btn-light btn-sm" (click)="goBack()">
+      <i class="bi bi-arrow-left me-2"></i>Back to Policies
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="d-flex justify-content-center py-10">
+    <span class="spinner-border text-primary" role="status"></span>
+  </div>
+
+  <!-- Not found -->
+  <div *ngIf="!isLoading && notFound" class="text-center py-10">
+    <i class="bi bi-exclamation-circle text-muted d-block mb-4" style="font-size: 2.5rem;"></i>
+    <p class="text-muted fs-6 mb-4">This policy is not available yet.</p>
+    <button type="button" class="btn btn-light btn-sm" (click)="goBack()">Back to Policies</button>
+  </div>
+
+  <!-- Policy content -->
+  <div *ngIf="!isLoading && policy" class="card">
+    <div class="card-header border-0 pt-6 pb-0">
+      <div>
+        <h3 class="card-title fw-bold fs-4 mb-1">{{ policy.title }}</h3>
+        <span class="text-muted fs-7">
+          Last updated: {{ policy.updatedAt ? (policy.updatedAt | date:'dd MMM yyyy') : '—' }}
+        </span>
+      </div>
+    </div>
+    <div class="card-body pt-6">
+      <div class="fs-6 text-gray-700 lh-lg" style="white-space: pre-wrap">{{ policy.content }}</div>
+    </div>
+  </div>
+
+</div>

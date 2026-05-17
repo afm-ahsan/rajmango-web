@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { InlineSVGModule } from 'ng-inline-svg-2';
 import { ProfileServiceProxy, UserAddressServiceProxy } from 'src/app/services/client-proxy';
 import { SharedModule } from 'src/app/shared/shared.module';
@@ -21,6 +21,7 @@ import { AddressModalComponent } from './address-modal/address-modal.component';
     FormsModule,
     ReactiveFormsModule,
     NgbModalModule,
+    NgbTooltipModule,
     InlineSVGModule,
     SharedModule,
     CustomerProfileRoutingModule,

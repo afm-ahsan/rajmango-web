@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { ConfirmPasswordValidator } from './confirm-password.validator';
 import { RegisterModel } from '../../models/register.model';
+import { strongPasswordValidator } from 'src/app/shared/validators/password.validator';
 
 @Component({
   selector: 'app-registration',
@@ -47,7 +48,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
         email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
         phoneNumber: ['', [Validators.required, Validators.maxLength(20)]],
-        password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20)]],
+        password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), strongPasswordValidator()]],
         cPassword: ['', [Validators.required]],
         agree: [false, Validators.requiredTrue],
       },

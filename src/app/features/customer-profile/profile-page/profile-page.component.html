@@ -122,9 +122,30 @@
                   formControlName="currentPassword" autocomplete="current-password" />
               </div>
               <div class="col-md-6 mb-5">
-                <label class="form-label">New Password</label>
+                <label class="form-label d-flex align-items-center gap-2">
+                  New Password
+                  <i
+                    class="bi bi-info-circle text-muted fs-6 cursor-pointer"
+                    [ngbTooltip]="passwordTooltip"
+                    placement="right"
+                    triggers="mouseenter:mouseleave click"
+                    container="body"
+                  ></i>
+                </label>
                 <input type="password" class="form-control form-control-lg"
-                  formControlName="newPassword" autocomplete="new-password" />
+                  formControlName="newPassword" autocomplete="new-password"
+                  [class.is-invalid]="isInvalid('newPassword')" />
+                <ng-container *ngIf="isInvalid('newPassword')">
+                  <div *ngIf="profileForm.get('newPassword')?.hasError('minlength')" class="invalid-feedback d-block">
+                    Password must be at least 6 characters.
+                  </div>
+                  <div *ngIf="profileForm.get('newPassword')?.hasError('maxlength')" class="invalid-feedback d-block">
+                    Password must be at most 20 characters.
+                  </div>
+                  <div *ngIf="profileForm.get('newPassword')?.hasError('weakPassword')" class="invalid-feedback d-block">
+                    Password must include upper/lowercase, number, and special character.
+                  </div>
+                </ng-container>
               </div>
             </div>
 
@@ -207,3 +228,16 @@
 
   </div>
 </div>
+
+<ng-template #passwordTooltip>
+  <div class="text-start">
+    <div class="fw-semibold mb-1">Password must contain at least:</div>
+    <ul class="mb-0 ps-3">
+      <li>One capital letter</li>
+      <li>One small letter</li>
+      <li>One number</li>
+      <li>One special character (e.g. !@#$%)</li>
+      <li>Minimum 6 characters</li>
+    </ul>
+  </div>
+</ng-template>

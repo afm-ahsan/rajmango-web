@@ -1,0 +1,387 @@
+<div class="tc-page">
+
+  <!-- Scroll Progress -->
+  <div class="tc-scroll-progress" [style.width.%]="scrollProgress"></div>
+
+  <!-- Header -->
+  <header class="tc-header">
+    <div class="tc-header-content">
+      <h1 class="tc-header-title">Terms and Conditions</h1>
+      <p class="tc-header-subtitle">RajMango Services Agreement</p>
+      <div class="tc-header-meta">
+        <span><strong>Effective Date:</strong> January 1, 2026</span>
+        <span><strong>Last Updated:</strong> May 2026</span>
+        <span><strong>Version:</strong> 1.0</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section Navigation -->
+  <nav class="tc-nav-bar">
+    <div class="tc-nav-content">
+      <button class="tc-nav-btn" [class.active]="activeSection === 'introduction'" (click)="scrollToSection('introduction')">Introduction</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'definitions'"  (click)="scrollToSection('definitions')">Definitions</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'account'"      (click)="scrollToSection('account')">Account Registration</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'availability'" (click)="scrollToSection('availability')">Availability</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'orders'"       (click)="scrollToSection('orders')">Orders</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'pricing'"      (click)="scrollToSection('pricing')">Pricing</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'payment'"      (click)="scrollToSection('payment')">Payment</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'delivery'"     (click)="scrollToSection('delivery')">Delivery</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'cancellation'" (click)="scrollToSection('cancellation')">Cancellation</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'refunds'"      (click)="scrollToSection('refunds')">Refunds</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'liability'"    (click)="scrollToSection('liability')">Liability</button>
+      <button class="tc-nav-btn" [class.active]="activeSection === 'contact'"      (click)="scrollToSection('contact')">Contact</button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="tc-wrap">
+
+    <!-- Table of Contents -->
+    <div class="tc-toc">
+      <h2 class="tc-toc-title">Table of Contents</h2>
+      <ul class="tc-toc-list">
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('introduction')">1. Introduction</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('definitions')">2. Definitions</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('account')">3. Account Registration</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('availability')">4. Product Availability</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('orders')">5. Order Placement</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('pricing')">6. Pricing</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('payment')">7. Payment Terms</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('delivery')">8. Delivery</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('cancellation')">9. Cancellation</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('refunds')">10. Refunds</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('liability')">11. Limitations of Liability</a></li>
+        <li class="tc-toc-item"><a class="tc-toc-link" (click)="scrollToSection('contact')">12. Contact Information</a></li>
+      </ul>
+    </div>
+
+    <!-- Introduction banner -->
+    <div class="tc-intro">
+      <h2>Welcome to RajMango</h2>
+      <p>These Terms and Conditions ("Terms") constitute a legally binding agreement between you and RajMango ("Company," "we," "us," or "our") governing your access to and use of our website, mobile applications, and services (collectively, the "Platform").</p>
+      <p><strong>By accessing, browsing, or using the Platform, you acknowledge that you have read, understood, and agree to be bound by these Terms.</strong> If you do not agree with any part of these Terms, you must immediately cease using the Platform.</p>
+    </div>
+
+    <!-- 1. Introduction -->
+    <section id="introduction" class="tc-section">
+      <div class="tc-section-number">1. Introduction</div>
+      <h2 class="tc-section-title">About RajMango</h2>
+      <div class="tc-section-content">
+        <p>RajMango operates a digital platform that facilitates the ordering and delivery of seasonal mango varieties from verified suppliers to customers throughout our service areas. Our Platform enables users to:</p>
+        <ul>
+          <li>Browse and review available mango varieties</li>
+          <li>Place orders for seasonal mangoes</li>
+          <li>Process payments through secure methods</li>
+          <li>Track order status and delivery information</li>
+          <li>Manage customer accounts and preferences</li>
+        </ul>
+        <p>RajMango does not manufacture, produce, or directly supply the mangoes. We serve as a marketplace connecting suppliers with customers. All mangoes are sourced from certified agricultural suppliers and undergo quality inspections prior to shipment.</p>
+      </div>
+    </section>
+
+    <!-- 2. Definitions -->
+    <section id="definitions" class="tc-section">
+      <div class="tc-section-number">2. Definitions</div>
+      <h2 class="tc-section-title">Key Definitions</h2>
+      <div class="tc-section-content">
+        <p>For the purposes of these Terms, the following definitions apply:</p>
+        <ul>
+          <li><strong>"Account"</strong> — Your registered user account on the Platform</li>
+          <li><strong>"Content"</strong> — All information, text, graphics, and data on the Platform</li>
+          <li><strong>"Goods"</strong> — Seasonal mango varieties available for purchase</li>
+          <li><strong>"Order"</strong> — Your request to purchase Goods through the Platform</li>
+          <li><strong>"Services"</strong> — All features, functions, and services provided by RajMango</li>
+          <li><strong>"User"</strong> — Any individual or entity accessing the Platform</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3. Account Registration -->
+    <section id="account" class="tc-section">
+      <div class="tc-section-number">3. Account Registration</div>
+      <h2 class="tc-section-title">Your Account and Responsibilities</h2>
+      <div class="tc-section-content">
+        <p>To use the Platform's full functionality, you must create an Account by providing accurate, current, and complete information, including:</p>
+        <ul>
+          <li>Full legal name</li>
+          <li>Valid email address</li>
+          <li>Verified mobile phone number</li>
+          <li>Accurate delivery address(es)</li>
+          <li>Valid payment method information</li>
+        </ul>
+        <p><strong>You are solely responsible for:</strong></p>
+        <ul>
+          <li>Maintaining the confidentiality of your Account credentials</li>
+          <li>All activities that occur under your Account</li>
+          <li>Keeping your information current and accurate</li>
+          <li>Notifying us immediately of unauthorized access</li>
+        </ul>
+        <div class="tc-highlight">
+          <p>RajMango reserves the right to suspend or terminate any Account that provides false, inaccurate, or incomplete information.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Product Availability -->
+    <section id="availability" class="tc-section">
+      <div class="tc-section-number">4. Product Availability</div>
+      <h2 class="tc-section-title">Seasonal Supply and Availability</h2>
+      <div class="tc-section-content">
+        <p>Product availability on the Platform is subject to several factors beyond RajMango's control:</p>
+        <ul>
+          <li>Agricultural harvest timing and seasonal variations</li>
+          <li>Quality control standards and grading requirements</li>
+          <li>Supplier stock levels and production capacity</li>
+          <li>Market conditions and supply chain disruptions</li>
+          <li>Weather events and natural disasters</li>
+          <li>Government regulations and trade restrictions</li>
+        </ul>
+        <p>Product listings on the Platform represent current availability only and do not guarantee continuous supply. Prices and availability may change without notice. RajMango reserves the right to:</p>
+        <ul>
+          <li>Modify product listings</li>
+          <li>Adjust quantity limits per customer</li>
+          <li>Cancel or modify Orders if products become unavailable</li>
+          <li>Substitute similar varieties at equivalent prices if the originally ordered variety becomes unavailable</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 5. Order Placement -->
+    <section id="orders" class="tc-section">
+      <div class="tc-section-number">5. Order Placement and Confirmation</div>
+      <h2 class="tc-section-title">How Orders Work</h2>
+      <div class="tc-section-content">
+        <p>An Order submitted through the Platform constitutes an offer to purchase Goods subject to these Terms. Submission of an Order does NOT automatically guarantee acceptance or fulfillment.</p>
+        <p><strong>Order Process:</strong></p>
+        <ul>
+          <li>You select Goods and submit an Order through the Platform</li>
+          <li>RajMango reviews the Order for accuracy, availability, and compliance</li>
+          <li>If approved, you receive an Order confirmation via email or SMS</li>
+          <li>RajMango reserves the right to request additional verification information</li>
+          <li>RajMango reserves the right to reject any Order at our sole discretion</li>
+        </ul>
+        <div class="tc-highlight">
+          <p><strong>Important:</strong> Order confirmation by email/SMS constitutes acceptance of the Order and creation of a binding contract. No Order is final until confirmed by RajMango.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Pricing -->
+    <section id="pricing" class="tc-section">
+      <div class="tc-section-number">6. Pricing</div>
+      <h2 class="tc-section-title">Price Determination and Adjustments</h2>
+      <div class="tc-section-content">
+        <p>Prices for Goods displayed on the Platform are subject to variation based on:</p>
+        <ul>
+          <li>Specific mango variety and grade</li>
+          <li>Current agricultural season and harvest availability</li>
+          <li>Product quality, size, and packaging specifications</li>
+          <li>Order quantity and bulk discounts</li>
+          <li>Delivery location and distance</li>
+          <li>Current market rates and commodity prices</li>
+          <li>Applicable taxes and regulatory fees</li>
+        </ul>
+        <p>The final price will be clearly displayed before Order confirmation. RajMango reserves the right to adjust prices due to market conditions, and any changes will apply only to new Orders placed after the price change. Existing confirmed Orders will honor the price at the time of confirmation.</p>
+      </div>
+    </section>
+
+    <!-- 7. Payment -->
+    <section id="payment" class="tc-section">
+      <div class="tc-section-number">7. Payment Terms and Processing</div>
+      <h2 class="tc-section-title">Payment Methods and Security</h2>
+      <div class="tc-section-content">
+        <p>RajMango accepts payment through the following verified methods:</p>
+        <ul>
+          <li>Credit and debit cards (Visa, MasterCard, etc.)</li>
+          <li>Digital wallets and mobile payment systems</li>
+          <li>Bank transfers and direct deposits</li>
+          <li>Other methods as specified on the Platform</li>
+        </ul>
+        <p><strong>Payment Processing:</strong></p>
+        <ul>
+          <li>Payment must be received and verified before shipment</li>
+          <li>All transactions are processed through secure, encrypted channels</li>
+          <li>You authorize RajMango to charge the payment method provided</li>
+          <li>Payment information is never stored on our servers</li>
+          <li>Declined or failed payments will result in Order cancellation</li>
+        </ul>
+        <div class="tc-highlight">
+          <p>RajMango is not liable for any transaction issues caused by your payment provider, bank, or financial institution.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Delivery -->
+    <section id="delivery" class="tc-section">
+      <div class="tc-section-number">8. Delivery and Shipping</div>
+      <h2 class="tc-section-title">Delivery Terms and Conditions</h2>
+      <div class="tc-section-content">
+        <p>Delivery timelines and terms are subject to numerous factors:</p>
+        <ul>
+          <li>Product sourcing and quality verification processes</li>
+          <li>Packaging and cold chain storage requirements</li>
+          <li>Courier service availability and capacity</li>
+          <li>Delivery address accessibility and geographic location</li>
+          <li>Weather conditions and seasonal factors</li>
+          <li>National holidays and weekend schedules</li>
+          <li>Unforeseen operational disruptions</li>
+        </ul>
+        <p><strong>Delivery Responsibility:</strong></p>
+        <p>While RajMango partners with reliable courier services, we are not responsible for delays, damages, or losses caused by courier providers or circumstances beyond our reasonable control. You are responsible for:</p>
+        <ul>
+          <li>Providing accurate delivery address information</li>
+          <li>Ensuring someone is available to receive the delivery</li>
+          <li>Inspecting Goods upon receipt</li>
+          <li>Reporting any damage or quality issues within 24 hours of delivery</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 9. Cancellation -->
+    <section id="cancellation" class="tc-section">
+      <div class="tc-section-number">9. Cancellation Policy</div>
+      <h2 class="tc-section-title">Order Cancellation Rights</h2>
+      <div class="tc-section-content">
+        <p><strong>Customer Cancellation Rights:</strong> You may request to cancel an Order under the following conditions:</p>
+        <ul>
+          <li><strong>Before Processing:</strong> Orders may be cancelled free of charge before RajMango begins processing or packing</li>
+          <li><strong>After Processing:</strong> Once an Order has been processed, packed, or shipped, cancellation may not be possible</li>
+          <li><strong>Refund Processing:</strong> Approved cancellations will result in a full refund minus any applicable fees</li>
+        </ul>
+        <p><strong>RajMango Cancellation Rights:</strong> RajMango reserves the right to cancel any Order without liability if:</p>
+        <ul>
+          <li>Product becomes unavailable or out of stock</li>
+          <li>Payment authorization fails or is declined</li>
+          <li>Account information is inaccurate or fraudulent</li>
+          <li>We cannot fulfill the Order within reasonable timeframes</li>
+          <li>Legal or regulatory compliance issues arise</li>
+        </ul>
+        <p>You will be notified immediately of any cancellation initiated by RajMango.</p>
+      </div>
+    </section>
+
+    <!-- 10. Refunds -->
+    <section id="refunds" class="tc-section">
+      <div class="tc-section-number">10. Refund Policy</div>
+      <h2 class="tc-section-title">Refund Terms and Conditions</h2>
+      <div class="tc-section-content">
+        <p>Refund eligibility is determined based on the following criteria:</p>
+        <ul>
+          <li>Reason for refund request (quality issues, damage, non-delivery, etc.)</li>
+          <li>Current payment status of the Order</li>
+          <li>Fulfillment status of the Order</li>
+          <li>Timing of the refund request relative to delivery</li>
+          <li>Supporting documentation provided by the customer</li>
+        </ul>
+        <p><strong>Approved Refunds:</strong> When a refund is approved, it will be processed to the original payment method. Refund processing times may vary:</p>
+        <ul>
+          <li>Credit/debit card refunds: 5–10 business days</li>
+          <li>Digital wallet/mobile payments: 2–5 business days</li>
+          <li>Bank transfers: 7–14 business days</li>
+        </ul>
+        <p><strong>Non-Refundable:</strong> The following situations typically do not qualify for refunds:</p>
+        <ul>
+          <li>Customer change of mind or preference</li>
+          <li>Failure to accept delivery at the specified address</li>
+          <li>Refusal to accept Goods without providing quality evidence</li>
+          <li>Purchases made in error by the customer</li>
+        </ul>
+        <div class="tc-highlight">
+          <p>All refund requests must be submitted within 7 days of delivery with supporting documentation (photos, correspondence, etc.).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Liability -->
+    <section id="liability" class="tc-section">
+      <div class="tc-section-number">11. Limitations of Liability</div>
+      <h2 class="tc-section-title">Legal Disclaimers and Liability Limits</h2>
+      <div class="tc-section-content">
+        <p><strong>RajMango provides the Platform "AS IS" and "AS AVAILABLE" without warranties of any kind.</strong></p>
+        <p>To the maximum extent permitted by applicable law, RajMango shall not be liable for:</p>
+        <ul>
+          <li>Indirect, incidental, special, consequential, or punitive damages</li>
+          <li>Loss of profits, revenue, data, or business opportunities</li>
+          <li>Delays or failures caused by courier providers or third parties</li>
+          <li>Seasonal supply disruptions or agricultural failure</li>
+          <li>Natural disasters, acts of God, or force majeure events</li>
+          <li>Quality variations inherent in seasonal agricultural products</li>
+          <li>Government actions, regulations, or trade restrictions</li>
+          <li>Platform unavailability, errors, or technical issues</li>
+        </ul>
+        <p><strong>Total Liability Cap:</strong> RajMango's total liability for any claim shall not exceed the amount paid by you for the specific Order in question.</p>
+        <div class="tc-highlight">
+          <p>Some jurisdictions do not allow the limitation or exclusion of certain damages. To the extent applicable law prohibits these limitations, RajMango's liability will be limited to the greatest extent permitted by law.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. Contact -->
+    <section id="contact" class="tc-section">
+      <div class="tc-section-number">12. Contact Information</div>
+      <h2 class="tc-section-title">How to Reach Us</h2>
+      <div class="tc-section-content">
+        <p>For questions, concerns, complaints, or support regarding these Terms or our Services, please contact us through any of the following channels:</p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:contact@ajwadtech.com">contact&#64;ajwadtech.com</a></li>
+          <li><strong>Phone:</strong> <a href="tel:+8801323993377">+880 1323 993 388</a></li>
+          <li><strong>Address:</strong> Baneswar, Rajshahi, Bangladesh</li>
+        </ul>
+        <p><strong>Response Time:</strong> We aim to respond to all inquiries within 48 business hours. Please provide your Order number and relevant details to expedite resolution.</p>
+      </div>
+    </section>
+
+    <!-- Additional terms -->
+    <section class="tc-section">
+      <h2 class="tc-section-title">Additional Important Terms</h2>
+      <div class="tc-section-content">
+        <h3>Privacy and Data Protection</h3>
+        <p>Your personal data is collected, processed, and stored in accordance with applicable data protection laws and our Privacy Policy. We implement industry-standard security measures to protect your information.</p>
+
+        <h3>Modification of Terms</h3>
+        <p>RajMango reserves the right to modify these Terms at any time. Changes will be effective immediately upon posting. Your continued use of the Platform after modifications constitutes acceptance of the updated Terms. We recommend reviewing these Terms periodically.</p>
+
+        <h3>Governing Law</h3>
+        <p>These Terms are governed by and construed in accordance with the laws of Bangladesh. You agree to submit to the exclusive jurisdiction of the courts in Bangladesh for any disputes arising from these Terms.</p>
+
+        <h3>Entire Agreement</h3>
+        <p>These Terms, together with our Privacy Policy and any other policies referenced herein, constitute the entire agreement between you and RajMango regarding your use of the Platform and supersede all prior negotiations and agreements.</p>
+
+        <h3>Severability</h3>
+        <p>If any provision of these Terms is found to be invalid, illegal, or unenforceable, such provision shall be modified to the minimum extent necessary to make it enforceable, or if not possible, severed, and the remaining provisions shall continue in full force and effect.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="tc-footer">
+    <div class="tc-footer-content">
+      <div class="tc-footer-section">
+        <h3>RajMango</h3>
+        <ul>
+          <li><a class="tc-footer-link" (click)="scrollToSection('introduction')">About Us</a></li>
+          <li><a class="tc-footer-link" (click)="scrollToSection('contact')">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="tc-footer-section">
+        <h3>Services</h3>
+        <ul>
+          <li><a href="/auth/login">Sign In</a></li>
+          <li><a href="/auth/registration">Create Account</a></li>
+        </ul>
+      </div>
+      <div class="tc-footer-section">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="/terms-and-conditions">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="tc-footer-bottom">
+      <p>&copy; 2026 RajMango. All rights reserved.</p>
+    </div>
+  </footer>
+
+</div>

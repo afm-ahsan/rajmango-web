@@ -70,18 +70,18 @@ export class AuthServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetAuthUserDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetAuthUserDto>(null as any);
     }
 
     /**
@@ -126,18 +126,18 @@ export class AuthServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Boolean.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Boolean>(null as any);
     }
 
     /**
@@ -182,18 +182,18 @@ export class AuthServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 }
 
@@ -250,26 +250,26 @@ export class BkashServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_InitiateBkashPaymentResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_InitiateBkashPaymentResponse>(null as any);
     }
 
     /**
@@ -314,26 +314,26 @@ export class BkashServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 }
 
@@ -385,18 +385,18 @@ export class CatalogServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_CatalogItemDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_CatalogItemDto>(null as any);
     }
 
     /**
@@ -439,18 +439,18 @@ export class CatalogServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_CatalogItemDetailDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_CatalogItemDetailDto>(null as any);
     }
 }
 
@@ -507,26 +507,26 @@ export class ComplaintServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -566,26 +566,26 @@ export class ComplaintServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_ComplaintDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_ComplaintDto>(null as any);
     }
 
     /**
@@ -625,26 +625,26 @@ export class ComplaintServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_ComplaintDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_ComplaintDto>(null as any);
     }
 
     /**
@@ -687,26 +687,26 @@ export class ComplaintServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_ComplaintDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_ComplaintDto>(null as any);
     }
 
     /**
@@ -754,26 +754,26 @@ export class ComplaintServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 }
 
@@ -825,26 +825,26 @@ export class CourierAreaMapServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_CourierAreaMapDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_CourierAreaMapDto>(null as any);
     }
 
     /**
@@ -889,26 +889,26 @@ export class CourierAreaMapServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -951,26 +951,26 @@ export class CourierAreaMapServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_CourierAreaMapDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_CourierAreaMapDto>(null as any);
     }
 
     /**
@@ -1018,26 +1018,26 @@ export class CourierAreaMapServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -1080,26 +1080,26 @@ export class CourierAreaMapServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -1139,26 +1139,26 @@ export class CourierAreaMapServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -1198,38 +1198,38 @@ export class CourierAreaMapServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_CourierAreaDropdownDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_CourierAreaDropdownDto>(null as any);
     }
 
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param sortBy (optional) 
-     * @param sortDirection (optional) 
+     * @param sortOrder (optional) 
      * @param filter (optional) 
      * @param userId (optional) 
      * @return OK
      */
-    getCategoryWithPagination(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortDirection: string | undefined, filter: string | undefined, userId: number | undefined): Observable<PaginatedResult_CourierAreaMapDto> {
+    getCategoryWithPagination(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortOrder: string | undefined, filter: string | undefined, userId: number | undefined): Observable<PaginatedResult_CourierAreaMapDto> {
         let url_ = this.baseUrl + "/api/courier-area-map/paged?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -1243,10 +1243,10 @@ export class CourierAreaMapServiceProxy {
             throw new Error("The parameter 'sortBy' cannot be null.");
         else if (sortBy !== undefined)
             url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
-        if (sortDirection === null)
-            throw new Error("The parameter 'sortDirection' cannot be null.");
-        else if (sortDirection !== undefined)
-            url_ += "sortDirection=" + encodeURIComponent("" + sortDirection) + "&";
+        if (sortOrder === null)
+            throw new Error("The parameter 'sortOrder' cannot be null.");
+        else if (sortOrder !== undefined)
+            url_ += "sortOrder=" + encodeURIComponent("" + sortOrder) + "&";
         if (filter === null)
             throw new Error("The parameter 'filter' cannot be null.");
         else if (filter !== undefined)
@@ -1287,26 +1287,26 @@ export class CourierAreaMapServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_CourierAreaMapDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_CourierAreaMapDto>(null as any);
     }
 }
 
@@ -1358,26 +1358,26 @@ export class CourierProviderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_CourierProviderDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_CourierProviderDto>(null as any);
     }
 
     /**
@@ -1422,26 +1422,26 @@ export class CourierProviderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -1484,26 +1484,26 @@ export class CourierProviderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_CourierProviderDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_CourierProviderDto>(null as any);
     }
 
     /**
@@ -1551,26 +1551,26 @@ export class CourierProviderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -1613,26 +1613,26 @@ export class CourierProviderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -1672,26 +1672,26 @@ export class CourierProviderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -1731,38 +1731,38 @@ export class CourierProviderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_CourierProviderDropdownDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_CourierProviderDropdownDto>(null as any);
     }
 
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param sortBy (optional) 
-     * @param sortDirection (optional) 
+     * @param sortOrder (optional) 
      * @param filter (optional) 
      * @param userId (optional) 
      * @return OK
      */
-    getCategoryWithPagination(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortDirection: string | undefined, filter: string | undefined, userId: number | undefined): Observable<PaginatedResult_CourierProviderDto> {
+    getCategoryWithPagination(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortOrder: string | undefined, filter: string | undefined, userId: number | undefined): Observable<PaginatedResult_CourierProviderDto> {
         let url_ = this.baseUrl + "/api/courier-provider/paged?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -1776,10 +1776,10 @@ export class CourierProviderServiceProxy {
             throw new Error("The parameter 'sortBy' cannot be null.");
         else if (sortBy !== undefined)
             url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
-        if (sortDirection === null)
-            throw new Error("The parameter 'sortDirection' cannot be null.");
-        else if (sortDirection !== undefined)
-            url_ += "sortDirection=" + encodeURIComponent("" + sortDirection) + "&";
+        if (sortOrder === null)
+            throw new Error("The parameter 'sortOrder' cannot be null.");
+        else if (sortOrder !== undefined)
+            url_ += "sortOrder=" + encodeURIComponent("" + sortOrder) + "&";
         if (filter === null)
             throw new Error("The parameter 'filter' cannot be null.");
         else if (filter !== undefined)
@@ -1820,26 +1820,26 @@ export class CourierProviderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_CourierProviderDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_CourierProviderDto>(null as any);
     }
 }
 
@@ -1891,26 +1891,26 @@ export class CourierStationServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_CourierStationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_CourierStationDto>(null as any);
     }
 
     /**
@@ -1955,26 +1955,26 @@ export class CourierStationServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -2017,26 +2017,26 @@ export class CourierStationServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_CourierStationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_CourierStationDto>(null as any);
     }
 
     /**
@@ -2084,26 +2084,26 @@ export class CourierStationServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -2146,26 +2146,26 @@ export class CourierStationServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -2205,26 +2205,26 @@ export class CourierStationServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -2264,26 +2264,26 @@ export class CourierStationServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_CourierStationDropdownDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_CourierStationDropdownDto>(null as any);
     }
 
     /**
@@ -2328,26 +2328,26 @@ export class CourierStationServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_AvailableCourierStationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_AvailableCourierStationDto>(null as any);
     }
 
     /**
@@ -2407,29 +2407,29 @@ export class CourierStationServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_NearbyStationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_NearbyStationDto>(null as any);
     }
 
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param sortBy (optional) 
-     * @param sortDirection (optional) 
+     * @param sortOrder (optional) 
      * @param filter (optional) 
      * @return OK
      */
-    getCategoryWithPagination(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortDirection: string | undefined, filter: string | undefined): Observable<PaginatedResult_CourierStationDto> {
+    getCategoryWithPagination(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortOrder: string | undefined, filter: string | undefined): Observable<PaginatedResult_CourierStationDto> {
         let url_ = this.baseUrl + "/api/courier-station/paged?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -2443,10 +2443,10 @@ export class CourierStationServiceProxy {
             throw new Error("The parameter 'sortBy' cannot be null.");
         else if (sortBy !== undefined)
             url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
-        if (sortDirection === null)
-            throw new Error("The parameter 'sortDirection' cannot be null.");
-        else if (sortDirection !== undefined)
-            url_ += "sortDirection=" + encodeURIComponent("" + sortDirection) + "&";
+        if (sortOrder === null)
+            throw new Error("The parameter 'sortOrder' cannot be null.");
+        else if (sortOrder !== undefined)
+            url_ += "sortOrder=" + encodeURIComponent("" + sortOrder) + "&";
         if (filter === null)
             throw new Error("The parameter 'filter' cannot be null.");
         else if (filter !== undefined)
@@ -2483,26 +2483,26 @@ export class CourierStationServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_CourierStationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_CourierStationDto>(null as any);
     }
 }
 
@@ -2554,26 +2554,26 @@ export class CustomerServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_GetAllCustomerDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_GetAllCustomerDto>(null as any);
     }
 
     /**
@@ -2618,26 +2618,26 @@ export class CustomerServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -2680,26 +2680,26 @@ export class CustomerServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetCustomerByIdDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetCustomerByIdDto>(null as any);
     }
 
     /**
@@ -2747,26 +2747,26 @@ export class CustomerServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -2809,26 +2809,26 @@ export class CustomerServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -2868,26 +2868,26 @@ export class CustomerServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetCustomerCountDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetCustomerCountDto>(null as any);
     }
 
     /**
@@ -2937,26 +2937,26 @@ export class CustomerServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_GetCustomerWithPaginationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_GetCustomerWithPaginationDto>(null as any);
     }
 }
 
@@ -3008,26 +3008,26 @@ export class DashboardServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_CustomerDashboardDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_CustomerDashboardDto>(null as any);
     }
 
     /**
@@ -3067,26 +3067,26 @@ export class DashboardServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_AdminDashboardDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_AdminDashboardDto>(null as any);
     }
 }
 
@@ -3138,26 +3138,26 @@ export class ExpenseServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_GetAllExpenseDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_GetAllExpenseDto>(null as any);
     }
 
     /**
@@ -3202,26 +3202,26 @@ export class ExpenseServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -3264,26 +3264,26 @@ export class ExpenseServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetExpenseByIdDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetExpenseByIdDto>(null as any);
     }
 
     /**
@@ -3331,26 +3331,26 @@ export class ExpenseServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -3393,26 +3393,26 @@ export class ExpenseServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -3452,26 +3452,26 @@ export class ExpenseServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetExpenseCountDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetExpenseCountDto>(null as any);
     }
 
     /**
@@ -3521,26 +3521,26 @@ export class ExpenseServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_GetExpenseWithPaginationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_GetExpenseWithPaginationDto>(null as any);
     }
 }
 
@@ -3592,26 +3592,26 @@ export class ExpenseTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_GetAllExpenseTypeDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_GetAllExpenseTypeDto>(null as any);
     }
 
     /**
@@ -3656,26 +3656,26 @@ export class ExpenseTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -3718,26 +3718,26 @@ export class ExpenseTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetExpenseTypeByIdDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetExpenseTypeByIdDto>(null as any);
     }
 
     /**
@@ -3785,26 +3785,26 @@ export class ExpenseTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -3847,26 +3847,26 @@ export class ExpenseTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -3906,26 +3906,26 @@ export class ExpenseTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetExpenseTypeCountDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetExpenseTypeCountDto>(null as any);
     }
 
     /**
@@ -3975,26 +3975,26 @@ export class ExpenseTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_GetExpenseTypeWithPaginationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_GetExpenseTypeWithPaginationDto>(null as any);
     }
 }
 
@@ -4051,18 +4051,18 @@ export class FaqServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_FaqItemDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_FaqItemDto>(null as any);
     }
 
     /**
@@ -4102,26 +4102,26 @@ export class FaqServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_FaqItemDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_FaqItemDto>(null as any);
     }
 
     /**
@@ -4166,26 +4166,26 @@ export class FaqServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -4228,26 +4228,26 @@ export class FaqServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 }
 
@@ -4304,26 +4304,26 @@ export class FeedbackServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -4363,26 +4363,26 @@ export class FeedbackServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_FeedbackDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_FeedbackDto>(null as any);
     }
 
     /**
@@ -4425,26 +4425,26 @@ export class FeedbackServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_FeedbackDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_FeedbackDto>(null as any);
     }
 
     /**
@@ -4489,26 +4489,26 @@ export class FeedbackServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 }
 
@@ -4531,7 +4531,7 @@ export class FileServiceProxy {
      * @return OK
      */
     upload(domain: string | undefined, prefix: string | undefined, entityId: number | undefined, file: FileParameter | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/file/upload?";
+        let url_ = this.baseUrl + "/api/File/upload?";
         if (domain === null)
             throw new Error("The parameter 'domain' cannot be null.");
         else if (domain !== undefined)
@@ -4582,23 +4582,23 @@ export class FileServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<void>(null as any);
     }
 
     /**
@@ -4606,7 +4606,7 @@ export class FileServiceProxy {
      * @return OK
      */
     delete(relativePath: string | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/file/delete?";
+        let url_ = this.baseUrl + "/api/File/delete?";
         if (relativePath === null)
             throw new Error("The parameter 'relativePath' cannot be null.");
         else if (relativePath !== undefined)
@@ -4642,23 +4642,23 @@ export class FileServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<void>(null as any);
     }
 
     /**
@@ -4666,7 +4666,7 @@ export class FileServiceProxy {
      * @return OK
      */
     download(relativePath: string | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/file/download?";
+        let url_ = this.baseUrl + "/api/File/download?";
         if (relativePath === null)
             throw new Error("The parameter 'relativePath' cannot be null.");
         else if (relativePath !== undefined)
@@ -4702,23 +4702,194 @@ export class FileServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    uploadImage(): Observable<void> {
+        let url_ = this.baseUrl + "/api/File/upload-image";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUploadImage(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUploadImage(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUploadImage(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    delete2(fileName: string, location: string): Observable<void> {
+        let url_ = this.baseUrl + "/api/File/delete-image/{fileName}/{location}";
+        if (fileName === undefined || fileName === null)
+            throw new Error("The parameter 'fileName' must be defined.");
+        url_ = url_.replace("{fileName}", encodeURIComponent("" + fileName));
+        if (location === undefined || location === null)
+            throw new Error("The parameter 'location' must be defined.");
+        url_ = url_.replace("{location}", encodeURIComponent("" + location));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete2(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processDelete2(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getPhotos(): Observable<void> {
+        let url_ = this.baseUrl + "/api/File/get-images";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPhotos(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPhotos(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processGetPhotos(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
     }
 }
 
@@ -4770,26 +4941,26 @@ export class MangoAvailabilityServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_MangoAvailabilityDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_MangoAvailabilityDto>(null as any);
     }
 
     /**
@@ -4834,26 +5005,26 @@ export class MangoAvailabilityServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -4896,26 +5067,26 @@ export class MangoAvailabilityServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_MangoAvailabilityDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_MangoAvailabilityDto>(null as any);
     }
 
     /**
@@ -4963,26 +5134,26 @@ export class MangoAvailabilityServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -5025,26 +5196,26 @@ export class MangoAvailabilityServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -5084,26 +5255,26 @@ export class MangoAvailabilityServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_MangoAvailabilityDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_MangoAvailabilityDto>(null as any);
     }
 
     /**
@@ -5151,26 +5322,26 @@ export class MangoAvailabilityServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 }
 
@@ -5222,26 +5393,26 @@ export class MangoTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_GetAllMangoTypeDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_GetAllMangoTypeDto>(null as any);
     }
 
     /**
@@ -5286,26 +5457,26 @@ export class MangoTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -5348,26 +5519,26 @@ export class MangoTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetMangoTypeByIdDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetMangoTypeByIdDto>(null as any);
     }
 
     /**
@@ -5415,26 +5586,26 @@ export class MangoTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -5477,26 +5648,26 @@ export class MangoTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -5536,26 +5707,26 @@ export class MangoTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetMangoTypeCountDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetMangoTypeCountDto>(null as any);
     }
 
     /**
@@ -5620,26 +5791,26 @@ export class MangoTypeServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_GetMangoTypeWithPaginationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_GetMangoTypeWithPaginationDto>(null as any);
     }
 }
 
@@ -5691,26 +5862,26 @@ export class OrderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_OrderDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_OrderDto>(null as any);
     }
 
     /**
@@ -5755,26 +5926,26 @@ export class OrderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -5817,26 +5988,26 @@ export class OrderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_OrderDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_OrderDto>(null as any);
     }
 
     /**
@@ -5884,26 +6055,26 @@ export class OrderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -5946,26 +6117,26 @@ export class OrderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -6005,26 +6176,26 @@ export class OrderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -6094,26 +6265,26 @@ export class OrderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_OrderDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_OrderDto>(null as any);
     }
 
     /**
@@ -6161,26 +6332,26 @@ export class OrderServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 }
 
@@ -6232,26 +6403,26 @@ export class PaymentServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_GetAllPaymentDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_GetAllPaymentDto>(null as any);
     }
 
     /**
@@ -6296,26 +6467,26 @@ export class PaymentServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -6358,26 +6529,26 @@ export class PaymentServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetPaymentByIdDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetPaymentByIdDto>(null as any);
     }
 
     /**
@@ -6425,26 +6596,26 @@ export class PaymentServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -6487,26 +6658,26 @@ export class PaymentServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -6546,26 +6717,26 @@ export class PaymentServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetPaymentCountDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetPaymentCountDto>(null as any);
     }
 
     /**
@@ -6620,26 +6791,26 @@ export class PaymentServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_GetPaymentWithPaginationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_GetPaymentWithPaginationDto>(null as any);
     }
 }
 
@@ -6691,18 +6862,18 @@ export class PolicyServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_PolicyDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_PolicyDto>(null as any);
     }
 
     /**
@@ -6747,26 +6918,26 @@ export class PolicyServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -6809,18 +6980,18 @@ export class PolicyServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_PolicyDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_PolicyDto>(null as any);
     }
 }
 
@@ -6872,26 +7043,26 @@ export class ProfileServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_MyProfileDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_MyProfileDto>(null as any);
     }
 
     /**
@@ -6936,26 +7107,26 @@ export class ProfileServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 }
 
@@ -7017,26 +7188,26 @@ export class ReportServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_OrderSummaryReportDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_OrderSummaryReportDto>(null as any);
     }
 
     /**
@@ -7085,23 +7256,23 @@ export class ReportServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<void>(null as any);
     }
 
     /**
@@ -7151,26 +7322,26 @@ export class ReportServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_PaymentSummaryReportDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_PaymentSummaryReportDto>(null as any);
     }
 
     /**
@@ -7219,23 +7390,23 @@ export class ReportServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<void>(null as any);
     }
 
     /**
@@ -7285,26 +7456,26 @@ export class ReportServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_ExpenseSummaryReportDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_ExpenseSummaryReportDto>(null as any);
     }
 
     /**
@@ -7353,23 +7524,23 @@ export class ReportServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<void>(null as any);
     }
 }
 
@@ -7421,26 +7592,26 @@ export class RoleServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_GetAllRoleDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_GetAllRoleDto>(null as any);
     }
 
     /**
@@ -7485,26 +7656,26 @@ export class RoleServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -7547,26 +7718,26 @@ export class RoleServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetRoleByIdDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetRoleByIdDto>(null as any);
     }
 
     /**
@@ -7614,26 +7785,26 @@ export class RoleServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -7676,26 +7847,26 @@ export class RoleServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -7735,26 +7906,26 @@ export class RoleServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_GetRoleCountDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_GetRoleCountDto>(null as any);
     }
 
     /**
@@ -7804,26 +7975,26 @@ export class RoleServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_GetRoleWithPaginationDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_GetRoleWithPaginationDto>(null as any);
     }
 }
 
@@ -7875,26 +8046,26 @@ export class UserServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_AppUserDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_AppUserDto>(null as any);
     }
 
     /**
@@ -7939,26 +8110,26 @@ export class UserServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -8001,26 +8172,26 @@ export class UserServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_AppUserDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_AppUserDto>(null as any);
     }
 
     /**
@@ -8068,26 +8239,26 @@ export class UserServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -8130,26 +8301,26 @@ export class UserServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -8189,26 +8360,26 @@ export class UserServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -8273,26 +8444,26 @@ export class UserServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_AppUserDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<PaginatedResult_AppUserDto>(null as any);
     }
 }
 
@@ -8344,26 +8515,26 @@ export class UserAddressServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_List_UserAddressDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_List_UserAddressDto>(null as any);
     }
 
     /**
@@ -8408,26 +8579,26 @@ export class UserAddressServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -8470,26 +8641,26 @@ export class UserAddressServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_UserAddressDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_UserAddressDto>(null as any);
     }
 
     /**
@@ -8537,26 +8708,26 @@ export class UserAddressServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 
     /**
@@ -8599,78 +8770,298 @@ export class UserAddressServiceProxy {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Unauthorized", status, _responseText, _headers);
             }));
         } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("Forbidden", status, _responseText, _headers);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf(null as any);
+        return _observableOf<Result_Int32>(null as any);
     }
 }
 
-export class ActionModel implements IActionModel {
-    id!: number;
-    action!: string | undefined;
-    hasAccess!: boolean;
+@Injectable()
+export class UserPermissionServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(data?: IActionModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @return OK
+     */
+    getDirectPermissions(userId: number): Observable<Result_List_UserPermissionDto> {
+        let url_ = this.baseUrl + "/api/users/{userId}/permissions";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDirectPermissions(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDirectPermissions(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_List_UserPermissionDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_List_UserPermissionDto>;
+        }));
+    }
+
+    protected processGetDirectPermissions(response: HttpResponseBase): Observable<Result_List_UserPermissionDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_List_UserPermissionDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
         }
+        return _observableOf<Result_List_UserPermissionDto>(null as any);
     }
 
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.action = _data["action"];
-            this.hasAccess = _data["hasAccess"];
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    grant(userId: number, body: GrantPermissionRequest | undefined): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/users/{userId}/permissions";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGrant(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGrant(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processGrant(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
         }
+        return _observableOf<Result_Int32>(null as any);
     }
 
-    static fromJS(data: any): ActionModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new ActionModel();
-        result.init(data);
-        return result;
+    /**
+     * @return OK
+     */
+    revoke(userId: number, permissionId: number): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/users/{userId}/permissions/{permissionId}/revoke";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        if (permissionId === undefined || permissionId === null)
+            throw new Error("The parameter 'permissionId' must be defined.");
+        url_ = url_.replace("{permissionId}", encodeURIComponent("" + permissionId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRevoke(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRevoke(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
     }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["action"] = this.action;
-        data["hasAccess"] = this.hasAccess;
-        return data;
+    protected processRevoke(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<Result_Int32>(null as any);
     }
 
-    clone(): ActionModel {
-        const json = this.toJSON();
-        let result = new ActionModel();
-        result.init(json);
-        return result;
-    }
-}
+    /**
+     * @return OK
+     */
+    deleteOverride(userId: number, permissionId: number): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/users/{userId}/permissions/{permissionId}";
+        if (userId === undefined || userId === null)
+            throw new Error("The parameter 'userId' must be defined.");
+        url_ = url_.replace("{userId}", encodeURIComponent("" + userId));
+        if (permissionId === undefined || permissionId === null)
+            throw new Error("The parameter 'permissionId' must be defined.");
+        url_ = url_.replace("{permissionId}", encodeURIComponent("" + permissionId));
+        url_ = url_.replace(/[?&]$/, "");
 
-export interface IActionModel {
-    id: number;
-    action: string | undefined;
-    hasAccess: boolean;
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteOverride(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteOverride(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processDeleteOverride(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<Result_Int32>(null as any);
+    }
 }
 
 export class AddFeedbackImageCommand implements IAddFeedbackImageCommand {
@@ -8708,13 +9099,6 @@ export class AddFeedbackImageCommand implements IAddFeedbackImageCommand {
         data["imagePath"] = this.imagePath;
         data["sortOrder"] = this.sortOrder;
         return data;
-    }
-
-    clone(): AddFeedbackImageCommand {
-        const json = this.toJSON();
-        let result = new AddFeedbackImageCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -8820,13 +9204,6 @@ export class AdminDashboardDto implements IAdminDashboardDto {
         }
         return data;
     }
-
-    clone(): AdminDashboardDto {
-        const json = this.toJSON();
-        let result = new AdminDashboardDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IAdminDashboardDto {
@@ -8904,13 +9281,6 @@ export class AdminRecentOrderDto implements IAdminRecentOrderDto {
         data["paymentStatus"] = this.paymentStatus;
         return data;
     }
-
-    clone(): AdminRecentOrderDto {
-        const json = this.toJSON();
-        let result = new AdminRecentOrderDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IAdminRecentOrderDto {
@@ -8942,11 +9312,10 @@ export class AppUserDto implements IAppUserDto {
     phoneNumberConfirmed!: boolean;
     email!: string | undefined;
     emailConfirmed!: boolean;
-    password!: string | undefined;
-    passwordHash!: string | undefined;
-    accessFailedCount!: number;
+    imagePath!: string | undefined;
     isActive!: boolean;
     roleId!: number;
+    roleName!: string | undefined;
 
     constructor(data?: IAppUserDto) {
         if (data) {
@@ -8974,11 +9343,10 @@ export class AppUserDto implements IAppUserDto {
             this.phoneNumberConfirmed = _data["phoneNumberConfirmed"];
             this.email = _data["email"];
             this.emailConfirmed = _data["emailConfirmed"];
-            this.password = _data["password"];
-            this.passwordHash = _data["passwordHash"];
-            this.accessFailedCount = _data["accessFailedCount"];
+            this.imagePath = _data["imagePath"];
             this.isActive = _data["isActive"];
             this.roleId = _data["roleId"];
+            this.roleName = _data["roleName"];
         }
     }
 
@@ -9006,19 +9374,11 @@ export class AppUserDto implements IAppUserDto {
         data["phoneNumberConfirmed"] = this.phoneNumberConfirmed;
         data["email"] = this.email;
         data["emailConfirmed"] = this.emailConfirmed;
-        data["password"] = this.password;
-        data["passwordHash"] = this.passwordHash;
-        data["accessFailedCount"] = this.accessFailedCount;
+        data["imagePath"] = this.imagePath;
         data["isActive"] = this.isActive;
         data["roleId"] = this.roleId;
+        data["roleName"] = this.roleName;
         return data;
-    }
-
-    clone(): AppUserDto {
-        const json = this.toJSON();
-        let result = new AppUserDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -9038,11 +9398,10 @@ export interface IAppUserDto {
     phoneNumberConfirmed: boolean;
     email: string | undefined;
     emailConfirmed: boolean;
-    password: string | undefined;
-    passwordHash: string | undefined;
-    accessFailedCount: number;
+    imagePath: string | undefined;
     isActive: boolean;
     roleId: number;
+    roleName: string | undefined;
 }
 
 export class Assembly implements IAssembly {
@@ -9158,13 +9517,6 @@ export class Assembly implements IAssembly {
         data["securityRuleSet"] = this.securityRuleSet;
         return data;
     }
-
-    clone(): Assembly {
-        const json = this.toJSON();
-        let result = new Assembly();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IAssembly {
@@ -9221,13 +9573,6 @@ export class AuthUserRole implements IAuthUserRole {
         data["name"] = this.name;
         return data;
     }
-
-    clone(): AuthUserRole {
-        const json = this.toJSON();
-        let result = new AuthUserRole();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IAuthUserRole {
@@ -9282,13 +9627,6 @@ export class AvailableCourierStationDto implements IAvailableCourierStationDto {
         data["phone"] = this.phone;
         data["mapUrl"] = this.mapUrl;
         return data;
-    }
-
-    clone(): AvailableCourierStationDto {
-        const json = this.toJSON();
-        let result = new AvailableCourierStationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -9396,13 +9734,6 @@ export class CatalogItemDetailDto implements ICatalogItemDetailDto {
         data["availabilityId"] = this.availabilityId;
         return data;
     }
-
-    clone(): CatalogItemDetailDto {
-        const json = this.toJSON();
-        let result = new CatalogItemDetailDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICatalogItemDetailDto {
@@ -9504,13 +9835,6 @@ export class CatalogItemDto implements ICatalogItemDto {
                 data["crateOptions"].push(item ? item.toJSON() : <any>undefined);
         }
         return data;
-    }
-
-    clone(): CatalogItemDto {
-        const json = this.toJSON();
-        let result = new CatalogItemDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -9615,13 +9939,6 @@ export class ComplaintDto implements IComplaintDto {
         data["resolvedAt"] = this.resolvedAt ? this.resolvedAt.toISOString() : <any>undefined;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         return data;
-    }
-
-    clone(): ComplaintDto {
-        const json = this.toJSON();
-        let result = new ComplaintDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -9780,13 +10097,6 @@ export class ConstructorInfo implements IConstructorInfo {
         data["memberType"] = this.memberType;
         return data;
     }
-
-    clone(): ConstructorInfo {
-        const json = this.toJSON();
-        let result = new ConstructorInfo();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IConstructorInfo {
@@ -9857,13 +10167,6 @@ export class CourierAreaDropdownDto implements ICourierAreaDropdownDto {
         data["name"] = this.name;
         return data;
     }
-
-    clone(): CourierAreaDropdownDto {
-        const json = this.toJSON();
-        let result = new CourierAreaDropdownDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICourierAreaDropdownDto {
@@ -9922,13 +10225,6 @@ export class CourierAreaMap implements ICourierAreaMap {
         data["area"] = this.area;
         return data;
     }
-
-    clone(): CourierAreaMap {
-        const json = this.toJSON();
-        let result = new CourierAreaMap();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICourierAreaMap {
@@ -9980,13 +10276,6 @@ export class CourierAreaMapDto implements ICourierAreaMapDto {
         data["courierStationId"] = this.courierStationId;
         data["courierStationName"] = this.courierStationName;
         return data;
-    }
-
-    clone(): CourierAreaMapDto {
-        const json = this.toJSON();
-        let result = new CourierAreaMapDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -10077,13 +10366,6 @@ export class CourierProvider implements ICourierProvider {
         }
         return data;
     }
-
-    clone(): CourierProvider {
-        const json = this.toJSON();
-        let result = new CourierProvider();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICourierProvider {
@@ -10136,13 +10418,6 @@ export class CourierProviderDropdownDto implements ICourierProviderDropdownDto {
         data["id"] = this.id;
         data["name"] = this.name;
         return data;
-    }
-
-    clone(): CourierProviderDropdownDto {
-        const json = this.toJSON();
-        let result = new CourierProviderDropdownDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -10206,13 +10481,6 @@ export class CourierProviderDto implements ICourierProviderDto {
                 data["stations"].push(item ? item.toJSON() : <any>undefined);
         }
         return data;
-    }
-
-    clone(): CourierProviderDto {
-        const json = this.toJSON();
-        let result = new CourierProviderDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -10327,13 +10595,6 @@ export class CourierStation implements ICourierStation {
         }
         return data;
     }
-
-    clone(): CourierStation {
-        const json = this.toJSON();
-        let result = new CourierStation();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICourierStation {
@@ -10393,13 +10654,6 @@ export class CourierStationDropdownDto implements ICourierStationDropdownDto {
         data["id"] = this.id;
         data["name"] = this.name;
         return data;
-    }
-
-    clone(): CourierStationDropdownDto {
-        const json = this.toJSON();
-        let result = new CourierStationDropdownDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -10488,13 +10742,6 @@ export class CourierStationDto implements ICourierStationDto {
         }
         return data;
     }
-
-    clone(): CourierStationDto {
-        const json = this.toJSON();
-        let result = new CourierStationDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICourierStationDto {
@@ -10554,13 +10801,6 @@ export class CrateOptionDto implements ICrateOptionDto {
         data["pricePerCrate"] = this.pricePerCrate;
         return data;
     }
-
-    clone(): CrateOptionDto {
-        const json = this.toJSON();
-        let result = new CrateOptionDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICrateOptionDto {
@@ -10608,13 +10848,6 @@ export class CreateCourierAreaMapCommand implements ICreateCourierAreaMapCommand
         data["courierStationId"] = this.courierStationId;
         data["area"] = this.area;
         return data;
-    }
-
-    clone(): CreateCourierAreaMapCommand {
-        const json = this.toJSON();
-        let result = new CreateCourierAreaMapCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -10664,13 +10897,6 @@ export class CreateCourierProviderCommand implements ICreateCourierProviderComma
         data["email"] = this.email;
         data["isActive"] = this.isActive;
         return data;
-    }
-
-    clone(): CreateCourierProviderCommand {
-        const json = this.toJSON();
-        let result = new CreateCourierProviderCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -10744,13 +10970,6 @@ export class CreateCourierStationCommand implements ICreateCourierStationCommand
         data["googleMapUrl"] = this.googleMapUrl;
         data["isActive"] = this.isActive;
         return data;
-    }
-
-    clone(): CreateCourierStationCommand {
-        const json = this.toJSON();
-        let result = new CreateCourierStationCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -10828,13 +11047,6 @@ export class CreateCustomerCommand implements ICreateCustomerCommand {
         data["isActive"] = this.isActive;
         data["createdBy"] = this.createdBy;
         return data;
-    }
-
-    clone(): CreateCustomerCommand {
-        const json = this.toJSON();
-        let result = new CreateCustomerCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -10918,13 +11130,6 @@ export class CreateExpenseCommand implements ICreateExpenseCommand {
         data["deletedAt"] = this.deletedAt ? this.deletedAt.toISOString() : <any>undefined;
         return data;
     }
-
-    clone(): CreateExpenseCommand {
-        const json = this.toJSON();
-        let result = new CreateExpenseCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICreateExpenseCommand {
@@ -11003,13 +11208,6 @@ export class CreateExpenseTypeCommand implements ICreateExpenseTypeCommand {
         data["deletedAt"] = this.deletedAt ? this.deletedAt.toISOString() : <any>undefined;
         return data;
     }
-
-    clone(): CreateExpenseTypeCommand {
-        const json = this.toJSON();
-        let result = new CreateExpenseTypeCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICreateExpenseTypeCommand {
@@ -11076,13 +11274,6 @@ export class CreateMangoAvailabilityCommand implements ICreateMangoAvailabilityC
         data["notes"] = this.notes;
         data["createdBy"] = this.createdBy;
         return data;
-    }
-
-    clone(): CreateMangoAvailabilityCommand {
-        const json = this.toJSON();
-        let result = new CreateMangoAvailabilityCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -11153,13 +11344,6 @@ export class CreateMangoTypeCommand implements ICreateMangoTypeCommand {
         data["createdBy"] = this.createdBy;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         return data;
-    }
-
-    clone(): CreateMangoTypeCommand {
-        const json = this.toJSON();
-        let result = new CreateMangoTypeCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -11232,13 +11416,6 @@ export class CreateOrderCommand implements ICreateOrderCommand {
         }
         return data;
     }
-
-    clone(): CreateOrderCommand {
-        const json = this.toJSON();
-        let result = new CreateOrderCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICreateOrderCommand {
@@ -11290,13 +11467,6 @@ export class CreatePaymentCommand implements ICreatePaymentCommand {
         data["transactionId"] = this.transactionId;
         return data;
     }
-
-    clone(): CreatePaymentCommand {
-        const json = this.toJSON();
-        let result = new CreatePaymentCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICreatePaymentCommand {
@@ -11311,10 +11481,9 @@ export class CreateRoleCommand implements ICreateRoleCommand {
     name!: string | undefined;
     description!: string | undefined;
     isActive!: boolean;
-    permissionJson!: string | undefined;
-    permissions!: PermissionModel[] | undefined;
-    createdBy!: number;
-    createdAt!: moment.Moment;
+    permissions!: string[] | undefined;
+    createdBy!: number | undefined;
+    createdAt!: moment.Moment | undefined;
     updatedBy!: number | undefined;
     updatedAt!: moment.Moment | undefined;
     isDeleted!: boolean | undefined;
@@ -11336,11 +11505,10 @@ export class CreateRoleCommand implements ICreateRoleCommand {
             this.name = _data["name"];
             this.description = _data["description"];
             this.isActive = _data["isActive"];
-            this.permissionJson = _data["permissionJson"];
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
                 for (let item of _data["permissions"])
-                    this.permissions!.push(PermissionModel.fromJS(item));
+                    this.permissions!.push(item);
             }
             this.createdBy = _data["createdBy"];
             this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
@@ -11365,11 +11533,10 @@ export class CreateRoleCommand implements ICreateRoleCommand {
         data["name"] = this.name;
         data["description"] = this.description;
         data["isActive"] = this.isActive;
-        data["permissionJson"] = this.permissionJson;
         if (Array.isArray(this.permissions)) {
             data["permissions"] = [];
             for (let item of this.permissions)
-                data["permissions"].push(item ? item.toJSON() : <any>undefined);
+                data["permissions"].push(item);
         }
         data["createdBy"] = this.createdBy;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
@@ -11380,13 +11547,6 @@ export class CreateRoleCommand implements ICreateRoleCommand {
         data["deletedAt"] = this.deletedAt ? this.deletedAt.toISOString() : <any>undefined;
         return data;
     }
-
-    clone(): CreateRoleCommand {
-        const json = this.toJSON();
-        let result = new CreateRoleCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICreateRoleCommand {
@@ -11394,10 +11554,9 @@ export interface ICreateRoleCommand {
     name: string | undefined;
     description: string | undefined;
     isActive: boolean;
-    permissionJson: string | undefined;
-    permissions: PermissionModel[] | undefined;
-    createdBy: number;
-    createdAt: moment.Moment;
+    permissions: string[] | undefined;
+    createdBy: number | undefined;
+    createdAt: moment.Moment | undefined;
     updatedBy: number | undefined;
     updatedAt: moment.Moment | undefined;
     isDeleted: boolean | undefined;
@@ -11449,13 +11608,6 @@ export class CreateUserAddressCommand implements ICreateUserAddressCommand {
         data["addressType"] = this.addressType;
         data["isPrimary"] = this.isPrimary;
         return data;
-    }
-
-    clone(): CreateUserAddressCommand {
-        const json = this.toJSON();
-        let result = new CreateUserAddressCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -11518,13 +11670,6 @@ export class CreateUserCommand implements ICreateUserCommand {
         data["roleId"] = this.roleId;
         data["isActive"] = this.isActive;
         return data;
-    }
-
-    clone(): CreateUserCommand {
-        const json = this.toJSON();
-        let result = new CreateUserCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -11594,13 +11739,6 @@ export class CustomAttributeData implements ICustomAttributeData {
         }
         return data;
     }
-
-    clone(): CustomAttributeData {
-        const json = this.toJSON();
-        let result = new CustomAttributeData();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICustomAttributeData {
@@ -11649,13 +11787,6 @@ export class CustomAttributeNamedArgument implements ICustomAttributeNamedArgume
         data["isField"] = this.isField;
         return data;
     }
-
-    clone(): CustomAttributeNamedArgument {
-        const json = this.toJSON();
-        let result = new CustomAttributeNamedArgument();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICustomAttributeNamedArgument {
@@ -11697,13 +11828,6 @@ export class CustomAttributeTypedArgument implements ICustomAttributeTypedArgume
         data["argumentType"] = this.argumentType ? this.argumentType.toJSON() : <any>undefined;
         data["value"] = this.value;
         return data;
-    }
-
-    clone(): CustomAttributeTypedArgument {
-        const json = this.toJSON();
-        let result = new CustomAttributeTypedArgument();
-        result.init(json);
-        return result;
     }
 }
 
@@ -11782,13 +11906,6 @@ export class CustomerDashboardDto implements ICustomerDashboardDto {
         }
         return data;
     }
-
-    clone(): CustomerDashboardDto {
-        const json = this.toJSON();
-        let result = new CustomerDashboardDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICustomerDashboardDto {
@@ -11857,13 +11974,6 @@ export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
         data["paymentStatus"] = this.paymentStatus;
         return data;
     }
-
-    clone(): CustomerRecentOrderDto {
-        const json = this.toJSON();
-        let result = new CustomerRecentOrderDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ICustomerRecentOrderDto {
@@ -11929,13 +12039,6 @@ export class DashboardMangoAvailabilityDto implements IDashboardMangoAvailabilit
         data["pricePerKg"] = this.pricePerKg;
         data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
         return data;
-    }
-
-    clone(): DashboardMangoAvailabilityDto {
-        const json = this.toJSON();
-        let result = new DashboardMangoAvailabilityDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -12044,13 +12147,6 @@ export class EventInfo implements IEventInfo {
         data["eventHandlerType"] = this.eventHandlerType ? this.eventHandlerType.toJSON() : <any>undefined;
         return data;
     }
-
-    clone(): EventInfo {
-        const json = this.toJSON();
-        let result = new EventInfo();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IEventInfo {
@@ -12134,13 +12230,6 @@ export class Exception implements IException {
         data["stackTrace"] = this.stackTrace;
         return data;
     }
-
-    clone(): Exception {
-        const json = this.toJSON();
-        let result = new Exception();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IException {
@@ -12190,13 +12279,6 @@ export class ExecuteBkashPaymentCommand implements IExecuteBkashPaymentCommand {
         data["amount"] = this.amount;
         return data;
     }
-
-    clone(): ExecuteBkashPaymentCommand {
-        const json = this.toJSON();
-        let result = new ExecuteBkashPaymentCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IExecuteBkashPaymentCommand {
@@ -12243,13 +12325,6 @@ export class ExpenseByTypeDto implements IExpenseByTypeDto {
         data["count"] = this.count;
         data["totalAmount"] = this.totalAmount;
         return data;
-    }
-
-    clone(): ExpenseByTypeDto {
-        const json = this.toJSON();
-        let result = new ExpenseByTypeDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -12310,13 +12385,6 @@ export class ExpenseSummaryLineDto implements IExpenseSummaryLineDto {
         data["amount"] = this.amount;
         data["paymentMethod"] = this.paymentMethod;
         return data;
-    }
-
-    clone(): ExpenseSummaryLineDto {
-        const json = this.toJSON();
-        let result = new ExpenseSummaryLineDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -12392,13 +12460,6 @@ export class ExpenseSummaryReportDto implements IExpenseSummaryReportDto {
         }
         return data;
     }
-
-    clone(): ExpenseSummaryReportDto {
-        const json = this.toJSON();
-        let result = new ExpenseSummaryReportDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IExpenseSummaryReportDto {
@@ -12455,13 +12516,6 @@ export class FaqItemDto implements IFaqItemDto {
         data["isActive"] = this.isActive;
         return data;
     }
-
-    clone(): FaqItemDto {
-        const json = this.toJSON();
-        let result = new FaqItemDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IFaqItemDto {
@@ -12471,69 +12525,6 @@ export interface IFaqItemDto {
     category: string | undefined;
     sortOrder: number;
     isActive: boolean;
-}
-
-export class FeatureModel implements IFeatureModel {
-    id!: number;
-    title!: string | undefined;
-    hasAccess!: boolean;
-    actionModels!: ActionModel[] | undefined;
-
-    constructor(data?: IFeatureModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.title = _data["title"];
-            this.hasAccess = _data["hasAccess"];
-            if (Array.isArray(_data["actionModels"])) {
-                this.actionModels = [] as any;
-                for (let item of _data["actionModels"])
-                    this.actionModels!.push(ActionModel.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): FeatureModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new FeatureModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["title"] = this.title;
-        data["hasAccess"] = this.hasAccess;
-        if (Array.isArray(this.actionModels)) {
-            data["actionModels"] = [];
-            for (let item of this.actionModels)
-                data["actionModels"].push(item ? item.toJSON() : <any>undefined);
-        }
-        return data;
-    }
-
-    clone(): FeatureModel {
-        const json = this.toJSON();
-        let result = new FeatureModel();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IFeatureModel {
-    id: number;
-    title: string | undefined;
-    hasAccess: boolean;
-    actionModels: ActionModel[] | undefined;
 }
 
 export class FeedbackDto implements IFeedbackDto {
@@ -12597,13 +12588,6 @@ export class FeedbackDto implements IFeedbackDto {
         }
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         return data;
-    }
-
-    clone(): FeedbackDto {
-        const json = this.toJSON();
-        let result = new FeedbackDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -12754,13 +12738,6 @@ export class FieldInfo implements IFieldInfo {
         data["fieldHandle"] = this.fieldHandle ? this.fieldHandle.toJSON() : <any>undefined;
         return data;
     }
-
-    clone(): FieldInfo {
-        const json = this.toJSON();
-        let result = new FieldInfo();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IFieldInfo {
@@ -12878,13 +12855,6 @@ export class GetAllCustomerDto implements IGetAllCustomerDto {
         data["updatedBy"] = this.updatedBy;
         return data;
     }
-
-    clone(): GetAllCustomerDto {
-        const json = this.toJSON();
-        let result = new GetAllCustomerDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetAllCustomerDto {
@@ -12972,13 +12942,6 @@ export class GetAllExpenseDto implements IGetAllExpenseDto {
         data["isActive"] = this.isActive;
         return data;
     }
-
-    clone(): GetAllExpenseDto {
-        const json = this.toJSON();
-        let result = new GetAllExpenseDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetAllExpenseDto {
@@ -13056,13 +13019,6 @@ export class GetAllExpenseTypeDto implements IGetAllExpenseTypeDto {
         data["description"] = this.description;
         data["isActive"] = this.isActive;
         return data;
-    }
-
-    clone(): GetAllExpenseTypeDto {
-        const json = this.toJSON();
-        let result = new GetAllExpenseTypeDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -13146,13 +13102,6 @@ export class GetAllMangoTypeDto implements IGetAllMangoTypeDto {
         data["sequence"] = this.sequence;
         return data;
     }
-
-    clone(): GetAllMangoTypeDto {
-        const json = this.toJSON();
-        let result = new GetAllMangoTypeDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetAllMangoTypeDto {
@@ -13231,13 +13180,6 @@ export class GetAllPaymentDto implements IGetAllPaymentDto {
         data["transactionId"] = this.transactionId;
         return data;
     }
-
-    clone(): GetAllPaymentDto {
-        const json = this.toJSON();
-        let result = new GetAllPaymentDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetAllPaymentDto {
@@ -13266,8 +13208,7 @@ export class GetAllRoleDto implements IGetAllRoleDto {
     name!: string | undefined;
     description!: string | undefined;
     isActive!: boolean;
-    permissionJson!: string | undefined;
-    permissions!: PermissionModel[] | undefined;
+    permissions!: string[] | undefined;
 
     constructor(data?: IGetAllRoleDto) {
         if (data) {
@@ -13291,11 +13232,10 @@ export class GetAllRoleDto implements IGetAllRoleDto {
             this.name = _data["name"];
             this.description = _data["description"];
             this.isActive = _data["isActive"];
-            this.permissionJson = _data["permissionJson"];
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
                 for (let item of _data["permissions"])
-                    this.permissions!.push(PermissionModel.fromJS(item));
+                    this.permissions!.push(item);
             }
         }
     }
@@ -13320,20 +13260,12 @@ export class GetAllRoleDto implements IGetAllRoleDto {
         data["name"] = this.name;
         data["description"] = this.description;
         data["isActive"] = this.isActive;
-        data["permissionJson"] = this.permissionJson;
         if (Array.isArray(this.permissions)) {
             data["permissions"] = [];
             for (let item of this.permissions)
-                data["permissions"].push(item ? item.toJSON() : <any>undefined);
+                data["permissions"].push(item);
         }
         return data;
-    }
-
-    clone(): GetAllRoleDto {
-        const json = this.toJSON();
-        let result = new GetAllRoleDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -13349,8 +13281,7 @@ export interface IGetAllRoleDto {
     name: string | undefined;
     description: string | undefined;
     isActive: boolean;
-    permissionJson: string | undefined;
-    permissions: PermissionModel[] | undefined;
+    permissions: string[] | undefined;
 }
 
 export class GetAuthUserDto implements IGetAuthUserDto {
@@ -13365,7 +13296,6 @@ export class GetAuthUserDto implements IGetAuthUserDto {
     jwtAuth!: JwtAuthDto;
     roles!: AuthUserRole[] | undefined;
     roleId!: number | undefined;
-    permissionJson!: string | undefined;
     permissions!: string[] | undefined;
 
     constructor(data?: IGetAuthUserDto) {
@@ -13394,7 +13324,6 @@ export class GetAuthUserDto implements IGetAuthUserDto {
                     this.roles!.push(AuthUserRole.fromJS(item));
             }
             this.roleId = _data["roleId"];
-            this.permissionJson = _data["permissionJson"];
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
                 for (let item of _data["permissions"])
@@ -13427,20 +13356,12 @@ export class GetAuthUserDto implements IGetAuthUserDto {
                 data["roles"].push(item ? item.toJSON() : <any>undefined);
         }
         data["roleId"] = this.roleId;
-        data["permissionJson"] = this.permissionJson;
         if (Array.isArray(this.permissions)) {
             data["permissions"] = [];
             for (let item of this.permissions)
                 data["permissions"].push(item);
         }
         return data;
-    }
-
-    clone(): GetAuthUserDto {
-        const json = this.toJSON();
-        let result = new GetAuthUserDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -13456,7 +13377,6 @@ export interface IGetAuthUserDto {
     jwtAuth: JwtAuthDto;
     roles: AuthUserRole[] | undefined;
     roleId: number | undefined;
-    permissionJson: string | undefined;
     permissions: string[] | undefined;
 }
 
@@ -13492,13 +13412,6 @@ export class GetAuthUserQuery implements IGetAuthUserQuery {
         data["email"] = this.email;
         data["password"] = this.password;
         return data;
-    }
-
-    clone(): GetAuthUserQuery {
-        const json = this.toJSON();
-        let result = new GetAuthUserQuery();
-        result.init(json);
-        return result;
     }
 }
 
@@ -13582,13 +13495,6 @@ export class GetCustomerByIdDto implements IGetCustomerByIdDto {
         data["updatedBy"] = this.updatedBy;
         return data;
     }
-
-    clone(): GetCustomerByIdDto {
-        const json = this.toJSON();
-        let result = new GetCustomerByIdDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetCustomerByIdDto {
@@ -13639,13 +13545,6 @@ export class GetCustomerCountDto implements IGetCustomerCountDto {
         data = typeof data === 'object' ? data : {};
         data["totalCount"] = this.totalCount;
         return data;
-    }
-
-    clone(): GetCustomerCountDto {
-        const json = this.toJSON();
-        let result = new GetCustomerCountDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -13721,13 +13620,6 @@ export class GetCustomerWithPaginationDto implements IGetCustomerWithPaginationD
         data["customerType"] = this.customerType;
         data["isActive"] = this.isActive;
         return data;
-    }
-
-    clone(): GetCustomerWithPaginationDto {
-        const json = this.toJSON();
-        let result = new GetCustomerWithPaginationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -13814,13 +13706,6 @@ export class GetExpenseByIdDto implements IGetExpenseByIdDto {
         data["isActive"] = this.isActive;
         return data;
     }
-
-    clone(): GetExpenseByIdDto {
-        const json = this.toJSON();
-        let result = new GetExpenseByIdDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetExpenseByIdDto {
@@ -13868,13 +13753,6 @@ export class GetExpenseCountDto implements IGetExpenseCountDto {
         data = typeof data === 'object' ? data : {};
         data["totalCount"] = this.totalCount;
         return data;
-    }
-
-    clone(): GetExpenseCountDto {
-        const json = this.toJSON();
-        let result = new GetExpenseCountDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -13942,13 +13820,6 @@ export class GetExpenseTypeByIdDto implements IGetExpenseTypeByIdDto {
         data["isActive"] = this.isActive;
         return data;
     }
-
-    clone(): GetExpenseTypeByIdDto {
-        const json = this.toJSON();
-        let result = new GetExpenseTypeByIdDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetExpenseTypeByIdDto {
@@ -13994,13 +13865,6 @@ export class GetExpenseTypeCountDto implements IGetExpenseTypeCountDto {
         data = typeof data === 'object' ? data : {};
         data["totalCount"] = this.totalCount;
         return data;
-    }
-
-    clone(): GetExpenseTypeCountDto {
-        const json = this.toJSON();
-        let result = new GetExpenseTypeCountDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -14067,13 +13931,6 @@ export class GetExpenseTypeWithPaginationDto implements IGetExpenseTypeWithPagin
         data["description"] = this.description;
         data["isActive"] = this.isActive;
         return data;
-    }
-
-    clone(): GetExpenseTypeWithPaginationDto {
-        const json = this.toJSON();
-        let result = new GetExpenseTypeWithPaginationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -14156,13 +14013,6 @@ export class GetExpenseWithPaginationDto implements IGetExpenseWithPaginationDto
         data["amount"] = this.amount;
         data["isActive"] = this.isActive;
         return data;
-    }
-
-    clone(): GetExpenseWithPaginationDto {
-        const json = this.toJSON();
-        let result = new GetExpenseWithPaginationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -14248,13 +14098,6 @@ export class GetMangoTypeByIdDto implements IGetMangoTypeByIdDto {
         data["sequence"] = this.sequence;
         return data;
     }
-
-    clone(): GetMangoTypeByIdDto {
-        const json = this.toJSON();
-        let result = new GetMangoTypeByIdDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetMangoTypeByIdDto {
@@ -14302,13 +14145,6 @@ export class GetMangoTypeCountDto implements IGetMangoTypeCountDto {
         data = typeof data === 'object' ? data : {};
         data["totalCount"] = this.totalCount;
         return data;
-    }
-
-    clone(): GetMangoTypeCountDto {
-        const json = this.toJSON();
-        let result = new GetMangoTypeCountDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -14390,13 +14226,6 @@ export class GetMangoTypeWithPaginationDto implements IGetMangoTypeWithPaginatio
         data["sweetnessLevel"] = this.sweetnessLevel;
         data["sequence"] = this.sequence;
         return data;
-    }
-
-    clone(): GetMangoTypeWithPaginationDto {
-        const json = this.toJSON();
-        let result = new GetMangoTypeWithPaginationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -14491,13 +14320,6 @@ export class GetPaymentByIdDto implements IGetPaymentByIdDto {
         data["paymentMethod"] = this.paymentMethod;
         return data;
     }
-
-    clone(): GetPaymentByIdDto {
-        const json = this.toJSON();
-        let result = new GetPaymentByIdDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetPaymentByIdDto {
@@ -14547,13 +14369,6 @@ export class GetPaymentCountDto implements IGetPaymentCountDto {
         data = typeof data === 'object' ? data : {};
         data["totalCount"] = this.totalCount;
         return data;
-    }
-
-    clone(): GetPaymentCountDto {
-        const json = this.toJSON();
-        let result = new GetPaymentCountDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -14621,13 +14436,6 @@ export class GetPaymentWithPaginationDto implements IGetPaymentWithPaginationDto
         data["transactionId"] = this.transactionId;
         return data;
     }
-
-    clone(): GetPaymentWithPaginationDto {
-        const json = this.toJSON();
-        let result = new GetPaymentWithPaginationDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetPaymentWithPaginationDto {
@@ -14656,8 +14464,7 @@ export class GetRoleByIdDto implements IGetRoleByIdDto {
     name!: string | undefined;
     description!: string | undefined;
     isActive!: boolean;
-    permissionJson!: string | undefined;
-    permissions!: PermissionModel[] | undefined;
+    permissions!: string[] | undefined;
 
     constructor(data?: IGetRoleByIdDto) {
         if (data) {
@@ -14681,11 +14488,10 @@ export class GetRoleByIdDto implements IGetRoleByIdDto {
             this.name = _data["name"];
             this.description = _data["description"];
             this.isActive = _data["isActive"];
-            this.permissionJson = _data["permissionJson"];
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
                 for (let item of _data["permissions"])
-                    this.permissions!.push(PermissionModel.fromJS(item));
+                    this.permissions!.push(item);
             }
         }
     }
@@ -14710,20 +14516,12 @@ export class GetRoleByIdDto implements IGetRoleByIdDto {
         data["name"] = this.name;
         data["description"] = this.description;
         data["isActive"] = this.isActive;
-        data["permissionJson"] = this.permissionJson;
         if (Array.isArray(this.permissions)) {
             data["permissions"] = [];
             for (let item of this.permissions)
-                data["permissions"].push(item ? item.toJSON() : <any>undefined);
+                data["permissions"].push(item);
         }
         return data;
-    }
-
-    clone(): GetRoleByIdDto {
-        const json = this.toJSON();
-        let result = new GetRoleByIdDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -14739,8 +14537,7 @@ export interface IGetRoleByIdDto {
     name: string | undefined;
     description: string | undefined;
     isActive: boolean;
-    permissionJson: string | undefined;
-    permissions: PermissionModel[] | undefined;
+    permissions: string[] | undefined;
 }
 
 export class GetRoleCountDto implements IGetRoleCountDto {
@@ -14773,13 +14570,6 @@ export class GetRoleCountDto implements IGetRoleCountDto {
         data["totalCount"] = this.totalCount;
         return data;
     }
-
-    clone(): GetRoleCountDto {
-        const json = this.toJSON();
-        let result = new GetRoleCountDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetRoleCountDto {
@@ -14798,8 +14588,7 @@ export class GetRoleWithPaginationDto implements IGetRoleWithPaginationDto {
     name!: string | undefined;
     description!: string | undefined;
     isActive!: boolean;
-    permissionJson!: string | undefined;
-    permissions!: PermissionModel[] | undefined;
+    permissions!: string[] | undefined;
 
     constructor(data?: IGetRoleWithPaginationDto) {
         if (data) {
@@ -14823,11 +14612,10 @@ export class GetRoleWithPaginationDto implements IGetRoleWithPaginationDto {
             this.name = _data["name"];
             this.description = _data["description"];
             this.isActive = _data["isActive"];
-            this.permissionJson = _data["permissionJson"];
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
                 for (let item of _data["permissions"])
-                    this.permissions!.push(PermissionModel.fromJS(item));
+                    this.permissions!.push(item);
             }
         }
     }
@@ -14852,20 +14640,12 @@ export class GetRoleWithPaginationDto implements IGetRoleWithPaginationDto {
         data["name"] = this.name;
         data["description"] = this.description;
         data["isActive"] = this.isActive;
-        data["permissionJson"] = this.permissionJson;
         if (Array.isArray(this.permissions)) {
             data["permissions"] = [];
             for (let item of this.permissions)
-                data["permissions"].push(item ? item.toJSON() : <any>undefined);
+                data["permissions"].push(item);
         }
         return data;
-    }
-
-    clone(): GetRoleWithPaginationDto {
-        const json = this.toJSON();
-        let result = new GetRoleWithPaginationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -14881,8 +14661,7 @@ export interface IGetRoleWithPaginationDto {
     name: string | undefined;
     description: string | undefined;
     isActive: boolean;
-    permissionJson: string | undefined;
-    permissions: PermissionModel[] | undefined;
+    permissions: string[] | undefined;
 }
 
 export class GetValidTokenQuery implements IGetValidTokenQuery {
@@ -14915,17 +14694,46 @@ export class GetValidTokenQuery implements IGetValidTokenQuery {
         data["token"] = this.token;
         return data;
     }
-
-    clone(): GetValidTokenQuery {
-        const json = this.toJSON();
-        let result = new GetValidTokenQuery();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IGetValidTokenQuery {
     token: string | undefined;
+}
+
+export class GrantPermissionRequest implements IGrantPermissionRequest {
+    permissionId!: number;
+
+    constructor(data?: IGrantPermissionRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.permissionId = _data["permissionId"];
+        }
+    }
+
+    static fromJS(data: any): GrantPermissionRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new GrantPermissionRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["permissionId"] = this.permissionId;
+        return data;
+    }
+}
+
+export interface IGrantPermissionRequest {
+    permissionId: number;
 }
 
 export class ICustomAttributeProvider implements IICustomAttributeProvider {
@@ -14952,13 +14760,6 @@ export class ICustomAttributeProvider implements IICustomAttributeProvider {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         return data;
-    }
-
-    clone(): ICustomAttributeProvider {
-        const json = this.toJSON();
-        let result = new ICustomAttributeProvider();
-        result.init(json);
-        return result;
     }
 }
 
@@ -14997,13 +14798,6 @@ export class InitiateBkashPaymentCommand implements IInitiateBkashPaymentCommand
         data["orderId"] = this.orderId;
         data["amount"] = this.amount;
         return data;
-    }
-
-    clone(): InitiateBkashPaymentCommand {
-        const json = this.toJSON();
-        let result = new InitiateBkashPaymentCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -15045,13 +14839,6 @@ export class InitiateBkashPaymentResponse implements IInitiateBkashPaymentRespon
         data["bkashUrl"] = this.bkashUrl;
         return data;
     }
-
-    clone(): InitiateBkashPaymentResponse {
-        const json = this.toJSON();
-        let result = new InitiateBkashPaymentResponse();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IInitiateBkashPaymentResponse {
@@ -15083,13 +14870,6 @@ export class IntPtr implements IIntPtr {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         return data;
-    }
-
-    clone(): IntPtr {
-        const json = this.toJSON();
-        let result = new IntPtr();
-        result.init(json);
-        return result;
     }
 }
 
@@ -15155,13 +14935,6 @@ export class JwtAuthDto implements IJwtAuthDto {
         data["ipAddress"] = this.ipAddress;
         data["deviceInfo"] = this.deviceInfo;
         return data;
-    }
-
-    clone(): JwtAuthDto {
-        const json = this.toJSON();
-        let result = new JwtAuthDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -15250,13 +15023,6 @@ export class MangoAvailabilityDto implements IMangoAvailabilityDto {
         data["updatedBy"] = this.updatedBy;
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
         return data;
-    }
-
-    clone(): MangoAvailabilityDto {
-        const json = this.toJSON();
-        let result = new MangoAvailabilityDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -15350,13 +15116,6 @@ export class MemberInfo implements IMemberInfo {
         data["isCollectible"] = this.isCollectible;
         data["metadataToken"] = this.metadataToken;
         return data;
-    }
-
-    clone(): MemberInfo {
-        const json = this.toJSON();
-        let result = new MemberInfo();
-        result.init(json);
-        return result;
     }
 }
 
@@ -15538,13 +15297,6 @@ export class MethodBase implements IMethodBase {
         data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
         data["isSecurityTransparent"] = this.isSecurityTransparent;
         return data;
-    }
-
-    clone(): MethodBase {
-        const json = this.toJSON();
-        let result = new MethodBase();
-        result.init(json);
-        return result;
     }
 }
 
@@ -15740,13 +15492,6 @@ export class MethodInfo implements IMethodInfo {
         data["returnTypeCustomAttributes"] = this.returnTypeCustomAttributes ? this.returnTypeCustomAttributes.toJSON() : <any>undefined;
         return data;
     }
-
-    clone(): MethodInfo {
-        const json = this.toJSON();
-        let result = new MethodInfo();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IMethodInfo {
@@ -15849,13 +15594,6 @@ export class Module implements IModule {
         data["metadataToken"] = this.metadataToken;
         return data;
     }
-
-    clone(): Module {
-        const json = this.toJSON();
-        let result = new Module();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IModule {
@@ -15899,13 +15637,6 @@ export class ModuleHandle implements IModuleHandle {
         data = typeof data === 'object' ? data : {};
         data["mdStreamVersion"] = this.mdStreamVersion;
         return data;
-    }
-
-    clone(): ModuleHandle {
-        const json = this.toJSON();
-        let result = new ModuleHandle();
-        result.init(json);
-        return result;
     }
 }
 
@@ -15984,13 +15715,6 @@ export class MyProfileDto implements IMyProfileDto {
         data["customerId"] = this.customerId;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         return data;
-    }
-
-    clone(): MyProfileDto {
-        const json = this.toJSON();
-        let result = new MyProfileDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -16081,13 +15805,6 @@ export class NearbyStationDto implements INearbyStationDto {
         data["distanceKm"] = this.distanceKm;
         return data;
     }
-
-    clone(): NearbyStationDto {
-        const json = this.toJSON();
-        let result = new NearbyStationDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface INearbyStationDto {
@@ -16161,13 +15878,6 @@ export class OrderDetailDto implements IOrderDetailDto {
         data["note"] = this.note;
         return data;
     }
-
-    clone(): OrderDetailDto {
-        const json = this.toJSON();
-        let result = new OrderDetailDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IOrderDetailDto {
@@ -16229,13 +15939,6 @@ export class OrderDetailInputDto implements IOrderDetailInputDto {
         data["totalPrice"] = this.totalPrice;
         data["note"] = this.note;
         return data;
-    }
-
-    clone(): OrderDetailInputDto {
-        const json = this.toJSON();
-        let result = new OrderDetailInputDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -16350,13 +16053,6 @@ export class OrderDto implements IOrderDto {
         }
         return data;
     }
-
-    clone(): OrderDto {
-        const json = this.toJSON();
-        let result = new OrderDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IOrderDto {
@@ -16452,13 +16148,6 @@ export class OrderSummaryLineDto implements IOrderSummaryLineDto {
         data["paymentStatus"] = this.paymentStatus;
         return data;
     }
-
-    clone(): OrderSummaryLineDto {
-        const json = this.toJSON();
-        let result = new OrderSummaryLineDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IOrderSummaryLineDto {
@@ -16550,13 +16239,6 @@ export class OrderSummaryReportDto implements IOrderSummaryReportDto {
                 data["orders"].push(item ? item.toJSON() : <any>undefined);
         }
         return data;
-    }
-
-    clone(): OrderSummaryReportDto {
-        const json = this.toJSON();
-        let result = new OrderSummaryReportDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -16653,13 +16335,6 @@ export class PaginatedResult_AppUserDto implements IPaginatedResult_AppUserDto {
         data["hasNextPage"] = this.hasNextPage;
         return data;
     }
-
-    clone(): PaginatedResult_AppUserDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_AppUserDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IPaginatedResult_AppUserDto {
@@ -16751,13 +16426,6 @@ export class PaginatedResult_CourierAreaMapDto implements IPaginatedResult_Couri
         data["hasPreviousPage"] = this.hasPreviousPage;
         data["hasNextPage"] = this.hasNextPage;
         return data;
-    }
-
-    clone(): PaginatedResult_CourierAreaMapDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_CourierAreaMapDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -16851,13 +16519,6 @@ export class PaginatedResult_CourierProviderDto implements IPaginatedResult_Cour
         data["hasNextPage"] = this.hasNextPage;
         return data;
     }
-
-    clone(): PaginatedResult_CourierProviderDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_CourierProviderDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IPaginatedResult_CourierProviderDto {
@@ -16949,13 +16610,6 @@ export class PaginatedResult_CourierStationDto implements IPaginatedResult_Couri
         data["hasPreviousPage"] = this.hasPreviousPage;
         data["hasNextPage"] = this.hasNextPage;
         return data;
-    }
-
-    clone(): PaginatedResult_CourierStationDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_CourierStationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -17049,13 +16703,6 @@ export class PaginatedResult_GetCustomerWithPaginationDto implements IPaginatedR
         data["hasNextPage"] = this.hasNextPage;
         return data;
     }
-
-    clone(): PaginatedResult_GetCustomerWithPaginationDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_GetCustomerWithPaginationDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IPaginatedResult_GetCustomerWithPaginationDto {
@@ -17147,13 +16794,6 @@ export class PaginatedResult_GetExpenseTypeWithPaginationDto implements IPaginat
         data["hasPreviousPage"] = this.hasPreviousPage;
         data["hasNextPage"] = this.hasNextPage;
         return data;
-    }
-
-    clone(): PaginatedResult_GetExpenseTypeWithPaginationDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_GetExpenseTypeWithPaginationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -17247,13 +16887,6 @@ export class PaginatedResult_GetExpenseWithPaginationDto implements IPaginatedRe
         data["hasNextPage"] = this.hasNextPage;
         return data;
     }
-
-    clone(): PaginatedResult_GetExpenseWithPaginationDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_GetExpenseWithPaginationDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IPaginatedResult_GetExpenseWithPaginationDto {
@@ -17345,13 +16978,6 @@ export class PaginatedResult_GetMangoTypeWithPaginationDto implements IPaginated
         data["hasPreviousPage"] = this.hasPreviousPage;
         data["hasNextPage"] = this.hasNextPage;
         return data;
-    }
-
-    clone(): PaginatedResult_GetMangoTypeWithPaginationDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_GetMangoTypeWithPaginationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -17445,13 +17071,6 @@ export class PaginatedResult_GetPaymentWithPaginationDto implements IPaginatedRe
         data["hasNextPage"] = this.hasNextPage;
         return data;
     }
-
-    clone(): PaginatedResult_GetPaymentWithPaginationDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_GetPaymentWithPaginationDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IPaginatedResult_GetPaymentWithPaginationDto {
@@ -17544,13 +17163,6 @@ export class PaginatedResult_GetRoleWithPaginationDto implements IPaginatedResul
         data["hasNextPage"] = this.hasNextPage;
         return data;
     }
-
-    clone(): PaginatedResult_GetRoleWithPaginationDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_GetRoleWithPaginationDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IPaginatedResult_GetRoleWithPaginationDto {
@@ -17642,13 +17254,6 @@ export class PaginatedResult_OrderDto implements IPaginatedResult_OrderDto {
         data["hasPreviousPage"] = this.hasPreviousPage;
         data["hasNextPage"] = this.hasNextPage;
         return data;
-    }
-
-    clone(): PaginatedResult_OrderDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_OrderDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -17760,13 +17365,6 @@ export class ParameterInfo implements IParameterInfo {
         data["metadataToken"] = this.metadataToken;
         return data;
     }
-
-    clone(): ParameterInfo {
-        const json = this.toJSON();
-        let result = new ParameterInfo();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IParameterInfo {
@@ -17822,13 +17420,6 @@ export class PaymentByMethodDto implements IPaymentByMethodDto {
         data["count"] = this.count;
         data["totalPaid"] = this.totalPaid;
         return data;
-    }
-
-    clone(): PaymentByMethodDto {
-        const json = this.toJSON();
-        let result = new PaymentByMethodDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -17922,13 +17513,6 @@ export class PaymentSummaryLineDto implements IPaymentSummaryLineDto {
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         return data;
     }
-
-    clone(): PaymentSummaryLineDto {
-        const json = this.toJSON();
-        let result = new PaymentSummaryLineDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IPaymentSummaryLineDto {
@@ -18019,13 +17603,6 @@ export class PaymentSummaryReportDto implements IPaymentSummaryReportDto {
         }
         return data;
     }
-
-    clone(): PaymentSummaryReportDto {
-        const json = this.toJSON();
-        let result = new PaymentSummaryReportDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IPaymentSummaryReportDto {
@@ -18039,61 +17616,6 @@ export interface IPaymentSummaryReportDto {
     totalDue: number;
     byMethod: PaymentByMethodDto[] | undefined;
     payments: PaymentSummaryLineDto[] | undefined;
-}
-
-export class PermissionModel implements IPermissionModel {
-    area!: string | undefined;
-    featureModels!: FeatureModel[] | undefined;
-
-    constructor(data?: IPermissionModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.area = _data["area"];
-            if (Array.isArray(_data["featureModels"])) {
-                this.featureModels = [] as any;
-                for (let item of _data["featureModels"])
-                    this.featureModels!.push(FeatureModel.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): PermissionModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new PermissionModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["area"] = this.area;
-        if (Array.isArray(this.featureModels)) {
-            data["featureModels"] = [];
-            for (let item of this.featureModels)
-                data["featureModels"].push(item ? item.toJSON() : <any>undefined);
-        }
-        return data;
-    }
-
-    clone(): PermissionModel {
-        const json = this.toJSON();
-        let result = new PermissionModel();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IPermissionModel {
-    area: string | undefined;
-    featureModels: FeatureModel[] | undefined;
 }
 
 export class PolicyDto implements IPolicyDto {
@@ -18140,13 +17662,6 @@ export class PolicyDto implements IPolicyDto {
         data["isActive"] = this.isActive;
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
         return data;
-    }
-
-    clone(): PolicyDto {
-        const json = this.toJSON();
-        let result = new PolicyDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -18259,13 +17774,6 @@ export class PropertyInfo implements IPropertyInfo {
         data["setMethod"] = this.setMethod ? this.setMethod.toJSON() : <any>undefined;
         return data;
     }
-
-    clone(): PropertyInfo {
-        const json = this.toJSON();
-        let result = new PropertyInfo();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IPropertyInfo {
@@ -18328,13 +17836,6 @@ export class RegisterUserCommand implements IRegisterUserCommand {
         data["password"] = this.password;
         return data;
     }
-
-    clone(): RegisterUserCommand {
-        const json = this.toJSON();
-        let result = new RegisterUserCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IRegisterUserCommand {
@@ -18394,13 +17895,6 @@ export class Result_AdminDashboardDto implements IResult_AdminDashboardDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_AdminDashboardDto {
-        const json = this.toJSON();
-        let result = new Result_AdminDashboardDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -18462,13 +17956,6 @@ export class Result_AppUserDto implements IResult_AppUserDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_AppUserDto {
-        const json = this.toJSON();
-        let result = new Result_AppUserDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_AppUserDto {
@@ -18528,13 +18015,6 @@ export class Result_Boolean implements IResult_Boolean {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_Boolean {
-        const json = this.toJSON();
-        let result = new Result_Boolean();
-        result.init(json);
-        return result;
     }
 }
 
@@ -18596,13 +18076,6 @@ export class Result_CatalogItemDetailDto implements IResult_CatalogItemDetailDto
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_CatalogItemDetailDto {
-        const json = this.toJSON();
-        let result = new Result_CatalogItemDetailDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_CatalogItemDetailDto {
@@ -18662,13 +18135,6 @@ export class Result_ComplaintDto implements IResult_ComplaintDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_ComplaintDto {
-        const json = this.toJSON();
-        let result = new Result_ComplaintDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -18730,13 +18196,6 @@ export class Result_CourierAreaMapDto implements IResult_CourierAreaMapDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_CourierAreaMapDto {
-        const json = this.toJSON();
-        let result = new Result_CourierAreaMapDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_CourierAreaMapDto {
@@ -18796,13 +18255,6 @@ export class Result_CourierProviderDto implements IResult_CourierProviderDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_CourierProviderDto {
-        const json = this.toJSON();
-        let result = new Result_CourierProviderDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -18864,13 +18316,6 @@ export class Result_CourierStationDto implements IResult_CourierStationDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_CourierStationDto {
-        const json = this.toJSON();
-        let result = new Result_CourierStationDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_CourierStationDto {
@@ -18930,13 +18375,6 @@ export class Result_CustomerDashboardDto implements IResult_CustomerDashboardDto
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_CustomerDashboardDto {
-        const json = this.toJSON();
-        let result = new Result_CustomerDashboardDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -18998,13 +18436,6 @@ export class Result_ExpenseSummaryReportDto implements IResult_ExpenseSummaryRep
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_ExpenseSummaryReportDto {
-        const json = this.toJSON();
-        let result = new Result_ExpenseSummaryReportDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_ExpenseSummaryReportDto {
@@ -19064,13 +18495,6 @@ export class Result_FeedbackDto implements IResult_FeedbackDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_FeedbackDto {
-        const json = this.toJSON();
-        let result = new Result_FeedbackDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -19132,13 +18556,6 @@ export class Result_GetAuthUserDto implements IResult_GetAuthUserDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_GetAuthUserDto {
-        const json = this.toJSON();
-        let result = new Result_GetAuthUserDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_GetAuthUserDto {
@@ -19198,13 +18615,6 @@ export class Result_GetCustomerByIdDto implements IResult_GetCustomerByIdDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_GetCustomerByIdDto {
-        const json = this.toJSON();
-        let result = new Result_GetCustomerByIdDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -19266,13 +18676,6 @@ export class Result_GetCustomerCountDto implements IResult_GetCustomerCountDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_GetCustomerCountDto {
-        const json = this.toJSON();
-        let result = new Result_GetCustomerCountDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_GetCustomerCountDto {
@@ -19332,13 +18735,6 @@ export class Result_GetExpenseByIdDto implements IResult_GetExpenseByIdDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_GetExpenseByIdDto {
-        const json = this.toJSON();
-        let result = new Result_GetExpenseByIdDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -19400,13 +18796,6 @@ export class Result_GetExpenseCountDto implements IResult_GetExpenseCountDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_GetExpenseCountDto {
-        const json = this.toJSON();
-        let result = new Result_GetExpenseCountDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_GetExpenseCountDto {
@@ -19466,13 +18855,6 @@ export class Result_GetExpenseTypeByIdDto implements IResult_GetExpenseTypeByIdD
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_GetExpenseTypeByIdDto {
-        const json = this.toJSON();
-        let result = new Result_GetExpenseTypeByIdDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -19534,13 +18916,6 @@ export class Result_GetExpenseTypeCountDto implements IResult_GetExpenseTypeCoun
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_GetExpenseTypeCountDto {
-        const json = this.toJSON();
-        let result = new Result_GetExpenseTypeCountDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_GetExpenseTypeCountDto {
@@ -19600,13 +18975,6 @@ export class Result_GetMangoTypeByIdDto implements IResult_GetMangoTypeByIdDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_GetMangoTypeByIdDto {
-        const json = this.toJSON();
-        let result = new Result_GetMangoTypeByIdDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -19668,13 +19036,6 @@ export class Result_GetMangoTypeCountDto implements IResult_GetMangoTypeCountDto
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_GetMangoTypeCountDto {
-        const json = this.toJSON();
-        let result = new Result_GetMangoTypeCountDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_GetMangoTypeCountDto {
@@ -19734,13 +19095,6 @@ export class Result_GetPaymentByIdDto implements IResult_GetPaymentByIdDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_GetPaymentByIdDto {
-        const json = this.toJSON();
-        let result = new Result_GetPaymentByIdDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -19802,13 +19156,6 @@ export class Result_GetPaymentCountDto implements IResult_GetPaymentCountDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_GetPaymentCountDto {
-        const json = this.toJSON();
-        let result = new Result_GetPaymentCountDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_GetPaymentCountDto {
@@ -19868,13 +19215,6 @@ export class Result_GetRoleByIdDto implements IResult_GetRoleByIdDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_GetRoleByIdDto {
-        const json = this.toJSON();
-        let result = new Result_GetRoleByIdDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -19936,13 +19276,6 @@ export class Result_GetRoleCountDto implements IResult_GetRoleCountDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_GetRoleCountDto {
-        const json = this.toJSON();
-        let result = new Result_GetRoleCountDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_GetRoleCountDto {
@@ -20003,13 +19336,6 @@ export class Result_InitiateBkashPaymentResponse implements IResult_InitiateBkas
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_InitiateBkashPaymentResponse {
-        const json = this.toJSON();
-        let result = new Result_InitiateBkashPaymentResponse();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_InitiateBkashPaymentResponse {
@@ -20069,13 +19395,6 @@ export class Result_Int32 implements IResult_Int32 {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_Int32 {
-        const json = this.toJSON();
-        let result = new Result_Int32();
-        result.init(json);
-        return result;
     }
 }
 
@@ -20145,13 +19464,6 @@ export class Result_List_AppUserDto implements IResult_List_AppUserDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_AppUserDto {
-        const json = this.toJSON();
-        let result = new Result_List_AppUserDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_AppUserDto {
@@ -20219,13 +19531,6 @@ export class Result_List_AvailableCourierStationDto implements IResult_List_Avai
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_AvailableCourierStationDto {
-        const json = this.toJSON();
-        let result = new Result_List_AvailableCourierStationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -20295,13 +19600,6 @@ export class Result_List_CatalogItemDto implements IResult_List_CatalogItemDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_CatalogItemDto {
-        const json = this.toJSON();
-        let result = new Result_List_CatalogItemDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_CatalogItemDto {
@@ -20369,13 +19667,6 @@ export class Result_List_ComplaintDto implements IResult_List_ComplaintDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_ComplaintDto {
-        const json = this.toJSON();
-        let result = new Result_List_ComplaintDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -20445,13 +19736,6 @@ export class Result_List_CourierAreaDropdownDto implements IResult_List_CourierA
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_CourierAreaDropdownDto {
-        const json = this.toJSON();
-        let result = new Result_List_CourierAreaDropdownDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_CourierAreaDropdownDto {
@@ -20519,13 +19803,6 @@ export class Result_List_CourierAreaMapDto implements IResult_List_CourierAreaMa
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_CourierAreaMapDto {
-        const json = this.toJSON();
-        let result = new Result_List_CourierAreaMapDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -20595,13 +19872,6 @@ export class Result_List_CourierProviderDropdownDto implements IResult_List_Cour
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_CourierProviderDropdownDto {
-        const json = this.toJSON();
-        let result = new Result_List_CourierProviderDropdownDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_CourierProviderDropdownDto {
@@ -20669,13 +19939,6 @@ export class Result_List_CourierProviderDto implements IResult_List_CourierProvi
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_CourierProviderDto {
-        const json = this.toJSON();
-        let result = new Result_List_CourierProviderDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -20745,13 +20008,6 @@ export class Result_List_CourierStationDropdownDto implements IResult_List_Couri
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_CourierStationDropdownDto {
-        const json = this.toJSON();
-        let result = new Result_List_CourierStationDropdownDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_CourierStationDropdownDto {
@@ -20819,13 +20075,6 @@ export class Result_List_CourierStationDto implements IResult_List_CourierStatio
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_CourierStationDto {
-        const json = this.toJSON();
-        let result = new Result_List_CourierStationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -20895,13 +20144,6 @@ export class Result_List_FaqItemDto implements IResult_List_FaqItemDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_FaqItemDto {
-        const json = this.toJSON();
-        let result = new Result_List_FaqItemDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_FaqItemDto {
@@ -20969,13 +20211,6 @@ export class Result_List_FeedbackDto implements IResult_List_FeedbackDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_FeedbackDto {
-        const json = this.toJSON();
-        let result = new Result_List_FeedbackDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -21045,13 +20280,6 @@ export class Result_List_GetAllCustomerDto implements IResult_List_GetAllCustome
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_GetAllCustomerDto {
-        const json = this.toJSON();
-        let result = new Result_List_GetAllCustomerDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_GetAllCustomerDto {
@@ -21119,13 +20347,6 @@ export class Result_List_GetAllExpenseDto implements IResult_List_GetAllExpenseD
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_GetAllExpenseDto {
-        const json = this.toJSON();
-        let result = new Result_List_GetAllExpenseDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -21195,13 +20416,6 @@ export class Result_List_GetAllExpenseTypeDto implements IResult_List_GetAllExpe
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_GetAllExpenseTypeDto {
-        const json = this.toJSON();
-        let result = new Result_List_GetAllExpenseTypeDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_GetAllExpenseTypeDto {
@@ -21269,13 +20483,6 @@ export class Result_List_GetAllMangoTypeDto implements IResult_List_GetAllMangoT
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_GetAllMangoTypeDto {
-        const json = this.toJSON();
-        let result = new Result_List_GetAllMangoTypeDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -21345,13 +20552,6 @@ export class Result_List_GetAllPaymentDto implements IResult_List_GetAllPaymentD
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_GetAllPaymentDto {
-        const json = this.toJSON();
-        let result = new Result_List_GetAllPaymentDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_GetAllPaymentDto {
@@ -21419,13 +20619,6 @@ export class Result_List_GetAllRoleDto implements IResult_List_GetAllRoleDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_GetAllRoleDto {
-        const json = this.toJSON();
-        let result = new Result_List_GetAllRoleDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -21495,13 +20688,6 @@ export class Result_List_MangoAvailabilityDto implements IResult_List_MangoAvail
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_MangoAvailabilityDto {
-        const json = this.toJSON();
-        let result = new Result_List_MangoAvailabilityDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_MangoAvailabilityDto {
@@ -21569,13 +20755,6 @@ export class Result_List_NearbyStationDto implements IResult_List_NearbyStationD
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_NearbyStationDto {
-        const json = this.toJSON();
-        let result = new Result_List_NearbyStationDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -21645,13 +20824,6 @@ export class Result_List_OrderDto implements IResult_List_OrderDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_OrderDto {
-        const json = this.toJSON();
-        let result = new Result_List_OrderDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_OrderDto {
@@ -21719,13 +20891,6 @@ export class Result_List_PolicyDto implements IResult_List_PolicyDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_List_PolicyDto {
-        const json = this.toJSON();
-        let result = new Result_List_PolicyDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -21795,19 +20960,80 @@ export class Result_List_UserAddressDto implements IResult_List_UserAddressDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_List_UserAddressDto {
-        const json = this.toJSON();
-        let result = new Result_List_UserAddressDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_List_UserAddressDto {
     messages: string[] | undefined;
     succeeded: boolean;
     data: UserAddressDto[] | undefined;
+    exception: Exception;
+    code: number;
+}
+
+export class Result_List_UserPermissionDto implements IResult_List_UserPermissionDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: UserPermissionDto[] | undefined;
+    exception!: Exception;
+    code!: number;
+
+    constructor(data?: IResult_List_UserPermissionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(UserPermissionDto.fromJS(item));
+            }
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): Result_List_UserPermissionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result_List_UserPermissionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        return data;
+    }
+}
+
+export interface IResult_List_UserPermissionDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: UserPermissionDto[] | undefined;
     exception: Exception;
     code: number;
 }
@@ -21861,13 +21087,6 @@ export class Result_MangoAvailabilityDto implements IResult_MangoAvailabilityDto
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_MangoAvailabilityDto {
-        const json = this.toJSON();
-        let result = new Result_MangoAvailabilityDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -21929,13 +21148,6 @@ export class Result_MyProfileDto implements IResult_MyProfileDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_MyProfileDto {
-        const json = this.toJSON();
-        let result = new Result_MyProfileDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_MyProfileDto {
@@ -21995,13 +21207,6 @@ export class Result_OrderDto implements IResult_OrderDto {
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_OrderDto {
-        const json = this.toJSON();
-        let result = new Result_OrderDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -22063,13 +21268,6 @@ export class Result_OrderSummaryReportDto implements IResult_OrderSummaryReportD
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_OrderSummaryReportDto {
-        const json = this.toJSON();
-        let result = new Result_OrderSummaryReportDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_OrderSummaryReportDto {
@@ -22129,13 +21327,6 @@ export class Result_PaymentSummaryReportDto implements IResult_PaymentSummaryRep
         data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
         data["code"] = this.code;
         return data;
-    }
-
-    clone(): Result_PaymentSummaryReportDto {
-        const json = this.toJSON();
-        let result = new Result_PaymentSummaryReportDto();
-        result.init(json);
-        return result;
     }
 }
 
@@ -22197,13 +21388,6 @@ export class Result_PolicyDto implements IResult_PolicyDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_PolicyDto {
-        const json = this.toJSON();
-        let result = new Result_PolicyDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_PolicyDto {
@@ -22264,13 +21448,6 @@ export class Result_UserAddressDto implements IResult_UserAddressDto {
         data["code"] = this.code;
         return data;
     }
-
-    clone(): Result_UserAddressDto {
-        const json = this.toJSON();
-        let result = new Result_UserAddressDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IResult_UserAddressDto {
@@ -22311,13 +21488,6 @@ export class RuntimeFieldHandle implements IRuntimeFieldHandle {
         data["value"] = this.value ? this.value.toJSON() : <any>undefined;
         return data;
     }
-
-    clone(): RuntimeFieldHandle {
-        const json = this.toJSON();
-        let result = new RuntimeFieldHandle();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IRuntimeFieldHandle {
@@ -22354,13 +21524,6 @@ export class RuntimeMethodHandle implements IRuntimeMethodHandle {
         data["value"] = this.value ? this.value.toJSON() : <any>undefined;
         return data;
     }
-
-    clone(): RuntimeMethodHandle {
-        const json = this.toJSON();
-        let result = new RuntimeMethodHandle();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IRuntimeMethodHandle {
@@ -22396,13 +21559,6 @@ export class RuntimeTypeHandle implements IRuntimeTypeHandle {
         data = typeof data === 'object' ? data : {};
         data["value"] = this.value ? this.value.toJSON() : <any>undefined;
         return data;
-    }
-
-    clone(): RuntimeTypeHandle {
-        const json = this.toJSON();
-        let result = new RuntimeTypeHandle();
-        result.init(json);
-        return result;
     }
 }
 
@@ -22448,13 +21604,6 @@ export class StructLayoutAttribute implements IStructLayoutAttribute {
         data["typeId"] = this.typeId;
         data["value"] = this.value;
         return data;
-    }
-
-    clone(): StructLayoutAttribute {
-        const json = this.toJSON();
-        let result = new StructLayoutAttribute();
-        result.init(json);
-        return result;
     }
 }
 
@@ -22509,13 +21658,6 @@ export class SubmitComplaintCommand implements ISubmitComplaintCommand {
                 data["imagePaths"].push(item);
         }
         return data;
-    }
-
-    clone(): SubmitComplaintCommand {
-        const json = this.toJSON();
-        let result = new SubmitComplaintCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -22572,13 +21714,6 @@ export class SubmitFeedbackCommand implements ISubmitFeedbackCommand {
                 data["imagePaths"].push(item);
         }
         return data;
-    }
-
-    clone(): SubmitFeedbackCommand {
-        const json = this.toJSON();
-        let result = new SubmitFeedbackCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -22857,13 +21992,6 @@ export class Type implements IType {
         data["containsGenericParameters"] = this.containsGenericParameters;
         data["isVisible"] = this.isVisible;
         return data;
-    }
-
-    clone(): Type {
-        const json = this.toJSON();
-        let result = new Type();
-        result.init(json);
-        return result;
     }
 }
 
@@ -23333,13 +22461,6 @@ export class TypeInfo implements ITypeInfo {
         }
         return data;
     }
-
-    clone(): TypeInfo {
-        const json = this.toJSON();
-        let result = new TypeInfo();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface ITypeInfo {
@@ -23463,13 +22584,6 @@ export class UpdateComplaintStatusCommand implements IUpdateComplaintStatusComma
         data["adminNote"] = this.adminNote;
         return data;
     }
-
-    clone(): UpdateComplaintStatusCommand {
-        const json = this.toJSON();
-        let result = new UpdateComplaintStatusCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateComplaintStatusCommand {
@@ -23513,13 +22627,6 @@ export class UpdateCourierAreaMapCommand implements IUpdateCourierAreaMapCommand
         data["courierStationId"] = this.courierStationId;
         data["area"] = this.area;
         return data;
-    }
-
-    clone(): UpdateCourierAreaMapCommand {
-        const json = this.toJSON();
-        let result = new UpdateCourierAreaMapCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -23573,13 +22680,6 @@ export class UpdateCourierProviderCommand implements IUpdateCourierProviderComma
         data["email"] = this.email;
         data["isActive"] = this.isActive;
         return data;
-    }
-
-    clone(): UpdateCourierProviderCommand {
-        const json = this.toJSON();
-        let result = new UpdateCourierProviderCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -23657,13 +22757,6 @@ export class UpdateCourierStationCommand implements IUpdateCourierStationCommand
         data["googleMapUrl"] = this.googleMapUrl;
         data["isActive"] = this.isActive;
         return data;
-    }
-
-    clone(): UpdateCourierStationCommand {
-        const json = this.toJSON();
-        let result = new UpdateCourierStationCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -23746,13 +22839,6 @@ export class UpdateCustomerCommand implements IUpdateCustomerCommand {
         data["updatedBy"] = this.updatedBy;
         return data;
     }
-
-    clone(): UpdateCustomerCommand {
-        const json = this.toJSON();
-        let result = new UpdateCustomerCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateCustomerCommand {
@@ -23830,13 +22916,6 @@ export class UpdateExpenseCommand implements IUpdateExpenseCommand {
         data["deletedAt"] = this.deletedAt ? this.deletedAt.toISOString() : <any>undefined;
         return data;
     }
-
-    clone(): UpdateExpenseCommand {
-        const json = this.toJSON();
-        let result = new UpdateExpenseCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateExpenseCommand {
@@ -23907,13 +22986,6 @@ export class UpdateExpenseTypeCommand implements IUpdateExpenseTypeCommand {
         data["deletedAt"] = this.deletedAt ? this.deletedAt.toISOString() : <any>undefined;
         return data;
     }
-
-    clone(): UpdateExpenseTypeCommand {
-        const json = this.toJSON();
-        let result = new UpdateExpenseTypeCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateExpenseTypeCommand {
@@ -23979,13 +23051,6 @@ export class UpdateMangoAvailabilityCommand implements IUpdateMangoAvailabilityC
         data["updatedBy"] = this.updatedBy;
         return data;
     }
-
-    clone(): UpdateMangoAvailabilityCommand {
-        const json = this.toJSON();
-        let result = new UpdateMangoAvailabilityCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateMangoAvailabilityCommand {
@@ -24034,13 +23099,6 @@ export class UpdateMangoAvailabilityStatusCommand implements IUpdateMangoAvailab
         data["newStatus"] = this.newStatus;
         data["updatedBy"] = this.updatedBy;
         return data;
-    }
-
-    clone(): UpdateMangoAvailabilityStatusCommand {
-        const json = this.toJSON();
-        let result = new UpdateMangoAvailabilityStatusCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -24116,13 +23174,6 @@ export class UpdateMangoTypeCommand implements IUpdateMangoTypeCommand {
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
         return data;
     }
-
-    clone(): UpdateMangoTypeCommand {
-        const json = this.toJSON();
-        let result = new UpdateMangoTypeCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateMangoTypeCommand {
@@ -24185,13 +23236,6 @@ export class UpdateMyProfileCommand implements IUpdateMyProfileCommand {
         data["currentPassword"] = this.currentPassword;
         data["newPassword"] = this.newPassword;
         return data;
-    }
-
-    clone(): UpdateMyProfileCommand {
-        const json = this.toJSON();
-        let result = new UpdateMyProfileCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -24263,13 +23307,6 @@ export class UpdateOrderCommand implements IUpdateOrderCommand {
         }
         return data;
     }
-
-    clone(): UpdateOrderCommand {
-        const json = this.toJSON();
-        let result = new UpdateOrderCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateOrderCommand {
@@ -24322,13 +23359,6 @@ export class UpdateOrderStatusCommand implements IUpdateOrderStatusCommand {
         data["updatedBy"] = this.updatedBy;
         return data;
     }
-
-    clone(): UpdateOrderStatusCommand {
-        const json = this.toJSON();
-        let result = new UpdateOrderStatusCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateOrderStatusCommand {
@@ -24377,13 +23407,6 @@ export class UpdatePaymentCommand implements IUpdatePaymentCommand {
         data["transactionId"] = this.transactionId;
         return data;
     }
-
-    clone(): UpdatePaymentCommand {
-        const json = this.toJSON();
-        let result = new UpdatePaymentCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdatePaymentCommand {
@@ -24398,10 +23421,9 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
     name!: string | undefined;
     description!: string | undefined;
     isActive!: boolean;
-    permissionJson!: string | undefined;
-    permissions!: PermissionModel[] | undefined;
-    createdBy!: number;
-    createdAt!: moment.Moment;
+    permissions!: string[] | undefined;
+    createdBy!: number | undefined;
+    createdAt!: moment.Moment | undefined;
     updatedBy!: number | undefined;
     updatedAt!: moment.Moment | undefined;
     deletedAt!: moment.Moment | undefined;
@@ -24421,11 +23443,10 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
             this.name = _data["name"];
             this.description = _data["description"];
             this.isActive = _data["isActive"];
-            this.permissionJson = _data["permissionJson"];
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
                 for (let item of _data["permissions"])
-                    this.permissions!.push(PermissionModel.fromJS(item));
+                    this.permissions!.push(item);
             }
             this.createdBy = _data["createdBy"];
             this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
@@ -24448,11 +23469,10 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
         data["name"] = this.name;
         data["description"] = this.description;
         data["isActive"] = this.isActive;
-        data["permissionJson"] = this.permissionJson;
         if (Array.isArray(this.permissions)) {
             data["permissions"] = [];
             for (let item of this.permissions)
-                data["permissions"].push(item ? item.toJSON() : <any>undefined);
+                data["permissions"].push(item);
         }
         data["createdBy"] = this.createdBy;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
@@ -24461,13 +23481,6 @@ export class UpdateRoleCommand implements IUpdateRoleCommand {
         data["deletedAt"] = this.deletedAt ? this.deletedAt.toISOString() : <any>undefined;
         return data;
     }
-
-    clone(): UpdateRoleCommand {
-        const json = this.toJSON();
-        let result = new UpdateRoleCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateRoleCommand {
@@ -24475,10 +23488,9 @@ export interface IUpdateRoleCommand {
     name: string | undefined;
     description: string | undefined;
     isActive: boolean;
-    permissionJson: string | undefined;
-    permissions: PermissionModel[] | undefined;
-    createdBy: number;
-    createdAt: moment.Moment;
+    permissions: string[] | undefined;
+    createdBy: number | undefined;
+    createdAt: moment.Moment | undefined;
     updatedBy: number | undefined;
     updatedAt: moment.Moment | undefined;
     deletedAt: moment.Moment | undefined;
@@ -24532,13 +23544,6 @@ export class UpdateUserAddressCommand implements IUpdateUserAddressCommand {
         data["isPrimary"] = this.isPrimary;
         return data;
     }
-
-    clone(): UpdateUserAddressCommand {
-        const json = this.toJSON();
-        let result = new UpdateUserAddressCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateUserAddressCommand {
@@ -24557,7 +23562,7 @@ export class UpdateUserCommand implements IUpdateUserCommand {
     lastName!: string;
     phoneNumber!: string;
     email!: string;
-    password!: string;
+    password!: string | undefined;
     imagePath!: string | undefined;
     roleId!: number | undefined;
     isActive!: boolean;
@@ -24605,13 +23610,6 @@ export class UpdateUserCommand implements IUpdateUserCommand {
         data["isActive"] = this.isActive;
         return data;
     }
-
-    clone(): UpdateUserCommand {
-        const json = this.toJSON();
-        let result = new UpdateUserCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpdateUserCommand {
@@ -24620,7 +23618,7 @@ export interface IUpdateUserCommand {
     lastName: string;
     phoneNumber: string;
     email: string;
-    password: string;
+    password: string | undefined;
     imagePath: string | undefined;
     roleId: number | undefined;
     isActive: boolean;
@@ -24671,13 +23669,6 @@ export class UpsertFaqItemCommand implements IUpsertFaqItemCommand {
         data["isActive"] = this.isActive;
         return data;
     }
-
-    clone(): UpsertFaqItemCommand {
-        const json = this.toJSON();
-        let result = new UpsertFaqItemCommand();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUpsertFaqItemCommand {
@@ -24727,13 +23718,6 @@ export class UpsertPolicyCommand implements IUpsertPolicyCommand {
         data["content"] = this.content;
         data["isActive"] = this.isActive;
         return data;
-    }
-
-    clone(): UpsertPolicyCommand {
-        const json = this.toJSON();
-        let result = new UpsertPolicyCommand();
-        result.init(json);
-        return result;
     }
 }
 
@@ -24801,13 +23785,6 @@ export class UserAddressDto implements IUserAddressDto {
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
         return data;
     }
-
-    clone(): UserAddressDto {
-        const json = this.toJSON();
-        let result = new UserAddressDto();
-        result.init(json);
-        return result;
-    }
 }
 
 export interface IUserAddressDto {
@@ -24821,6 +23798,54 @@ export interface IUserAddressDto {
     isPrimary: boolean;
     createdAt: moment.Moment;
     updatedAt: moment.Moment | undefined;
+}
+
+export class UserPermissionDto implements IUserPermissionDto {
+    permissionId!: number;
+    permissionName!: string | undefined;
+    module!: string | undefined;
+    isGranted!: boolean;
+
+    constructor(data?: IUserPermissionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.permissionId = _data["permissionId"];
+            this.permissionName = _data["permissionName"];
+            this.module = _data["module"];
+            this.isGranted = _data["isGranted"];
+        }
+    }
+
+    static fromJS(data: any): UserPermissionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserPermissionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["permissionId"] = this.permissionId;
+        data["permissionName"] = this.permissionName;
+        data["module"] = this.module;
+        data["isGranted"] = this.isGranted;
+        return data;
+    }
+}
+
+export interface IUserPermissionDto {
+    permissionId: number;
+    permissionName: string | undefined;
+    module: string | undefined;
+    isGranted: boolean;
 }
 
 export interface FileParameter {

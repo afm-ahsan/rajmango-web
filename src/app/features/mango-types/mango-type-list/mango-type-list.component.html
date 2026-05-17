@@ -76,8 +76,16 @@
                 </td>
                 <td>{{ mangoType.description }}</td>
                 <td>{{ mangoType.region }}</td>
-                <td>{{ mangoType.mangoGrade }}</td>
-                <td>{{ getSweetnessLabel(mangoType.sweetnessLevel) }}</td>
+                <td>
+                  <span class="badge fs-7 px-3 py-2" [ngClass]="getGradeBadgeClass(mangoType.mangoGrade)">
+                    {{ getGradeLabel(mangoType.mangoGrade) }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge fs-7 px-3 py-2" [ngClass]="getSweetnessBadgeClass(mangoType.sweetnessLevel)">
+                    {{ getSweetnessLabel(mangoType.sweetnessLevel) }}
+                  </span>
+                </td>
                 <td class="text-center">
                   <button type="button" class="btn btn-light btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                     Actions <i class="bi bi-three-dots-vertical ms-2"></i>

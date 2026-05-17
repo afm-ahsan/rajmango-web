@@ -8,6 +8,7 @@ import { RegistrationComponent } from './components/registration/registration.co
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { AuthComponent } from './auth.component';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslationModule } from '../i18n/translation.module';
 
 @NgModule({
@@ -25,6 +26,7 @@ import { TranslationModule } from '../i18n/translation.module';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgbTooltipModule,
   ],
 })
 export class AuthModule {}

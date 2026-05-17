@@ -20,7 +20,7 @@
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold required">Email</label>
           <input type="text" class="form-control form-control-solid" formControlName="email"
-            placeholder="Email address" autocomplete="off" />
+            placeholder="e.g. me@example.com" autocomplete="off" />
           <div *ngIf="controlHasError('required', 'email')" class="text-danger fs-7 mt-1">Email is required.</div>
           <div *ngIf="controlHasError('email', 'email')" class="text-danger fs-7 mt-1">Please enter a valid email.</div>
         </div>
@@ -52,12 +52,22 @@
             class="text-danger fs-7 mt-1">Role is required.</div>
         </div>
         <div class="col-12 col-md-6">
-          <label class="form-label fw-semibold" [class.required]="!userDto.id">Password</label>
+          <label class="form-label fw-semibold d-flex align-items-center gap-2" [class.required]="!userDto.id">
+            Password
+            <i
+              class="bi bi-info-circle text-muted fs-6 cursor-pointer"
+              [ngbTooltip]="passwordTooltip"
+              placement="right"
+              triggers="mouseenter:mouseleave click"
+              container="body"
+            ></i>
+          </label>
           <input type="password" class="form-control form-control-solid" formControlName="password"
             placeholder="Password" autocomplete="new-password" />
           <div *ngIf="controlHasError('required', 'password')" class="text-danger fs-7 mt-1">Password is required.</div>
           <div *ngIf="controlHasError('minlength', 'password')" class="text-danger fs-7 mt-1">Password must be at least 6 characters.</div>
           <div *ngIf="controlHasError('maxlength', 'password')" class="text-danger fs-7 mt-1">Password must be at most 16 characters.</div>
+          <div *ngIf="controlHasError('weakPassword', 'password')" class="text-danger fs-7 mt-1">Password must include upper/lowercase, number, and special character.</div>
         </div>
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold" [class.required]="!userDto.id">Confirm Password</label>
@@ -66,6 +76,45 @@
           <div *ngIf="controlHasError('required', 'cPassword')" class="text-danger fs-7 mt-1">Confirm password is required.</div>
           <div *ngIf="formGroup.controls['cPassword'].errors?.ConfirmPassword" class="text-danger fs-7 mt-1">
             Passwords do not match.
+          </div>
+        </div>
+        <div class="col-12">
+          <label class="form-label fw-semibold">Profile Photo</label>
+          <div class="d-flex align-items-center gap-5">
+            <div class="symbol symbol-circle" style="width:72px;height:72px;flex-shrink:0;">
+              <img
+                [src]="avatarUrl()"
+                alt="Profile photo"
+                class="rounded-circle"
+                style="width:72px;height:72px;object-fit:cover;border:2px solid #e4e6ef;"
+                (error)="onAvatarError($event)" />
+            </div>
+            <div>
+              <p class="fw-semibold text-muted mb-2 fs-7">Upload a profile photo (JPG, PNG, WEBP)</p>
+              <input type="file" #photoInput accept="image/jpeg,image/png,image/webp"
+                style="display:none"
+                (change)="onPhotoSelected($event)" />
+              <div class="d-flex align-items-center gap-3">
+                <button type="button"
+                  class="btn btn-sm btn-light btn-active-light-primary"
+                  (click)="photoInput.click()"
+                  [disabled]="isUploadingPhoto">
+                  <span *ngIf="!isUploadingPhoto">
+                    <i class="bi bi-camera-fill me-1 fs-8"></i>Upload Photo
+                  </span>
+                  <span *ngIf="isUploadingPhoto">
+                    <span class="spinner-border spinner-border-sm me-1" role="status"></span>Uploading…
+                  </span>
+                </button>
+                <a *ngIf="hasPhoto && !isUploadingPhoto"
+                  href="javascript:void(0)"
+                  class="text-danger fs-7 text-decoration-none"
+                  (click)="removePhoto()">
+                  Remove
+                </a>
+              </div>
+              <small *ngIf="photoError" class="text-danger mt-1 d-block">{{ photoError }}</small>
+            </div>
           </div>
         </div>
         <div class="col-12">
@@ -84,3 +133,16 @@
     </button>
   </div>
 </div>
+
+<ng-template #passwordTooltip>
+  <div class="text-start">
+    <div class="fw-semibold mb-1">Password must contain at least:</div>
+    <ul class="mb-0 ps-3">
+      <li>One capital letter</li>
+      <li>One small letter</li>
+      <li>One number</li>
+      <li>One special character (e.g. !@#$%)</li>
+      <li>Minimum 6 characters</li>
+    </ul>
+  </div>
+</ng-template>

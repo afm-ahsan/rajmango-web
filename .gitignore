@@ -1,55 +1,126 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# ─────────────────────────────────────────────────────────────────────────────
+# RajMango Web — .gitignore
+# Stack: Angular 13 · TypeScript · Node · Metronic v8
+# ─────────────────────────────────────────────────────────────────────────────
 
-# compiled output
+# ── Build Output ──────────────────────────────────────────────────────────────
 /dist
-/tmp
 /out-tsc
-# Only exists if Bazel was run
+/tmp
 /bazel-out
 
-# cache
+# ── Angular Cache ─────────────────────────────────────────────────────────────
 /.angular
+/.angular/cache
 
-# dependencies
+# ── Dependencies ──────────────────────────────────────────────────────────────
 /node_modules
-yarn.lock
+
+# Lock files:
+# package-lock.json — currently excluded (historical project choice).
+# Recommendation: remove this line and commit it for reproducible CI builds.
 package-lock.json
+yarn.lock
 
-# profiling files
+# ── Test / Coverage ───────────────────────────────────────────────────────────
+/coverage
+/typings
+
+# ── TypeScript Incremental Compilation ───────────────────────────────────────
+*.tsbuildinfo
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log
+pnpm-debug.log*
+lerna-debug.log*
+/libpeerconnection.log
+testem.log
+
+# ── Profiling ─────────────────────────────────────────────────────────────────
 chrome-profiler-events*.json
+speed-measure-plugin*.json
 
-# IDEs and editors
+# ── Cache Directories ─────────────────────────────────────────────────────────
+/.sass-cache
+/.cache
+/connect.lock
+
+# ── Runtime / Temp Files ──────────────────────────────────────────────────────
+*.tmp
+*.temp
+*.orig
+*.rej
+*.bak
+*.swp
+*~
+
+# ── Environment & Secrets ─────────────────────────────────────────────────────
+# Angular uses environment.ts files — those are committed as config templates.
+# Add protection for any .env secrets if introduced in future:
+.env
+.env.*
+!.env.example
+
+# ── Local / Machine-Specific Config ──────────────────────────────────────────
+# Claude Code local permission overrides — machine-specific, never shared
+.claude/settings.local.json
+*.local.json
+
+# ── IDE — JetBrains (IntelliJ, WebStorm, Rider, DataGrip) ───────────────────
 /.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+*.iml
+*.iws
+*.ipr
+.idea_modules/
 
-.vs/*
-.vs/gc-client/v17/*
-
-# IDE - VSCode
-.vscode
+# ── IDE — Visual Studio / VS Code ────────────────────────────────────────────
+# Allow shared workspace settings; exclude personal/generated files
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.history/*
+.history/
+*.launch
+.vs/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# misc
-/.sass-cache
-/connect.lock
-/coverage
-/libpeerconnection.log
-npm-debug.log
-yarn-error.log
-testem.log
-/typings
+# ── IDE — Other Editors ───────────────────────────────────────────────────────
+.project
+.classpath
+.c9/
+.settings/
+*.sublime-workspace
 
-# System Files
+# ── System Files — macOS ─────────────────────────────────────────────────────
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# ── System Files — Windows ───────────────────────────────────────────────────
 Thumbs.db
-/.vs
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ── Generated API Client ──────────────────────────────────────────────────────
+# swagger.json is committed as the frontend API contract source.
+# If the workflow changes to fetch-at-build-time, add it here:
+# swagger.json
+
+# ── Runtime Uploads (if backend ever writes to web project folder) ────────────
+# /uploads
+# /public/uploads

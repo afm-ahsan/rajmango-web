@@ -85,7 +85,7 @@
       type="email"
       formControlName="email"
       class="form-control form-control-lg form-control-solid"
-      placeholder="Email"
+      placeholder="e.g. me@example.com"
       autocomplete="email"
       [ngClass]="{
         'is-invalid': email?.invalid && (email?.dirty || email?.touched),
@@ -136,7 +136,16 @@
 
   <!--begin::Password-->
   <div class="fv-row mb-7">
-    <label for="password" class="form-label fw-bold text-dark fs-6">Password</label>
+    <label for="password" class="form-label fw-bold text-dark fs-6 d-flex align-items-center gap-2">
+      Password
+      <i
+        class="bi bi-info-circle text-muted fs-6 cursor-pointer"
+        [ngbTooltip]="passwordTooltip"
+        placement="right"
+        triggers="mouseenter:mouseleave click"
+        container="body"
+      ></i>
+    </label>
     <input
       id="password"
       type="password"
@@ -161,6 +170,19 @@
     </ng-container>
   </div>
   <!--end::Password-->
+
+  <ng-template #passwordTooltip>
+    <div class="text-start">
+      <div class="fw-semibold mb-1">Password must contain at least:</div>
+      <ul class="mb-0 ps-3">
+        <li>One capital letter</li>
+        <li>One small letter</li>
+        <li>One number</li>
+        <li>One special character (e.g. !@#$%)</li>
+        <li>Minimum 6 characters</li>
+      </ul>
+    </div>
+  </ng-template>
 
   <!--begin::Confirm Password-->
   <div class="fv-row mb-7">
@@ -206,7 +228,7 @@
       />
       <label for="agree" class="form-check-label fw-bold text-gray-700 fs-6">
         I agree to the
-        <a href="javascript:void(0)" class="ms-1 link-primary">terms and conditions</a>
+        <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer" class="ms-1 link-primary">terms and conditions</a>
       </label>
     </div>
   </div>

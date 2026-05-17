@@ -44,6 +44,18 @@ export class ViewMangoTypeModalComponent implements OnInit, OnDestroy {
     return EnumLabelUtils.getSweetnessLevelLabel(level);
   }
 
+  getSweetnessBadgeClass(level: number): string {
+    return EnumLabelUtils.getSweetnessLevelBadgeClass(level);
+  }
+
+  getGradeLabel(grade: number): string {
+    return EnumLabelUtils.getMangoGradeLabel(grade);
+  }
+
+  getGradeBadgeClass(grade: number): string {
+    return EnumLabelUtils.getMangoGradeBadgeClass(grade);
+  }
+
   public createImagePath = (serverPath: string) => {
     const clean = serverPath.startsWith('/') ? serverPath.slice(1) : serverPath;
     return `${environment.apis.default.url}/${clean}`;

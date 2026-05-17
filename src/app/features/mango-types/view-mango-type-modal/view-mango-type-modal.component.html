@@ -18,7 +18,9 @@
       </div>
       <div class="col-12 col-md-6">
         <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Grade</div>
-        <div class="fw-semibold fs-6">{{ mangoTypeDto.mangoGrade || '—' }}</div>
+        <span class="badge fs-7 px-3 py-2" [ngClass]="getGradeBadgeClass(mangoTypeDto.mangoGrade)">
+          {{ getGradeLabel(mangoTypeDto.mangoGrade) }}
+        </span>
       </div>
       <div class="col-12 col-md-6">
         <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Avg. Weight</div>
@@ -26,7 +28,9 @@
       </div>
       <div class="col-12 col-md-6">
         <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Sweetness</div>
-        <div class="fw-semibold fs-6">{{ getSweetnessLabel(mangoTypeDto.sweetnessLevel) }}</div>
+        <span class="badge fs-7 px-3 py-2" [ngClass]="getSweetnessBadgeClass(mangoTypeDto.sweetnessLevel)">
+          {{ getSweetnessLabel(mangoTypeDto.sweetnessLevel) }}
+        </span>
       </div>
       <div class="col-12">
         <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Description</div>

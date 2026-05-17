@@ -1,8 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
+import { strongPasswordValidator } from 'src/app/shared/validators/password.validator';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, first, of } from 'rxjs';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
+import { FileService } from 'src/app/shared/services/file-service.service';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import _ from 'underscore';
@@ -12,6 +15,7 @@ import { RoleService } from '../../roles/role.service';
 import { UserDto } from '../models/user-dto.model';
 import { UserInputDto } from '../models/user-input-dto.model';
 import { UserService } from '../user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-create-user-modal',
@@ -30,12 +34,20 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   isLoading = false;
 
+  newImagePath = '';
+  oldImagePath = '';
+  isUploadingPhoto = false;
+  photoError = '';
+  avatarLoadError = false;
+
   constructor(
     private fb: FormBuilder,
     public modal: NgbActiveModal,
     private authService: AuthService,
     private userService: UserService,
     private roleService: RoleService,
+    private fileService: FileService,
+    private cdRef: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +97,7 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
         .subscribe((userDto: any) => {
           this.isLoading = false;
           this.userDto = userDto.data;
+          this.oldImagePath = this.userDto.imagePath ?? '';
           this.loadForm();
         });
     }
@@ -137,8 +150,8 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
         password: [
           '',
           this.userDto.id
-            ? Validators.compose([Validators.minLength(6), Validators.maxLength(16)])
-            : Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(16)]),
+            ? Validators.compose([Validators.minLength(6), Validators.maxLength(16), strongPasswordValidator()])
+            : Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(16), strongPasswordValidator()]),
         ],
         cPassword: [
           '',
@@ -199,13 +212,14 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
   }
 
   prepareData() {
-    const loggerUesrId = this.authService.getLoggedUserId();
+    const loggerUserId = this.authService.getLoggedUserId();
     const formData = this.formGroup.value;
     this.userInputDto.userName = formData.userName;
     this.userInputDto.firstName = formData.firstName;
     this.userInputDto.lastName = formData.lastName;
     this.userInputDto.email = formData.email;
     this.userInputDto.phoneNumber = formData.phoneNumber;
+    this.userInputDto.imagePath = this.newImagePath || this.oldImagePath;
     if (!this.userDto.id || formData.password) {
       this.userInputDto.password = formData.password;
     }
@@ -215,26 +229,99 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
       this.userInputDto.id = this.userDto.id;
       this.userInputDto.createdBy = this.userDto.createdBy;
       this.userInputDto.createdAt = this.userDto.createdAt;
-      this.userInputDto.updatedBy = loggerUesrId;
+      this.userInputDto.updatedBy = loggerUserId;
     } else {
       this.userInputDto.createdAt = new Date();
-      this.userInputDto.createdBy = loggerUesrId;
+      this.userInputDto.createdBy = loggerUserId;
     }
   }
 
-  initObject() {
-    const EMPTY_ENTITY: UserDto = {
+  get currentImagePath(): string {
+    return this.newImagePath || this.oldImagePath;
+  }
+
+  get hasPhoto(): boolean {
+    return !!this.currentImagePath?.trim();
+  }
+
+  avatarUrl(): string {
+    if (this.avatarLoadError || !this.currentImagePath) {
+      return 'assets/media/avatars/blank.png';
+    }
+    const clean = this.currentImagePath.startsWith('/')
+      ? this.currentImagePath.slice(1)
+      : this.currentImagePath;
+    return `${environment.apis.default.url}/${clean}`;
+  }
+
+  onAvatarError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.onerror = null;
+    img.src = 'assets/media/avatars/blank.png';
+    this.avatarLoadError = true;
+  }
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    input.value = '';
+
+    const previousNew = this.newImagePath;
+    this.isUploadingPhoto = true;
+    this.photoError = '';
+    this.avatarLoadError = false;
+
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    this.subs.sink = this.fileService
+      .upload(formData, { domain: 'users', prefix: 'user' })
+      .subscribe({
+        next: (evt: any) => {
+          if (evt.type === HttpEventType.Response) {
+            const imagePath: string = evt.body?.imagePath;
+            if (imagePath) {
+              this.newImagePath = imagePath;
+              this.isUploadingPhoto = false;
+              if (previousNew?.trim()) {
+                this.fileService.delete(previousNew).subscribe({ next: () => {}, error: () => {} });
+              }
+              this.cdRef.detectChanges();
+            }
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          this.photoError = err?.error?.message ?? err?.message ?? 'Photo upload failed.';
+          this.isUploadingPhoto = false;
+          this.cdRef.detectChanges();
+        },
+      });
+  }
+
+  removePhoto(): void {
+    const pathToDelete = this.currentImagePath;
+    this.newImagePath = '';
+    this.oldImagePath = '';
+    this.avatarLoadError = false;
+    this.photoError = '';
+    if (pathToDelete?.trim()) {
+      this.fileService.delete(pathToDelete).subscribe({ next: () => {}, error: () => {} });
+    }
+  }
+
+  initObject(): UserDto {
+    return {
       id: 0,
       userName: '',
       firstName: '',
       lastName: '',
       email: '',
       phoneNumber: '',
-      password: '',
-      passwordHash: '',
       phoneNumberConfirmed: false,
       emailConfirmed: false,
-      accessFailedCount: 0,
+      imagePath: '',
+      roleName: '',
       roleId: 0,
       isActive: true,
       isDeleted: false,
@@ -245,14 +332,12 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
       updatedAt: null,
       deletedAt: null,
     };
-    return EMPTY_ENTITY;
   }
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
   }
 
-  // helpers for View
   isControlValid(controlName: string): boolean {
     const control = this.formGroup.controls[controlName];
     return control.valid && (control.dirty || control.touched);

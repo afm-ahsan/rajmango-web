@@ -14,6 +14,11 @@ export const routes: Routes = [
       import('./features/errors/errors.module').then((m) => m.ErrorsModule),
   },
   {
+    path: 'terms-and-conditions',
+    loadChildren: () =>
+      import('./features/terms/terms.module').then((m) => m.TermsModule),
+  },
+  {
     path: '',
     canActivate: [AuthGuard],
     loadChildren: () =>

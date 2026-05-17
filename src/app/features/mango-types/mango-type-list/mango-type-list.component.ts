@@ -144,4 +144,16 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
   getSweetnessLabel(level: number): string {
     return EnumLabelUtils.getSweetnessLevelLabel(level);
   }
+
+  getSweetnessBadgeClass(level: number): string {
+    return EnumLabelUtils.getSweetnessLevelBadgeClass(level);
+  }
+
+  getGradeLabel(grade: number): string {
+    return EnumLabelUtils.getMangoGradeLabel(grade);
+  }
+
+  getGradeBadgeClass(grade: number): string {
+    return EnumLabelUtils.getMangoGradeBadgeClass(grade);
+  }
 }

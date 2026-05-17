@@ -7,9 +7,8 @@ export interface UserDto {
   phoneNumberConfirmed: boolean;
   email: string;
   emailConfirmed: boolean;
-  password: string;
-  passwordHash: string;
-  accessFailedCount: number;
+  imagePath?: string;
+  roleName?: string;
   isActive: boolean;
   roleId: number;
   isDeleted: boolean;
@@ -20,4 +19,3 @@ export interface UserDto {
   updatedAt: Date | null;
   deletedAt: Date | null;
 }
-  

@@ -4,20 +4,13 @@ export interface UserInputDto {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  phoneNumberConfirmed: boolean;
   email: string;
-  emailConfirmed: boolean;
   password: string;
-  passwordHash: string;
-  accessFailedCount: number;
+  imagePath?: string;
   isActive: boolean;
   roleId: number;
-  isDeleted: boolean;
   createdBy: number | null;
   updatedBy: number | null;
-  deletedBy: number | null;
   createdAt: Date | null;
   updatedAt: Date | null;
-  deletedAt: Date | null;
 }
-  

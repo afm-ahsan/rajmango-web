@@ -1,0 +1,291 @@
+// ── SCSS variables (converted from CSS custom properties) ──────────────────────
+$primary:     #d4824b;
+$secondary:   #2d5016;
+$accent:      #f4a34a;
+$dark-text:   #1f1f1f;
+$text-muted:  #4a4a4a;
+$border:      #e0e0e0;
+$font-serif:  'Georgia', 'Garamond', serif;
+$transition:  all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ── Page wrapper ───────────────────────────────────────────────────────────────
+.tc-page {
+  background: #ffffff;
+  color: $dark-text;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.8;
+  font-size: 16px;
+  min-height: 100vh;
+}
+
+// ── Scroll progress bar ────────────────────────────────────────────────────────
+.tc-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, $primary, $accent);
+  z-index: 1100;
+  transition: width 0.1s linear;
+}
+
+// ── Header ─────────────────────────────────────────────────────────────────────
+.tc-header {
+  background: linear-gradient(135deg, rgba(212, 130, 75, 0.98), rgba(45, 80, 22, 0.85));
+  padding: 3rem 2rem;
+  border-bottom: 1px solid rgba(212, 130, 75, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  &-content { max-width: 1200px; margin: 0 auto; }
+
+  &-title {
+    font-family: $font-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+  }
+
+  &-subtitle {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.05rem;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  &-meta {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.95rem;
+    margin-top: 1rem;
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+}
+
+// ── Section nav ────────────────────────────────────────────────────────────────
+.tc-nav-bar {
+  background: #ffffff;
+  border-bottom: 1px solid $border;
+  position: sticky;
+  top: 3rem;
+  z-index: 99;
+}
+
+.tc-nav-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tc-nav-btn {
+  flex-shrink: 0;
+  padding: 1rem 1.5rem;
+  border: none;
+  background: none;
+  color: $text-muted;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: $transition;
+  text-decoration: none;
+
+  &:hover { color: $primary; background-color: #f9f9f9; }
+  &.active { color: $primary; border-bottom-color: $primary; }
+  &:focus { outline: 2px solid $primary; outline-offset: 2px; }
+}
+
+// ── Main content ───────────────────────────────────────────────────────────────
+.tc-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.tc-toc {
+  background: #f9f9f9;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+
+  &-title { font-size: 1.1rem; font-weight: 700; color: $dark-text; margin-bottom: 1.5rem; }
+
+  &-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+  }
+
+  &-item { margin: 0; }
+
+  &-link {
+    color: $primary;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: $transition;
+    &:hover { color: $secondary; text-decoration: underline; }
+  }
+}
+
+// ── Intro ──────────────────────────────────────────────────────────────────────
+.tc-intro {
+  background: linear-gradient(135deg, rgba(212, 130, 75, 0.05), rgba(244, 163, 74, 0.05));
+  border: 1px solid rgba(212, 130, 75, 0.1);
+  border-radius: 8px;
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+
+  h2 { font-size: 2rem; margin-bottom: 1rem; color: $primary; }
+  p  { font-size: 1.05rem; line-height: 1.8; margin-bottom: 1rem; }
+}
+
+// ── Sections ───────────────────────────────────────────────────────────────────
+.tc-section {
+  margin-bottom: 3rem;
+  scroll-margin-top: 150px;
+}
+
+.tc-section-number {
+  font-size: 0.9rem;
+  color: $accent;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.tc-section-title {
+  font-family: $font-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: $secondary;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid $border;
+}
+
+.tc-section-content {
+  color: $text-muted;
+  line-height: 1.85;
+  margin-bottom: 1.5rem;
+
+  p  { margin-bottom: 1rem; }
+  h3 { margin-top: 1.5rem; margin-bottom: 1rem; color: $secondary; font-weight: 700; }
+
+  ul, ol { margin: 1.5rem 0 1.5rem 2rem; }
+  li { margin-bottom: 0.8rem; line-height: 1.8; }
+}
+
+.tc-highlight {
+  background: #f9f9f9;
+  border-left: 4px solid $primary;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 4px;
+  strong { color: $dark-text; }
+}
+
+// ── Footer ─────────────────────────────────────────────────────────────────────
+.tc-footer {
+  background: linear-gradient(135deg, rgba(45, 80, 22, 0.98), rgba(45, 80, 22, 0.95));
+  color: #ffffff;
+  padding: 3rem 2rem 2rem;
+  margin-top: 4rem;
+  border-top: 1px solid rgba(212, 130, 75, 0.2);
+
+  &-content {
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  &-section {
+    h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: $accent;
+      margin-bottom: 1rem;
+    }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { margin-bottom: 0.75rem; }
+    a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      transition: $transition;
+      &:hover { color: $accent; }
+    }
+  }
+
+  &-link {
+    cursor: pointer;
+  }
+
+  &-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    a { color: $accent; }
+  }
+}
+
+// ── Responsive ─────────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .tc-header-title { font-size: 1.8rem; }
+  .tc-section-title { font-size: 1.4rem; }
+  .tc-wrap { padding: 2rem 1rem; }
+  .tc-toc { padding: 1.5rem; }
+  .tc-toc-list { grid-template-columns: 1fr; }
+  .tc-header-meta { gap: 1rem; font-size: 0.9rem; }
+  .tc-nav-btn { padding: 0.75rem 1rem; font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  .tc-header { padding: 2rem 1rem; }
+  .tc-header-title { font-size: 1.5rem; }
+  .tc-header-subtitle { font-size: 0.95rem; }
+  .tc-section-title { font-size: 1.2rem; }
+  .tc-nav-btn { padding: 0.75rem; font-size: 0.85rem; }
+  .tc-intro { padding: 1.5rem; h2 { font-size: 1.4rem; } }
+}
+
+@media print {
+  .tc-scroll-progress,
+  .tc-nav-bar,
+  .tc-toc { display: none; }
+
+  .tc-header {
+    background: #ffffff !important;
+    color: $dark-text;
+    padding: 2rem 0;
+    border-bottom: 2px solid $border;
+    box-shadow: none;
+    position: static;
+  }
+
+  .tc-header-title { color: $dark-text; }
+  .tc-section { page-break-inside: avoid; break-inside: avoid; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
