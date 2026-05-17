@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BkashCancelledComponent } from './bkash-callback/bkash-cancelled.component';
+import { BkashFailedComponent } from './bkash-callback/bkash-failed.component';
+import { BkashSuccessComponent } from './bkash-callback/bkash-success.component';
 import { OrderListComponent } from './order-list/order-list.component';
 import { OrderComponent } from './order.component';
 import { ViewOrderModalComponent } from './view-order-modal/view-order-modal.component';
@@ -9,14 +12,11 @@ const routes: Routes = [
     path: '',
     component: OrderComponent,
     children: [
-      {
-        path: 'order-list',
-        component: OrderListComponent,
-      },
-      {
-        path: 'order-view',
-        component: ViewOrderModalComponent,
-      },
+      { path: 'order-list', component: OrderListComponent },
+      { path: 'order-view', component: ViewOrderModalComponent },
+      { path: 'bkash-success', component: BkashSuccessComponent },
+      { path: 'bkash-failed', component: BkashFailedComponent },
+      { path: 'bkash-cancelled', component: BkashCancelledComponent },
       { path: '', redirectTo: 'orders', pathMatch: 'full' },
       { path: '**', redirectTo: 'orders', pathMatch: 'full' },
     ],

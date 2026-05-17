@@ -20,6 +20,7 @@ import { ViewOrderModalComponent } from '../view-order-modal/view-order-modal.co
 import { SubmitFeedbackModalComponent } from 'src/app/features/feedback/submit-feedback-modal/submit-feedback-modal.component';
 import { SubmitComplaintModalComponent } from 'src/app/features/complaints/submit-complaint-modal/submit-complaint-modal.component';
 import { SignalRService } from 'src/app/shared/services/signalr.service';
+import { BkashPaymentModalComponent } from '../bkash-payment-modal/bkash-payment-modal.component';
 
 @Component({
   selector: 'app-order-list',
@@ -194,6 +195,40 @@ export class OrderListComponent implements OnInit, OnDestroy {
     const ref = this.modalService.open(SubmitComplaintModalComponent, { size: 'md' });
     ref.componentInstance.orderId = order.id;
     ref.componentInstance.orderNumber = order.orderNumber;
+  }
+
+  isPayable(order: OrderDto): boolean {
+    // Guard: cancelled orders cannot be paid
+    const os = Number(order.orderStatus);
+    if (os === OrderStatus.Cancelled || os === OrderStatus.Returned) return false;
+
+    // Normalise paymentStatus to a number whether the API sends an int or a string
+    const rawPs = order.paymentStatus as any;
+    let ps: number;
+    if (typeof rawPs === 'string') {
+      // Backend sent a string name — resolve via enum reverse mapping
+      ps = (PaymentStatus as any)[rawPs] as number ?? -1;
+    } else {
+      ps = Number(rawPs);
+    }
+
+    // Never show Payment for already-paid / refunded / payment-cancelled
+    if (ps === PaymentStatus.Paid || ps === PaymentStatus.Refunded || ps === PaymentStatus.Cancelled) return false;
+
+    // Show Payment for None(0), Unpaid(1), Partial(3), Failed(4) — as long as there is an amount outstanding
+    const outstanding = (order.dueAmount != null && order.dueAmount > 0)
+      ? order.dueAmount
+      : order.totalAmount;
+    return outstanding > 0;
+  }
+
+  openPayment(order: OrderDto): void {
+    const ref = this.modalService.open(BkashPaymentModalComponent, { size: 'lg' });
+    ref.componentInstance.order = order;
+    ref.result.then(
+      () => {},
+      () => {}
+    );
   }
 
   // 6. Utility Methods

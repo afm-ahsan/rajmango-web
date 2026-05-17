@@ -1,0 +1,118 @@
+<div class="modal-content">
+  <!-- Header -->
+  <div class="modal-header">
+    <div class="d-flex align-items-center gap-3">
+      <img src="assets/media/svg/bkash-logo.svg" alt="bKash" height="28"
+           onerror="this.style.display='none'" />
+      <h2 class="modal-title mb-0">Pay with bKash</h2>
+    </div>
+    <button type="button" class="btn-close" (click)="cancel()" [disabled]="isPaying"></button>
+  </div>
+
+  <!-- Body -->
+  <div class="modal-body py-6 px-lg-8" *ngIf="order">
+
+    <!-- Order Info -->
+    <div class="row g-3 mb-6">
+      <div class="col-6 col-md-4">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Number</div>
+        <div class="fw-bold fs-6">{{ order.orderNumber }}</div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Status</div>
+        <div>
+          <span class="badge fs-7" [ngClass]="getOrderStatusBadgeClass()">
+            {{ orderStatusLabel }}
+          </span>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Payment Status</div>
+        <div>
+          <span class="badge fs-7" [ngClass]="getPaymentStatusBadgeClass()">
+            {{ paymentStatusLabel }}
+          </span>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Status</div>
+        <div class="fw-semibold fs-6">{{ deliveryStatusLabel }}</div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Due Amount</div>
+        <div class="fw-bold fs-6 text-danger">৳ {{ order.dueAmount | number }}</div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Amount</div>
+        <div class="fw-bold fs-6">৳ {{ order.totalAmount | number }}</div>
+      </div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="table-responsive mb-4" *ngIf="order.orderDetails.length">
+      <table class="table table-striped align-middle fs-7">
+        <thead>
+          <tr class="text-muted fw-bolder text-uppercase">
+            <th>#</th>
+            <th>Mango</th>
+            <th>Crate</th>
+            <th class="text-end">Qty (Kg)</th>
+            <th class="text-end">Unit Price</th>
+            <th class="text-end">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of order.orderDetails; index as i">
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.mangoName || '—' }}</td>
+            <td>{{ item.crateName || '—' }}</td>
+            <td class="text-end">{{ item.quantity | number }}</td>
+            <td class="text-end">৳ {{ item.unitPrice | number }}</td>
+            <td class="text-end">৳ {{ item.totalPrice | number }}</td>
+          </tr>
+          <tr class="table-light fw-bold">
+            <td colspan="5" class="text-end">Total</td>
+            <td class="text-end">৳ {{ order.totalAmount | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Error Message -->
+    <div class="alert alert-danger d-flex align-items-center py-3" *ngIf="errorMessage">
+      <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- bKash redirect notice -->
+    <div class="alert alert-light-warning border border-warning d-flex align-items-start py-3 gap-2" *ngIf="!errorMessage">
+      <i class="bi bi-info-circle-fill text-warning fs-5 flex-shrink-0 mt-1"></i>
+      <div class="fs-7 text-gray-700">
+        Clicking <strong>Pay Now</strong> will redirect you to the secure bKash payment page.
+        Do not close the browser during payment.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-light btn-sm"
+      (click)="cancel()"
+      [disabled]="isPaying">
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-sm"
+      style="background-color:#E2136E; color:#fff;"
+      (click)="payNow()"
+      [disabled]="isPaying">
+      <span *ngIf="isPaying" class="spinner-border spinner-border-sm me-2" role="status"></span>
+      <span *ngIf="!isPaying"><i class="bi bi-credit-card-2-front me-2"></i></span>
+      {{ isPaying ? 'Redirecting…' : 'Pay Now' }}
+    </button>
+  </div>
+</div>

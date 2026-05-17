@@ -95,6 +95,14 @@
                         <i class="bi bi-trash me-2"></i>Delete
                       </a>
                     </div>
+                    <ng-container *ngIf="isPayable(order)">
+                      <div class="separator my-2"></div>
+                      <div class="menu-item px-3">
+                        <a class="menu-link px-3" style="color:#E2136E;" (click)="openPayment(order)">
+                          <i class="bi bi-credit-card-2-front me-2"></i>Payment
+                        </a>
+                      </div>
+                    </ng-container>
                     <ng-container *ngIf="order.isDelivered">
                       <div class="separator my-2"></div>
                       <div class="menu-item px-3">
