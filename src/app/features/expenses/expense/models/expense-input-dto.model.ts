@@ -3,6 +3,7 @@ export interface ExpenseInputDto {
     name: string;
     description: string;
     amount: number;
+    paymentReference?: string;
     expenseTypeId: number;
     isActive: boolean;
     isDeleted: boolean;

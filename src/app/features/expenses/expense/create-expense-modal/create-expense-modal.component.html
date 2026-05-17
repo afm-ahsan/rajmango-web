@@ -23,6 +23,11 @@
             placeholder="0.00" autocomplete="off" />
           <div *ngIf="controlHasError('required', 'amount')" class="text-danger fs-7 mt-1">Amount is required.</div>
         </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Payment Reference</label>
+          <input type="text" class="form-control form-control-solid" formControlName="paymentReference"
+            placeholder="e.g. bKash/bank ref #" autocomplete="off" />
+        </div>
         <div class="col-12">
           <label class="form-label fw-semibold required">Expense Type</label>
           <select class="form-select form-select-solid" formControlName="expenseTypeId">

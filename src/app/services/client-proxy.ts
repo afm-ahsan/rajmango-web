@@ -12340,7 +12340,7 @@ export class ExpenseSummaryLineDto implements IExpenseSummaryLineDto {
     expenseTypeName!: string | undefined;
     name!: string | undefined;
     expenseDate!: moment.Moment;
-    transactionId!: string | undefined;
+    paymentReference!: string | undefined;
     paidTo!: string | undefined;
     amount!: number;
     paymentMethod!: PaymentMethod;
@@ -12360,7 +12360,7 @@ export class ExpenseSummaryLineDto implements IExpenseSummaryLineDto {
             this.expenseTypeName = _data["expenseTypeName"];
             this.name = _data["name"];
             this.expenseDate = _data["expenseDate"] ? moment(_data["expenseDate"].toString()) : <any>undefined;
-            this.transactionId = _data["transactionId"];
+            this.paymentReference = _data["paymentReference"];
             this.paidTo = _data["paidTo"];
             this.amount = _data["amount"];
             this.paymentMethod = _data["paymentMethod"];
@@ -12380,7 +12380,7 @@ export class ExpenseSummaryLineDto implements IExpenseSummaryLineDto {
         data["expenseTypeName"] = this.expenseTypeName;
         data["name"] = this.name;
         data["expenseDate"] = this.expenseDate ? this.expenseDate.toISOString() : <any>undefined;
-        data["transactionId"] = this.transactionId;
+        data["paymentReference"] = this.paymentReference;
         data["paidTo"] = this.paidTo;
         data["amount"] = this.amount;
         data["paymentMethod"] = this.paymentMethod;
@@ -12393,7 +12393,7 @@ export interface IExpenseSummaryLineDto {
     expenseTypeName: string | undefined;
     name: string | undefined;
     expenseDate: moment.Moment;
-    transactionId: string | undefined;
+    paymentReference: string | undefined;
     paidTo: string | undefined;
     amount: number;
     paymentMethod: PaymentMethod;
@@ -12890,6 +12890,7 @@ export class GetAllExpenseDto implements IGetAllExpenseDto {
     expenseTypeId!: number;
     amount!: number;
     isActive!: boolean;
+    paymentReference!: string | undefined;
 
     constructor(data?: IGetAllExpenseDto) {
         if (data) {
@@ -12915,6 +12916,7 @@ export class GetAllExpenseDto implements IGetAllExpenseDto {
             this.expenseTypeId = _data["expenseTypeId"];
             this.amount = _data["amount"];
             this.isActive = _data["isActive"];
+            this.paymentReference = _data["paymentReference"];
         }
     }
 
@@ -12940,6 +12942,7 @@ export class GetAllExpenseDto implements IGetAllExpenseDto {
         data["expenseTypeId"] = this.expenseTypeId;
         data["amount"] = this.amount;
         data["isActive"] = this.isActive;
+        data["paymentReference"] = this.paymentReference;
         return data;
     }
 }
@@ -12958,6 +12961,7 @@ export interface IGetAllExpenseDto {
     expenseTypeId: number;
     amount: number;
     isActive: boolean;
+    paymentReference: string | undefined;
 }
 
 export class GetAllExpenseTypeDto implements IGetAllExpenseTypeDto {
@@ -13654,6 +13658,7 @@ export class GetExpenseByIdDto implements IGetExpenseByIdDto {
     expenseTypeId!: number;
     amount!: number;
     isActive!: boolean;
+    paymentReference!: string | undefined;
 
     constructor(data?: IGetExpenseByIdDto) {
         if (data) {
@@ -13679,6 +13684,7 @@ export class GetExpenseByIdDto implements IGetExpenseByIdDto {
             this.expenseTypeId = _data["expenseTypeId"];
             this.amount = _data["amount"];
             this.isActive = _data["isActive"];
+            this.paymentReference = _data["paymentReference"];
         }
     }
 
@@ -13704,6 +13710,7 @@ export class GetExpenseByIdDto implements IGetExpenseByIdDto {
         data["expenseTypeId"] = this.expenseTypeId;
         data["amount"] = this.amount;
         data["isActive"] = this.isActive;
+        data["paymentReference"] = this.paymentReference;
         return data;
     }
 }
@@ -13722,6 +13729,7 @@ export interface IGetExpenseByIdDto {
     expenseTypeId: number;
     amount: number;
     isActive: boolean;
+    paymentReference: string | undefined;
 }
 
 export class GetExpenseCountDto implements IGetExpenseCountDto {
@@ -13962,6 +13970,7 @@ export class GetExpenseWithPaginationDto implements IGetExpenseWithPaginationDto
     expenseTypeId!: number;
     amount!: number;
     isActive!: boolean;
+    paymentReference!: string | undefined;
 
     constructor(data?: IGetExpenseWithPaginationDto) {
         if (data) {
@@ -13987,6 +13996,7 @@ export class GetExpenseWithPaginationDto implements IGetExpenseWithPaginationDto
             this.expenseTypeId = _data["expenseTypeId"];
             this.amount = _data["amount"];
             this.isActive = _data["isActive"];
+            this.paymentReference = _data["paymentReference"];
         }
     }
 
@@ -14012,6 +14022,7 @@ export class GetExpenseWithPaginationDto implements IGetExpenseWithPaginationDto
         data["expenseTypeId"] = this.expenseTypeId;
         data["amount"] = this.amount;
         data["isActive"] = this.isActive;
+        data["paymentReference"] = this.paymentReference;
         return data;
     }
 }
@@ -14030,6 +14041,7 @@ export interface IGetExpenseWithPaginationDto {
     expenseTypeId: number;
     amount: number;
     isActive: boolean;
+    paymentReference: string | undefined;
 }
 
 export class GetMangoTypeByIdDto implements IGetMangoTypeByIdDto {

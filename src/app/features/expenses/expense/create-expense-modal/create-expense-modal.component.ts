@@ -96,6 +96,7 @@ export class CreateExpenseModalComponent implements OnInit, OnDestroy {
         Validators.compose([Validators.required]),
       ],
       amount: [this.expenseDto.amount, Validators.compose([Validators.required])],
+      paymentReference: [this.expenseDto.paymentReference],
       isActive: [this.expenseDto.isActive],
     });
   }
@@ -150,6 +151,7 @@ export class CreateExpenseModalComponent implements OnInit, OnDestroy {
     this.expenseInputDto.description = formData.description;
     this.expenseInputDto.expenseTypeId = formData.expenseTypeId;
     this.expenseInputDto.amount = formData.amount;
+    this.expenseInputDto.paymentReference = formData.paymentReference || undefined;
     this.expenseInputDto.isActive = formData.isActive;
     if (this.expenseDto.id) {
       this.expenseInputDto.id = this.expenseDto.id;
@@ -169,6 +171,7 @@ export class CreateExpenseModalComponent implements OnInit, OnDestroy {
       description: '',
       expenseTypeId: 0,
       amount: 0,
+      paymentReference: '',
       isActive: true,
       isDeleted: false,
       createdBy: null,

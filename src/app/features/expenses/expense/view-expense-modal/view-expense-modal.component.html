@@ -26,6 +26,10 @@
           {{ expenseDto.isActive ? 'Active' : 'Inactive' }}
         </span>
       </div>
+      <div class="col-12 col-md-6">
+        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Payment Reference</div>
+        <div class="fw-semibold fs-6">{{ expenseDto.paymentReference || '—' }}</div>
+      </div>
       <div class="col-12">
         <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Description</div>
         <div class="fw-semibold fs-6">{{ expenseDto.description || '—' }}</div>

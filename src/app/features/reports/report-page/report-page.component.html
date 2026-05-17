@@ -369,7 +369,7 @@
                 <td>{{ e.name }}</td>
                 <td>{{ e.expenseDate.toDate() | date:'dd MMM yyyy' }}</td>
                 <td>{{ e.paidTo || '—' }}</td>
-                <td>{{ e.transactionId || '—' }}</td>
+                <td>{{ e.paymentReference || '—' }}</td>
                 <td class="fw-bold text-danger">{{ e.amount | number:'1.0-0' }}</td>
                 <td>{{ getPaymentMethodLabel(e.paymentMethod) }}</td>
               </tr>
