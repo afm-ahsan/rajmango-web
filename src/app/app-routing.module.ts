@@ -19,6 +19,21 @@ export const routes: Routes = [
       import('./features/terms/terms.module').then((m) => m.TermsModule),
   },
   {
+    path: 'about',
+    loadChildren: () =>
+      import('./features/public/about/about.module').then((m) => m.AboutModule),
+  },
+  {
+    path: 'contact-us',
+    loadChildren: () =>
+      import('./features/public/contact-us/contact-us.module').then((m) => m.ContactUsModule),
+  },
+  {
+    path: 'privacy-policy',
+    loadChildren: () =>
+      import('./features/public/privacy-policy/privacy-policy.module').then((m) => m.PrivacyPolicyModule),
+  },
+  {
     path: '',
     canActivate: [AuthGuard],
     loadChildren: () =>

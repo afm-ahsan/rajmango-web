@@ -1,0 +1,253 @@
+$primary:    #d4824b;
+$secondary:  #2d5016;
+$accent:     #f4a34a;
+$dark-text:  #1f1f1f;
+$text-muted: #4a4a4a;
+$border:     #e0e0e0;
+$font-serif: 'Georgia', 'Garamond', serif;
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+.pub-page {
+  background: #ffffff;
+  color: $dark-text;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.8;
+  font-size: 16px;
+  min-height: 100vh;
+}
+
+.pub-scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, $primary, $accent);
+  z-index: 1100;
+  transition: width 0.1s linear;
+}
+
+.pub-header {
+  background: linear-gradient(135deg, rgba(212, 130, 75, 0.98), rgba(45, 80, 22, 0.85));
+  padding: 3rem 2rem;
+  text-align: center;
+
+  &-content { max-width: 800px; margin: 0 auto; }
+
+  &-logo {
+    margin-bottom: 1.5rem;
+    img {
+      max-width: 90px;
+      height: auto;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  &-title {
+    font-family: $font-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+  }
+
+  &-subtitle {
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 0;
+  }
+}
+
+.pub-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.pub-intro {
+  background: linear-gradient(135deg, rgba(212, 130, 75, 0.05), rgba(244, 163, 74, 0.05));
+  border: 1px solid rgba(212, 130, 75, 0.15);
+  border-radius: 8px;
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+
+  h2 { font-size: 1.8rem; margin-bottom: 1rem; color: $primary; font-family: $font-serif; }
+  p  { font-size: 1.05rem; line-height: 1.8; margin-bottom: 1rem; color: $text-muted; }
+  p:last-child { margin-bottom: 0; }
+}
+
+.pub-section {
+  margin-bottom: 3.5rem;
+}
+
+.pub-section-label {
+  font-size: 0.85rem;
+  color: $accent;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 0.4rem;
+}
+
+.pub-section-title {
+  font-family: $font-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: $secondary;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid $border;
+}
+
+.pub-section-content {
+  color: $text-muted;
+  line-height: 1.85;
+
+  p  { margin-bottom: 1rem; }
+  h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; color: $secondary; font-weight: 700; font-size: 1.05rem; }
+  ul { margin: 1.5rem 0 1.5rem 1.5rem; }
+  li { margin-bottom: 0.75rem; line-height: 1.8; }
+  strong { color: $dark-text; }
+}
+
+.pub-highlight {
+  background: #f9f9f9;
+  border-left: 4px solid $primary;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+
+  p { margin: 0; color: $text-muted; font-size: 0.97rem; }
+}
+
+.pub-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.pub-card {
+  background: #fafafa;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: $transition;
+
+  &:hover {
+    border-color: rgba(212, 130, 75, 0.4);
+    box-shadow: 0 4px 12px rgba(212, 130, 75, 0.1);
+  }
+
+  &-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+  h3 { font-size: 1rem; font-weight: 700; color: $secondary; margin-bottom: 0.5rem; }
+  p  { font-size: 0.9rem; color: $text-muted; margin: 0; line-height: 1.6; }
+}
+
+.pub-cta {
+  background: linear-gradient(135deg, rgba(45, 80, 22, 0.06), rgba(212, 130, 75, 0.06));
+  border: 1px solid rgba(212, 130, 75, 0.2);
+  border-radius: 10px;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin-top: 2rem;
+
+  h2 { font-family: $font-serif; font-size: 1.8rem; color: $secondary; margin-bottom: 0.75rem; }
+  p  { color: $text-muted; margin-bottom: 2rem; font-size: 1.05rem; }
+
+  &-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+}
+
+.pub-btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: $transition;
+
+  &-primary {
+    background: $primary;
+    color: #ffffff;
+    &:hover { background: darken($primary, 8%); color: #ffffff; }
+  }
+
+  &-secondary {
+    background: transparent;
+    color: $secondary;
+    border: 2px solid $secondary;
+    &:hover { background: $secondary; color: #ffffff; }
+  }
+}
+
+.pub-footer {
+  background: linear-gradient(135deg, rgba(45, 80, 22, 0.98), rgba(45, 80, 22, 0.95));
+  color: #ffffff;
+  padding: 3rem 2rem 2rem;
+  margin-top: 4rem;
+  border-top: 1px solid rgba(212, 130, 75, 0.2);
+
+  &-content {
+    max-width: 960px;
+    margin: 0 auto 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+
+  &-section {
+    h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: $accent;
+      margin-bottom: 1rem;
+    }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { margin-bottom: 0.6rem; }
+    a {
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: $transition;
+      &:hover { color: $accent; }
+    }
+  }
+
+  &-bottom {
+    max-width: 960px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pub-header-title  { font-size: 1.9rem; }
+  .pub-section-title { font-size: 1.4rem; }
+  .pub-wrap          { padding: 2rem 1rem; }
+  .pub-intro         { padding: 1.5rem; }
+  .pub-cards         { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .pub-cta           { padding: 2rem 1rem; }
+}
+
+@media (max-width: 480px) {
+  .pub-header         { padding: 2rem 1rem; }
+  .pub-header-title   { font-size: 1.5rem; }
+  .pub-header-subtitle { font-size: 0.95rem; }
+  .pub-section-title  { font-size: 1.2rem; }
+  .pub-intro h2       { font-size: 1.4rem; }
+  .pub-cta h2         { font-size: 1.4rem; }
+  .pub-cards          { grid-template-columns: 1fr 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
