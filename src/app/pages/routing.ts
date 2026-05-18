@@ -39,10 +39,6 @@ const Routing: Routes = [
       import('../features/policies/policy.module').then((m) => m.PolicyModule),
   },
 
-  // ─── Legacy Metronic profile redirects ───────────────────────────────
-  { path: 'crafted/pages/profile', children: [{ path: '**', redirectTo: '/customer-profile/profile' }] },
-  { path: 'crafted/account', children: [{ path: '**', redirectTo: '/customer-profile/profile' }] },
-
   // ─── Admin — Operations ───────────────────────────────────────────────
   {
     path: 'mango-types',
