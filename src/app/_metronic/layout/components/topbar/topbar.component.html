@@ -110,14 +110,14 @@
 >
   <!-- begin::Toggle -->
   <div
-    class="cursor-pointer symbol"
+    class="cursor-pointer symbol symbol-circle"
     [ngClass]="toolbarUserAvatarHeightClass"
     data-kt-menu-trigger="click"
     data-kt-menu-attach="parent"
     data-kt-menu-placement="bottom-end"
     data-kt-menu-flip="bottom"
   >
-    <img [src]="headerAvatarUrl()" (error)="onAvatarError($event)" alt="Avatar" />
+    <img [src]="headerAvatarUrl()" (error)="onAvatarError($event)" alt="Avatar" class="avatar-img" />
   </div>
   <!-- end::Toggle  -->
   <app-user-inner></app-user-inner>

@@ -109,3 +109,21 @@
   }
 }
 
+
+
+// ─── Sign Out menu item — red on hover only ───────────────────────────────────
+.signout-menu-item:hover .menu-link,
+.signout-menu-item:hover .menu-title,
+.signout-menu-item:hover .svg-icon svg [fill]:not([fill='none']) {
+  color: #dc3545 !important;
+  fill: #dc3545 !important;
+}
+
+// ─── Avatar global ────────────────────────────────────────────────────────────
+// Shared avatar image styling. Wrapper sizing stays per-context (topbar / profile).
+.avatar-img {
+  object-fit: cover;
+  object-position: center 15%;
+  display: block;
+  border-radius: 50%;
+}

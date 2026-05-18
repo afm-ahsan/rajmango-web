@@ -20,12 +20,12 @@
             <!-- Avatar upload -->
             <div class="d-flex align-items-center gap-5 mb-7">
               <!-- Circular avatar — single image with built-in error fallback -->
-              <div class="symbol symbol-circle" style="width:80px;height:80px;flex-shrink:0;">
+              <div class="symbol symbol-circle" style="width:80px;height:80px;flex-shrink:0;overflow:hidden;">
                 <img
                   [src]="avatarUrl()"
                   alt="Profile photo"
-                  class="rounded-circle"
-                  style="width:80px;height:80px;object-fit:cover;border:2px solid #e4e6ef;"
+                  class="avatar-img"
+                  style="width:80px;height:80px;border:2px solid #e4e6ef;"
                   (error)="onAvatarError($event)" />
               </div>
 
