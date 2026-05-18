@@ -76,6 +76,9 @@
   background: transparent;
   border-bottom: none;
   box-shadow: none;
+  // Ensure track never blows out the container
+  overflow: hidden;
+  white-space: nowrap;
 
   &::before {
     background: linear-gradient(to right, #ffffff, transparent);
