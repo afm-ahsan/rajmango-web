@@ -17,6 +17,9 @@ export class AsideMenuComponent implements OnInit {
   get canViewHome(): boolean {
     return this.permissionService.hasAccess(UserPermissionKey.HasHomeAccess);
   }
+  get canViewDashboard(): boolean {
+    return this.permissionService.hasAccess(UserPermissionKey.HasDashboardAccess);
+  }
   get canViewAdminSection(): boolean {
     return this.permissionService.hasAccess(UserPermissionKey.HasAdminAccess);
   }

@@ -10,6 +10,7 @@ import { DropdownModel, EntityDropdownModel } from 'src/app/shared/models/dropdo
 import { DropdownService } from 'src/app/shared/services/dropdown.service';
 import { DomainUtils } from 'src/app/shared/utils/domain-utils';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { ReceiverType } from 'src/app/shared/enums/receiver-type.enum';
 import { dropdownRequiredValidator } from 'src/app/shared/validators/dropdown-validators';
 import { minOrderKgValidator } from 'src/app/shared/validators/order-validators';
 import { SubSink } from 'subsink';
@@ -55,6 +56,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   stationCheckRequired = false;
   isFallbackMode = false;
   private priceMap: Record<number, number> = {};
+  private initialOrderDetailsSnapshot = '[]';
 
   readonly searchStation = (term: string, item: AvailableCourierDto): boolean => {
     const q = term.toLowerCase();
@@ -103,6 +105,9 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       note: [this.newOrderDto.note],
       courierStationId: [null],
       fallbackAddress: [this.newOrderDto.fallbackAddress],
+      receiverType: [ReceiverType.Self, [Validators.required]],
+      receiverName: [null],
+      receiverMobileNumber: [null],
     }, { validators: [minOrderKgValidator(10)] });
   }
 
@@ -172,36 +177,59 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   private afterDataLoad(isEditMode: boolean): void {
     this.orderForm = this.buildForm();
 
+    this.subs.sink = this.orderForm.get('receiverType')!.valueChanges.subscribe(type => {
+      this.updateReceiverValidators(type);
+      this.cdRef.detectChanges();
+    });
+
     if (isEditMode) {
       if(this.orderDto.courierStationId){
         this.isFallbackMode = false;
         this.orderForm.patchValue({
-          area: this.orderDto.area, 
+          area: this.orderDto.area,
           courierStationId: this.orderDto.courierStationId,
-        });        
+        });
         this.findCourierStation(this.orderDto.area, this.orderDto.courierStationId);
       }else{
         this.isFallbackMode = true;
         this.orderForm.patchValue({
-          area: this.orderDto.area, 
+          area: this.orderDto.area,
           fallbackAddress: this.orderDto.fallbackAddress,
         });
       }
       const firstItem = this.orderDetails.length > 0 ? this.orderDetails[0] : null;
       this.orderForm.patchValue({
-        mangoType: firstItem?.mangoTypeId, 
+        mangoType: firstItem?.mangoTypeId,
         crateType: firstItem?.crateType,
         quantity: firstItem?.quantity,
-        note: firstItem?.note
+        note: firstItem?.note,
+        receiverType: this.orderDto.receiverType ?? ReceiverType.Self,
+        receiverName: this.orderDto.receiverName ?? null,
+        receiverMobileNumber: this.orderDto.receiverMobileNumber ?? null,
       });
+      this.updateReceiverValidators(this.orderDto.receiverType ?? ReceiverType.Self);
+      if (!this.orderDto.courierStationId) {
+        // Fallback mode: no async findCourierStation — finalise pristine state now
+        this.orderForm.markAsPristine();
+        this.orderForm.markAsUntouched();
+        this.setInitialSnapshot();
+      }
+      // courierStationId path: findCourierStation() handles markAsPristine + snapshot
     } else {
       this.orderForm.patchValue({
         mangoType: this.mangoTypeId || 0,
         crateType: 0,
         area: null,
         quantity: 1,
-        note: ''
+        note: '',
+        receiverType: ReceiverType.Self,
+        receiverName: null,
+        receiverMobileNumber: null,
       });
+      this.updateReceiverValidators(ReceiverType.Self);
+      this.orderForm.markAsPristine();
+      this.orderForm.markAsUntouched();
+      this.setInitialSnapshot();
     }
 
     this.isLoading = false;
@@ -283,13 +311,17 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   }
 
   reset(): void{
-    this.orderForm.reset({ 
-      mangoType: 0, 
-      crateType: 0, 
+    this.orderForm.reset({
+      mangoType: 0,
+      crateType: 0,
       area: 0,
-      quantity: 1, 
-      note: '', 
+      quantity: 1,
+      note: '',
+      receiverType: ReceiverType.Self,
+      receiverName: null,
+      receiverMobileNumber: null,
     });
+    this.updateReceiverValidators(ReceiverType.Self);
     this.isFallbackMode = false;
     this.availableStations = [];
     this.orderDetails = [];
@@ -345,14 +377,14 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-  if (this.orderDetails.length === 0) {
+  if (!this.hasUnsavedChanges) {
     this.modal.dismiss();
     return;
   }
 
   Swal.fire({
-    title: 'Unsaved Items',
-    text: 'You have unsaved order items. Do you really want to cancel?',
+    title: 'Unsaved Changes',
+    text: 'You have unsaved changes. Do you really want to cancel?',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Yes, cancel',
@@ -428,6 +460,11 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       this.orderInputDto.courierStationId = +this.orderForm.get('courierStationId')?.value;
       this.orderInputDto.fallbackAddress = null;
     }
+
+    const receiverType: number = this.orderForm.get('receiverType')?.value ?? ReceiverType.Self;
+    this.orderInputDto.receiverType = receiverType;
+    this.orderInputDto.receiverName = receiverType === ReceiverType.Others ? this.orderForm.get('receiverName')?.value : null;
+    this.orderInputDto.receiverMobileNumber = receiverType === ReceiverType.Others ? this.orderForm.get('receiverMobileNumber')?.value : null;
   }
 
   private initObject(): OrderDto {
@@ -533,15 +570,53 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
           this.orderForm.get('courierStationId')?.reset();
         }
         this.updateCourierValidation();
+        this.orderForm.markAsPristine();
+        this.orderForm.markAsUntouched();
+        this.setInitialSnapshot();
       },
       error: () => {
         this.availableStations = [];
         this.isFallbackMode = true;
         this.orderForm.get('courierStationId')?.reset();
         this.updateCourierValidation();
+        this.orderForm.markAsPristine();
+        this.orderForm.markAsUntouched();
+        this.setInitialSnapshot();
         Swal.fire({ title: 'Courier Unavailable', text: 'Unable to load courier stations for this area. Please try again.', icon: 'warning', heightAuto: false, scrollbarPadding: false });
       },
     });
+  }
+
+  private serializeOrderDetails(details: OrderDetailDto[]): string {
+    return JSON.stringify(
+      details.map(({ mangoTypeId, crateType, quantity, note, unitPrice, totalPrice }) =>
+        ({ mangoTypeId, crateType, quantity, note, unitPrice, totalPrice })
+      )
+    );
+  }
+
+  private setInitialSnapshot(): void {
+    this.initialOrderDetailsSnapshot = this.serializeOrderDetails(this.orderDetails);
+  }
+
+  get hasUnsavedChanges(): boolean {
+    if (!this.orderForm) return false;
+    if (this.orderForm.dirty) return true;
+    return this.serializeOrderDetails(this.orderDetails) !== this.initialOrderDetailsSnapshot;
+  }
+
+  private updateReceiverValidators(type: number): void {
+    const nameControl = this.orderForm.get('receiverName');
+    const mobileControl = this.orderForm.get('receiverMobileNumber');
+    if (type === ReceiverType.Others) {
+      nameControl?.setValidators([Validators.required]);
+      mobileControl?.setValidators([Validators.required, Validators.maxLength(20)]);
+    } else {
+      nameControl?.clearValidators();
+      mobileControl?.clearValidators();
+    }
+    nameControl?.updateValueAndValidity();
+    mobileControl?.updateValueAndValidity();
   }
 
   private updateCourierValidation(): void {

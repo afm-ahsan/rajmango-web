@@ -22,6 +22,9 @@ export interface OrderDto {
   courierStationId?: number | null;
   fallbackAddress?: string;
   area: string;
+  receiverType?: number | null;
+  receiverName?: string | null;
+  receiverMobileNumber?: string | null;
   deliveryStatus: DeliveryStatus;
   orderDetails: OrderDetailDto[];
 }

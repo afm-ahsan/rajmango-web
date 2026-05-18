@@ -3,7 +3,6 @@ import { ComplaintStatus } from "../enums/complaint-status.enum";
 import { CrateType } from "../enums/crate-type.enum";
 import { CustomerType } from "../enums/customer-type.enum";
 import { DeliveryStatus } from "../enums/delivery-status.enum";
-import { MangoType } from "../enums/mango-type.enum";
 import { OrderStatus } from "../enums/order-status.enum";
 import { PaymentStatus } from "../enums/payment_status.enum";
 import { PolicyType } from "../enums/policy-type.enum";
@@ -22,7 +21,7 @@ export class EnumLabelUtils {
   }
 
   static getDeliveryStatusLabel(type: DeliveryStatus): string {
-    return OrderStatus[type] ?? 'Unknown';
+    return DeliveryStatus[type] ?? 'Unknown';
   }
 
   static getOrderStatusLabel(type: OrderStatus): string {
@@ -31,10 +30,6 @@ export class EnumLabelUtils {
 
   static getPaymentStatusLabel(type: PaymentStatus): string {
     return PaymentStatus[type] ?? 'Unknown';
-  }
-
-  static getMangoTypeLabel(mangoTypeId: number): string {
-    return MangoType[mangoTypeId] ?? 'Unknown';
   }
 
   static getPaymentMethodLabel(method: number): string {

@@ -15,17 +15,6 @@ export class DropdownService {
     ];
   }
 
-  getMangoTypeOptions(): DropdownModel[] {
-    return [
-      { id: 1, label: 'Gopalbhog' },
-      { id: 2, label: 'Himsagor' },
-      { id: 3, label: 'Langra' },
-      { id: 4, label: 'Amrupali' },
-      { id: 5, label: 'Brindabon' },
-      { id: 6, label: 'Fazli' },
-    ];
-  }
-
   getOrderStatusOptions(): DropdownModel[] {
     return [
       { id: 1, label: 'Pending' },

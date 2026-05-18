@@ -75,7 +75,8 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
         );
       },
       error: () => {
-        this.mangoTypeOptions = this.dropdownService.getMangoTypeOptions();
+        this.mangoTypeOptions = [];
+        Swal.fire('Failed', 'Unable to load mango types. Please close and try again.', 'error');
       },
     });
   }

@@ -93,10 +93,47 @@
               Please enter a delivery address (at least 10 characters).
             </div>
           </div>          
+          <!-- Receiver -->
+          <div class="col-12">
+            <label class="form-label fw-semibold required">Receiver</label>
+            <div class="d-flex gap-4 mt-1">
+              <div class="form-check form-check-custom form-check-solid">
+                <input class="form-check-input" type="radio" formControlName="receiverType" [value]="0" id="receiverSelf">
+                <label class="form-check-label" for="receiverSelf">
+                  <span class="fw-semibold">Self</span>
+                  <span class="text-muted fs-7 d-block">I will collect from the courier station</span>
+                </label>
+              </div>
+              <div class="form-check form-check-custom form-check-solid">
+                <input class="form-check-input" type="radio" formControlName="receiverType" [value]="1" id="receiverOthers">
+                <label class="form-check-label" for="receiverOthers">
+                  <span class="fw-semibold">Others</span>
+                  <span class="text-muted fs-7 d-block">Someone else will receive</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="orderForm.get('receiverType')?.value === 1">
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold required">Receiver Name</label>
+              <input type="text" class="form-control form-control-solid" formControlName="receiverName"
+                [class.is-invalid]="isControlInvalid('receiverName')"
+                placeholder="Enter receiver name" maxlength="100" />
+              <div *ngIf="isControlInvalid('receiverName')" class="text-danger fs-7 mt-1">Receiver name is required.</div>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-semibold required">Receiver Mobile</label>
+              <input type="text" class="form-control form-control-solid" formControlName="receiverMobileNumber"
+                [class.is-invalid]="isControlInvalid('receiverMobileNumber')"
+                placeholder="Enter mobile number" maxlength="20" />
+              <div *ngIf="isControlInvalid('receiverMobileNumber')" class="text-danger fs-7 mt-1">Receiver mobile is required.</div>
+            </div>
+          </ng-container>
+
           <div class="col-12">
             <label class="form-label fw-semibold">Note</label>
             <textarea class="form-control form-control-solid" formControlName="note"
-              placeholder="Optional note" rows="2" maxlength="512"></textarea>
+              placeholder="Optional note" rows="1" maxlength="512"></textarea>
           </div>
           <div class="col-12 col-md-4">
             <label class="form-label fw-semibold required">Quantity (kg)</label>

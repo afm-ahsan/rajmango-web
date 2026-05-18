@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { DashboardServiceProxy } from 'src/app/services/client-proxy';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { DashboardServiceProxy, MangoAvailabilityServiceProxy } from 'src/app/services/client-proxy';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { CustomerDashboardComponent } from './customer-dashboard/customer-dashboard.component';
@@ -17,9 +18,10 @@ import { DashboardComponent } from './dashboard.component';
   imports: [
     CommonModule,
     RouterModule,
+    NgbModalModule,
     SharedModule,
     DashboardRoutingModule,
   ],
-  providers: [DashboardServiceProxy],
+  providers: [DashboardServiceProxy, MangoAvailabilityServiceProxy],
 })
 export class DashboardModule {}

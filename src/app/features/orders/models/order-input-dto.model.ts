@@ -6,4 +6,7 @@ export interface OrderInputDto {
   courierStationId: number | null;
   fallbackAddress: string | null;
   orderDetails: OrderDetailInputDto[];
+  receiverType: number | null;
+  receiverName: string | null;
+  receiverMobileNumber: string | null;
 }

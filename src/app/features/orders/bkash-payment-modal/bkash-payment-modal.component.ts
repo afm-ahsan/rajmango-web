@@ -21,7 +21,7 @@ export class BkashPaymentModalComponent implements OnDestroy {
       ...value,
       orderDetails: (value.orderDetails ?? []).map(detail => ({
         ...detail,
-        mangoName: detail.mangoName || EnumLabelUtils.getMangoTypeLabel(detail.mangoTypeId),
+        mangoName: detail.mangoName ?? 'Unknown',
         crateName: detail.crateName || EnumLabelUtils.getCrateTypeLabel(detail.crateType),
       })),
     };

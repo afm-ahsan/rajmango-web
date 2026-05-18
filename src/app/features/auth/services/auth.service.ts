@@ -94,16 +94,8 @@ export class AuthService implements OnDestroy {
     return this.authHttpService.getUserByToken(auth.authToken).pipe(
       map((response: any) => {
         if (response?.messages?.[0]?.includes('Valid Token')) {
-          // Merge any fresh fields the /me endpoint returns back into the
-          // cached auth object so localStorage never serves stale data.
-          const fresh = response?.data;
-          if (fresh) {
-            if (fresh.imagePath !== undefined) auth.imagePath = fresh.imagePath;
-            if (fresh.firstName !== undefined) auth.firstName = fresh.firstName;
-            if (fresh.lastName  !== undefined) auth.lastName  = fresh.lastName;
-            if (fresh.email     !== undefined) auth.email     = fresh.email;
-            this.setAuthToLocalStorage(auth);
-          }
+          // Permissions are sourced from the login response stored in localStorage.
+          // They reflect the role assignment at login time.
           this.permissionService.currentPermission = this.permissionService.preparePermissionModel(auth.permissions);
           this.currentUserSubject.next(auth);
         } else {

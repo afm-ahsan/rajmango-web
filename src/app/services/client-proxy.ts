@@ -11364,8 +11364,9 @@ export class CreateOrderCommand implements ICreateOrderCommand {
     userId!: number;
     courierStationId!: number | undefined;
     fallbackAddress!: string | undefined;
+    receiverType!: number | undefined;
     receiverName!: string | undefined;
-    receiverPhone!: string | undefined;
+    receiverMobileNumber!: string | undefined;
     deliveryNote!: string | undefined;
     orderDetails!: OrderDetailInputDto[] | undefined;
 
@@ -11383,8 +11384,9 @@ export class CreateOrderCommand implements ICreateOrderCommand {
             this.userId = _data["userId"];
             this.courierStationId = _data["courierStationId"];
             this.fallbackAddress = _data["fallbackAddress"];
+            this.receiverType = _data["receiverType"];
             this.receiverName = _data["receiverName"];
-            this.receiverPhone = _data["receiverPhone"];
+            this.receiverMobileNumber = _data["receiverMobileNumber"];
             this.deliveryNote = _data["deliveryNote"];
             if (Array.isArray(_data["orderDetails"])) {
                 this.orderDetails = [] as any;
@@ -11406,8 +11408,9 @@ export class CreateOrderCommand implements ICreateOrderCommand {
         data["userId"] = this.userId;
         data["courierStationId"] = this.courierStationId;
         data["fallbackAddress"] = this.fallbackAddress;
+        data["receiverType"] = this.receiverType;
         data["receiverName"] = this.receiverName;
-        data["receiverPhone"] = this.receiverPhone;
+        data["receiverMobileNumber"] = this.receiverMobileNumber;
         data["deliveryNote"] = this.deliveryNote;
         if (Array.isArray(this.orderDetails)) {
             data["orderDetails"] = [];
@@ -11422,8 +11425,9 @@ export interface ICreateOrderCommand {
     userId: number;
     courierStationId: number | undefined;
     fallbackAddress: string | undefined;
+    receiverType: number | undefined;
     receiverName: string | undefined;
-    receiverPhone: string | undefined;
+    receiverMobileNumber: string | undefined;
     deliveryNote: string | undefined;
     orderDetails: OrderDetailInputDto[] | undefined;
 }
@@ -15981,8 +15985,9 @@ export class OrderDto implements IOrderDto {
     trackingNumber!: string | undefined;
     courierStationId!: number | undefined;
     fallbackAddress!: string | undefined;
+    receiverType!: number | undefined;
     receiverName!: string | undefined;
-    receiverPhone!: string | undefined;
+    receiverMobileNumber!: string | undefined;
     deliveryNote!: string | undefined;
     area!: string | undefined;
     deliveryStatus!: DeliveryStatus;
@@ -16015,8 +16020,9 @@ export class OrderDto implements IOrderDto {
             this.trackingNumber = _data["trackingNumber"];
             this.courierStationId = _data["courierStationId"];
             this.fallbackAddress = _data["fallbackAddress"];
+            this.receiverType = _data["receiverType"];
             this.receiverName = _data["receiverName"];
-            this.receiverPhone = _data["receiverPhone"];
+            this.receiverMobileNumber = _data["receiverMobileNumber"];
             this.deliveryNote = _data["deliveryNote"];
             this.area = _data["area"];
             this.deliveryStatus = _data["deliveryStatus"];
@@ -16053,8 +16059,9 @@ export class OrderDto implements IOrderDto {
         data["trackingNumber"] = this.trackingNumber;
         data["courierStationId"] = this.courierStationId;
         data["fallbackAddress"] = this.fallbackAddress;
+        data["receiverType"] = this.receiverType;
         data["receiverName"] = this.receiverName;
-        data["receiverPhone"] = this.receiverPhone;
+        data["receiverMobileNumber"] = this.receiverMobileNumber;
         data["deliveryNote"] = this.deliveryNote;
         data["area"] = this.area;
         data["deliveryStatus"] = this.deliveryStatus;
@@ -16084,8 +16091,9 @@ export interface IOrderDto {
     trackingNumber: string | undefined;
     courierStationId: number | undefined;
     fallbackAddress: string | undefined;
+    receiverType: number | undefined;
     receiverName: string | undefined;
-    receiverPhone: string | undefined;
+    receiverMobileNumber: string | undefined;
     deliveryNote: string | undefined;
     area: string | undefined;
     deliveryStatus: DeliveryStatus;
@@ -23265,8 +23273,9 @@ export class UpdateOrderCommand implements IUpdateOrderCommand {
     userId!: number;
     courierStationId!: number | undefined;
     fallbackAddress!: string | undefined;
+    receiverType!: number | undefined;
     receiverName!: string | undefined;
-    receiverPhone!: string | undefined;
+    receiverMobileNumber!: string | undefined;
     deliveryNote!: string | undefined;
     orderDetails!: OrderDetailInputDto[] | undefined;
 
@@ -23285,8 +23294,9 @@ export class UpdateOrderCommand implements IUpdateOrderCommand {
             this.userId = _data["userId"];
             this.courierStationId = _data["courierStationId"];
             this.fallbackAddress = _data["fallbackAddress"];
+            this.receiverType = _data["receiverType"];
             this.receiverName = _data["receiverName"];
-            this.receiverPhone = _data["receiverPhone"];
+            this.receiverMobileNumber = _data["receiverMobileNumber"];
             this.deliveryNote = _data["deliveryNote"];
             if (Array.isArray(_data["orderDetails"])) {
                 this.orderDetails = [] as any;
@@ -23309,8 +23319,9 @@ export class UpdateOrderCommand implements IUpdateOrderCommand {
         data["userId"] = this.userId;
         data["courierStationId"] = this.courierStationId;
         data["fallbackAddress"] = this.fallbackAddress;
+        data["receiverType"] = this.receiverType;
         data["receiverName"] = this.receiverName;
-        data["receiverPhone"] = this.receiverPhone;
+        data["receiverMobileNumber"] = this.receiverMobileNumber;
         data["deliveryNote"] = this.deliveryNote;
         if (Array.isArray(this.orderDetails)) {
             data["orderDetails"] = [];
@@ -23326,8 +23337,9 @@ export interface IUpdateOrderCommand {
     userId: number;
     courierStationId: number | undefined;
     fallbackAddress: string | undefined;
+    receiverType: number | undefined;
     receiverName: string | undefined;
-    receiverPhone: string | undefined;
+    receiverMobileNumber: string | undefined;
     deliveryNote: string | undefined;
     orderDetails: OrderDetailInputDto[] | undefined;
 }

@@ -7,22 +7,108 @@
     <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
       <span class="spinner-border text-primary" role="status"></span>
     </div>
-    <div *ngIf="!isLoading && orderDto">
-      <div class="row g-4 mb-6">
+    <ng-container *ngIf="!isLoading && orderDto">
+
+      <!-- Order Header -->
+      <div class="row g-4 mb-4">
         <div class="col-12 col-md-4">
           <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Number</div>
-          <div class="fw-semibold fs-6">{{ orderDto.orderNumber }}</div>
+          <div class="fw-bold fs-6">{{ orderDto.orderNumber }}</div>
         </div>
         <div class="col-12 col-md-4">
-          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Quantity</div>
-          <div class="fw-semibold fs-6">{{ orderDto.totalQuantity }}</div>
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Date</div>
+          <div class="fw-semibold fs-6">{{ orderDto.orderDate ? (orderDto.orderDate | date:'dd MMM yyyy') : '—' }}</div>
         </div>
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Status</div>
+          <span class="badge fs-7" [ngClass]="getOrderStatusBadgeClass(orderDto.orderStatus)">
+            {{ getOrderStatusLabel(orderDto.orderStatus) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Payment & Delivery Status -->
+      <div class="row g-4 mb-4">
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Payment Status</div>
+          <span class="badge fs-7" [ngClass]="getPaymentStatusBadgeClass(orderDto.paymentStatus)">
+            {{ getPaymentStatusLabel(orderDto.paymentStatus) }}
+          </span>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Status</div>
+          <span class="badge fs-7" [ngClass]="getDeliveryStatusBadgeClass(orderDto.deliveryStatus)">
+            {{ getDeliveryStatusLabel(orderDto.deliveryStatus) }}
+          </span>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Date</div>
+          <div class="fw-semibold fs-6">{{ orderDto.deliveryDate ? (orderDto.deliveryDate | date:'dd MMM yyyy') : '—' }}</div>
+        </div>
+      </div>
+
+      <!-- Financials -->
+      <div class="row g-4 mb-4">
         <div class="col-12 col-md-4">
           <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Amount</div>
           <div class="fw-bold fs-6">{{ orderDto.totalAmount | number }}</div>
         </div>
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Paid Amount</div>
+          <div class="fw-semibold fs-6 text-success">{{ orderDto.paidAmount | number }}</div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Due Amount</div>
+          <div class="fw-semibold fs-6" [class.text-danger]="orderDto.dueAmount > 0">{{ orderDto.dueAmount | number }}</div>
+        </div>
       </div>
-      <div class="table-responsive" *ngIf="orderDto.orderDetails.length > 0">
+
+      <!-- Delivery Info -->
+      <div class="row g-4 mb-4">
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Area</div>
+          <div class="fw-semibold fs-6">{{ orderDto.area || '—' }}</div>
+        </div>
+        <div class="col-12 col-md-4" *ngIf="orderDto.courierStationId">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Courier Station ID</div>
+          <div class="fw-semibold fs-6">{{ orderDto.courierStationId }}</div>
+        </div>
+        <div class="col-12 col-md-4" *ngIf="orderDto.trackingNumber">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Tracking Number</div>
+          <div class="fw-semibold fs-6">{{ orderDto.trackingNumber }}</div>
+        </div>
+      </div>
+      <div class="row g-4 mb-4" *ngIf="orderDto.fallbackAddress">
+        <div class="col-12">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Manual Delivery Address</div>
+          <div class="fw-semibold fs-6">{{ orderDto.fallbackAddress }}</div>
+        </div>
+      </div>
+
+      <!-- Receiver Info -->
+      <div class="row g-4 mb-4">
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Receiver</div>
+          <div class="fw-semibold fs-6">
+            {{ (orderDto.receiverType ?? 0) === ReceiverType.Others ? 'Others' : 'Self' }}
+          </div>
+        </div>
+        <ng-container *ngIf="(orderDto.receiverType ?? 0) === ReceiverType.Others">
+          <div class="col-12 col-md-4">
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Receiver Name</div>
+            <div class="fw-semibold fs-6">{{ orderDto.receiverName || '—' }}</div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Receiver Mobile</div>
+            <div class="fw-semibold fs-6">{{ orderDto.receiverMobileNumber || '—' }}</div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Order Items -->
+      <hr />
+      <div class="fw-bold fs-6 mb-3">Order Items ({{ orderDto.totalQuantity | number }} kg)</div>
+      <div class="table-responsive" *ngIf="orderDto.orderDetails && orderDto.orderDetails.length > 0">
         <table class="table table-striped align-middle">
           <thead>
             <tr>
@@ -40,8 +126,8 @@
               <td>{{ item.mangoName }}</td>
               <td>{{ item.crateName }}</td>
               <td class="text-end">{{ item.quantity | number }}</td>
-              <td class="text-end">{{ item.unitPrice }}</td>
-              <td class="text-end">{{ item.totalPrice }}</td>
+              <td class="text-end">{{ item.unitPrice | number }}</td>
+              <td class="text-end">{{ item.totalPrice | number }}</td>
             </tr>
             <tr class="table-light fw-bold">
               <td colspan="5" class="text-end">Total:</td>
@@ -50,7 +136,9 @@
           </tbody>
         </table>
       </div>
-    </div>
+      <div *ngIf="!orderDto.orderDetails || !orderDto.orderDetails.length" class="text-muted fs-7">No items found.</div>
+
+    </ng-container>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-light btn-sm" (click)="modal.dismiss()">Close</button>

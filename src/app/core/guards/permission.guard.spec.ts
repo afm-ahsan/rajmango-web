@@ -155,10 +155,14 @@ describe('UserPermissionService.preparePermissionModel', () => {
   it('returns all-false access model for null or empty permissions', () => {
     const model = service.preparePermissionModel(null);
 
-    // Static true fields remain true
+    // hasHomeAccess is intentionally true for all authenticated users
+    // (the Home link is always visible in the sidebar once logged in).
     expect(model.hasHomeAccess).toBe(true);
 
-    // Permission-gated fields must be false
+    // hasDashboardAccess must be false without dashboard.*.view permission
+    expect(model.hasDashboardAccess).toBe(false);
+
+    // All other permission-gated fields must be false
     expect(model.hasAdminAccess).toBe(false);
     expect(model.hasMangoTypeAccess).toBe(false);
     expect(model.hasOrderAccess).toBe(false);

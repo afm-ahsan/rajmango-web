@@ -1,5 +1,4 @@
 import { CrateType } from '../enums/crate-type.enum';
-import { MangoType } from '../enums/mango-type.enum';
 
 export class DomainUtils {
   static getCrateWeight(crateType: CrateType): number {

@@ -12,7 +12,7 @@
       <div class="col-6 col-md-3">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Total Orders</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Orders</div>
             <div class="fs-2 fw-bold text-dark">{{ dashboard.totalOrders }}</div>
           </div>
         </div>
@@ -20,7 +20,7 @@
       <div class="col-6 col-md-3">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Orders Today</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Orders Today</div>
             <div class="fs-2 fw-bold text-primary">{{ dashboard.ordersToday }}</div>
           </div>
         </div>
@@ -28,7 +28,7 @@
       <div class="col-6 col-md-3">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Pending Orders</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Pending Orders</div>
             <div class="fs-2 fw-bold text-warning">{{ dashboard.pendingOrders }}</div>
           </div>
         </div>
@@ -36,7 +36,7 @@
       <div class="col-6 col-md-3">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Delivered</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivered</div>
             <div class="fs-2 fw-bold text-success">{{ dashboard.deliveredOrders }}</div>
           </div>
         </div>
@@ -48,7 +48,7 @@
       <div class="col-6 col-md-4">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Total Revenue</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Revenue</div>
             <div class="fs-2 fw-bold text-dark">৳{{ dashboard.totalRevenue | number:'1.0-0' }}</div>
           </div>
         </div>
@@ -56,7 +56,7 @@
       <div class="col-6 col-md-4">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Collected</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Collected</div>
             <div class="fs-2 fw-bold text-success">৳{{ dashboard.totalCollected | number:'1.0-0' }}</div>
           </div>
         </div>
@@ -64,7 +64,7 @@
       <div class="col-6 col-md-4">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Outstanding</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Outstanding</div>
             <div class="fs-2 fw-bold text-danger">৳{{ dashboard.totalOutstanding | number:'1.0-0' }}</div>
           </div>
         </div>
@@ -76,7 +76,7 @@
       <div class="col-6 col-md-3">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Customers</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Customers</div>
             <div class="fs-2 fw-bold text-dark">{{ dashboard.totalCustomers }}</div>
           </div>
         </div>
@@ -84,7 +84,7 @@
       <div class="col-6 col-md-3">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Available Mango Types</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Mango Types</div>
             <div class="fs-2 fw-bold text-dark">{{ dashboard.availableMangoTypes }}</div>
           </div>
         </div>
@@ -92,7 +92,7 @@
       <div class="col-6 col-md-3">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Processing</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Processing</div>
             <div class="fs-2 fw-bold text-info">{{ dashboard.processingOrders }}</div>
           </div>
         </div>
@@ -100,7 +100,7 @@
       <div class="col-6 col-md-3">
         <div class="card border-0 shadow-sm h-100">
           <div class="card-body">
-            <div class="text-muted fs-7 mb-1">Shipped</div>
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Shipped</div>
             <div class="fs-2 fw-bold text-primary">{{ dashboard.shippedOrders }}</div>
           </div>
         </div>
@@ -113,30 +113,46 @@
         <h5 class="mb-0 fw-bold">Recent Orders</h5>
         <a routerLink="/orders/order-list" class="btn btn-sm btn-light-primary">View All</a>
       </div>
-      <div class="card-body ps-10 p-0">
+      <div class="card-body p-0">
         <div class="table-responsive">
           <table class="table table-hover align-middle mb-0">
+            <colgroup>
+              <col style="width: 15%">
+              <col style="width: 18%">
+              <col style="width: 12%">
+              <col style="width: 14%">
+              <col style="width: 21%">
+              <col style="width: 20%">
+            </colgroup>
             <thead class="table-light">
               <tr>
-                <th>Order #</th>
-                <th>Customer</th>
-                <th>Date</th>
-                <th class="text-end">Amount</th>
-                <th>Status</th>
-                <th>Payment</th>
+                <th class="ps-5 py-3">Order #</th>
+                <th class="py-3">Customer</th>
+                <th class="py-3">Date</th>
+                <th class="text-end py-3">Amount</th>
+                <th class="text-center py-3">Status</th>
+                <th class="ps-4 pe-5 py-3">Payment</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let order of dashboard.recentOrders">
-                <td class="fw-semibold">{{ order.orderNumber }}</td>
-                <td>{{ order.customerName }}</td>
-                <td>{{ order.orderDate.toDate() | date:'dd MMM yyyy' }}</td>
-                <td class="text-end">৳{{ order.totalAmount | number:'1.0-0' }}</td>
-                <td><span class="badge badge-light-primary">{{ order.orderStatus }}</span></td>
-                <td><span class="badge badge-light-warning">{{ order.paymentStatus }}</span></td>
+                <td class="ps-5 py-3 fw-semibold text-nowrap">{{ order.orderNumber }}</td>
+                <td class="py-3">{{ order.customerName }}</td>
+                <td class="py-3 text-nowrap">{{ order.orderDate.toDate() | date:'dd MMM yyyy' }}</td>
+                <td class="text-end py-3 fw-semibold">৳{{ order.totalAmount | number:'1.0-0' }}</td>
+                <td class="text-center py-3">
+                  <span class="badge fw-semibold fs-8" [ngClass]="getOrderStatusBadgeClass(order.orderStatus)">
+                    {{ getOrderStatusLabel(order.orderStatus) }}
+                  </span>
+                </td>
+                <td class="ps-4 pe-5 py-3">
+                  <span class="badge fw-semibold fs-8" [ngClass]="getPaymentStatusBadgeClass(order.paymentStatus)">
+                    {{ getPaymentStatusLabel(order.paymentStatus) }}
+                  </span>
+                </td>
               </tr>
               <tr *ngIf="!dashboard.recentOrders?.length">
-                <td colspan="6" class="text-center text-muted py-5">No recent orders.</td>
+                <td colspan="6" class="text-center text-muted py-6">No recent orders.</td>
               </tr>
             </tbody>
           </table>
@@ -145,19 +161,33 @@
     </div>
 
     <!-- Available Mangoes -->
-    <div class="card border-0 shadow-sm" *ngIf="dashboard.availableMangoes?.length">
+    <div class="card border-0 shadow-sm">
       <div class="card-header bg-white py-4">
         <h5 class="mb-0 fw-bold">Available Mangoes</h5>
       </div>
       <div class="card-body">
-        <div class="row g-3">
-          <div class="col-6 col-md-3" *ngFor="let mango of dashboard.availableMangoes">
-            <div class="card border h-100 text-center p-3">
-              <div class="fw-bold">{{ mango.mangoTypeName }}</div>
-              <div class="text-success fs-5 fw-bold mt-1">৳{{ mango.pricePerKg }}/kg</div>
+        <div class="row g-3" *ngIf="dashboard.availableMangoes?.length; else noMangoes">
+          <div class="col-12 col-sm-6 col-md-4 col-xl-3" *ngFor="let mango of dashboard.availableMangoes">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-body p-4 d-flex flex-column">
+                <div class="d-flex align-items-start justify-content-between mb-2">
+                  <h6 class="fw-bold mb-0 me-2 text-dark">{{ mango.mangoTypeName }}</h6>
+                  <span class="badge badge-light-success flex-shrink-0">Available</span>
+                </div>
+                <div class="fs-4 fw-bold text-success mb-2">৳{{ mango.pricePerKg }}/kg</div>
+                <div class="fs-7 fw-medium text-gray-600 mt-auto">
+                  <i class="bi bi-calendar3 me-1"></i>Until {{ mango.endDate.toDate() | date:'dd MMM yyyy' }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
+        <ng-template #noMangoes>
+          <div class="text-center py-8 text-muted">
+            <i class="bi bi-basket2 fs-1 d-block mb-3 opacity-50"></i>
+            <p class="mb-0">No mangoes are currently available. Please check back soon.</p>
+          </div>
+        </ng-template>
       </div>
     </div>
   </ng-container>

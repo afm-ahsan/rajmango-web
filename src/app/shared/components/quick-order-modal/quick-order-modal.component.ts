@@ -22,6 +22,7 @@ import { DropdownModel, EntityDropdownModel } from '../../models/dropdown.model'
 import { DropdownService } from '../../services/dropdown.service';
 import { DomainUtils } from '../../utils/domain-utils';
 import { EnumLabelUtils } from '../../utils/enum-label.utils';
+import { ReceiverType } from '../../enums/receiver-type.enum';
 import { dropdownRequiredValidator } from '../../validators/dropdown-validators';
 import { minOrderKgValidator } from '../../validators/order-validators';
 
@@ -46,6 +47,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   isLoading = false;
   isCourierStationLoading = false;
   subs = new SubSink();
+  private initialOrderDetailsSnapshot = '[]';
 
   readonly searchStation = (term: string, item: AvailableCourierDto): boolean => {
     const q = term.toLowerCase();
@@ -81,6 +83,9 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
         note: [''],
         courierStationId: [null],
         fallbackAddress: [''],
+        receiverType: [ReceiverType.Self, [Validators.required]],
+        receiverName: [null],
+        receiverMobileNumber: [null],
       },
       { validators: [minOrderKgValidator(10)] }
     );
@@ -117,15 +122,56 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
 
   private afterDataLoad(): void {
     this.orderForm = this.buildForm();
+
+    this.subs.sink = this.orderForm.get('receiverType')!.valueChanges.subscribe(type => {
+      this.updateReceiverValidators(type);
+      this.cdRef.detectChanges();
+    });
+
     this.orderForm.patchValue({
       mangoType: this.mango?.id ?? 0,
       crateType: 0,
       area: null,
       quantity: 1,
       note: '',
+      receiverType: ReceiverType.Self,
+      receiverName: null,
+      receiverMobileNumber: null,
     });
+    this.updateReceiverValidators(ReceiverType.Self);
+    this.orderForm.markAsPristine();
+    this.orderForm.markAsUntouched();
+    this.initialOrderDetailsSnapshot = '[]';
     this.isLoading = false;
     this.cdRef.detectChanges();
+  }
+
+  private serializeOrderDetails(details: OrderDetailDto[]): string {
+    return JSON.stringify(
+      details.map(({ mangoTypeId, crateType, quantity, note, unitPrice, totalPrice }) =>
+        ({ mangoTypeId, crateType, quantity, note, unitPrice, totalPrice })
+      )
+    );
+  }
+
+  get hasUnsavedChanges(): boolean {
+    if (!this.orderForm) return false;
+    if (this.orderForm.dirty) return true;
+    return this.serializeOrderDetails(this.orderDetails) !== this.initialOrderDetailsSnapshot;
+  }
+
+  private updateReceiverValidators(type: number): void {
+    const nameControl = this.orderForm.get('receiverName');
+    const mobileControl = this.orderForm.get('receiverMobileNumber');
+    if (type === ReceiverType.Others) {
+      nameControl?.setValidators([Validators.required]);
+      mobileControl?.setValidators([Validators.required, Validators.maxLength(20)]);
+    } else {
+      nameControl?.clearValidators();
+      mobileControl?.clearValidators();
+    }
+    nameControl?.updateValueAndValidity();
+    mobileControl?.updateValueAndValidity();
   }
 
   addOrder(): void {
@@ -185,7 +231,17 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   }
 
   reset(): void {
-    this.orderForm.reset({ mangoType: this.mango?.id ?? 0, crateType: 0, area: 0, quantity: 1, note: '' });
+    this.orderForm.reset({
+      mangoType: this.mango?.id ?? 0,
+      crateType: 0,
+      area: 0,
+      quantity: 1,
+      note: '',
+      receiverType: ReceiverType.Self,
+      receiverName: null,
+      receiverMobileNumber: null,
+    });
+    this.updateReceiverValidators(ReceiverType.Self);
     this.isFallbackMode = false;
     this.availableStations = [];
     this.orderDetails = [];
@@ -237,13 +293,13 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   }
 
   cancel(): void {
-    if (this.orderDetails.length === 0) {
+    if (!this.hasUnsavedChanges) {
       this.modal.dismiss();
       return;
     }
     Swal.fire({
-      title: 'Unsaved Items',
-      text: 'You have unsaved order items. Do you really want to cancel?',
+      title: 'Unsaved Changes',
+      text: 'You have unsaved changes. Do you really want to cancel?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, cancel',
@@ -265,6 +321,10 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
       this.orderInputDto.courierStationId = +this.orderForm.get('courierStationId')?.value;
       this.orderInputDto.fallbackAddress = null;
     }
+    const receiverType: number = this.orderForm.get('receiverType')?.value ?? ReceiverType.Self;
+    this.orderInputDto.receiverType = receiverType;
+    this.orderInputDto.receiverName = receiverType === ReceiverType.Others ? this.orderForm.get('receiverName')?.value : null;
+    this.orderInputDto.receiverMobileNumber = receiverType === ReceiverType.Others ? this.orderForm.get('receiverMobileNumber')?.value : null;
   }
 
   private initObject(): OrderDto {
