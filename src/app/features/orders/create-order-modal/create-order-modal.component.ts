@@ -49,11 +49,19 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   isLoading = false;
   isSubmitting = false;
   loadFailed = false;
+  isCourierStationLoading = false;
   orderDateObject: Date;
   availableStations: AvailableCourierDto[] = [];
   stationCheckRequired = false;
   isFallbackMode = false;
   private priceMap: Record<number, number> = {};
+
+  readonly searchStation = (term: string, item: AvailableCourierDto): boolean => {
+    const q = term.toLowerCase();
+    return (item.providerName?.toLowerCase().includes(q) ?? false)
+        || (item.stationName?.toLowerCase().includes(q) ?? false)
+        || (item.area?.toLowerCase().includes(q) ?? false);
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -85,7 +93,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         [dropdownRequiredValidator()],
       ],
       area: [
-        this.newOrderDto.area,        
+        null,
         [dropdownRequiredValidator()],
       ],
       quantity: [
@@ -93,7 +101,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         Validators.compose([Validators.required, Validators.min(1)]),
       ],
       note: [this.newOrderDto.note],
-      courierStationId: [this.newOrderDto.courierStationId],
+      courierStationId: [null],
       fallbackAddress: [this.newOrderDto.fallbackAddress],
     }, { validators: [minOrderKgValidator(10)] });
   }
@@ -186,24 +194,17 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         quantity: firstItem?.quantity,
         note: firstItem?.note
       });
-    } else{
+    } else {
       this.orderForm.patchValue({
         mangoType: this.mangoTypeId || 0,
         crateType: 0,
-        area: '0',
+        area: null,
         quantity: 1,
         note: ''
       });
     }
 
     this.isLoading = false;
-  }
-
-  private handleLoadError(): void {
-    this.loadFailed = true;
-    if (!this.orderForm) {
-      this.orderForm = this.buildForm();
-    }
   }
 
   addOrder(): void {
@@ -317,8 +318,12 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonText: 'Yes, Save it',
       cancelButtonText: 'Cancel',
-      confirmButtonColor: '#0d6efd',  // Bootstrap primary
-      cancelButtonColor: '#6c757d'    // Bootstrap secondary
+      confirmButtonColor: '#0d6efd',
+      cancelButtonColor: '#6c757d',
+      heightAuto: false,
+      scrollbarPadding: false,
+      allowOutsideClick: false,
+      allowEscapeKey: true,
     }).then(result => {
       if (result.isConfirmed) {
         this.performSave();
@@ -327,9 +332,9 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   }
 
   private performSave(): void {
-    if (this.orderDetails.length === 0) { 
-      Swal.fire("ORDER MISSING", "Please complete your new order."); 
-      return; 
+    if (this.orderDetails.length === 0) {
+      Swal.fire({ title: 'Order Missing', text: 'Please complete your new order.', icon: 'warning', heightAuto: false, scrollbarPadding: false });
+      return;
     }
     this.prepareData();
     if (this.orderDto.id) {
@@ -352,8 +357,12 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     showCancelButton: true,
     confirmButtonText: 'Yes, cancel',
     cancelButtonText: 'Go back',
-    confirmButtonColor: '#dc3545', // red
-    cancelButtonColor: '#6c757d'   // secondary
+    confirmButtonColor: '#dc3545',
+    cancelButtonColor: '#6c757d',
+    heightAuto: false,
+    scrollbarPadding: false,
+    allowOutsideClick: false,
+    allowEscapeKey: true,
   }).then(result => {
     if (result.isConfirmed) {
       this.modal.dismiss();
@@ -368,15 +377,15 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (res: any) => {
         if (res?.succeeded) {
-          Swal.fire('SUCCESS', 'Order updated successfully.', 'success');
+          Swal.fire({ title: 'Success', text: 'Order updated successfully.', icon: 'success', heightAuto: false, scrollbarPadding: false });
           this.modal.close('success');
         } else {
           const msg = res?.messages?.join('\n') ?? 'Order update failed.';
-          Swal.fire('Update Failed', msg, 'warning');
+          Swal.fire({ title: 'Update Failed', text: msg, icon: 'warning', heightAuto: false, scrollbarPadding: false });
         }
       },
       error: () => {
-        Swal.fire('FAILED', 'Order update failed.', 'error');
+        Swal.fire({ title: 'Failed', text: 'Order update failed.', icon: 'error', heightAuto: false, scrollbarPadding: false });
       }
     });
   }
@@ -388,15 +397,15 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (res: any) => {
         if (res?.succeeded) {
-          Swal.fire('SUCCESS', 'Order created successfully.', 'success');
+          Swal.fire({ title: 'Success', text: 'Order created successfully.', icon: 'success', heightAuto: false, scrollbarPadding: false });
           this.modal.close('success');
         } else {
           const msg = res?.messages?.join('\n') ?? 'Order creation failed.';
-          Swal.fire('Order Not Placed', msg, 'warning');
+          Swal.fire({ title: 'Order Not Placed', text: msg, icon: 'warning', heightAuto: false, scrollbarPadding: false });
         }
       },
       error: () => {
-        Swal.fire('FAILED', 'Order creation failed.', 'error');
+        Swal.fire({ title: 'Failed', text: 'Order creation failed.', icon: 'error', heightAuto: false, scrollbarPadding: false });
       }
     });
   }
@@ -457,64 +466,80 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     };
   }
     
-    get isSaveDisabled(): boolean {
-    return !this.orderForm || !this.orderForm.valid || this.orderDetails.length === 0 || this.isSubmitting;
+  get isSaveDisabled(): boolean {
+    return !this.orderForm || !this.orderForm.valid || this.orderDetails.length === 0 || this.isSubmitting || this.isCourierStationLoading;
+  }
+
+  get hasAreaSelected(): boolean {
+    const v = this.orderForm?.get('area')?.value;
+    return !!v && v !== '0';
   }
 
   onAreaChanged(): void {
     const area = this.orderForm.get('area')?.value;
-    this.subs.sink = this.courierService.getAvailableCouriers(area).subscribe({
+    if (!area || area === '0') {
+      this.availableStations = [];
+      this.isFallbackMode = false;
+      this.isCourierStationLoading = false;
+      this.orderForm.get('courierStationId')?.reset();
+      this.updateCourierValidation();
+      this.cdRef.detectChanges();
+      return;
+    }
+    this.availableStations = [];
+    this.isFallbackMode = false;
+    this.orderForm.get('courierStationId')?.reset();
+    this.isCourierStationLoading = true;
+    this.cdRef.detectChanges();
+
+    this.subs.sink = this.courierService.getAvailableCouriers(area).pipe(
+      finalize(() => { this.isCourierStationLoading = false; this.cdRef.detectChanges(); })
+    ).subscribe({
       next: (response) => {
         this.availableStations = response.data;
-
         if (this.availableStations.length === 1) {
           this.isFallbackMode = false;
-          this.orderForm.patchValue({
-            courierStationId: this.availableStations[0].stationId
-          });
+          this.orderForm.patchValue({ courierStationId: this.availableStations[0].stationId });
         } else if (this.availableStations.length === 0) {
           this.isFallbackMode = true;
           this.orderForm.get('courierStationId')?.reset();
         } else {
           this.isFallbackMode = false;
         }
-
         this.updateCourierValidation();
-        this.cdRef.detectChanges();
       },
       error: () => {
         this.availableStations = [];
         this.isFallbackMode = true;
         this.orderForm.get('courierStationId')?.reset();
         this.updateCourierValidation();
-        this.cdRef.detectChanges();
-        Swal.fire('Courier Unavailable', 'Could not load courier options for this area. You can still place your order using a manual address.', 'warning');
+        Swal.fire({ title: 'Courier Unavailable', text: 'Unable to load courier stations for this area. Please try again.', icon: 'warning', heightAuto: false, scrollbarPadding: false });
       },
     });
   }
 
   findCourierStation(area: string, courierStationId: number): void {
-    this.subs.sink = this.courierService.getAvailableCouriers(area).subscribe({
+    this.isCourierStationLoading = true;
+
+    this.subs.sink = this.courierService.getAvailableCouriers(area).pipe(
+      finalize(() => { this.isCourierStationLoading = false; this.cdRef.detectChanges(); })
+    ).subscribe({
       next: (response) => {
         this.availableStations = response.data;
-
         const exists = this.availableStations.some(s => s.stationId === courierStationId);
         if (exists) {
           this.orderForm.patchValue({ courierStationId });
         } else {
           this.orderForm.get('courierStationId')?.reset();
         }
-
         this.updateCourierValidation();
-        this.cdRef.detectChanges();
       },
       error: () => {
         this.availableStations = [];
         this.isFallbackMode = true;
         this.orderForm.get('courierStationId')?.reset();
         this.updateCourierValidation();
-        this.cdRef.detectChanges();
-        Swal.fire('Courier Unavailable', 'Could not load courier options for this area. You can still place your order using a manual address.', 'warning');
+        Swal.fire({ title: 'Courier Unavailable', text: 'Unable to load courier stations for this area. Please try again.', icon: 'warning', heightAuto: false, scrollbarPadding: false });
       },
     });
   }

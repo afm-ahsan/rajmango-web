@@ -8,3 +8,104 @@
 
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
+// ─── ng-select ────────────────────────────────────────────────────────────────
+@import "@ng-select/ng-select/themes/default.theme.css";
+
+// Metronic "solid" skin for ng-select — matches .form-select-solid appearance
+.ng-select.ng-select-solid {
+  font-size: 1rem;
+  font-family: inherit;
+
+  // Single-select fixed height matches Bootstrap form-select-solid (42px)
+  &.ng-select-single .ng-select-container {
+    height: 42px;
+  }
+
+  .ng-select-container {
+    min-height: 42px;
+    background-color: #f5f8fa;
+    border: 1px solid #f5f8fa;
+    border-radius: 0.475rem;
+    font-size: 1rem;
+    font-family: inherit;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #5e6278;
+    transition: border-color 0.15s ease-in-out;
+
+    .ng-value-container {
+      padding-left: 0.75rem;
+
+      .ng-placeholder { color: #a1a5b7; font-size: 1rem; }
+      .ng-value        { color: #181c32; font-size: 1rem; }
+      .ng-input > input {
+        color: #5e6278;
+        background: transparent;
+        font-size: 1rem;
+        font-family: inherit;
+        font-weight: 400;
+      }
+    }
+
+    .ng-arrow-wrapper {
+      padding-right: 0.75rem;
+      .ng-arrow { border-color: #7e8299 transparent transparent; }
+    }
+  }
+
+  &.ng-select-focused .ng-select-container { border-color: #b5b5c3; box-shadow: none; }
+
+  &.ng-select-opened > .ng-select-container {
+    border-color: #b5b5c3;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  // Invalid states — reactive form and [class.is-invalid]
+  &.ng-invalid.ng-touched .ng-select-container,
+  &.is-invalid .ng-select-container { border-color: #f1416c; }
+
+  // Disabled state (set via ng-select [disabled] input)
+  &.ng-select-disabled .ng-select-container {
+    background-color: #eff2f5;
+    border-color: #eff2f5;
+    cursor: not-allowed;
+    opacity: 0.85;
+
+    .ng-value     { color: #b5b5c3; }
+    .ng-placeholder { color: #b5b5c3; }
+    .ng-arrow-wrapper .ng-arrow { border-color: #b5b5c3 transparent transparent; }
+  }
+
+  .ng-dropdown-panel {
+    border: 1px solid #e4e6ef;
+    border-top: none;
+    border-bottom-left-radius: 0.475rem;
+    border-bottom-right-radius: 0.475rem;
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.075);
+    z-index: 1055; // above Bootstrap modals (1050)
+    font-size: 1rem;
+    font-family: inherit;
+
+    .ng-option {
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 400;
+      color: #181c32;
+      padding: 0.5rem 0.75rem;
+      line-height: 1.5;
+
+      &.ng-option-marked                    { background-color: #f5f8fa; }
+      &.ng-option-selected                  { background-color: #f5f8fa; color: #009ef7; font-weight: 500; }
+      &.ng-option-selected.ng-option-marked { background-color: #e8f5fe; }
+    }
+
+    .ng-option-loading,
+    .ng-notfound-container .ng-option {
+      color: #a1a5b7;
+      font-size: 1rem;
+      font-style: italic;
+    }
+  }
+}
+

@@ -35,25 +35,55 @@
           </div>
           <div class="col-12">
             <label class="form-label fw-semibold required">Delivery Area</label>
-            <select class="form-select form-select-solid" formControlName="area"
-              [class.is-invalid]="isControlInvalid('area')" (change)="onAreaChanged()">
-              <option value="0">Select Your Area</option>
-              <option *ngFor="let area of courierAreaOptions" [value]="area.name">{{ area.name }}</option>
-            </select>
+            <ng-select
+              class="ng-select-solid"
+              formControlName="area"
+              [items]="courierAreaOptions"
+              bindLabel="name"
+              bindValue="name"
+              placeholder="Select Delivery Area"
+              [searchable]="true"
+              [clearable]="false"
+              notFoundText="No matching results found."
+              (change)="onAreaChanged()"
+              [class.is-invalid]="isControlInvalid('area')">
+            </ng-select>
             <div *ngIf="isControlInvalid('area')" class="text-danger fs-7 mt-1">Please select a delivery area.</div>
           </div>
-          <div class="col-12" *ngIf="!isFallbackMode && availableStations.length > 0">
+          <!-- Courier station: loading state -->
+          <div class="col-12" *ngIf="isCourierStationLoading">
             <label class="form-label fw-semibold required">Courier Station</label>
-            <select class="form-select form-select-solid" formControlName="courierStationId"
+            <div class="form-control form-control-solid d-flex align-items-center gap-2 text-muted">
+              <span class="spinner-border spinner-border-sm text-primary flex-shrink-0" role="status" aria-label="Loading"></span>
+              <span>Loading courier stations...</span>
+            </div>
+          </div>
+          <!-- Courier station: select (disabled until area chosen, enabled after stations load) -->
+          <div class="col-12" *ngIf="!isCourierStationLoading && !isFallbackMode">
+            <label class="form-label fw-semibold required">Courier Station</label>
+            <ng-select
+              class="ng-select-solid"
+              formControlName="courierStationId"
+              [items]="availableStations"
+              bindValue="stationId"
+              [searchFn]="searchStation"
+              placeholder="Select Courier Station"
+              [searchable]="true"
+              [clearable]="false"
+              notFoundText="No matching results found."
+              [disabled]="!hasAreaSelected"
               [class.is-invalid]="isControlInvalid('courierStationId')">
-              <option value="0">Select Station</option>
-              <option *ngFor="let station of availableStations" [value]="station.stationId">
-                {{ station.providerName }} - {{ station.stationName }} ({{ station.area }})
-              </option>
-            </select>
+              <ng-template ng-label-tmp let-item="item">
+                {{ item.providerName }} - {{ item.stationName }} ({{ item.area }})
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                {{ item.providerName }} - {{ item.stationName }} ({{ item.area }})
+              </ng-template>
+            </ng-select>
             <div *ngIf="isControlInvalid('courierStationId')" class="text-danger fs-7 mt-1">Please select a courier station.</div>
           </div>
-          <div class="col-12" *ngIf="isFallbackMode">
+          <!-- Courier station: fallback manual address -->
+          <div class="col-12" *ngIf="!isCourierStationLoading && isFallbackMode">
             <label class="form-label fw-semibold required">Manual Delivery Address</label>
             <textarea class="form-control form-control-solid" formControlName="fallbackAddress"
               [class.is-invalid]="isControlInvalid('fallbackAddress')"

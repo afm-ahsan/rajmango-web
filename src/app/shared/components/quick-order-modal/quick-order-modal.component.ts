@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, of, switchMap } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/features/auth';
@@ -43,7 +44,15 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   stationCheckRequired = false;
   isFallbackMode = false;
   isLoading = false;
+  isCourierStationLoading = false;
   subs = new SubSink();
+
+  readonly searchStation = (term: string, item: AvailableCourierDto): boolean => {
+    const q = term.toLowerCase();
+    return (item.providerName?.toLowerCase().includes(q) ?? false)
+        || (item.stationName?.toLowerCase().includes(q) ?? false)
+        || (item.area?.toLowerCase().includes(q) ?? false);
+  };
 
   constructor(
     public modal: NgbActiveModal,
@@ -67,7 +76,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
       {
         mangoType: [this.mango?.id ?? 0, [dropdownRequiredValidator()]],
         crateType: [0, [dropdownRequiredValidator()]],
-        area: ['0', [dropdownRequiredValidator()]],
+        area: [null, [dropdownRequiredValidator()]],
         quantity: [1, Validators.compose([Validators.required, Validators.min(1)])],
         note: [''],
         courierStationId: [null],
@@ -111,7 +120,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     this.orderForm.patchValue({
       mangoType: this.mango?.id ?? 0,
       crateType: 0,
-      area: '0',
+      area: null,
       quantity: 1,
       note: '',
     });
@@ -283,18 +292,44 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
 
   onAreaChanged(): void {
     const area = this.orderForm.get('area')?.value;
-    this.subs.sink = this.courierService.getAvailableCouriers(area).subscribe((response) => {
-      this.availableStations = response.data;
-      if (this.availableStations.length === 1) {
-        this.isFallbackMode = false;
-        this.orderForm.patchValue({ courierStationId: this.availableStations[0].stationId });
-      } else if (this.availableStations.length === 0) {
+    if (!area || area === '0') {
+      this.availableStations = [];
+      this.isFallbackMode = false;
+      this.isCourierStationLoading = false;
+      this.orderForm.get('courierStationId')?.reset();
+      this.updateCourierValidation();
+      this.cdRef.detectChanges();
+      return;
+    }
+    this.availableStations = [];
+    this.isFallbackMode = false;
+    this.orderForm.get('courierStationId')?.reset();
+    this.isCourierStationLoading = true;
+    this.cdRef.detectChanges();
+
+    this.subs.sink = this.courierService.getAvailableCouriers(area).pipe(
+      finalize(() => { this.isCourierStationLoading = false; this.cdRef.detectChanges(); })
+    ).subscribe({
+      next: (response) => {
+        this.availableStations = response.data;
+        if (this.availableStations.length === 1) {
+          this.isFallbackMode = false;
+          this.orderForm.patchValue({ courierStationId: this.availableStations[0].stationId });
+        } else if (this.availableStations.length === 0) {
+          this.isFallbackMode = true;
+          this.orderForm.get('courierStationId')?.reset();
+        } else {
+          this.isFallbackMode = false;
+        }
+        this.updateCourierValidation();
+      },
+      error: () => {
+        this.availableStations = [];
         this.isFallbackMode = true;
         this.orderForm.get('courierStationId')?.reset();
-      } else {
-        this.isFallbackMode = false;
-      }
-      this.updateCourierValidation();
+        this.updateCourierValidation();
+        Swal.fire('Courier Unavailable', 'Unable to load courier stations for this area. Please try again.', 'warning');
+      },
     });
   }
 
@@ -313,7 +348,12 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   }
 
   get isSaveDisabled(): boolean {
-    return !this.orderForm || !this.orderForm.valid || this.orderDetails.length === 0;
+    return !this.orderForm || !this.orderForm.valid || this.orderDetails.length === 0 || this.isCourierStationLoading;
+  }
+
+  get hasAreaSelected(): boolean {
+    const v = this.orderForm?.get('area')?.value;
+    return !!v && v !== '0';
   }
 
   isControlValid(controlName: string): boolean {

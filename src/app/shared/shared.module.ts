@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { InlineSVGModule } from 'ng-inline-svg-2';
 import { AlertModalComponent } from './components/alert-modal/alert-modal.component';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
@@ -36,9 +37,10 @@ import { CreateOrderModalComponent } from '../features/orders/create-order-modal
     FormsModule,
     ReactiveFormsModule,
     NgbModule,
+    NgSelectModule,
     InlineSVGModule,
     NgxPrintModule,
-    RouterModule, 
+    RouterModule,
   ],
   declarations: [
     TreePipe,
@@ -66,6 +68,7 @@ import { CreateOrderModalComponent } from '../features/orders/create-order-modal
     CreateOrderModalComponent,
   ],
   exports: [
+    NgSelectModule,
     TreePipe,
     YesNoPipe,
     LoaderComponent,
