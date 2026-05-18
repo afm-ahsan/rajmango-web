@@ -33,6 +33,8 @@ export class PermissionService {
     14: { 1: 'report.view'                                                                                                                                                     },
     15: { 1: 'user.view',                 2: 'user.create',                 3: 'user.update',                 4: 'user.delete',                 5: 'user.permission.grant'     },
     16: { 1: 'role.view',                 2: 'role.create',                 3: 'role.update',                 4: 'role.delete'                                                 },
+    17: { 1: 'dashboard.admin.view'                                                                                                                                            },
+    18: { 1: 'dashboard.customer.view'                                                                                                                                         },
   };
 
   getPermissionString(featureId: number, actionId: number): string | null {
@@ -41,6 +43,29 @@ export class PermissionService {
 
   public getPermissionList(): PermissionModel[] {
     return [
+      // ─── Dashboard ────────────────────────────────────────────────────
+      {
+        area: 'Dashboard',
+        featureModels: [
+          {
+            id: 17,
+            title: 'Admin Dashboard',
+            hasAccess: false,
+            actionModels: [
+              { id: 1, action: 'View', hasAccess: false },
+            ],
+          },
+          {
+            id: 18,
+            title: 'Customer Dashboard',
+            hasAccess: false,
+            actionModels: [
+              { id: 1, action: 'View', hasAccess: false },
+            ],
+          },
+        ],
+      },
+
       // ─── Operations ───────────────────────────────────────────────────
       {
         area: 'Operations',

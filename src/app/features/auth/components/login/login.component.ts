@@ -2,10 +2,10 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@ang
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { AuthFacade } from '../../auth.facade';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
-import { environment } from 'src/environments/environment';
+import { AppConfigService } from 'src/app/core/services/app-config.service';
 
 @Component({
   selector: 'app-login',
@@ -17,12 +17,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   loginForm!: FormGroup;
   hasError = false;
+  backendErrorMessage = '';
   isSubmitting = false;
   returnUrl = '/home';
 
   turnstileToken: string | null = null;
   turnstileLoadFailed = false;
-  readonly turnstileSiteKey = environment.turnstile.siteKey;
 
   private readonly _destroy$ = new Subject<void>();
 
@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute,
     private _router: Router,
     private _cdRef: ChangeDetectorRef,
+    public appConfig: AppConfigService,
   ) {
     if (this._authFacade.currentUserValue) {
       this._router.navigate(['/home']);
@@ -89,28 +90,33 @@ export class LoginComponent implements OnInit, OnDestroy {
   get password() { return this.loginForm.get('password'); }
 
   submit(): void {
-    if (this.loginForm.invalid || this.isSubmitting || !this.turnstileToken) return;
+    if (this.loginForm.invalid || this.isSubmitting) return;
+    if (this.appConfig.turnstileEnabled && !this.turnstileToken) return;
 
     this.hasError = false;
+    this.backendErrorMessage = '';
     this.isSubmitting = true;
 
     this._authFacade
-      .login(this.email?.value, this.password?.value, this.turnstileToken)
-      .pipe(takeUntil(this._destroy$))
+      .login(this.email?.value, this.password?.value, this.appConfig.turnstileEnabled ? (this.turnstileToken ?? undefined) : undefined)
+      .pipe(
+        takeUntil(this._destroy$),
+        finalize(() => { this.isSubmitting = false; })
+      )
       .subscribe({
-        next: (user) => {
-          if (user) {
+        next: (result) => {
+          if (result.user) {
             this._router.navigate([this.returnUrl]);
           } else {
             this.hasError = true;
-            this.isSubmitting = false;
+            this.backendErrorMessage = result.messages[0] ?? '';
             this.turnstileToken = null;
             this.turnstileRef?.reset();
           }
         },
         error: () => {
           this.hasError = true;
-          this.isSubmitting = false;
+          this.backendErrorMessage = '';
           this.turnstileToken = null;
           this.turnstileRef?.reset();
         },

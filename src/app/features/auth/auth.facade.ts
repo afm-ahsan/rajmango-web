@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AuthService } from './services/auth.service';
+import { AuthService, UserType } from './services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFacade {
@@ -14,7 +14,7 @@ export class AuthFacade {
     return this.authService.currentUserValue;
   }
 
-  login(email: string, password: string, turnstileToken?: string) {
+  login(email: string, password: string, turnstileToken?: string): Observable<{ user: UserType; messages: string[] }> {
     return this.authService.login(email, password, turnstileToken);
   }
 }

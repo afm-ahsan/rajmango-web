@@ -43,16 +43,23 @@ export class AuthService implements OnDestroy {
     });
   }
 
-  login(email: string, password: string, turnstileToken?: string): Observable<UserType> {
-    if (!email || !password) return of(undefined);
+  login(email: string, password: string, turnstileToken?: string): Observable<{ user: UserType; messages: string[] }> {
+    if (!email || !password) return of({ user: undefined, messages: [] });
 
     this.isLoadingSubject.next(true);
     return this.authHttpService.login(email, password, turnstileToken).pipe(
-      map((auth: any) => this.setAuthToLocalStorage(auth.data)),
-      switchMap(() => this.getUserByToken()),
-      catchError(err => {
+      switchMap((res: any) => {
+        if (!res?.succeeded || !res?.data) {
+          return of({ user: undefined as UserType, messages: (res?.messages as string[]) ?? [] });
+        }
+        this.setAuthToLocalStorage(res.data);
+        return this.getUserByToken().pipe(
+          map(user => ({ user, messages: [] as string[] }))
+        );
+      }),
+      catchError((err: any) => {
         console.error('Login error:', err);
-        return of(undefined);
+        return of({ user: undefined as UserType, messages: [] as string[] });
       }),
       finalize(() => this.isLoadingSubject.next(false))
     );

@@ -9,7 +9,7 @@ import { RegisterModel } from '../../models/register.model';
 import { strongPasswordValidator } from 'src/app/shared/validators/password.validator';
 import { bdMobileValidator } from 'src/app/shared/validators/bd-mobile.validator';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
-import { environment } from 'src/environments/environment';
+import { AppConfigService } from 'src/app/core/services/app-config.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -26,7 +26,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   isSubmitting = false;
   turnstileToken: string | null = null;
   turnstileLoadFailed = false;
-  readonly turnstileSiteKey = environment.turnstile.siteKey;
+  genericErrorMessage = '';
 
   private destroy$ = new Subject<void>();
 
@@ -35,6 +35,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private cdRef: ChangeDetectorRef,
+    public appConfig: AppConfigService,
   ) {
     this.isLoading$ = this.authService.isLoading$;
 
@@ -68,9 +69,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   submit(): void {
-    if (this.registrationForm.invalid || this.isSubmitting || !this.turnstileToken) return;
+    if (this.registrationForm.invalid || this.isSubmitting) return;
+    if (this.appConfig.turnstileEnabled && !this.turnstileToken) return;
 
     this.hasError = false;
+    this.genericErrorMessage = '';
     this.isSubmitting = true;
 
     const formValue = this.registrationForm.value;
@@ -81,7 +84,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       email: formValue.email,
       phoneNumber: formValue.phoneNumber,
       password: formValue.password,
-      turnstileToken: this.turnstileToken,
+      turnstileToken: this.appConfig.turnstileEnabled ? (this.turnstileToken ?? undefined) : undefined,
     };
 
     this.authService
@@ -130,6 +133,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       }
     }
     if (!hasFieldError) {
+      this.genericErrorMessage = messages[0] ?? 'Registration failed. Please try again.';
       this.hasError = true;
     }
   }

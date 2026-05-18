@@ -3,6 +3,7 @@ import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { appInitFactory } from './core/factories/app-init.factory';
+import { AppConfigService } from './core/services/app-config.service';
 
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -43,6 +44,12 @@ import { environment } from 'src/environments/environment';
       provide: APP_INITIALIZER,
       useFactory: appInitFactory,
       deps: [AuthService, LoaderService, Router],
+      multi: true
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (appConfig: AppConfigService) => () => appConfig.loadConfig(),
+      deps: [AppConfigService],
       multi: true
     },
     {
