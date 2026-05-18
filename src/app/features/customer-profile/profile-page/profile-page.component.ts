@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { strongPasswordValidator } from 'src/app/shared/validators/password.validator';
+import { bdMobileValidator } from 'src/app/shared/validators/bd-mobile.validator';
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
@@ -61,7 +62,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.profileForm = this.fb.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      phoneNumber: ['', [Validators.required]],
+      phoneNumber: ['', [Validators.required, bdMobileValidator()]],
       currentPassword: [''],
       newPassword: ['', [Validators.minLength(6), Validators.maxLength(20), strongPasswordValidator()]],
     });

@@ -13,6 +13,7 @@ import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { ReceiverType } from 'src/app/shared/enums/receiver-type.enum';
 import { dropdownRequiredValidator } from 'src/app/shared/validators/dropdown-validators';
 import { minOrderKgValidator } from 'src/app/shared/validators/order-validators';
+import { bdMobileValidator } from 'src/app/shared/validators/bd-mobile.validator';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../auth';
@@ -610,7 +611,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     const mobileControl = this.orderForm.get('receiverMobileNumber');
     if (type === ReceiverType.Others) {
       nameControl?.setValidators([Validators.required]);
-      mobileControl?.setValidators([Validators.required, Validators.maxLength(20)]);
+      mobileControl?.setValidators([Validators.required, bdMobileValidator()]);
     } else {
       nameControl?.clearValidators();
       mobileControl?.clearValidators();

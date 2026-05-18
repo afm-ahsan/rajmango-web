@@ -7,6 +7,7 @@ import { AuthService } from '../../services/auth.service';
 import { ConfirmPasswordValidator } from './confirm-password.validator';
 import { RegisterModel } from '../../models/register.model';
 import { strongPasswordValidator } from 'src/app/shared/validators/password.validator';
+import { bdMobileValidator } from 'src/app/shared/validators/bd-mobile.validator';
 import { TurnstileComponent } from '../turnstile/turnstile.component';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
@@ -117,7 +118,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
         lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
         email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
-        phoneNumber: ['', [Validators.required, Validators.maxLength(20)]],
+        phoneNumber: ['', [Validators.required, bdMobileValidator()]],
         password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), strongPasswordValidator()]],
         cPassword: ['', [Validators.required]],
         agree: [false, Validators.requiredTrue],
@@ -157,7 +158,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
   readonly phoneNumberErrors = [
     { key: 'required', msg: 'Phone number is required' },
-    { key: 'maxlength', msg: 'Phone number must be at most 20 characters' },
+    { key: 'bdMobile', msg: 'Please enter a valid Bangladesh mobile number.' },
   ];
 
   readonly passwordErrors = [

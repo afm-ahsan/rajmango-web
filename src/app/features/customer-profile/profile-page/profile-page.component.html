@@ -105,7 +105,8 @@
                 <input type="text" class="form-control form-control-lg"
                   formControlName="phoneNumber"
                   [class.is-invalid]="isInvalid('phoneNumber')" />
-                <div *ngIf="isInvalid('phoneNumber')" class="invalid-feedback">Phone number is required.</div>
+                <div *ngIf="isInvalid('phoneNumber') && profileForm.get('phoneNumber')?.errors?.['required']" class="invalid-feedback">Phone number is required.</div>
+                <div *ngIf="isInvalid('phoneNumber') && profileForm.get('phoneNumber')?.errors?.['bdMobile']" class="invalid-feedback">Please enter a valid Bangladesh mobile number.</div>
               </div>
             </div>
 

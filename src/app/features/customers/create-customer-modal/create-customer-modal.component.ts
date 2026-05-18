@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { bdMobileValidator } from 'src/app/shared/validators/bd-mobile.validator';
 import { catchError, first, of } from 'rxjs';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
 import { SubSink } from 'subsink';
@@ -77,7 +78,7 @@ export class CreateCustomerModalComponent implements OnInit, OnDestroy {
         ]),
       ],
       email: [this.customerDto.email],
-      phoneNumber: [this.customerDto.phoneNumber],
+      phoneNumber: [this.customerDto.phoneNumber, [bdMobileValidator()]],
       address: [this.customerDto.address],
       isActive: [this.customerDto.isActive],
       customerType: [this.customerDto.customerType],

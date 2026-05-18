@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { strongPasswordValidator } from 'src/app/shared/validators/password.validator';
+import { bdMobileValidator } from 'src/app/shared/validators/bd-mobile.validator';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, first, of } from 'rxjs';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
@@ -145,7 +146,7 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
         ],
         phoneNumber: [
           this.userDto.phoneNumber,
-          Validators.compose([Validators.required]),
+          Validators.compose([Validators.required, bdMobileValidator()]),
         ],
         password: [
           '',

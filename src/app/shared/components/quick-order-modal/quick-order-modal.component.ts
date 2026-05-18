@@ -25,6 +25,7 @@ import { EnumLabelUtils } from '../../utils/enum-label.utils';
 import { ReceiverType } from '../../enums/receiver-type.enum';
 import { dropdownRequiredValidator } from '../../validators/dropdown-validators';
 import { minOrderKgValidator } from '../../validators/order-validators';
+import { bdMobileValidator } from '../../validators/bd-mobile.validator';
 
 @Component({
   selector: 'app-quick-order-modal',
@@ -165,7 +166,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     const mobileControl = this.orderForm.get('receiverMobileNumber');
     if (type === ReceiverType.Others) {
       nameControl?.setValidators([Validators.required]);
-      mobileControl?.setValidators([Validators.required, Validators.maxLength(20)]);
+      mobileControl?.setValidators([Validators.required, bdMobileValidator()]);
     } else {
       nameControl?.clearValidators();
       mobileControl?.clearValidators();
