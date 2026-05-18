@@ -35,7 +35,9 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
         this.errorLogger.logHttpError(error);
         this.errorMessageService.handleHttpError(error);
 
-        if (error.status === 401 || error.status === 408) {
+        const onAuthPage = this.router.url.startsWith('/auth');
+        const onErrorPage = this.router.url.startsWith('/error');
+        if ((error.status === 401 || error.status === 408) && !onAuthPage && !onErrorPage) {
           this.router.navigateByUrl('/auth/login');
         }
 

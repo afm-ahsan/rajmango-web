@@ -38,14 +38,16 @@ export class AuthService implements OnDestroy {
     private authHttpService: AuthHttpService,
     private permissionService: UserPermissionService
   ) {
-    this.subs.sink = this.getUserByToken().subscribe();
+    this.subs.sink = this.getUserByToken().subscribe({
+      error: (err) => console.error('Failed to restore session on init:', err)
+    });
   }
 
-  login(email: string, password: string): Observable<UserType> {
+  login(email: string, password: string, turnstileToken?: string): Observable<UserType> {
     if (!email || !password) return of(undefined);
 
     this.isLoadingSubject.next(true);
-    return this.authHttpService.login(email, password).pipe(
+    return this.authHttpService.login(email, password, turnstileToken).pipe(
       map((auth: any) => this.setAuthToLocalStorage(auth.data)),
       switchMap(() => this.getUserByToken()),
       catchError(err => {
@@ -64,13 +66,13 @@ export class AuthService implements OnDestroy {
     this.router.navigate(['/auth/login']);
   }
 
-  registration(user: RegisterModel): Observable<UserType> {
+  registration(user: RegisterModel): Observable<boolean> {
     this.isLoadingSubject.next(true);
     return this.authHttpService.registerUser(user).pipe(
-      switchMap(() => this.login(user.email, user.password)),
+      map(() => true),
       catchError(err => {
         console.error('Registration error:', err);
-        return of(undefined);
+        return of(false);
       }),
       finalize(() => this.isLoadingSubject.next(false))
     );

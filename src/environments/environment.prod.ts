@@ -16,6 +16,10 @@ export const environment = {
   USERID_KEY: 'authf172fc2a1f98',
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
+  turnstile: {
+    // Replace with your production site key from the Cloudflare dashboard
+    siteKey: '0x4AAAAAADRoFVu2_xec2NJH',
+  },
   application: {
     baseUrl,
     name: 'RajMango',

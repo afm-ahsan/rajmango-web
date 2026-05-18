@@ -34,7 +34,7 @@ export class GlobalErrorHandlerService implements ErrorHandler {
       });
     });
 
-    // Optionally redirect on fatal app errors
-    this.router.navigateByUrl('/error'); // add this route if needed
+    // Redirect to 500 page on fatal unhandled app errors
+    this.router.navigateByUrl('/error/500');
   }
 }

@@ -24,12 +24,9 @@ export class AuthHttpService {
   //   });
   // }
 
-  login(email: string, password: string): Observable<any> {
+  login(email: string, password: string, turnstileToken?: string): Observable<any> {
     return this.httpClient
-      .post(`${this.apiUrl}/login`, {
-        email,
-        password,
-      })
+      .post(`${this.apiUrl}/login`, { email, password, turnstileToken })
       .pipe(catchError(this.handleError));
   }
 

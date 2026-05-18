@@ -137,6 +137,13 @@ const Routing: Routes = [
       import('../features/roles/role.module').then((m) => m.RoleModule),
   },
 
+  // ─── Error pages (inside layout so header/user-menu remain visible) ─────
+  {
+    path: 'error',
+    loadChildren: () =>
+      import('../features/errors/errors.module').then((m) => m.ErrorsModule),
+  },
+
   // ─── Fallback ────────────────────────────────────────────────────────
   {
     path: '',

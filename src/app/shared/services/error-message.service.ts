@@ -10,42 +10,39 @@ export class ErrorMessageService {
 
   public handleHttpError(error: HttpErrorResponse): void {
     if (error.error instanceof ErrorEvent) {
-      this.showClientError(error.error.message);
-    } else {
-      switch (error.status) {
-        case 401:
-          this.showUnauthorized();
-          break;
-        case 403:
-          this.showForbidden();
-          break;
-        case 408:
-          this.showTimeout();
-          break;
-        default:
-          this.showUnknownError(error.message);
-          break;
-      }
+      // Network-level client error (e.g. CORS, DNS failure before a response arrives)
+      Swal.fire('Connection Error', 'Unable to connect to the server. Please check your internet connection and try again.', 'warning');
+      return;
     }
-  }
 
-  private showClientError(message: string): void {
-    Swal.fire('Client Error', message, 'warning');
-  }
-
-  private showUnauthorized(): void {
-    Swal.fire('Unauthorized', 'Your session has expired. Please log in again.', 'warning');
-  }
-
-  private showForbidden(): void {
-    Swal.fire('Access Denied', 'You don\'t have permission to access this resource.', 'warning');
-  }
-
-  private showTimeout(): void {
-    Swal.fire('Timeout', 'The request timed out. Please try again.', 'warning');
-  }
-
-  private showUnknownError(message: string): void {
-    Swal.fire('Error', message || 'An unexpected error occurred.', 'error');
+    switch (error.status) {
+      case 0:
+        Swal.fire('Connection Error', 'Unable to connect to the server. Please check your internet connection and try again.', 'warning');
+        break;
+      case 400:
+        Swal.fire('Invalid Request', 'Some information looks incorrect. Please review and try again.', 'warning');
+        break;
+      case 401:
+        Swal.fire('Session Expired', 'Your session has expired. Please sign in again.', 'warning');
+        break;
+      case 403:
+        Swal.fire('Access Denied', 'You do not have permission to perform this action. Please contact support if this seems incorrect.', 'warning');
+        break;
+      case 404:
+        Swal.fire('Not Found', 'The requested information could not be found.', 'warning');
+        break;
+      case 408:
+        Swal.fire('Request Timeout', 'The request took too long. Please try again.', 'warning');
+        break;
+      case 409:
+        Swal.fire('Conflict', 'This record may already exist or was changed recently. Please refresh and try again.', 'warning');
+        break;
+      case 500:
+        Swal.fire('Server Error', 'Something went wrong on our side. Please try again shortly.', 'error');
+        break;
+      default:
+        Swal.fire('Unexpected Error', 'Something went wrong. Please try again.', 'error');
+        break;
+    }
   }
 }

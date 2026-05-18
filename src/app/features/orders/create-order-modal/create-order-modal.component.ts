@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, of, switchMap } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
@@ -48,6 +48,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   isLoading = false;
   isSubmitting = false;
+  loadFailed = false;
   orderDateObject: Date;
   availableStations: AvailableCourierDto[] = [];
   stationCheckRequired = false;
@@ -69,7 +70,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.crateTypeOptions = this.dropdownService.getCrateTypeOptions();
-    this.initNewOrder();
+    this.newOrderDto = this.initNewOrder();
     this.loadData();
   }
 
@@ -103,16 +104,27 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
 
   loadData(): void {
     this.isLoading = true;
+    this.loadFailed = false;
+
+    const mangoTypes$ = this.mangoTypeService.list().pipe(
+      catchError(() => { this.loadFailed = true; return of({ data: [] }); })
+    );
+    const courierAreas$ = this.courierAreaService.getDropdown().pipe(
+      catchError(() => { this.loadFailed = true; return of({ data: [] }); })
+    );
+    const availabilities$ = this.availabilityProxy.get().pipe(
+      catchError(() => { this.loadFailed = true; return of({ data: [] }); })
+    );
 
     this.subs.sink = forkJoin({
-        mangoTypes: this.mangoTypeService.list(),
-        courierAreas: this.courierAreaService.getDropdown(),
-        availabilities: this.availabilityProxy.get(),
-      }).pipe(
+      mangoTypes: mangoTypes$,
+      courierAreas: courierAreas$,
+      availabilities: availabilities$,
+    }).pipe(
       switchMap(({ mangoTypes, courierAreas, availabilities }) => {
-        this.mangoTypes = mangoTypes.data;
+        this.mangoTypes = mangoTypes.data ?? [];
         this.mangoTypeOptions = this.dropdownService.mapToEntityDropdown(this.mangoTypes, 'id', 'name');
-        this.courierAreaOptions = courierAreas.data;
+        this.courierAreaOptions = courierAreas.data ?? [];
         const activeAvail: MangoAvailabilityDto[] = availabilities.data ?? [];
         this.priceMap = activeAvail.reduce((map, a) => {
           map[a.mangoTypeId] = a.pricePerKg;
@@ -125,8 +137,11 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
           return of(null);
         }
 
-        return this.orderService.getById(this.id);
-      })
+        return this.orderService.getById(this.id).pipe(
+          catchError(() => { this.loadFailed = true; return of(null); })
+        );
+      }),
+      finalize(() => { this.isLoading = false; this.cdRef.detectChanges(); })
     ).subscribe({
       next: (orderRes) => {
         if (orderRes) {
@@ -137,7 +152,12 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
           this.cdRef.detectChanges();
         }
       },
-      error: () => this.handleLoadError()
+      error: () => {
+        this.loadFailed = true;
+        if (!this.orderForm) {
+          this.orderForm = this.buildForm();
+        }
+      }
     });
   }
 
@@ -180,8 +200,10 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   }
 
   private handleLoadError(): void {
-    this.isLoading = false;
-    Swal.fire('Failed', 'Failed to load data.', 'error');
+    this.loadFailed = true;
+    if (!this.orderForm) {
+      this.orderForm = this.buildForm();
+    }
   }
 
   addOrder(): void {
@@ -441,38 +463,59 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
 
   onAreaChanged(): void {
     const area = this.orderForm.get('area')?.value;
-    this.subs.sink = this.courierService.getAvailableCouriers(area).subscribe(response => {
-      this.availableStations = response.data;
+    this.subs.sink = this.courierService.getAvailableCouriers(area).subscribe({
+      next: (response) => {
+        this.availableStations = response.data;
 
-      if (this.availableStations.length === 1) {
-        this.isFallbackMode = false;
-        this.orderForm.patchValue({ 
-          courierStationId: this.availableStations[0].stationId 
-        });
-      } else if (this.availableStations.length === 0) {
+        if (this.availableStations.length === 1) {
+          this.isFallbackMode = false;
+          this.orderForm.patchValue({
+            courierStationId: this.availableStations[0].stationId
+          });
+        } else if (this.availableStations.length === 0) {
+          this.isFallbackMode = true;
+          this.orderForm.get('courierStationId')?.reset();
+        } else {
+          this.isFallbackMode = false;
+        }
+
+        this.updateCourierValidation();
+        this.cdRef.detectChanges();
+      },
+      error: () => {
+        this.availableStations = [];
         this.isFallbackMode = true;
         this.orderForm.get('courierStationId')?.reset();
-      } else {
-        this.isFallbackMode = false;
-      }
-
-      this.updateCourierValidation();
+        this.updateCourierValidation();
+        this.cdRef.detectChanges();
+        Swal.fire('Courier Unavailable', 'Could not load courier options for this area. You can still place your order using a manual address.', 'warning');
+      },
     });
   }
 
   findCourierStation(area: string, courierStationId: number): void {
-    this.subs.sink = this.courierService.getAvailableCouriers(area).subscribe(response => {
-      this.availableStations = response.data;
-      
-      // Check if the provided courierStationId exists in the available list
-      const exists = this.availableStations.some(s => s.stationId === courierStationId);
-      if (exists) {
-        this.orderForm.patchValue({ courierStationId });
-      } else {
-        this.orderForm.get('courierStationId')?.reset();
-      }
+    this.subs.sink = this.courierService.getAvailableCouriers(area).subscribe({
+      next: (response) => {
+        this.availableStations = response.data;
 
-      this.updateCourierValidation();
+        const exists = this.availableStations.some(s => s.stationId === courierStationId);
+        if (exists) {
+          this.orderForm.patchValue({ courierStationId });
+        } else {
+          this.orderForm.get('courierStationId')?.reset();
+        }
+
+        this.updateCourierValidation();
+        this.cdRef.detectChanges();
+      },
+      error: () => {
+        this.availableStations = [];
+        this.isFallbackMode = true;
+        this.orderForm.get('courierStationId')?.reset();
+        this.updateCourierValidation();
+        this.cdRef.detectChanges();
+        Swal.fire('Courier Unavailable', 'Could not load courier options for this area. You can still place your order using a manual address.', 'warning');
+      },
     });
   }
 

@@ -11,7 +11,12 @@
     <h1 id="registerTitle" class="text-dark mb-3">Create an Account</h1>
     <div class="text-gray-400 fw-bold fs-4">
       Already have an account?
-      <a routerLink="/auth/login" class="link-primary fw-bolder">Sign in?</a>
+      <ng-container *ngIf="!isSubmitting">
+        <a routerLink="/auth/login" class="link-primary fw-bolder">Sign in?</a>
+      </ng-container>
+      <ng-container *ngIf="isSubmitting">
+        <span class="link-primary fw-bolder" style="opacity: 0.5; cursor: default;">Sign in?</span>
+      </ng-container>
     </div>
   </div>
   <!--end::Heading-->
@@ -234,17 +239,37 @@
   </div>
   <!--end::Agree-->
 
+  <!--begin::Turnstile-->
+  <div class="fv-row mb-7">
+    <app-turnstile
+      #turnstile
+      [siteKey]="turnstileSiteKey"
+      theme="light"
+      size="flexible"
+      (resolved)="onTurnstileResolved($event)"
+      (errored)="onTurnstileError()"
+      (loadFailed)="onTurnstileLoadFailed()"
+    ></app-turnstile>
+  </div>
+  <div *ngIf="turnstileLoadFailed" class="mb-5 alert alert-warning" role="alert">
+    <div class="alert-text fw-bold">
+      Security verification could not load. Please check your connection and
+      <a href="/auth/registration" class="alert-link">refresh the page</a>.
+    </div>
+  </div>
+  <!--end::Turnstile-->
+
   <!--begin::Actions-->
   <div class="text-center">
     <button
       type="submit"
-      [disabled]="registrationForm.invalid || !agree?.value"
+      [disabled]="registrationForm.invalid || !agree?.value || !turnstileToken || turnstileLoadFailed || isSubmitting"
       class="btn btn-lg btn-primary w-100 mb-5"
     >
-      <ng-container *ngIf="(isLoading$ | async) === false">
+      <ng-container *ngIf="!isSubmitting">
         <span class="indicator-label">Submit</span>
       </ng-container>
-      <ng-container *ngIf="isLoading$ | async">
+      <ng-container *ngIf="isSubmitting">
         <span class="indicator-progress d-block">
           Please wait...
           <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
@@ -252,12 +277,14 @@
       </ng-container>
     </button>
 
-    <a
+    <button
+      type="button"
+      [disabled]="isSubmitting"
       routerLink="/auth/login"
       class="btn btn-lg btn-light-primary w-100"
     >
       Cancel
-    </a>
+    </button>
   </div>
   <!--end::Actions-->
 </form>

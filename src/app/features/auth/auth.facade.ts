@@ -14,7 +14,7 @@ export class AuthFacade {
     return this.authService.currentUserValue;
   }
 
-  login(email: string, password: string) {
-    return this.authService.login(email, password);
+  login(email: string, password: string, turnstileToken?: string) {
+    return this.authService.login(email, password, turnstileToken);
   }
 }

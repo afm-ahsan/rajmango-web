@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
@@ -7,6 +7,9 @@ import { AuthService } from '../../services/auth.service';
 import { ConfirmPasswordValidator } from './confirm-password.validator';
 import { RegisterModel } from '../../models/register.model';
 import { strongPasswordValidator } from 'src/app/shared/validators/password.validator';
+import { TurnstileComponent } from '../turnstile/turnstile.component';
+import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-registration',
@@ -14,16 +17,23 @@ import { strongPasswordValidator } from 'src/app/shared/validators/password.vali
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
+  @ViewChild('turnstile') turnstileRef?: TurnstileComponent;
+
   registrationForm!: FormGroup;
   isLoading$: Observable<boolean>;
   hasError = false;
+  isSubmitting = false;
+  turnstileToken: string | null = null;
+  turnstileLoadFailed = false;
+  readonly turnstileSiteKey = environment.turnstile.siteKey;
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdRef: ChangeDetectorRef,
   ) {
     this.isLoading$ = this.authService.isLoading$;
 
@@ -39,6 +49,66 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  onTurnstileResolved(token: string): void {
+    this.turnstileToken = token;
+    this.cdRef.detectChanges();
+  }
+
+  onTurnstileError(): void {
+    this.turnstileToken = null;
+    this.cdRef.detectChanges();
+  }
+
+  onTurnstileLoadFailed(): void {
+    this.turnstileLoadFailed = true;
+    this.cdRef.detectChanges();
+  }
+
+  submit(): void {
+    if (this.registrationForm.invalid || this.isSubmitting || !this.turnstileToken) return;
+
+    this.hasError = false;
+    this.isSubmitting = true;
+
+    const formValue = this.registrationForm.value;
+
+    const newUser: RegisterModel = {
+      firstName: formValue.firstName,
+      lastName: formValue.lastName,
+      email: formValue.email,
+      phoneNumber: formValue.phoneNumber,
+      password: formValue.password,
+      turnstileToken: this.turnstileToken,
+    };
+
+    this.authService
+      .registration(newUser)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (success) => {
+          if (success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Registration Successful 🎉',
+              text: 'Your account has been created successfully. We are redirecting you to the login page so you can sign in and start exploring RajMango.',
+              confirmButtonText: 'Continue to Login',
+              timer: 3000,
+              timerProgressBar: true,
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+            }).then(() => {
+              this.router.navigate(['/auth/login']);
+            });
+          } else {
+            this.hasError = true;
+            this.isSubmitting = false;
+            this.turnstileToken = null;
+            this.turnstileRef?.reset();
+          }
+        },
+      });
   }
 
   private initializeForm(): void {
@@ -58,67 +128,14 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     );
   }
 
-  submit(): void {
-  if (this.registrationForm.invalid) return;
-
-  this.hasError = false;
-
-  const formValue = this.registrationForm.value;
-
-  const newUser: RegisterModel = {
-    firstName: formValue.firstName,
-    lastName: formValue.lastName,
-    email: formValue.email,
-    phoneNumber: formValue.phoneNumber,
-    password: formValue.password,
-  };
-
-  this.authService
-    .registration(newUser)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (user) => {
-        if (user) {
-          this.router.navigate(['/']);
-        } else {
-          this.hasError = true;
-        }
-      },
-      error: () => {
-        this.hasError = true;
-      },
-    });
-}
-
-
   // Form accessors
-  get firstName() {
-    return this.registrationForm.get('firstName');
-  }
-
-  get lastName() {
-    return this.registrationForm.get('lastName');
-  }
-
-  get email() {
-    return this.registrationForm.get('email');
-  }
-
-  get phoneNumber() {
-    return this.registrationForm.get('phoneNumber');
-  }
-
-  get password() {
-    return this.registrationForm.get('password');
-  }
-
-  get cPassword() {
-    return this.registrationForm.get('cPassword');
-  }
-
-  get agree() {
-    return this.registrationForm.get('agree');
-  }
+  get firstName() { return this.registrationForm.get('firstName'); }
+  get lastName()  { return this.registrationForm.get('lastName'); }
+  get email()     { return this.registrationForm.get('email'); }
+  get phoneNumber() { return this.registrationForm.get('phoneNumber'); }
+  get password()  { return this.registrationForm.get('password'); }
+  get cPassword() { return this.registrationForm.get('cPassword'); }
+  get agree()     { return this.registrationForm.get('agree'); }
 
   readonly firstNameErrors = [
     { key: 'required', msg: 'First name is required' },

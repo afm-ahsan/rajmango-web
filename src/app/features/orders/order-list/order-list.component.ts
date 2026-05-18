@@ -94,6 +94,10 @@ export class OrderListComponent implements OnInit, OnDestroy {
           this.orders = data;
           this.totalCount = count;
         },
+        error: () => {
+          this.orders = [];
+          this.totalCount = 0;
+        },
       });
   }
 
