@@ -24,6 +24,7 @@ import { ScriptsInitComponent } from './components/scripts-init/scripts-init.com
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { TopbarComponent } from './components/topbar/topbar.component';
 import { LayoutComponent } from './layout.component';
+import { AnnouncementTickerComponent } from './components/announcement-ticker/announcement-ticker.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     LayoutComponent,
+    AnnouncementTickerComponent,
     AsideComponent,
     HeaderComponent,
     ContentComponent,

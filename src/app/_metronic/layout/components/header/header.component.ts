@@ -44,13 +44,19 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  isErrorPage = false;
+
   routingChanges() {
     const routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd || event instanceof NavigationCancel) {
         MenuComponent.reinitialization();
       }
+      if (event instanceof NavigationEnd) {
+        this.isErrorPage = event.urlAfterRedirects.startsWith('/error');
+      }
     });
     this.unsubscribe.push(routerSubscription);
+    this.isErrorPage = this.router.url.startsWith('/error');
   }
 
   ngOnDestroy() {

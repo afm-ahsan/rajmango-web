@@ -1,10 +1,14 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   ViewChild,
   ElementRef,
   AfterViewInit,
 } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { LayoutService } from './core/layout.service';
 import { LayoutInitService } from './core/layout-init.service';
 
@@ -13,7 +17,7 @@ import { LayoutInitService } from './core/layout-init.service';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
 })
-export class LayoutComponent implements OnInit, AfterViewInit {
+export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   // Public variables
   selfLayout = 'default';
   asideSelfDisplay: true;
@@ -39,13 +43,17 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   extrasQuickPanelDisplay = false;
   extrasScrollTopDisplay = false;
   asideDisplay: boolean;
+  isErrorPage = false;
   @ViewChild('ktAside', { static: true }) ktAside: ElementRef;
   @ViewChild('ktHeaderMobile', { static: true }) ktHeaderMobile: ElementRef;
   @ViewChild('ktHeader', { static: true }) ktHeader: ElementRef;
 
+  private routerSub: Subscription;
+
   constructor(
     private initService: LayoutInitService,
-    private layout: LayoutService
+    private layout: LayoutService,
+    private router: Router
   ) {
     this.initService.init();
   }
@@ -58,6 +66,17 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.asideCSSClasses = this.layout.getStringCSSClasses('aside');
     this.headerCSSClasses = this.layout.getStringCSSClasses('header');
     this.headerHTMLAttributes = this.layout.getHTMLAttributes('headerMenu');
+
+    this.isErrorPage = this.router.url.startsWith('/error');
+    this.routerSub = this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd)
+    ).subscribe(e => {
+      this.isErrorPage = (e as NavigationEnd).urlAfterRedirects.startsWith('/error');
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.routerSub?.unsubscribe();
   }
 
   ngAfterViewInit(): void {

@@ -1,0 +1,17 @@
+<div
+  class="ticker-outer"
+  [class.inline]="inline"
+  role="marquee"
+  aria-label="Announcements"
+  (mouseenter)="isPaused = true"
+  (mouseleave)="isPaused = false"
+>
+  <div class="ticker-track" [class.paused]="isPaused">
+    <span class="ticker-item" *ngFor="let item of items">
+      <span class="ticker-sep" aria-hidden="true">◆</span>{{ item }}
+    </span>
+    <span class="ticker-item" aria-hidden="true" *ngFor="let item of items">
+      <span class="ticker-sep" aria-hidden="true">◆</span>{{ item }}
+    </span>
+  </div>
+</div>
