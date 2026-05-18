@@ -32,8 +32,7 @@ export class AuthHttpService {
 
   // CREATE =>  POST: add a new user to the server
   registerUser(data: RegisterModel): Observable<any> {
-    return this.httpClient.post(`${this.apiUrl}/registration`, data)
-      .pipe(catchError(this.handleError));
+    return this.httpClient.post(`${this.apiUrl}/registration`, data);
   }
 
   // Your server should check email => If email exists send link to the user and return true | If email doesn't exist return false

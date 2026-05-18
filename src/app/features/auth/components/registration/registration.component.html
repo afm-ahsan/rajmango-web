@@ -107,6 +107,9 @@
         }"
       ></ng-container>
     </ng-container>
+    <div *ngIf="email?.hasError('backendError') && (email?.dirty || email?.touched)" class="fv-plugins-message-container">
+      <span class="fv-help-block text-danger" role="alert">{{ email?.getError('backendError') }}</span>
+    </div>
   </div>
   <!--end::Email-->
 
@@ -136,6 +139,9 @@
         }"
       ></ng-container>
     </ng-container>
+    <div *ngIf="phoneNumber?.hasError('backendError') && (phoneNumber?.dirty || phoneNumber?.touched)" class="fv-plugins-message-container">
+      <span class="fv-help-block text-danger" role="alert">{{ phoneNumber?.getError('backendError') }}</span>
+    </div>
   </div>
   <!--end::Phone Number-->
 

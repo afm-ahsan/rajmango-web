@@ -88,8 +88,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
       .registration(newUser)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (success) => {
-          if (success) {
+        next: (result) => {
+          if (result.success) {
             Swal.fire({
               icon: 'success',
               title: 'Registration Successful 🎉',
@@ -103,13 +103,35 @@ export class RegistrationComponent implements OnInit, OnDestroy {
               this.router.navigate(['/auth/login']);
             });
           } else {
-            this.hasError = true;
+            this.applyBackendErrors(result.messages);
             this.isSubmitting = false;
             this.turnstileToken = null;
             this.turnstileRef?.reset();
+            this.cdRef.detectChanges();
           }
         },
       });
+  }
+
+  private applyBackendErrors(messages: string[]): void {
+    let hasFieldError = false;
+    for (const msg of messages) {
+      if (msg === 'Email address already exists.') {
+        this.registrationForm.get('email')!.setErrors({ backendError: msg });
+        this.registrationForm.get('email')!.markAsTouched();
+        hasFieldError = true;
+      } else if (
+        msg === 'Phone number already exists.' ||
+        msg === 'Please enter a valid Bangladesh mobile number.'
+      ) {
+        this.registrationForm.get('phoneNumber')!.setErrors({ backendError: msg });
+        this.registrationForm.get('phoneNumber')!.markAsTouched();
+        hasFieldError = true;
+      }
+    }
+    if (!hasFieldError) {
+      this.hasError = true;
+    }
   }
 
   private initializeForm(): void {

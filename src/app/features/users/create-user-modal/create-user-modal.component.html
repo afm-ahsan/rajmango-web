@@ -23,6 +23,7 @@
             placeholder="e.g. me@example.com" autocomplete="off" />
           <div *ngIf="controlHasError('required', 'email')" class="text-danger fs-7 mt-1">Email is required.</div>
           <div *ngIf="controlHasError('email', 'email')" class="text-danger fs-7 mt-1">Please enter a valid email.</div>
+          <div *ngIf="controlHasError('backendError', 'email')" class="text-danger fs-7 mt-1">{{ formGroup.get('email')?.getError('backendError') }}</div>
         </div>
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold required">First Name</label>
@@ -39,9 +40,10 @@
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold required">Phone</label>
           <input type="text" class="form-control form-control-solid" formControlName="phoneNumber"
-            placeholder="Phone number" autocomplete="off" />
+            placeholder="e.g. 01712345678" autocomplete="off" />
           <div *ngIf="controlHasError('required', 'phoneNumber')" class="text-danger fs-7 mt-1">Phone number is required.</div>
           <div *ngIf="controlHasError('bdMobile', 'phoneNumber')" class="text-danger fs-7 mt-1">Please enter a valid Bangladesh mobile number.</div>
+          <div *ngIf="controlHasError('backendError', 'phoneNumber')" class="text-danger fs-7 mt-1">{{ formGroup.get('phoneNumber')?.getError('backendError') }}</div>
         </div>
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold required">Role</label>

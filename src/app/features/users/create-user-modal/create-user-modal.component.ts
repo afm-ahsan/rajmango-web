@@ -199,7 +199,12 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
     this.subs.sink = this.userService
       .create(this.userInputDto)
       .subscribe(
-        (res: UserDto) => {
+        (res: any) => {
+          if (res?.succeeded === false) {
+            this.applyBackendErrors(res.messages ?? []);
+            this.cdRef.detectChanges();
+            return;
+          }
           this.userDto = res;
           Swal.fire('SUCCESS', 'Data saved successfully.', 'success');
           this.modal.close();
@@ -210,6 +215,21 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
           return of(this.initObject());
         }
       );
+  }
+
+  private applyBackendErrors(messages: string[]): void {
+    for (const msg of messages) {
+      if (msg === 'Email address already exists.') {
+        this.formGroup.get('email')!.setErrors({ backendError: msg });
+        this.formGroup.get('email')!.markAsTouched();
+      } else if (
+        msg === 'Phone number already exists.' ||
+        msg === 'Please enter a valid Bangladesh mobile number.'
+      ) {
+        this.formGroup.get('phoneNumber')!.setErrors({ backendError: msg });
+        this.formGroup.get('phoneNumber')!.markAsTouched();
+      }
+    }
   }
 
   prepareData() {

@@ -66,13 +66,22 @@ export class AuthService implements OnDestroy {
     this.router.navigate(['/auth/login']);
   }
 
-  registration(user: RegisterModel): Observable<boolean> {
+  registration(user: RegisterModel): Observable<{ success: boolean; messages: string[] }> {
     this.isLoadingSubject.next(true);
     return this.authHttpService.registerUser(user).pipe(
-      map(() => true),
-      catchError(err => {
-        console.error('Registration error:', err);
-        return of(false);
+      map((res: any) => ({
+        success: res?.succeeded === true,
+        messages: (res?.messages as string[]) ?? [],
+      })),
+      catchError((err: any) => {
+        const body = err?.error;
+        let messages: string[] = [];
+        if (Array.isArray(body)) {
+          messages = body;
+        } else if (Array.isArray(body?.messages)) {
+          messages = body.messages;
+        }
+        return of({ success: false, messages });
       }),
       finalize(() => this.isLoadingSubject.next(false))
     );

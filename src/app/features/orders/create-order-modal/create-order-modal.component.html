@@ -125,7 +125,7 @@
               <label class="form-label fw-semibold required">Receiver Mobile</label>
               <input type="text" class="form-control form-control-solid" formControlName="receiverMobileNumber"
                 [class.is-invalid]="isControlInvalid('receiverMobileNumber')"
-                placeholder="Enter mobile number" maxlength="20" />
+                placeholder="e.g. 01712345678" />
               <div *ngIf="isControlInvalid('receiverMobileNumber') && orderForm.get('receiverMobileNumber')?.errors?.['required']" class="text-danger fs-7 mt-1">Receiver mobile is required.</div>
               <div *ngIf="isControlInvalid('receiverMobileNumber') && orderForm.get('receiverMobileNumber')?.errors?.['bdMobile']" class="text-danger fs-7 mt-1">Please enter a valid Bangladesh mobile number.</div>
             </div>
