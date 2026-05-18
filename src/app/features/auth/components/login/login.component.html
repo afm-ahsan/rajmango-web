@@ -15,7 +15,7 @@
       class="rounded-pill img-fluid"
       style="max-width: 120px; height: auto;"
     />
-    <h2 id="loginTitle" class="text-dark mt-4 mb-3">Sign In to Raj Mango</h2>
+    <h2 id="loginTitle" class="text-dark mt-4 mb-3">Sign In to RajMango</h2>
   </div>
   <!--end::Header-->
 
@@ -29,6 +29,15 @@
     <div class="alert-text fw-bold">{{ backendErrorMessage || 'The login details are incorrect' }}</div>
   </div>
   <!--end::Error Message-->
+
+  <!--begin::Config Load Failed-->
+  <div *ngIf="appConfig.configLoadFailed" class="mb-5 alert alert-warning" role="alert">
+    <div class="alert-text fw-bold">
+      Security verification could not be configured. Please
+      <a href="/auth/login" class="alert-link">refresh the page</a> and try again.
+    </div>
+  </div>
+  <!--end::Config Load Failed-->
 
   <!--begin::Fieldset-->
   <fieldset>
@@ -101,7 +110,7 @@
   <!--end::Fieldset-->
 
   <!--begin::Turnstile-->
-  <ng-container *ngIf="appConfig.turnstileEnabled">
+  <ng-container *ngIf="appConfig.turnstileEnabled && appConfig.turnstileSiteKey">
     <div class="fv-row mb-7">
       <app-turnstile
         #turnstile
@@ -127,7 +136,7 @@
     <button
       type="submit"
       class="btn btn-lg btn-primary w-100 mb-5"
-      [disabled]="loginForm.invalid || isSubmitting || (appConfig.turnstileEnabled && (!turnstileToken || turnstileLoadFailed))"
+      [disabled]="loginForm.invalid || isSubmitting || (appConfig.turnstileEnabled && appConfig.turnstileSiteKey && (!turnstileToken || turnstileLoadFailed))"
       [attr.aria-busy]="isSubmitting ? 'true' : 'false'"
     >
       <ng-container *ngIf="isSubmitting; else submitLabel">

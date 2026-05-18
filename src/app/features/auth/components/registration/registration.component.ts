@@ -70,7 +70,7 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
   submit(): void {
     if (this.registrationForm.invalid || this.isSubmitting) return;
-    if (this.appConfig.turnstileEnabled && !this.turnstileToken) return;
+    if (this.appConfig.turnstileEnabled && this.appConfig.turnstileSiteKey && !this.turnstileToken) return;
 
     this.hasError = false;
     this.genericErrorMessage = '';
