@@ -27,29 +27,27 @@ export class AppConfigService {
             const backendSiteKey = backendEnabled ? (cfg?.siteKey ?? '') : '';
 
             if (backendEnabled && backendSiteKey) {
+              // Backend is authoritative — use its config
               this.turnstileEnabled = true;
               this.turnstileSiteKey = backendSiteKey;
-            } else if (!environment.production && (environment as any).turnstile?.siteKey) {
-              // Dev fallback: backend disabled or has no siteKey — use environment.ts test key
+            } else if ((environment as any).turnstile?.siteKey) {
+              // Backend returned disabled/empty — fall back to environment file siteKey
               this.turnstileEnabled = true;
               this.turnstileSiteKey = (environment as any).turnstile.siteKey;
-              console.info('[AppConfig] Dev fallback: using environment.ts Turnstile siteKey.');
+              console.info('[AppConfig] Env fallback: using environment.ts Turnstile siteKey.');
             } else {
               this.turnstileEnabled = false;
               this.turnstileSiteKey = '';
-              if (backendEnabled && !backendSiteKey) {
-                console.warn('[AppConfig] Turnstile is enabled but siteKey is empty.');
-              }
             }
             resolve();
           },
           error: (err) => {
             console.error('[AppConfig] Failed to load config from', `${environment.apis.default.url}/api/auth/config`, err);
-            if (!environment.production && (environment as any).turnstile?.siteKey) {
-              // Dev fallback: backend unreachable — still show Turnstile using env key
+            if ((environment as any).turnstile?.siteKey) {
+              // Backend unreachable — still show Turnstile using environment file key
               this.turnstileEnabled = true;
               this.turnstileSiteKey = (environment as any).turnstile.siteKey;
-              console.info('[AppConfig] Dev fallback (error path): using environment.ts Turnstile siteKey.');
+              console.info('[AppConfig] Env fallback (error path): using environment.ts Turnstile siteKey.');
             } else {
               this.configLoadFailed = true;
             }
