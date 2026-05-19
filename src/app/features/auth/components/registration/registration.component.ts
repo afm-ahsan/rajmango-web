@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@ang
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { ConfirmPasswordValidator } from './confirm-password.validator';
 import { RegisterModel } from '../../models/register.model';
@@ -89,7 +89,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
     this.authService
       .registration(newUser)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => { this.isSubmitting = false; })
+      )
       .subscribe({
         next: (result) => {
           if (result.success) {
@@ -107,11 +110,17 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             });
           } else {
             this.applyBackendErrors(result.messages);
-            this.isSubmitting = false;
             this.turnstileToken = null;
             this.turnstileRef?.reset();
             this.cdRef.detectChanges();
           }
+        },
+        error: () => {
+          this.hasError = true;
+          this.genericErrorMessage = 'Registration failed. Please try again.';
+          this.turnstileToken = null;
+          this.turnstileRef?.reset();
+          this.cdRef.detectChanges();
         },
       });
   }

@@ -40,6 +40,7 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
   isUploadingPhoto = false;
   photoError = '';
   avatarLoadError = false;
+  backendErrorMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -196,39 +197,47 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
   }
 
   create() {
+    this.isLoading = true;
+    this.backendErrorMessage = '';
     this.subs.sink = this.userService
       .create(this.userInputDto)
       .subscribe(
         (res: any) => {
+          this.isLoading = false;
           if (res?.succeeded === false) {
             this.applyBackendErrors(res.messages ?? []);
             this.cdRef.detectChanges();
             return;
           }
-          this.userDto = res;
           Swal.fire('SUCCESS', 'Data saved successfully.', 'success');
           this.modal.close();
         },
         (error) => {
-          this.modal.dismiss(error);
+          this.isLoading = false;
           Swal.fire('Failed', 'User creation failed.', 'error');
-          return of(this.initObject());
+          this.cdRef.detectChanges();
         }
       );
   }
 
   private applyBackendErrors(messages: string[]): void {
+    let hasFieldError = false;
     for (const msg of messages) {
       if (msg === 'Email address already exists.') {
         this.formGroup.get('email')!.setErrors({ backendError: msg });
         this.formGroup.get('email')!.markAsTouched();
+        hasFieldError = true;
       } else if (
         msg === 'Phone number already exists.' ||
         msg === 'Please enter a valid Bangladesh mobile number.'
       ) {
         this.formGroup.get('phoneNumber')!.setErrors({ backendError: msg });
         this.formGroup.get('phoneNumber')!.markAsTouched();
+        hasFieldError = true;
       }
+    }
+    if (!hasFieldError) {
+      this.backendErrorMessage = messages[0] ?? 'An error occurred. Please try again.';
     }
   }
 
