@@ -35,6 +35,7 @@ export class PermissionService {
     16: { 1: 'role.view',                 2: 'role.create',                 3: 'role.update',                 4: 'role.delete'                                                 },
     17: { 1: 'dashboard.admin.view'                                                                                                                                            },
     18: { 1: 'dashboard.customer.view'                                                                                                                                         },
+    19: { 1: 'order.admin.view',          2: 'order.admin.manage'                                                                                                              },
   };
 
   getPermissionString(featureId: number, actionId: number): string | null {
@@ -81,6 +82,15 @@ export class PermissionService {
               { id: 4, action: 'Delete', hasAccess: false },
               { id: 5, action: 'Approve', hasAccess: false },
               { id: 6, action: 'Export', hasAccess: false },
+            ],
+          },
+          {
+            id: 19,
+            title: 'Admin Order Management',
+            hasAccess: false,
+            actionModels: [
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Manage', hasAccess: false },
             ],
           },
           {

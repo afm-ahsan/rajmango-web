@@ -7,6 +7,7 @@ export class UserAccessModel {
 
   // ─── Operations ────────────────────────────────────────────────────
   hasOrderAccess: boolean;
+  hasAdminOrdersAccess: boolean;
   hasMangoTypeAccess: boolean;
   hasMangoAvailabilityAccess: boolean;
   hasCustomersAccess: boolean;

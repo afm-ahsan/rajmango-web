@@ -50,7 +50,8 @@ export class UserPermissionService {
       hasHomeAccess:    true,
       hasDashboardAccess: can(AppPermissions.Dashboard.AdminView) || can(AppPermissions.Dashboard.CustomerView),
       hasMangoCatalogAccess: can(AppPermissions.MangoTypes.View),
-      hasOrderAccess:    can(AppPermissions.Orders.View),
+      hasOrderAccess:       can(AppPermissions.Orders.View),
+      hasAdminOrdersAccess: can(AppPermissions.Orders.AdminView),
       hasComplaintsAccess: can(AppPermissions.Complaints.Submit) || can(AppPermissions.Complaints.AdminView),
       hasPoliciesAccess: can(AppPermissions.Policies.View),
 

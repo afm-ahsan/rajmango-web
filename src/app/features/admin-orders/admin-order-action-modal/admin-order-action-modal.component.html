@@ -1,0 +1,40 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h2 class="modal-title">{{ actionLabel }}</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body py-6 px-lg-8">
+
+    <p class="text-gray-700 fs-6 mb-4">{{ actionDescription }}</p>
+
+    <!-- Tracking number input only for Ship action -->
+    <div *ngIf="isShipAction" class="mb-4">
+      <label class="form-label fw-semibold">Tracking Number <span class="text-muted">(optional)</span></label>
+      <input
+        type="text"
+        class="form-control form-control-solid"
+        placeholder="e.g. SA123456BD"
+        [(ngModel)]="trackingNumber"
+      />
+    </div>
+
+    <!-- Error alert -->
+    <div class="alert alert-danger py-3" *ngIf="errorMessage">
+      <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.dismiss()" [disabled]="isSaving">
+      Cancel
+    </button>
+    <button
+      type="button"
+      [ngClass]="isCancelAction ? 'btn btn-danger' : 'btn btn-primary'"
+      (click)="submit()"
+      [disabled]="isSaving">
+      <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2" role="status"></span>
+      {{ isSaving ? 'Saving...' : actionLabel }}
+    </button>
+  </div>
+</div>

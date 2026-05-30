@@ -41,6 +41,13 @@ const Routing: Routes = [
 
   // ─── Admin — Operations ───────────────────────────────────────────────
   {
+    path: 'admin-orders',
+    canActivate: [PermissionGuard],
+    data: { requiredPermission: UserPermissionKey.HasAdminOrdersAccess },
+    loadChildren: () =>
+      import('../features/admin-orders/admin-orders.module').then((m) => m.AdminOrdersModule),
+  },
+  {
     path: 'mango-types',
     canActivate: [PermissionGuard],
     data: { requiredPermission: UserPermissionKey.HasMangoTypeAccess },

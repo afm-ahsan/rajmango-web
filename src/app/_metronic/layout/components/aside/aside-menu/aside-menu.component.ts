@@ -37,6 +37,9 @@ export class AsideMenuComponent implements OnInit {
   }
 
   // ─── Admin — Operations ────────────────────────────────────────────
+  get canViewAdminOrders(): boolean {
+    return this.permissionService.hasAccess(UserPermissionKey.HasAdminOrdersAccess);
+  }
   get canViewMangoTypes(): boolean {
     return this.permissionService.hasAccess(UserPermissionKey.HasMangoTypeAccess);
   }
