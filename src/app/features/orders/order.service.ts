@@ -93,6 +93,22 @@ export class OrderService {
       .pipe(catchError(this.handleError));
   }
 
+  overrideCourierCharge(id: number, dto: { overrideAmount: number; note: string }): Observable<any> {
+    return this.httpClient
+      .post(`${this.apiUrl}/order/${id}/override-courier-charge`, {
+        orderId: id,
+        courierChargeOverrideAmount: dto.overrideAmount,
+        courierChargeNote: dto.note
+      })
+      .pipe(catchError(this.handleError));
+  }
+
+  calculatePreview(dto: { courierStationId?: number | null; orderDetails: { mangoTypeId: number; crateType: number; quantity: number; }[] }): Observable<any> {
+    return this.httpClient
+      .post(`${this.apiUrl}/order/calculate-preview`, dto)
+      .pipe(catchError(this.handleError));
+  }
+
 // Search By Name
   filterByTitle(title: any): Observable<any> {
     return this.httpClient

@@ -141,6 +141,53 @@ export class AuthServiceProxy {
     }
 
     /**
+     * @return OK
+     */
+    getConfig(): Observable<void> {
+        let url_ = this.baseUrl + "/api/auth/config";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetConfig(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetConfig(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processGetConfig(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return OK
      */
@@ -1879,6 +1926,483 @@ export class CourierProviderServiceProxy {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = PaginatedResult_CourierProviderDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
+export class CourierRateConfigurationServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @return OK
+     */
+    getById(id: number): Observable<Result_CourierRateConfigurationDto> {
+        let url_ = this.baseUrl + "/api/courier-rate-config/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetById(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetById(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_CourierRateConfigurationDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_CourierRateConfigurationDto>;
+        }));
+    }
+
+    protected processGetById(response: HttpResponseBase): Observable<Result_CourierRateConfigurationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_CourierRateConfigurationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    update(id: number, body: UpdateCourierRateConfigCommand | undefined): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/courier-rate-config/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    delete(id: number): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/courier-rate-config/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getActiveByProvider(courierProviderId: number): Observable<Result_List_CourierRateConfigurationDto> {
+        let url_ = this.baseUrl + "/api/courier-rate-config/by-provider/{courierProviderId}/active";
+        if (courierProviderId === undefined || courierProviderId === null)
+            throw new Error("The parameter 'courierProviderId' must be defined.");
+        url_ = url_.replace("{courierProviderId}", encodeURIComponent("" + courierProviderId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetActiveByProvider(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetActiveByProvider(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_List_CourierRateConfigurationDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_List_CourierRateConfigurationDto>;
+        }));
+    }
+
+    protected processGetActiveByProvider(response: HttpResponseBase): Observable<Result_List_CourierRateConfigurationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_List_CourierRateConfigurationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getCount(): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/courier-rate-config/count";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCount(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processGetCount(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortBy (optional) 
+     * @param sortOrder (optional) 
+     * @param courierProviderId (optional) 
+     * @param isActive (optional) 
+     * @return OK
+     */
+    getPaged(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortOrder: string | undefined, courierProviderId: number | undefined, isActive: boolean | undefined): Observable<PaginatedResult_CourierRateConfigurationDto> {
+        let url_ = this.baseUrl + "/api/courier-rate-config/paged?";
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "pageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortBy === null)
+            throw new Error("The parameter 'sortBy' cannot be null.");
+        else if (sortBy !== undefined)
+            url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
+        if (sortOrder === null)
+            throw new Error("The parameter 'sortOrder' cannot be null.");
+        else if (sortOrder !== undefined)
+            url_ += "sortOrder=" + encodeURIComponent("" + sortOrder) + "&";
+        if (courierProviderId === null)
+            throw new Error("The parameter 'courierProviderId' cannot be null.");
+        else if (courierProviderId !== undefined)
+            url_ += "courierProviderId=" + encodeURIComponent("" + courierProviderId) + "&";
+        if (isActive === null)
+            throw new Error("The parameter 'isActive' cannot be null.");
+        else if (isActive !== undefined)
+            url_ += "isActive=" + encodeURIComponent("" + isActive) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaged(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaged(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedResult_CourierRateConfigurationDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedResult_CourierRateConfigurationDto>;
+        }));
+    }
+
+    protected processGetPaged(response: HttpResponseBase): Observable<PaginatedResult_CourierRateConfigurationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedResult_CourierRateConfigurationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    create(body: CreateCourierRateConfigCommand | undefined): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/courier-rate-config";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -6408,6 +6932,73 @@ export class OrderServiceProxy {
         }
         return _observableOf(null as any);
     }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    overrideCourierCharge(id: number, body: OverrideCourierChargeCommand | undefined): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/order/{id}/override-courier-charge";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOverrideCourierCharge(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOverrideCourierCharge(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processOverrideCourierCharge(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 @Injectable()
@@ -10490,6 +11081,11 @@ export interface ICourierAreaMapDto {
     courierStationName: string | undefined;
 }
 
+export enum CourierLocationType {
+    _1 = 1,
+    _2 = 2,
+}
+
 export class CourierProvider implements ICourierProvider {
     createdAt!: moment.Moment;
     createdBy!: number;
@@ -10506,6 +11102,7 @@ export class CourierProvider implements ICourierProvider {
     sequence!: number;
     isActive!: boolean;
     courierStations!: CourierStation[] | undefined;
+    courierRateConfigurations!: CourierRateConfiguration[] | undefined;
 
     constructor(data?: ICourierProvider) {
         if (data) {
@@ -10536,6 +11133,11 @@ export class CourierProvider implements ICourierProvider {
                 this.courierStations = [] as any;
                 for (let item of _data["courierStations"])
                     this.courierStations!.push(CourierStation.fromJS(item));
+            }
+            if (Array.isArray(_data["courierRateConfigurations"])) {
+                this.courierRateConfigurations = [] as any;
+                for (let item of _data["courierRateConfigurations"])
+                    this.courierRateConfigurations!.push(CourierRateConfiguration.fromJS(item));
             }
         }
     }
@@ -10568,6 +11170,11 @@ export class CourierProvider implements ICourierProvider {
             for (let item of this.courierStations)
                 data["courierStations"].push(item ? item.toJSON() : <any>undefined);
         }
+        if (Array.isArray(this.courierRateConfigurations)) {
+            data["courierRateConfigurations"] = [];
+            for (let item of this.courierRateConfigurations)
+                data["courierRateConfigurations"].push(item ? item.toJSON() : <any>undefined);
+        }
         return data;
     }
 
@@ -10595,6 +11202,7 @@ export interface ICourierProvider {
     sequence: number;
     isActive: boolean;
     courierStations: CourierStation[] | undefined;
+    courierRateConfigurations: CourierRateConfiguration[] | undefined;
 }
 
 export class CourierProviderDropdownDto implements ICourierProviderDropdownDto {
@@ -10717,6 +11325,176 @@ export interface ICourierProviderDto {
     email: string | undefined;
     isActive: boolean;
     stations: CourierStationDto[] | undefined;
+}
+
+export class CourierRateConfiguration implements ICourierRateConfiguration {
+    createdAt!: moment.Moment;
+    createdBy!: number;
+    updatedAt!: moment.Moment | undefined;
+    updatedBy!: number;
+    deletedAt!: moment.Moment | undefined;
+    deletedBy!: number;
+    isDeleted!: boolean;
+    id!: number;
+    courierProviderId!: number;
+    courierProvider!: CourierProvider;
+    courierLocationType!: CourierLocationType;
+    ratePerKg!: number;
+    minimumCharge!: number | undefined;
+    isActive!: boolean;
+    sequence!: number;
+
+    constructor(data?: ICourierRateConfiguration) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+            this.updatedAt = _data["updatedAt"] ? moment(_data["updatedAt"].toString()) : <any>undefined;
+            this.updatedBy = _data["updatedBy"];
+            this.deletedAt = _data["deletedAt"] ? moment(_data["deletedAt"].toString()) : <any>undefined;
+            this.deletedBy = _data["deletedBy"];
+            this.isDeleted = _data["isDeleted"];
+            this.id = _data["id"];
+            this.courierProviderId = _data["courierProviderId"];
+            this.courierProvider = _data["courierProvider"] ? CourierProvider.fromJS(_data["courierProvider"]) : <any>undefined;
+            this.courierLocationType = _data["courierLocationType"];
+            this.ratePerKg = _data["ratePerKg"];
+            this.minimumCharge = _data["minimumCharge"];
+            this.isActive = _data["isActive"];
+            this.sequence = _data["sequence"];
+        }
+    }
+
+    static fromJS(data: any): CourierRateConfiguration {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourierRateConfiguration();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+        data["updatedBy"] = this.updatedBy;
+        data["deletedAt"] = this.deletedAt ? this.deletedAt.toISOString() : <any>undefined;
+        data["deletedBy"] = this.deletedBy;
+        data["isDeleted"] = this.isDeleted;
+        data["id"] = this.id;
+        data["courierProviderId"] = this.courierProviderId;
+        data["courierProvider"] = this.courierProvider ? this.courierProvider.toJSON() : <any>undefined;
+        data["courierLocationType"] = this.courierLocationType;
+        data["ratePerKg"] = this.ratePerKg;
+        data["minimumCharge"] = this.minimumCharge;
+        data["isActive"] = this.isActive;
+        data["sequence"] = this.sequence;
+        return data;
+    }
+
+    clone(): CourierRateConfiguration {
+        const json = this.toJSON();
+        let result = new CourierRateConfiguration();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICourierRateConfiguration {
+    createdAt: moment.Moment;
+    createdBy: number;
+    updatedAt: moment.Moment | undefined;
+    updatedBy: number;
+    deletedAt: moment.Moment | undefined;
+    deletedBy: number;
+    isDeleted: boolean;
+    id: number;
+    courierProviderId: number;
+    courierProvider: CourierProvider;
+    courierLocationType: CourierLocationType;
+    ratePerKg: number;
+    minimumCharge: number | undefined;
+    isActive: boolean;
+    sequence: number;
+}
+
+export class CourierRateConfigurationDto implements ICourierRateConfigurationDto {
+    id!: number;
+    courierProviderId!: number;
+    courierProviderName!: string | undefined;
+    courierLocationType!: CourierLocationType;
+    ratePerKg!: number;
+    minimumCharge!: number | undefined;
+    isActive!: boolean;
+    sequence!: number;
+
+    constructor(data?: ICourierRateConfigurationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.courierProviderId = _data["courierProviderId"];
+            this.courierProviderName = _data["courierProviderName"];
+            this.courierLocationType = _data["courierLocationType"];
+            this.ratePerKg = _data["ratePerKg"];
+            this.minimumCharge = _data["minimumCharge"];
+            this.isActive = _data["isActive"];
+            this.sequence = _data["sequence"];
+        }
+    }
+
+    static fromJS(data: any): CourierRateConfigurationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourierRateConfigurationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["courierProviderId"] = this.courierProviderId;
+        data["courierProviderName"] = this.courierProviderName;
+        data["courierLocationType"] = this.courierLocationType;
+        data["ratePerKg"] = this.ratePerKg;
+        data["minimumCharge"] = this.minimumCharge;
+        data["isActive"] = this.isActive;
+        data["sequence"] = this.sequence;
+        return data;
+    }
+
+    clone(): CourierRateConfigurationDto {
+        const json = this.toJSON();
+        let result = new CourierRateConfigurationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICourierRateConfigurationDto {
+    id: number;
+    courierProviderId: number;
+    courierProviderName: string | undefined;
+    courierLocationType: CourierLocationType;
+    ratePerKg: number;
+    minimumCharge: number | undefined;
+    isActive: boolean;
+    sequence: number;
 }
 
 export class CourierStation implements ICourierStation {
@@ -11173,6 +11951,69 @@ export interface ICreateCourierProviderCommand {
     supportPhone: string | undefined;
     email: string | undefined;
     isActive: boolean;
+}
+
+export class CreateCourierRateConfigCommand implements ICreateCourierRateConfigCommand {
+    courierProviderId!: number;
+    courierLocationType!: CourierLocationType;
+    ratePerKg!: number;
+    minimumCharge!: number | undefined;
+    isActive!: boolean;
+    sequence!: number;
+
+    constructor(data?: ICreateCourierRateConfigCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.courierProviderId = _data["courierProviderId"];
+            this.courierLocationType = _data["courierLocationType"];
+            this.ratePerKg = _data["ratePerKg"];
+            this.minimumCharge = _data["minimumCharge"];
+            this.isActive = _data["isActive"];
+            this.sequence = _data["sequence"];
+        }
+    }
+
+    static fromJS(data: any): CreateCourierRateConfigCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCourierRateConfigCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["courierProviderId"] = this.courierProviderId;
+        data["courierLocationType"] = this.courierLocationType;
+        data["ratePerKg"] = this.ratePerKg;
+        data["minimumCharge"] = this.minimumCharge;
+        data["isActive"] = this.isActive;
+        data["sequence"] = this.sequence;
+        return data;
+    }
+
+    clone(): CreateCourierRateConfigCommand {
+        const json = this.toJSON();
+        let result = new CreateCourierRateConfigCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICreateCourierRateConfigCommand {
+    courierProviderId: number;
+    courierLocationType: CourierLocationType;
+    ratePerKg: number;
+    minimumCharge: number | undefined;
+    isActive: boolean;
+    sequence: number;
 }
 
 export class CreateCourierStationCommand implements ICreateCourierStationCommand {
@@ -16716,28 +17557,37 @@ export interface IOrderDetailInputDto {
 }
 
 export class OrderDto implements IOrderDto {
-    receiverType!: ReceiverType;
     id!: number;
     userId!: number;
     orderNumber!: string | undefined;
     orderDate!: moment.Moment;
     totalQuantity!: number;
+    productTotalAmount!: number;
     totalAmount!: number;
-    orderStatus!: OrderStatus;
-    paymentStatus!: PaymentStatus;
     paidAmount!: number;
     dueAmount!: number;
+    courierProviderId!: number | undefined;
+    courierLocationType!: CourierLocationType;
+    courierRatePerKg!: number;
+    courierCharge!: number;
+    courierChargeOverrideAmount!: number | undefined;
+    isCourierChargeOverridden!: boolean;
+    courierChargeNote!: string | undefined;
+    readonly finalCourierCharge!: number;
+    orderStatus!: OrderStatus;
+    paymentStatus!: PaymentStatus;
+    deliveryStatus!: DeliveryStatus;
     isValidOrder!: boolean;
     isDelivered!: boolean;
     deliveryDate!: moment.Moment | undefined;
     trackingNumber!: string | undefined;
     courierStationId!: number | undefined;
     fallbackAddress!: string | undefined;
+    receiverType!: ReceiverType;
     receiverName!: string | undefined;
     receiverMobileNumber!: string | undefined;
     deliveryNote!: string | undefined;
     area!: string | undefined;
-    deliveryStatus!: DeliveryStatus;
     orderDetails!: OrderDetailDto[] | undefined;
 
     constructor(data?: IOrderDto) {
@@ -16751,28 +17601,37 @@ export class OrderDto implements IOrderDto {
 
     init(_data?: any) {
         if (_data) {
-            this.receiverType = _data["receiverType"];
             this.id = _data["id"];
             this.userId = _data["userId"];
             this.orderNumber = _data["orderNumber"];
             this.orderDate = _data["orderDate"] ? moment(_data["orderDate"].toString()) : <any>undefined;
             this.totalQuantity = _data["totalQuantity"];
+            this.productTotalAmount = _data["productTotalAmount"];
             this.totalAmount = _data["totalAmount"];
-            this.orderStatus = _data["orderStatus"];
-            this.paymentStatus = _data["paymentStatus"];
             this.paidAmount = _data["paidAmount"];
             this.dueAmount = _data["dueAmount"];
+            this.courierProviderId = _data["courierProviderId"];
+            this.courierLocationType = _data["courierLocationType"];
+            this.courierRatePerKg = _data["courierRatePerKg"];
+            this.courierCharge = _data["courierCharge"];
+            this.courierChargeOverrideAmount = _data["courierChargeOverrideAmount"];
+            this.isCourierChargeOverridden = _data["isCourierChargeOverridden"];
+            this.courierChargeNote = _data["courierChargeNote"];
+            (<any>this).finalCourierCharge = _data["finalCourierCharge"];
+            this.orderStatus = _data["orderStatus"];
+            this.paymentStatus = _data["paymentStatus"];
+            this.deliveryStatus = _data["deliveryStatus"];
             this.isValidOrder = _data["isValidOrder"];
             this.isDelivered = _data["isDelivered"];
             this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
             this.trackingNumber = _data["trackingNumber"];
             this.courierStationId = _data["courierStationId"];
             this.fallbackAddress = _data["fallbackAddress"];
+            this.receiverType = _data["receiverType"];
             this.receiverName = _data["receiverName"];
             this.receiverMobileNumber = _data["receiverMobileNumber"];
             this.deliveryNote = _data["deliveryNote"];
             this.area = _data["area"];
-            this.deliveryStatus = _data["deliveryStatus"];
             if (Array.isArray(_data["orderDetails"])) {
                 this.orderDetails = [] as any;
                 for (let item of _data["orderDetails"])
@@ -16790,28 +17649,37 @@ export class OrderDto implements IOrderDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["receiverType"] = this.receiverType;
         data["id"] = this.id;
         data["userId"] = this.userId;
         data["orderNumber"] = this.orderNumber;
         data["orderDate"] = this.orderDate ? this.orderDate.toISOString() : <any>undefined;
         data["totalQuantity"] = this.totalQuantity;
+        data["productTotalAmount"] = this.productTotalAmount;
         data["totalAmount"] = this.totalAmount;
-        data["orderStatus"] = this.orderStatus;
-        data["paymentStatus"] = this.paymentStatus;
         data["paidAmount"] = this.paidAmount;
         data["dueAmount"] = this.dueAmount;
+        data["courierProviderId"] = this.courierProviderId;
+        data["courierLocationType"] = this.courierLocationType;
+        data["courierRatePerKg"] = this.courierRatePerKg;
+        data["courierCharge"] = this.courierCharge;
+        data["courierChargeOverrideAmount"] = this.courierChargeOverrideAmount;
+        data["isCourierChargeOverridden"] = this.isCourierChargeOverridden;
+        data["courierChargeNote"] = this.courierChargeNote;
+        data["finalCourierCharge"] = this.finalCourierCharge;
+        data["orderStatus"] = this.orderStatus;
+        data["paymentStatus"] = this.paymentStatus;
+        data["deliveryStatus"] = this.deliveryStatus;
         data["isValidOrder"] = this.isValidOrder;
         data["isDelivered"] = this.isDelivered;
         data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
         data["trackingNumber"] = this.trackingNumber;
         data["courierStationId"] = this.courierStationId;
         data["fallbackAddress"] = this.fallbackAddress;
+        data["receiverType"] = this.receiverType;
         data["receiverName"] = this.receiverName;
         data["receiverMobileNumber"] = this.receiverMobileNumber;
         data["deliveryNote"] = this.deliveryNote;
         data["area"] = this.area;
-        data["deliveryStatus"] = this.deliveryStatus;
         if (Array.isArray(this.orderDetails)) {
             data["orderDetails"] = [];
             for (let item of this.orderDetails)
@@ -16829,28 +17697,37 @@ export class OrderDto implements IOrderDto {
 }
 
 export interface IOrderDto {
-    receiverType: ReceiverType;
     id: number;
     userId: number;
     orderNumber: string | undefined;
     orderDate: moment.Moment;
     totalQuantity: number;
+    productTotalAmount: number;
     totalAmount: number;
-    orderStatus: OrderStatus;
-    paymentStatus: PaymentStatus;
     paidAmount: number;
     dueAmount: number;
+    courierProviderId: number | undefined;
+    courierLocationType: CourierLocationType;
+    courierRatePerKg: number;
+    courierCharge: number;
+    courierChargeOverrideAmount: number | undefined;
+    isCourierChargeOverridden: boolean;
+    courierChargeNote: string | undefined;
+    finalCourierCharge: number;
+    orderStatus: OrderStatus;
+    paymentStatus: PaymentStatus;
+    deliveryStatus: DeliveryStatus;
     isValidOrder: boolean;
     isDelivered: boolean;
     deliveryDate: moment.Moment | undefined;
     trackingNumber: string | undefined;
     courierStationId: number | undefined;
     fallbackAddress: string | undefined;
+    receiverType: ReceiverType;
     receiverName: string | undefined;
     receiverMobileNumber: string | undefined;
     deliveryNote: string | undefined;
     area: string | undefined;
-    deliveryStatus: DeliveryStatus;
     orderDetails: OrderDetailDto[] | undefined;
 }
 
@@ -17045,6 +17922,57 @@ export interface IOrderSummaryReportDto {
     totalCollected: number;
     totalOutstanding: number;
     orders: OrderSummaryLineDto[] | undefined;
+}
+
+export class OverrideCourierChargeCommand implements IOverrideCourierChargeCommand {
+    orderId!: number;
+    courierChargeOverrideAmount!: number;
+    courierChargeNote!: string | undefined;
+
+    constructor(data?: IOverrideCourierChargeCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderId = _data["orderId"];
+            this.courierChargeOverrideAmount = _data["courierChargeOverrideAmount"];
+            this.courierChargeNote = _data["courierChargeNote"];
+        }
+    }
+
+    static fromJS(data: any): OverrideCourierChargeCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new OverrideCourierChargeCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderId"] = this.orderId;
+        data["courierChargeOverrideAmount"] = this.courierChargeOverrideAmount;
+        data["courierChargeNote"] = this.courierChargeNote;
+        return data;
+    }
+
+    clone(): OverrideCourierChargeCommand {
+        const json = this.toJSON();
+        let result = new OverrideCourierChargeCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IOverrideCourierChargeCommand {
+    orderId: number;
+    courierChargeOverrideAmount: number;
+    courierChargeNote: string | undefined;
 }
 
 export class PaginatedResult_AppUserDto implements IPaginatedResult_AppUserDto {
@@ -17334,6 +18262,105 @@ export interface IPaginatedResult_CourierProviderDto {
     messages: string[] | undefined;
     succeeded: boolean;
     data: CourierProviderDto[] | undefined;
+    exception: Exception;
+    code: number;
+    currentPage: number;
+    totalPages: number;
+    totalCount: number;
+    pageSize: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+}
+
+export class PaginatedResult_CourierRateConfigurationDto implements IPaginatedResult_CourierRateConfigurationDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: CourierRateConfigurationDto[] | undefined;
+    exception!: Exception;
+    code!: number;
+    currentPage!: number;
+    totalPages!: number;
+    totalCount!: number;
+    pageSize!: number;
+    readonly hasPreviousPage!: boolean;
+    readonly hasNextPage!: boolean;
+
+    constructor(data?: IPaginatedResult_CourierRateConfigurationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(CourierRateConfigurationDto.fromJS(item));
+            }
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+            this.currentPage = _data["currentPage"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.pageSize = _data["pageSize"];
+            (<any>this).hasPreviousPage = _data["hasPreviousPage"];
+            (<any>this).hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedResult_CourierRateConfigurationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedResult_CourierRateConfigurationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        data["currentPage"] = this.currentPage;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["pageSize"] = this.pageSize;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+
+    clone(): PaginatedResult_CourierRateConfigurationDto {
+        const json = this.toJSON();
+        let result = new PaginatedResult_CourierRateConfigurationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPaginatedResult_CourierRateConfigurationDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: CourierRateConfigurationDto[] | undefined;
     exception: Exception;
     code: number;
     currentPage: number;
@@ -19307,6 +20334,73 @@ export interface IResult_CourierProviderDto {
     code: number;
 }
 
+export class Result_CourierRateConfigurationDto implements IResult_CourierRateConfigurationDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: CourierRateConfigurationDto;
+    exception!: Exception;
+    code!: number;
+
+    constructor(data?: IResult_CourierRateConfigurationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            this.data = _data["data"] ? CourierRateConfigurationDto.fromJS(_data["data"]) : <any>undefined;
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): Result_CourierRateConfigurationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result_CourierRateConfigurationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        return data;
+    }
+
+    clone(): Result_CourierRateConfigurationDto {
+        const json = this.toJSON();
+        let result = new Result_CourierRateConfigurationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IResult_CourierRateConfigurationDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: CourierRateConfigurationDto;
+    exception: Exception;
+    code: number;
+}
+
 export class Result_CourierStationDto implements IResult_CourierStationDto {
     messages!: string[] | undefined;
     succeeded!: boolean;
@@ -21109,6 +22203,81 @@ export interface IResult_List_CourierProviderDto {
     messages: string[] | undefined;
     succeeded: boolean;
     data: CourierProviderDto[] | undefined;
+    exception: Exception;
+    code: number;
+}
+
+export class Result_List_CourierRateConfigurationDto implements IResult_List_CourierRateConfigurationDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: CourierRateConfigurationDto[] | undefined;
+    exception!: Exception;
+    code!: number;
+
+    constructor(data?: IResult_List_CourierRateConfigurationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(CourierRateConfigurationDto.fromJS(item));
+            }
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): Result_List_CourierRateConfigurationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result_List_CourierRateConfigurationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        return data;
+    }
+
+    clone(): Result_List_CourierRateConfigurationDto {
+        const json = this.toJSON();
+        let result = new Result_List_CourierRateConfigurationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IResult_List_CourierRateConfigurationDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: CourierRateConfigurationDto[] | undefined;
     exception: Exception;
     code: number;
 }
@@ -24166,6 +25335,73 @@ export interface IUpdateCourierProviderCommand {
     supportPhone: string | undefined;
     email: string | undefined;
     isActive: boolean;
+}
+
+export class UpdateCourierRateConfigCommand implements IUpdateCourierRateConfigCommand {
+    id!: number;
+    courierProviderId!: number;
+    courierLocationType!: CourierLocationType;
+    ratePerKg!: number;
+    minimumCharge!: number | undefined;
+    isActive!: boolean;
+    sequence!: number;
+
+    constructor(data?: IUpdateCourierRateConfigCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.courierProviderId = _data["courierProviderId"];
+            this.courierLocationType = _data["courierLocationType"];
+            this.ratePerKg = _data["ratePerKg"];
+            this.minimumCharge = _data["minimumCharge"];
+            this.isActive = _data["isActive"];
+            this.sequence = _data["sequence"];
+        }
+    }
+
+    static fromJS(data: any): UpdateCourierRateConfigCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCourierRateConfigCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["courierProviderId"] = this.courierProviderId;
+        data["courierLocationType"] = this.courierLocationType;
+        data["ratePerKg"] = this.ratePerKg;
+        data["minimumCharge"] = this.minimumCharge;
+        data["isActive"] = this.isActive;
+        data["sequence"] = this.sequence;
+        return data;
+    }
+
+    clone(): UpdateCourierRateConfigCommand {
+        const json = this.toJSON();
+        let result = new UpdateCourierRateConfigCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateCourierRateConfigCommand {
+    id: number;
+    courierProviderId: number;
+    courierLocationType: CourierLocationType;
+    ratePerKg: number;
+    minimumCharge: number | undefined;
+    isActive: boolean;
+    sequence: number;
 }
 
 export class UpdateCourierStationCommand implements IUpdateCourierStationCommand {

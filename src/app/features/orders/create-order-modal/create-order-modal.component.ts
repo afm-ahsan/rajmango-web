@@ -59,6 +59,13 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   private priceMap: Record<number, number> = {};
   private initialOrderDetailsSnapshot = '[]';
 
+  previewProductTotal: number | null = null;
+  previewCourierCharge: number | null = null;
+  previewGrandTotal: number | null = null;
+  previewProviderName: string | null = null;
+  isPreviewLoading = false;
+  previewError: string | null = null;
+
   readonly searchStation = (term: string, item: AvailableCourierDto): boolean => {
     const q = term.toLowerCase();
     return (item.providerName?.toLowerCase().includes(q) ?? false)
@@ -183,6 +190,10 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       this.cdRef.detectChanges();
     });
 
+    this.subs.sink = this.orderForm.get('courierStationId')!.valueChanges.subscribe(() => {
+      this.refreshPreview();
+    });
+
     if (isEditMode) {
       if(this.orderDto.courierStationId){
         this.isFallbackMode = false;
@@ -281,8 +292,8 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     }    
     this.orderDto.totalAmount = this.getTotalPrice();
     this.orderForm.patchValue({ quantity: 1, note: '' });
-    //this.orderForm.reset({ mangoType: null, crateType: null, quantity: 1, note: '' });
     this.cdRef.detectChanges();
+    this.refreshPreview();
   }
 
   updateOrderDetailsWithNames(): void {
@@ -308,10 +319,12 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       this.orderDetails.splice(index, 1);
       this.orderDto.totalAmount = this.orderDetails.reduce((sum, item) => sum + item.totalPrice, 0);
       this.cdRef.detectChanges();
+      this.refreshPreview();
     }
   }
 
   reset(): void{
+    this.orderDetails = [];
     this.orderForm.reset({
       mangoType: 0,
       crateType: 0,
@@ -325,11 +338,53 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     this.updateReceiverValidators(ReceiverType.Self);
     this.isFallbackMode = false;
     this.availableStations = [];
-    this.orderDetails = [];
   }
 
   getTotalPrice(): number {
     return this.orderDetails.reduce((sum, item) => sum + item.totalPrice, 0);
+  }
+
+  getTotalWeight(): number {
+    return this.orderDetails.reduce((sum, item) => {
+      const crateWeight = DomainUtils.getCrateWeight(item.crateType);
+      return sum + (item.quantity * crateWeight);
+    }, 0);
+  }
+
+  refreshPreview(): void {
+    if (this.orderDetails.length === 0) {
+      this.previewProductTotal = null;
+      this.previewCourierCharge = null;
+      this.previewGrandTotal = null;
+      this.previewProviderName = null;
+      this.previewError = null;
+      this.cdRef.detectChanges();
+      return;
+    }
+    const rawStationId = this.isFallbackMode ? null : (this.orderForm?.get('courierStationId')?.value ?? null);
+    const stationId = rawStationId != null ? +rawStationId : null;
+    this.isPreviewLoading = true;
+    this.previewError = null;
+    this.cdRef.detectChanges();
+
+    this.subs.sink = this.orderService.calculatePreview({
+      courierStationId: stationId,
+      orderDetails: this.orderDetails.map(d => ({ mangoTypeId: d.mangoTypeId, crateType: d.crateType, quantity: d.quantity }))
+    }).pipe(
+      finalize(() => { this.isPreviewLoading = false; this.cdRef.detectChanges(); })
+    ).subscribe({
+      next: (res) => {
+        const data = res?.data;
+        this.previewProductTotal = data?.productTotalAmount ?? null;
+        this.previewCourierCharge = data?.courierCharge ?? null;
+        this.previewGrandTotal = data?.totalAmount ?? null;
+        this.previewProviderName = data?.courierProviderName ?? null;
+        this.cdRef.detectChanges();
+      },
+      error: () => {
+        this.previewError = 'Unable to calculate courier charge. Please try again.';
+      }
+    });
   }
 
   getMangoType(mangoTypeId: number): MangoTypeDto | undefined {
@@ -474,8 +529,8 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       orderNumber: '',
       orderDate: null,
       totalQuantity: 0,
-      orderStatus: OrderStatus.None,
-      paymentStatus: PaymentStatus.None,
+      orderStatus: OrderStatus.Pending,
+      paymentStatus: PaymentStatus.Unpaid,
       totalAmount: 0,
       paidAmount: 0,
       dueAmount: 0,

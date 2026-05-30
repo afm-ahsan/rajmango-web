@@ -68,13 +68,15 @@ export class UserPermissionService {
       hasExpensesAccess:    can(AppPermissions.Expenses.View),
 
       // ─── Logistics ───────────────────────────────────────────────
-      hasCourierProviderAccess: can(AppPermissions.CourierProviders.View) || can(AppPermissions.Couriers.View),
-      hasCourierStationsAccess: can(AppPermissions.CourierStations.View)  || can(AppPermissions.Couriers.View),
-      hasAreaMapAccess:         can(AppPermissions.CourierAreaMaps.View)  || can(AppPermissions.Couriers.View),
+      hasCourierProviderAccess:   can(AppPermissions.CourierProviders.View)   || can(AppPermissions.Couriers.View),
+      hasCourierStationsAccess:   can(AppPermissions.CourierStations.View)    || can(AppPermissions.Couriers.View),
+      hasAreaMapAccess:           can(AppPermissions.CourierAreaMaps.View)    || can(AppPermissions.Couriers.View),
+      hasCourierRateConfigAccess: can(AppPermissions.CourierRateConfigs.View) || can(AppPermissions.Couriers.View),
       hasCourierAccess:
-        can(AppPermissions.CourierProviders.View) ||
-        can(AppPermissions.CourierStations.View)  ||
-        can(AppPermissions.CourierAreaMaps.View)  ||
+        can(AppPermissions.CourierProviders.View)   ||
+        can(AppPermissions.CourierStations.View)    ||
+        can(AppPermissions.CourierAreaMaps.View)    ||
+        can(AppPermissions.CourierRateConfigs.View) ||
         can(AppPermissions.Couriers.View),
 
       // ─── Customer Relations ──────────────────────────────────────

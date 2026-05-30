@@ -71,6 +71,9 @@ export class AsideMenuComponent implements OnInit {
   get canViewAreaMap(): boolean {
     return this.permissionService.hasAccess(UserPermissionKey.HasAreaMapAccess);
   }
+  get canViewCourierRateConfig(): boolean {
+    return this.permissionService.hasAccess(UserPermissionKey.HasCourierRateConfigAccess);
+  }
 
   // ─── Admin — Customer Relations / Reports / Admin ──────────────────
   get canViewFeedback(): boolean {

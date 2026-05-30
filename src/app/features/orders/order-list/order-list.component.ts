@@ -16,6 +16,7 @@ import { CreateOrderModalComponent } from '../create-order-modal/create-order-mo
 import { DeleteOrderModalComponent } from '../delete-order-modal/delete-order-modal.component';
 import { OrderDto } from '../models/order-dto.model';
 import { OrderFacade } from '../order.facade';
+import { OrderService } from '../order.service';
 import { ViewOrderModalComponent } from '../view-order-modal/view-order-modal.component';
 import { SubmitFeedbackModalComponent } from 'src/app/features/feedback/submit-feedback-modal/submit-feedback-modal.component';
 import { SubmitComplaintModalComponent } from 'src/app/features/complaints/submit-complaint-modal/submit-complaint-modal.component';
@@ -55,7 +56,8 @@ export class OrderListComponent implements OnInit, OnDestroy {
     private imagePathService: ImagePathService,
     private signalR: SignalRService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private orderService: OrderService
   ) {
     this.filter.userId = this.authService.getLoggedUserId();
   }
@@ -228,7 +230,14 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
   openPayment(order: OrderDto): void {
     const ref = this.modalService.open(BkashPaymentModalComponent, { size: 'lg' });
-    ref.componentInstance.order = order;
+    this.subs.sink = this.orderService.getById(order.id).subscribe({
+      next: (res) => {
+        ref.componentInstance.order = res?.data ?? order;
+      },
+      error: () => {
+        ref.componentInstance.order = order;
+      }
+    });
     ref.result.then(
       () => {},
       () => {}

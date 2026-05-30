@@ -282,6 +282,15 @@
         </a>
       </div>
 
+      <div class="menu-item" *ngIf="canViewCourierRateConfig">
+        <a class="menu-link without-sub" routerLink="/couriers/courier-rate-config-list" routerLinkActive="active">
+          <span class="menu-icon">
+            <span [inlineSVG]="'./assets/media/icons/duotune/finance/fin010.svg'" class="svg-icon svg-icon-2"></span>
+          </span>
+          <span class="menu-title">Rate Configuration</span>
+        </a>
+      </div>
+
     </div>
   </div>
 

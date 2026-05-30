@@ -49,9 +49,35 @@
 
       <!-- Financials -->
       <div class="row g-4 mb-4">
+        <div class="col-12 col-md-4" *ngIf="orderDto.productTotalAmount != null">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Product Total</div>
+          <div class="fw-semibold fs-6">৳ {{ orderDto.productTotalAmount | number:'1.0-2' }}</div>
+        </div>
         <div class="col-12 col-md-4">
-          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Amount</div>
-          <div class="fw-bold fs-6">{{ orderDto.totalAmount | number }}</div>
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Weight</div>
+          <div class="fw-semibold fs-6">{{ orderDto.totalQuantity | number }} kg</div>
+        </div>
+        <div class="col-12 col-md-4" *ngIf="orderDto.courierCharge != null">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Courier Charge (Calc.)</div>
+          <div class="fw-semibold fs-6">৳ {{ orderDto.courierCharge | number:'1.0-2' }}</div>
+        </div>
+        <ng-container *ngIf="orderDto.isCourierChargeOverridden">
+          <div class="col-12 col-md-4">
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Override Courier Charge</div>
+            <div class="fw-semibold fs-6 text-warning">৳ {{ orderDto.courierChargeOverrideAmount | number:'1.0-2' }}</div>
+          </div>
+          <div class="col-12 col-md-4" *ngIf="orderDto.courierChargeNote">
+            <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Override Note</div>
+            <div class="fw-semibold fs-6">{{ orderDto.courierChargeNote }}</div>
+          </div>
+        </ng-container>
+        <div class="col-12 col-md-4" *ngIf="orderDto.finalCourierCharge != null">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Final Courier Charge</div>
+          <div class="fw-bold fs-6 text-primary">৳ {{ orderDto.finalCourierCharge | number:'1.0-2' }}</div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Grand Total</div>
+          <div class="fw-bold fs-5 text-dark">৳ {{ orderDto.totalAmount | number:'1.0-2' }}</div>
         </div>
         <div class="col-12 col-md-4">
           <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Paid Amount</div>
@@ -70,8 +96,8 @@
           <div class="fw-semibold fs-6">{{ orderDto.area || '—' }}</div>
         </div>
         <div class="col-12 col-md-4" *ngIf="orderDto.courierStationId">
-          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Courier Station ID</div>
-          <div class="fw-semibold fs-6">{{ orderDto.courierStationId }}</div>
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Courier Station</div>
+          <div class="fw-semibold fs-6">{{ orderDto.courierStationName || orderDto.courierStationId }}</div>
         </div>
         <div class="col-12 col-md-4" *ngIf="orderDto.trackingNumber">
           <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Tracking Number</div>
@@ -137,6 +163,37 @@
         </table>
       </div>
       <div *ngIf="!orderDto.orderDetails || !orderDto.orderDetails.length" class="text-muted fs-7">No items found.</div>
+
+      <!-- Admin: Override Courier Charge -->
+      <ng-container *ngIf="isAdmin">
+        <hr class="my-4" />
+        <div class="fw-bold fs-6 mb-3 text-dark">
+          <i class="bi bi-pencil-square me-2 text-warning"></i>Override Courier Charge
+        </div>
+        <div *ngIf="overrideSaveError" class="alert alert-danger d-flex align-items-center gap-2 rounded mb-3">
+          <i class="bi bi-exclamation-triangle-fill fs-6 flex-shrink-0"></i>
+          <span>{{ overrideSaveError }}</span>
+        </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-5">
+            <label class="form-label fw-semibold">Override Amount (৳)</label>
+            <input type="number" class="form-control form-control-solid" [(ngModel)]="overrideAmount"
+              placeholder="Enter override amount" min="0" step="0.01" />
+          </div>
+          <div class="col-12 col-md-7">
+            <label class="form-label fw-semibold">Note</label>
+            <input type="text" class="form-control form-control-solid" [(ngModel)]="overrideNote"
+              placeholder="Reason for override" maxlength="250" />
+          </div>
+          <div class="col-12">
+            <button type="button" class="btn btn-warning btn-sm" (click)="saveOverride()"
+              [disabled]="isSavingOverride || overrideAmount == null">
+              <span *ngIf="isSavingOverride" class="spinner-border spinner-border-sm me-2"></span>
+              <i *ngIf="!isSavingOverride" class="bi bi-save me-2"></i>Save Override
+            </button>
+          </div>
+        </div>
+      </ng-container>
 
     </ng-container>
   </div>

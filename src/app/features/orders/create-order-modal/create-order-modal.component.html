@@ -191,6 +191,55 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Cost Breakdown -->
+      <div *ngIf="orderDetails.length > 0" class="card border border-primary mt-4">
+        <div class="card-body py-4 px-5">
+          <div class="fw-bold fs-6 text-primary mb-3">
+            <i class="bi bi-receipt me-2"></i>Cost Breakdown
+          </div>
+          <div *ngIf="isPreviewLoading" class="d-flex align-items-center gap-2 text-muted mb-2">
+            <span class="spinner-border spinner-border-sm text-primary"></span>
+            <span class="fs-7">Calculating...</span>
+          </div>
+          <div *ngIf="previewError && !isPreviewLoading" class="alert alert-warning py-2 px-3 fs-7 mb-2">
+            <i class="bi bi-exclamation-triangle me-1"></i>{{ previewError }}
+          </div>
+          <ng-container *ngIf="!isPreviewLoading">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Product Total</span>
+              <span class="fw-semibold">৳ {{ (previewProductTotal ?? getTotalPrice()) | number:'1.0-2' }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">Total Weight</span>
+              <span class="fw-semibold">{{ getTotalWeight() | number }} kg</span>
+            </div>
+            <ng-container *ngIf="previewCourierCharge !== null">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">
+                  Courier Charge
+                  <span *ngIf="previewProviderName" class="ms-1 fs-7">({{ previewProviderName }})</span>
+                </span>
+                <span class="fw-semibold">৳ {{ previewCourierCharge | number:'1.0-2' }}</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="previewCourierCharge === null && !previewError">
+              <div class="d-flex justify-content-between mb-2 text-muted fst-italic fs-7">
+                <span>Courier Charge</span>
+                <span>{{ isFallbackMode ? 'Manual delivery — will be confirmed after placement' : 'Select courier station to calculate' }}</span>
+              </div>
+            </ng-container>
+            <hr class="my-2" />
+            <div class="d-flex justify-content-between">
+              <span class="fw-bold">{{ previewCourierCharge !== null ? 'Grand Total' : 'Estimated Total (excl. courier)' }}</span>
+              <span class="fw-bold text-primary fs-5">৳ {{ (previewGrandTotal ?? getTotalPrice()) | number:'1.0-2' }}</span>
+            </div>
+            <div *ngIf="previewCourierCharge === null" class="text-muted fs-7 mt-1 fst-italic">
+              * Final total will include courier charge calculated by the system based on your delivery area.
+            </div>
+          </ng-container>
+        </div>
+      </div>
     </ng-container>
     </ng-container>
   </div>

@@ -34,15 +34,16 @@ export class EnumLabelUtils {
 
   static getPaymentMethodLabel(method: number): string {
     const labels: Record<number, string> = {
-      0: 'None',
+      0: 'Unknown',
       1: 'Cash',
-      2: 'bKash',
-      3: 'Nagad',
-      4: 'Rocket',
-      5: 'Bank Transfer',
-      6: 'Cheque',
-      7: 'Card',
-      8: 'Other',
+      2: 'Bank Transfer',
+      3: 'Mobile Payment',
+      4: 'Credit Card',
+      5: 'Debit Card',
+      6: 'Visa Card',
+      7: 'Master Card',
+      8: 'Wallet',
+      9: 'bKash',
     };
     return labels[method] ?? `Method ${method}`;
   }
@@ -51,7 +52,7 @@ export class EnumLabelUtils {
     const labels: Record<number, string> = {
       0: 'Unknown',
       1: 'Home',
-      2: 'Work',
+      2: 'Office',
       3: 'Billing',
       4: 'Shipping',
     };
@@ -62,8 +63,8 @@ export class EnumLabelUtils {
     const labels: Record<number, string> = {
       0: 'Upcoming',
       1: 'Available',
-      2: 'Limited',
-      3: 'Ended',
+      2: 'Sold Out',
+      3: 'Closed',
     };
     return labels[status] ?? `Status ${status}`;
   }
@@ -117,12 +118,12 @@ export class EnumLabelUtils {
 
   static getMangoGradeLabel(grade: number): string {
     const labels: Record<number, string> = {
-      0: 'Low',
-      1: 'Medium',
-      2: 'High',
-      3: 'Very High',
-      4: 'Premium',
-      5: 'Ultra Premium',
+      0: '—',
+      1: 'Premium',
+      2: 'Standard',
+      3: 'Economy',
+      4: 'Export Quality',
+      5: 'Organic',
     };
     return labels[grade] ?? 'Unknown';
   }

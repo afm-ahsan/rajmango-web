@@ -25,10 +25,12 @@ export class CreateCustomerModalComponent implements OnInit, OnDestroy {
   isLoading = false;
   
   ddlCustomerTypes: DropdownModel[] = [
-    { id: 1, label: 'Walking' },
-    { id: 2, label: 'Registered' },
-    { id: 3, label: 'Guest' },
-    { id: 4, label: 'VIP' },
+    { id: 1, label: 'Regular' },
+    { id: 2, label: 'Wholesale' },
+    { id: 3, label: 'Corporate' },
+    { id: 4, label: 'Distributor' },
+    { id: 5, label: 'VIP' },
+    { id: 6, label: 'Staff' },
   ];
 
   constructor(

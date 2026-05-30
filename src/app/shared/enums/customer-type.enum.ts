@@ -1,7 +1,9 @@
 export enum CustomerType {
   None = 0,
-  Walking = 1,
-  Registered = 2,
-  Guest = 3,
-  VIP = 4,
+  Regular = 1,
+  Wholesale = 2,
+  Corporate = 3,
+  Distributor = 4,
+  VIP = 5,
+  Staff = 6
 }

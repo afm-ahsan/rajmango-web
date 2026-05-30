@@ -1,9 +1,9 @@
 export enum PaymentStatus {
-  None = 0,
-  Unpaid = 1,
-  Paid = 2,
-  Partial = 3,
-  Failed = 4,
-  Refunded = 5,
-  Cancelled = 6
+  Unpaid = 0,
+  Paid = 1,
+  Partial = 2,
+  Failed = 3,
+  Refunded = 4,
+  Cancelled = 5,
+  Pending = 6
 }

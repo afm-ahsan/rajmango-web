@@ -1,0 +1,101 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h2 class="modal-title">{{ id ? 'Edit Rate Config' : 'Add Rate Config' }}</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body py-6 px-lg-8">
+
+    <div *ngIf="isLoadingProviders" class="d-flex justify-content-center py-6">
+      <span class="spinner-border text-primary" role="status"></span>
+    </div>
+
+    <ng-container *ngIf="!isLoadingProviders">
+      <div *ngIf="isLoading" class="d-flex justify-content-center py-6">
+        <span class="spinner-border text-primary" role="status"></span>
+      </div>
+
+      <form *ngIf="!isLoading && formGroup" [formGroup]="formGroup">
+        <div class="row g-4">
+
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold required">Courier Provider</label>
+            <select class="form-select form-select-solid" formControlName="courierProviderId"
+              [class.is-invalid]="isControlInvalid('courierProviderId')">
+              <option value="0">Select Provider</option>
+              <option *ngFor="let p of courierProviders" [value]="p.id">{{ p.name }}</option>
+            </select>
+            <div *ngIf="isControlInvalid('courierProviderId')" class="text-danger fs-7 mt-1">
+              Courier provider is required.
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold required">Location Type</label>
+            <select class="form-select form-select-solid" formControlName="locationType"
+              [class.is-invalid]="isControlInvalid('locationType')">
+              <option value="0">Select Location Type</option>
+              <option *ngFor="let opt of locationTypeOptions" [value]="opt.id">{{ opt.label }}</option>
+            </select>
+            <div *ngIf="isControlInvalid('locationType')" class="text-danger fs-7 mt-1">
+              Location type is required.
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold required">Rate Per Kg (৳)</label>
+            <input type="number" class="form-control form-control-solid" formControlName="ratePerKg"
+              placeholder="e.g. 50" min="0.01" step="0.01"
+              [class.is-invalid]="isControlInvalid('ratePerKg')" />
+            <div *ngIf="controlHasError('required', 'ratePerKg')" class="text-danger fs-7 mt-1">
+              Rate per kg is required.
+            </div>
+            <div *ngIf="controlHasError('min', 'ratePerKg')" class="text-danger fs-7 mt-1">
+              Rate per kg must be greater than 0.
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold required">Minimum Charge (৳)</label>
+            <input type="number" class="form-control form-control-solid" formControlName="minimumCharge"
+              placeholder="e.g. 100" min="0" step="0.01"
+              [class.is-invalid]="isControlInvalid('minimumCharge')" />
+            <div *ngIf="controlHasError('required', 'minimumCharge')" class="text-danger fs-7 mt-1">
+              Minimum charge is required.
+            </div>
+            <div *ngIf="controlHasError('min', 'minimumCharge')" class="text-danger fs-7 mt-1">
+              Minimum charge must be 0 or greater.
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold required">Sequence</label>
+            <input type="number" class="form-control form-control-solid" formControlName="sequence"
+              placeholder="e.g. 1" min="1"
+              [class.is-invalid]="isControlInvalid('sequence')" />
+            <div *ngIf="controlHasError('required', 'sequence')" class="text-danger fs-7 mt-1">
+              Sequence is required.
+            </div>
+            <div *ngIf="controlHasError('min', 'sequence')" class="text-danger fs-7 mt-1">
+              Sequence must be at least 1.
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6 d-flex align-items-center pt-6">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" formControlName="isActive" id="isActiveCheck" />
+              <label class="form-check-label fw-semibold" for="isActiveCheck">Active</label>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </ng-container>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm me-3" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-primary btn-sm" (click)="save()"
+      [disabled]="!formGroup || formGroup.invalid || isLoading || isLoadingProviders">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>Save
+    </button>
+  </div>
+</div>

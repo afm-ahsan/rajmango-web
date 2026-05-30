@@ -7,7 +7,7 @@ import { OrderDetailDto } from './order-detail-dto.model';
 export interface OrderDto {
   id: number;
   orderNumber: string;
-  orderDate?: Date | null; 
+  orderDate?: Date | null;
   totalQuantity: number;
   totalAmount: number;
   orderStatus: OrderStatus;
@@ -20,6 +20,7 @@ export interface OrderDto {
   userId: number;
   trackingNumber?: string;
   courierStationId?: number | null;
+  courierStationName?: string | null;
   fallbackAddress?: string;
   area: string;
   receiverType?: number | null;
@@ -27,4 +28,13 @@ export interface OrderDto {
   receiverMobileNumber?: string | null;
   deliveryStatus: DeliveryStatus;
   orderDetails: OrderDetailDto[];
+  // Courier charge breakdown (returned by API)
+  productTotalAmount?: number | null;
+  courierProviderId?: number | null;
+  courierRatePerKg?: number | null;
+  courierCharge?: number | null;
+  courierChargeOverrideAmount?: number | null;
+  isCourierChargeOverridden?: boolean;
+  courierChargeNote?: string | null;
+  finalCourierCharge?: number | null;
 }

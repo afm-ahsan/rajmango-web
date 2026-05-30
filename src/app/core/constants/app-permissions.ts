@@ -77,6 +77,13 @@ export const AppPermissions = {
     Delete: 'courier-area-map.delete',
   },
 
+  CourierRateConfigs: {
+    View:   'courier-rate-config.view',
+    Create: 'courier-rate-config.create',
+    Update: 'courier-rate-config.update',
+    Delete: 'courier-rate-config.delete',
+  },
+
   Customers: {
     View:   'customer.view',
     Create: 'customer.create',

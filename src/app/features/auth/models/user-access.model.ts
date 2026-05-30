@@ -21,6 +21,7 @@ export class UserAccessModel {
   hasCourierProviderAccess: boolean;
   hasCourierStationsAccess: boolean;
   hasAreaMapAccess: boolean;
+  hasCourierRateConfigAccess: boolean;
 
   // ─── Customer Relations ────────────────────────────────────────────
   hasFeedbackAccess: boolean;

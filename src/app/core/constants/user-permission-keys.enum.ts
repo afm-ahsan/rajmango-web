@@ -17,10 +17,11 @@ export enum UserPermissionKey {
   HasExpensesAccess    = 'hasExpensesAccess',
 
   // ─── Logistics ─────────────────────────────────────────────────────
-  HasCourierAccess         = 'hasCourierAccess',
-  HasCourierProviderAccess = 'hasCourierProviderAccess',
-  HasCourierStationsAccess = 'hasCourierStationsAccess',
-  HasAreaMapAccess         = 'hasAreaMapAccess',
+  HasCourierAccess             = 'hasCourierAccess',
+  HasCourierProviderAccess     = 'hasCourierProviderAccess',
+  HasCourierStationsAccess     = 'hasCourierStationsAccess',
+  HasAreaMapAccess             = 'hasAreaMapAccess',
+  HasCourierRateConfigAccess   = 'hasCourierRateConfigAccess',
 
   // ─── Customer Relations ────────────────────────────────────────────
   HasFeedbackAccess   = 'hasFeedbackAccess',

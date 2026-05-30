@@ -12,6 +12,9 @@ import { CourierProviderListComponent } from './courier-provider/courier-provide
 import { CreateCourierProviderModalComponent } from './courier-provider/create-courier-provider-modal/create-courier-provider-modal.component';
 import { DeleteCourierProviderModalComponent } from './courier-provider/delete-courier-provider-modal/delete-courier-provider-modal.component';
 import { ViewCourierProviderModalComponent } from './courier-provider/view-courier-provider-modal/view-courier-provider-modal.component';
+import { CourierRateConfigListComponent } from './courier-rate-config/courier-rate-config-list/courier-rate-config-list.component';
+import { CreateCourierRateConfigModalComponent } from './courier-rate-config/create-courier-rate-config-modal/create-courier-rate-config-modal.component';
+import { DeleteCourierRateConfigModalComponent } from './courier-rate-config/delete-courier-rate-config-modal/delete-courier-rate-config-modal.component';
 import { CourierRoutingModule } from './courier-routing.module';
 import { CourierStationListComponent } from './courier-station/courier-station-list/courier-station-list.component';
 import { CreateCourierStationModalComponent } from './courier-station/create-courier-station-modal/create-courier-station-modal.component';
@@ -43,6 +46,9 @@ import { CourierComponent } from './courier.component';
     ViewCourierAreaMapModalComponent,
     DeleteCourierAreaMapModalComponent,
     CourierAreaMapListComponent,
+    CourierRateConfigListComponent,
+    CreateCourierRateConfigModalComponent,
+    DeleteCourierRateConfigModalComponent,
   ]
 })
 export class CourierModule { }

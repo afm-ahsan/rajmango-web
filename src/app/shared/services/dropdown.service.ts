@@ -17,38 +17,40 @@ export class DropdownService {
 
   getOrderStatusOptions(): DropdownModel[] {
     return [
-      { id: 1, label: 'Pending' },
-      { id: 2, label: 'Confirmed' },
-      { id: 3, label: 'Processing' },
-      { id: 4, label: 'Shipped' },
-      { id: 5, label: 'Delivered' },
-      { id: 6, label: 'Cancelled' },
-      { id: 7, label: 'Returned' },
-      { id: 8, label: 'Failed' }
+      { id: 0, label: 'Pending' },
+      { id: 1, label: 'Confirmed' },
+      { id: 2, label: 'Processing' },
+      { id: 3, label: 'Shipped' },
+      { id: 4, label: 'Delivered' },
+      { id: 5, label: 'Cancelled' },
+      { id: 6, label: 'Returned' },
+      { id: 7, label: 'Failed' }
     ];
   }
 
   getPaymentStatusOptions(): DropdownModel[] {
     return [
-      { id: 1, label: 'Unpaid' },
-      { id: 2, label: 'Paid' },
-      { id: 3, label: 'Partial' },
-      { id: 4, label: 'Failed' },
-      { id: 5, label: 'Refunded' },
-      { id: 6, label: 'Cancelled' }
+      { id: 0, label: 'Unpaid' },
+      { id: 1, label: 'Paid' },
+      { id: 2, label: 'Partial' },
+      { id: 3, label: 'Failed' },
+      { id: 4, label: 'Refunded' },
+      { id: 5, label: 'Cancelled' },
+      { id: 6, label: 'Pending' }
     ];
   }
 
   getPaymentMethodOptions(): DropdownModel[] {
     return [
       { id: 1, label: 'Cash' },
-      { id: 2, label: 'bKash' },
-      { id: 3, label: 'Nagad' },
-      { id: 4, label: 'Rocket' },
-      { id: 5, label: 'Bank Transfer' },
-      { id: 6, label: 'Cheque' },
-      { id: 7, label: 'Card' },
-      { id: 8, label: 'Other' },
+      { id: 2, label: 'Bank Transfer' },
+      { id: 3, label: 'Mobile Payment' },
+      { id: 4, label: 'Credit Card' },
+      { id: 5, label: 'Debit Card' },
+      { id: 6, label: 'Visa Card' },
+      { id: 7, label: 'Master Card' },
+      { id: 8, label: 'Wallet' },
+      { id: 9, label: 'bKash' },
     ];
   }
 
@@ -63,12 +65,11 @@ export class DropdownService {
 
   getMangoGradeOptions(): DropdownModel[] {
     return [
-      { id: 0, label: 'Low' },
-      { id: 1, label: 'Medium' },
-      { id: 2, label: 'High' },
-      { id: 3, label: 'Very High' },
-      { id: 4, label: 'Premium' },
-      { id: 5, label: 'Ultra Premium' },
+      { id: 1, label: 'Premium' },
+      { id: 2, label: 'Standard' },
+      { id: 3, label: 'Economy' },
+      { id: 4, label: 'Export Quality' },
+      { id: 5, label: 'Organic' },
     ];
   }
 
@@ -76,17 +77,24 @@ export class DropdownService {
     return [
       { id: 0, label: 'Upcoming' },
       { id: 1, label: 'Available' },
-      { id: 2, label: 'Limited' },
-      { id: 3, label: 'Ended' },
+      { id: 2, label: 'Sold Out' },
+      { id: 3, label: 'Closed' },
     ];
   }
 
   getAddressTypeOptions(): DropdownModel[] {
     return [
       { id: 1, label: 'Home' },
-      { id: 2, label: 'Work' },
+      { id: 2, label: 'Office' },
       { id: 3, label: 'Billing' },
       { id: 4, label: 'Shipping' },
+    ];
+  }
+
+  getLocationTypeOptions(): DropdownModel[] {
+    return [
+      { id: 1, label: 'Inside Dhaka' },
+      { id: 2, label: 'Outside Dhaka' }
     ];
   }
 

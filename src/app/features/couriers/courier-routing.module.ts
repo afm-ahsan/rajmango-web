@@ -7,6 +7,7 @@ import { CourierStationListComponent } from './courier-station/courier-station-l
 import { ViewCourierStationModalComponent } from './courier-station/view-courier-station-modal/view-courier-station-modal.component';
 import { ViewCourierAreaMapModalComponent } from './courier-area-map/view-courier-area-map-modal/view-courier-area-map-modal.component';
 import { CourierAreaMapListComponent } from './courier-area-map/courier-area-map-list/courier-area-map-list.component';
+import { CourierRateConfigListComponent } from './courier-rate-config/courier-rate-config-list/courier-rate-config-list.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
       {
         path: 'courier-area-map-view',
         component: ViewCourierAreaMapModalComponent,
+      },
+      {
+        path: 'courier-rate-config-list',
+        component: CourierRateConfigListComponent,
       },
       { path: '', redirectTo: 'couriers', pathMatch: 'full' },
       { path: '**', redirectTo: 'couriers', pathMatch: 'full' },
