@@ -52,43 +52,14 @@ export class AdminOrderViewModalComponent implements OnInit, OnDestroy {
   getCrateTypeLabel(t: number): string            { return EnumLabelUtils.getCrateTypeLabel(t); }
 
   getOrderStatusBadgeClass(status: OrderStatus): string {
-    const classes: Record<number, string> = {
-      [OrderStatus.Pending]:    'badge-light-warning',
-      [OrderStatus.Confirmed]:  'badge-light-info',
-      [OrderStatus.Processing]: 'badge-light-primary',
-      [OrderStatus.Shipped]:    'badge-light-primary',
-      [OrderStatus.Delivered]:  'badge-light-success',
-      [OrderStatus.Cancelled]:  'badge-light-danger',
-      [OrderStatus.Returned]:   'badge-light-warning',
-      [OrderStatus.Failed]:     'badge-light-danger',
-    };
-    return classes[status] ?? 'badge-light-secondary';
+    return EnumLabelUtils.getOrderStatusBadgeClass(status);
   }
 
   getPaymentStatusBadgeClass(status: PaymentStatus): string {
-    const classes: Record<number, string> = {
-      [PaymentStatus.Unpaid]:    'badge-light-danger',
-      [PaymentStatus.Paid]:      'badge-light-success',
-      [PaymentStatus.Partial]:   'badge-light-warning',
-      [PaymentStatus.Pending]:   'badge-light-warning',
-      [PaymentStatus.Failed]:    'badge-light-danger',
-      [PaymentStatus.Refunded]:  'badge-light-info',
-      [PaymentStatus.Cancelled]: 'badge-light-secondary',
-    };
-    return classes[status] ?? 'badge-light-secondary';
+    return EnumLabelUtils.getPaymentStatusBadgeClass(status);
   }
 
   getDeliveryStatusBadgeClass(status: DeliveryStatus): string {
-    const classes: Record<number, string> = {
-      [DeliveryStatus.None]:        'badge-light-secondary',
-      [DeliveryStatus.Pending]:     'badge-light-warning',
-      [DeliveryStatus.Dispatched]:  'badge-light-info',
-      [DeliveryStatus.InTransit]:   'badge-light-primary',
-      [DeliveryStatus.Delivered]:   'badge-light-success',
-      [DeliveryStatus.Failed]:      'badge-light-danger',
-      [DeliveryStatus.Returned]:    'badge-light-warning',
-      [DeliveryStatus.Cancelled]:   'badge-light-secondary',
-    };
-    return classes[status] ?? 'badge-light-secondary';
+    return EnumLabelUtils.getDeliveryStatusBadgeClass(status);
   }
 }

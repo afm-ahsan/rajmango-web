@@ -11,7 +11,17 @@
 
     <ng-container *ngIf="!isLoading && order">
 
-      <!-- ── Order Header ─────────────────────────────── -->
+      <!-- ── Courier Eligibility Banner ───────────────────── -->
+      <div *ngIf="order.isCourierEligible"
+           class="alert alert-success d-flex align-items-center gap-3 mb-4 py-3">
+        <i class="bi bi-truck fs-3 text-success"></i>
+        <div>
+          <div class="fw-bold">Courier Eligible</div>
+          <div class="fs-7">This order is confirmed, paid, and ready for courier dispatch.</div>
+        </div>
+      </div>
+
+      <!-- ── Order Header ──────────────────────────────────── -->
       <div class="row g-4 mb-4">
         <div class="col-12 col-md-4">
           <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Number</div>
@@ -27,7 +37,7 @@
         </div>
       </div>
 
-      <!-- ── Status Row ────────────────────────────────── -->
+      <!-- ── Status Row ────────────────────────────────────── -->
       <div class="row g-4 mb-4">
         <div class="col-12 col-md-4">
           <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Status</div>
@@ -49,7 +59,7 @@
         </div>
       </div>
 
-      <!-- ── Customer ───────────────────────────────────── -->
+      <!-- ── Customer ───────────────────────────────────────── -->
       <div class="separator separator-dashed mb-4"></div>
       <h5 class="fw-bold text-gray-700 mb-3">Customer</h5>
       <div class="row g-3 mb-4">
@@ -58,7 +68,7 @@
           <div class="fw-semibold">{{ order.customerName || '—' }}</div>
         </div>
         <div class="col-12 col-md-6">
-          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Phone</div>
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Mobile</div>
           <div class="fw-semibold">{{ order.customerPhone || '—' }}</div>
         </div>
         <div class="col-12 col-md-6">
@@ -71,17 +81,57 @@
         </div>
       </div>
 
-      <!-- ── Delivery ────────────────────────────────────── -->
+      <!-- ── Receiver ────────────────────────────────────────── -->
       <div class="separator separator-dashed mb-4"></div>
-      <h5 class="fw-bold text-gray-700 mb-3">Delivery</h5>
+      <h5 class="fw-bold text-gray-700 mb-3">
+        Receiver
+        <span class="badge ms-2 fs-8"
+              [ngClass]="order.receiverType === 0 ? 'badge-light-primary' : 'badge-light-warning'">
+          {{ order.receiverType === 0 ? 'Self' : 'Others' }}
+        </span>
+      </h5>
       <div class="row g-3 mb-4">
-        <div class="col-12 col-md-6" *ngIf="order.receiverName">
-          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Receiver</div>
-          <div class="fw-semibold">{{ order.receiverName }} ({{ order.receiverMobileNumber }})</div>
+        <div class="col-12 col-md-6">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Receiver Name</div>
+          <div class="fw-bold">
+            {{ order.receiverType === 0 ? (order.customerName || '—') : (order.receiverName || '—') }}
+          </div>
         </div>
-        <div class="col-12 col-md-6" *ngIf="order.courierStationName">
+        <div class="col-12 col-md-6">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Receiver Mobile</div>
+          <div class="fw-bold">
+            {{ order.receiverType === 0 ? (order.customerPhone || '—') : (order.receiverMobileNumber || '—') }}
+          </div>
+        </div>
+        <div class="col-12" *ngIf="order.fallbackAddress">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Address</div>
+          <div class="fw-semibold">{{ order.fallbackAddress }}</div>
+        </div>
+        <div class="col-12" *ngIf="order.deliveryNote">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Note</div>
+          <div class="fw-semibold text-gray-600">{{ order.deliveryNote }}</div>
+        </div>
+      </div>
+
+      <!-- ── Courier / Delivery ─────────────────────────────── -->
+      <div class="separator separator-dashed mb-4"></div>
+      <h5 class="fw-bold text-gray-700 mb-3">Courier & Delivery</h5>
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Courier Provider</div>
+          <div class="fw-semibold">{{ order.courierProviderName || '—' }}</div>
+        </div>
+        <div class="col-12 col-md-6">
           <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Courier Station</div>
-          <div class="fw-semibold">{{ order.courierStationName }}</div>
+          <div class="fw-semibold">{{ order.courierStationName || '—' }}</div>
+        </div>
+        <div class="col-12 col-md-6" *ngIf="order.courierStationAddress">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Station Address</div>
+          <div class="fw-semibold">{{ order.courierStationAddress }}</div>
+        </div>
+        <div class="col-12 col-md-6" *ngIf="order.deliveryArea">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Area</div>
+          <div class="fw-semibold">{{ order.deliveryArea }}</div>
         </div>
         <div class="col-12 col-md-6" *ngIf="order.trackingNumber">
           <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Tracking Number</div>
@@ -91,13 +141,9 @@
           <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Date</div>
           <div class="fw-semibold">{{ order.deliveryDate | date:'dd MMM yyyy' }}</div>
         </div>
-        <div class="col-12" *ngIf="order.deliveryNote">
-          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Note</div>
-          <div class="fw-semibold">{{ order.deliveryNote }}</div>
-        </div>
       </div>
 
-      <!-- ── Financials ─────────────────────────────────── -->
+      <!-- ── Financials ─────────────────────────────────────── -->
       <div class="separator separator-dashed mb-4"></div>
       <h5 class="fw-bold text-gray-700 mb-3">Financials</h5>
       <div class="row g-3 mb-4">
@@ -126,7 +172,7 @@
         </div>
       </div>
 
-      <!-- ── Order Items ────────────────────────────────── -->
+      <!-- ── Order Items ─────────────────────────────────────── -->
       <div class="separator separator-dashed mb-4"></div>
       <h5 class="fw-bold text-gray-700 mb-3">Order Items</h5>
       <div class="table-responsive mb-4">
@@ -154,7 +200,7 @@
         </table>
       </div>
 
-      <!-- ── Payments ───────────────────────────────────── -->
+      <!-- ── Payments ────────────────────────────────────────── -->
       <ng-container *ngIf="order.payments && order.payments.length > 0">
         <div class="separator separator-dashed mb-4"></div>
         <h5 class="fw-bold text-gray-700 mb-3">Payment History</h5>

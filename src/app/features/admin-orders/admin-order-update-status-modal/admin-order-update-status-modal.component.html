@@ -1,0 +1,59 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h2 class="modal-title">Update Order Status</h2>
+    <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body py-5 px-lg-7">
+
+    <div class="mb-5 text-muted fs-7">
+      Order: <span class="fw-bold text-gray-800">{{ order.orderNumber }}</span>
+    </div>
+
+    <form [formGroup]="form">
+
+      <div class="mb-4">
+        <label class="form-label fs-7 fw-semibold text-uppercase text-muted required">Order Status</label>
+        <select class="form-select form-select-solid" formControlName="orderStatus">
+          <option *ngFor="let s of orderStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fs-7 fw-semibold text-uppercase text-muted required">Payment Status</label>
+        <select class="form-select form-select-solid" formControlName="paymentStatus">
+          <option *ngFor="let s of paymentStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fs-7 fw-semibold text-uppercase text-muted required">Delivery Status</label>
+        <select class="form-select form-select-solid" formControlName="deliveryStatus">
+          <option *ngFor="let s of deliveryStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fs-7 fw-semibold text-uppercase text-muted">
+          Delivery Date <span class="text-muted fw-normal fs-8">(optional)</span>
+        </label>
+        <input type="date" class="form-control form-control-solid" formControlName="deliveryDate" />
+      </div>
+
+      <div class="alert alert-danger py-2 px-3 fs-7" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+    </form>
+  </div>
+  <div class="modal-footer gap-2">
+    <button type="button" class="btn btn-light btn-sm" (click)="modal.dismiss()" [disabled]="isSaving">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-primary btn-sm" (click)="submit()" [disabled]="isSaving || form.invalid">
+      <span *ngIf="!isSaving">Update Status</span>
+      <span *ngIf="isSaving">
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>Saving...
+      </span>
+    </button>
+  </div>
+</div>

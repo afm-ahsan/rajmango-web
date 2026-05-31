@@ -2,17 +2,25 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
+import { UserPermissionKey } from 'src/app/core/constants/user-permission-keys.enum';
 import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
+import { UserPermissionService } from 'src/app/features/auth/services/user-permission.service';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { FilterUtils } from 'src/app/shared/utils/filter-utils';
 import { SignalRService } from 'src/app/shared/services/signalr.service';
 import { SubSink } from 'subsink';
+import { CourierAreaMapService } from '../../couriers/courier-area-map/courier-area-map.service';
+import { MangoTypeService } from '../../mango-types/mango-type.service';
 import { OrderService } from '../../orders/order.service';
 import { AdminOrderFilterModel, AdminOrderListDto } from '../../orders/models/admin-order-list-dto.model';
 import { AdminOrderViewModalComponent } from '../admin-order-view-modal/admin-order-view-modal.component';
 import { AdminOrderActionModalComponent } from '../admin-order-action-modal/admin-order-action-modal.component';
+import { AdminOrderUpdateStatusModalComponent } from '../admin-order-update-status-modal/admin-order-update-status-modal.component';
+
+// ReceiverType enum mirror for template use
+const RECEIVER_SELF = 0;
 
 @Component({
   selector: 'app-admin-order-list',
@@ -26,8 +34,15 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
 
   readonly OrderStatus = OrderStatus;
   readonly PaymentStatus = PaymentStatus;
+  readonly DeliveryStatus = DeliveryStatus;
+  readonly RECEIVER_SELF = RECEIVER_SELF;
 
   showFilters = false;
+  showDivider = false;
+  hasAdminManage = false;
+
+  deliveryAreaOptions: { id: number; name: string }[] = [];
+  mangoTypeOptions: { id: number; name: string }[] = [];
 
   filter: AdminOrderFilterModel = {
     pageNumber: 1,
@@ -43,6 +58,9 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     startDate: null,
     endDate: null,
     mangoType: '',
+    courierEligibleOnly: false,
+    deliveryArea: undefined,
+    receiverMobile: '',
   };
 
   readonly orderStatusOptions = [
@@ -77,12 +95,28 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     private orderService: OrderService,
     private modalService: NgbModal,
     private signalR: SignalRService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private permissionService: UserPermissionService,
+    private courierAreaMapService: CourierAreaMapService,
+    private mangoTypeService: MangoTypeService
   ) {}
 
   ngOnInit(): void {
+    this.hasAdminManage = this.permissionService.hasAccess(UserPermissionKey.HasAdminOrdersManageAccess);
+    this.loadDropdowns();
     this.load();
     this.subs.sink = this.signalR.orderStatusUpdated$.subscribe(() => this.load());
+  }
+
+  private loadDropdowns(): void {
+    this.subs.sink = this.courierAreaMapService.getDropdown().subscribe({
+      next: (res: any) => { this.deliveryAreaOptions = Array.isArray(res) ? res : (res?.data ?? []); },
+      error: () => {}
+    });
+    this.subs.sink = this.mangoTypeService.list().subscribe({
+      next: (res: any) => { this.mangoTypeOptions = Array.isArray(res) ? res : (res?.data ?? []); },
+      error: () => {}
+    });
   }
 
   ngOnDestroy(): void {
@@ -120,8 +154,14 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     this.load();
   }
 
+  toggleFilters(): void {
+    this.showFilters = !this.showFilters;
+    if (!this.showFilters) this.showDivider = false;
+  }
+
   applyFilters(): void {
     this.filter = { ...this.filter, pageNumber: 1 };
+    this.showDivider = true;
     this.load();
   }
 
@@ -138,6 +178,9 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
       startDate: null,
       endDate: null,
       mangoType: '',
+      courierEligibleOnly: false,
+      deliveryArea: undefined,
+      receiverMobile: '',
     };
     this.load();
   }
@@ -156,6 +199,15 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     const ref = this.modalService.open(AdminOrderViewModalComponent, { size: 'lg' });
     ref.componentInstance.orderId = id;
     ref.result.then(() => {}, () => {});
+  }
+
+  openUpdateStatus(order: AdminOrderListDto): void {
+    const ref = this.modalService.open(AdminOrderUpdateStatusModalComponent, { size: 'sm' });
+    ref.componentInstance.order = order;
+    ref.result.then(
+      (result: 'success' | 'dismissed') => { if (result === 'success') this.load(); },
+      () => {}
+    );
   }
 
   openAction(order: AdminOrderListDto, action: 'confirm' | 'process' | 'ship' | 'deliver' | 'cancel'): void {
@@ -196,17 +248,7 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   }
 
   getOrderStatusBadgeClass(status: OrderStatus): string {
-    const classes: Record<number, string> = {
-      [OrderStatus.Pending]:    'badge-light-warning',
-      [OrderStatus.Confirmed]:  'badge-light-info',
-      [OrderStatus.Processing]: 'badge-light-primary',
-      [OrderStatus.Shipped]:    'badge-light-primary',
-      [OrderStatus.Delivered]:  'badge-light-success',
-      [OrderStatus.Cancelled]:  'badge-light-danger',
-      [OrderStatus.Returned]:   'badge-light-warning',
-      [OrderStatus.Failed]:     'badge-light-danger',
-    };
-    return classes[status] ?? 'badge-light-secondary';
+    return EnumLabelUtils.getOrderStatusBadgeClass(status);
   }
 
   getPaymentStatusLabel(status: PaymentStatus): string {
@@ -214,15 +256,14 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   }
 
   getPaymentStatusBadgeClass(status: PaymentStatus): string {
-    const classes: Record<number, string> = {
-      [PaymentStatus.Unpaid]:    'badge-light-danger',
-      [PaymentStatus.Paid]:      'badge-light-success',
-      [PaymentStatus.Partial]:   'badge-light-warning',
-      [PaymentStatus.Pending]:   'badge-light-warning',
-      [PaymentStatus.Failed]:    'badge-light-danger',
-      [PaymentStatus.Refunded]:  'badge-light-info',
-      [PaymentStatus.Cancelled]: 'badge-light-secondary',
-    };
-    return classes[status] ?? 'badge-light-secondary';
+    return EnumLabelUtils.getPaymentStatusBadgeClass(status);
+  }
+
+  getDeliveryStatusLabel(status: DeliveryStatus): string {
+    return EnumLabelUtils.getDeliveryStatusLabel(status);
+  }
+
+  getDeliveryStatusBadgeClass(status: DeliveryStatus): string {
+    return EnumLabelUtils.getDeliveryStatusBadgeClass(status);
   }
 }

@@ -130,6 +130,9 @@ export class OrderService {
     if (filter.courierProviderId != null) params = params.set('courierProviderId', filter.courierProviderId);
     if (filter.courierStationId != null)  params = params.set('courierStationId', filter.courierStationId);
     if (filter.mangoType)           params = params.set('mangoType', filter.mangoType);
+    if (filter.courierEligibleOnly) params = params.set('courierEligibleOnly', filter.courierEligibleOnly);
+    if (filter.deliveryArea)        params = params.set('deliveryArea', filter.deliveryArea);
+    if (filter.receiverMobile)      params = params.set('receiverMobile', filter.receiverMobile);
 
     return this.httpClient
       .get(`${this.apiUrl}/admin/orders`, { params })
@@ -169,6 +172,17 @@ export class OrderService {
   adminCancel(id: number): Observable<any> {
     return this.httpClient
       .post(`${this.apiUrl}/admin/orders/${id}/cancel`, {})
+      .pipe(catchError(this.handleError));
+  }
+
+  adminUpdateStatus(id: number, dto: {
+    orderStatus: number;
+    paymentStatus: number;
+    deliveryStatus: number;
+    deliveryDate: string | null;
+  }): Observable<any> {
+    return this.httpClient
+      .post(`${this.apiUrl}/admin/orders/${id}/update-status`, dto)
       .pipe(catchError(this.handleError));
   }
 

@@ -6,8 +6,9 @@ export enum UserPermissionKey {
   HasMangoCatalogAccess = 'hasMangoCatalogAccess',
 
   // ─── Operations ────────────────────────────────────────────────────
-  HasOrderAccess             = 'hasOrderAccess',
-  HasAdminOrdersAccess       = 'hasAdminOrdersAccess',
+  HasOrderAccess                 = 'hasOrderAccess',
+  HasAdminOrdersAccess           = 'hasAdminOrdersAccess',
+  HasAdminOrdersManageAccess     = 'hasAdminOrdersManageAccess',
   HasMangoTypeAccess         = 'hasMangoTypeAccess',
   HasMangoAvailabilityAccess = 'hasMangoAvailabilityAccess',
   HasCustomersAccess         = 'hasCustomersAccess',

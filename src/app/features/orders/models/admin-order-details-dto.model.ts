@@ -36,7 +36,11 @@ export interface AdminOrderDetailsDto {
   courierProviderName: string;
   courierStationId: number;
   courierStationName: string;
+  courierStationAddress: string;
+  deliveryArea: string;
   courierLocationType: number;
+
+  isCourierEligible: boolean;
 
   courierRatePerKg: number;
   courierChargeCalculated: number;

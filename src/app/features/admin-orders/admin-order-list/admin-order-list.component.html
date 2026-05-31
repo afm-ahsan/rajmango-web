@@ -6,10 +6,10 @@
       <!--begin::Header-->
       <div class="card-header border-0 pt-6">
         <div class="card-title">
-          <h3 class="card-label fw-bold fs-3 mb-0">Admin Orders</h3>
+          <h3 class="card-label fw-bold fs-3 mb-0">Manage Orders</h3>
         </div>
-        <div class="card-toolbar">
-          <button type="button" class="btn btn-sm btn-light-primary" (click)="showFilters = !showFilters">
+        <div class="card-toolbar gap-2">
+          <button type="button" class="btn btn-sm btn-light-primary" (click)="toggleFilters()">
             <i class="bi bi-funnel me-1"></i>{{ showFilters ? 'Hide Filters' : 'Filters' }}
           </button>
         </div>
@@ -18,27 +18,32 @@
 
       <!--begin::Filter Panel-->
       <div class="card-body pb-0 pt-4" *ngIf="showFilters">
-        <div class="row g-3 mb-4">
+        <div class="row g-3 mb-3">
+
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Order Number</label>
             <input type="text" class="form-control form-control-sm form-control-solid"
-              placeholder="e.g. RM-2026-001" [(ngModel)]="filter.orderNumber" />
+              placeholder="e.g. 202601010001" [(ngModel)]="filter.orderNumber" />
           </div>
+
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Customer Name</label>
             <input type="text" class="form-control form-control-sm form-control-solid"
               placeholder="Customer name" [(ngModel)]="filter.customerName" />
           </div>
+
           <div class="col-12 col-md-3">
-            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Phone</label>
+            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Customer Mobile</label>
             <input type="text" class="form-control form-control-sm form-control-solid"
-              placeholder="Phone number" [(ngModel)]="filter.phoneNumber" />
+              placeholder="e.g. 01712345678" [(ngModel)]="filter.phoneNumber" />
           </div>
+
           <div class="col-12 col-md-3">
-            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Mango Type</label>
+            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Receiver Mobile</label>
             <input type="text" class="form-control form-control-sm form-control-solid"
-              placeholder="e.g. Himsagar" [(ngModel)]="filter.mangoType" />
+              placeholder="e.g. 01712345678" [(ngModel)]="filter.receiverMobile" />
           </div>
+
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Order Status</label>
             <select class="form-select form-select-sm form-select-solid" [(ngModel)]="filter.orderStatus">
@@ -46,6 +51,7 @@
               <option *ngFor="let s of orderStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
             </select>
           </div>
+
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Payment Status</label>
             <select class="form-select form-select-sm form-select-solid" [(ngModel)]="filter.paymentStatus">
@@ -53,6 +59,7 @@
               <option *ngFor="let s of paymentStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
             </select>
           </div>
+
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Delivery Status</label>
             <select class="form-select form-select-sm form-select-solid" [(ngModel)]="filter.deliveryStatus">
@@ -60,15 +67,53 @@
               <option *ngFor="let s of deliveryStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
             </select>
           </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Delivery Area</label>
+            <ng-select
+              [items]="deliveryAreaOptions"
+              bindLabel="name"
+              bindValue="name"
+              [minTermLength]="3"
+              [clearable]="true"
+              placeholder="Search delivery area"
+              [(ngModel)]="filter.deliveryArea">
+            </ng-select>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Mango Type</label>
+            <select class="form-select form-select-sm form-select-solid" [(ngModel)]="filter.mangoType">
+              <option [ngValue]="''">All</option>
+              <option *ngFor="let t of mangoTypeOptions" [ngValue]="t.name">{{ t.name }}</option>
+            </select>
+          </div>
+
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Start Date</label>
-            <input type="date" class="form-control form-control-sm form-control-solid" [(ngModel)]="filter.startDate" />
+            <input type="date" class="form-control form-control-sm form-control-solid" style="min-width: 160px;"
+              placeholder="MM/DD/YYYY" [(ngModel)]="filter.startDate" />
           </div>
+
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">End Date</label>
-            <input type="date" class="form-control form-control-sm form-control-solid" [(ngModel)]="filter.endDate" />
+            <input type="date" class="form-control form-control-sm form-control-solid" style="min-width: 160px;"
+              placeholder="MM/DD/YYYY" [(ngModel)]="filter.endDate" />
           </div>
+
+          <div class="col-12 col-md-3 d-flex align-items-end">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="courierEligibleOnly"
+                [(ngModel)]="filter.courierEligibleOnly" />
+              <label class="form-check-label fw-semibold" for="courierEligibleOnly">
+                Courier Eligible Only
+              </label>
+              <div class="text-muted fs-8">Confirmed + Paid + Pending delivery</div>
+            </div>
+          </div>
+
         </div>
+
         <div class="d-flex gap-2 mb-4">
           <button type="button" class="btn btn-sm btn-primary" (click)="applyFilters()">
             <i class="bi bi-search me-1"></i>Apply
@@ -79,6 +124,8 @@
         </div>
       </div>
       <!--end::Filter Panel-->
+
+      <hr *ngIf="showFilters" class="my-0" />
 
       <!--begin::Loading-->
       <div class="card-body d-flex justify-content-center align-items-center" *ngIf="isLoading" style="min-height: 200px;">
@@ -91,7 +138,7 @@
       <!--begin::Body-->
       <div class="card-body py-4" *ngIf="!isLoading && orders.length > 0">
         <div class="table-responsive">
-          <table class="table table-striped table-hover align-middle fs-6 gy-5">
+          <table class="table table-striped table-hover align-middle fs-7 gy-4">
             <thead>
               <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                 <th class="cursor-pointer" (click)="onSort('orderNumber')">
@@ -102,9 +149,10 @@
                   Date
                   <span *ngIf="filter.sortBy === 'orderDate'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
                 </th>
-                <th>Customer</th>
+                <th>Customer / Receiver</th>
+                <th>Delivery Info</th>
                 <th class="cursor-pointer" (click)="onSort('totalQuantity')">
-                  Qty (kg)
+                  Qty
                   <span *ngIf="filter.sortBy === 'totalQuantity'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
                 </th>
                 <th class="cursor-pointer" (click)="onSort('totalAmount')">
@@ -117,36 +165,75 @@
                 </th>
                 <th>Order Status</th>
                 <th>Payment</th>
+                <th>Delivery</th>
+                <th>Delivery Date</th>
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
             <tbody class="text-gray-600 fw-semibold">
-              <tr *ngFor="let order of orders">
+              <tr *ngFor="let order of orders" [class.table-warning]="order.isCourierEligible">
                 <td>
                   <a href="javascript:void(0)" (click)="view(order.orderId)" class="text-gray-800 text-hover-primary fw-bold">
                     {{ order.orderNumber }}
                   </a>
+                  <div class="mt-1" *ngIf="order.isCourierEligible">
+                    <span class="badge badge-light-success fs-8">
+                      <i class="bi bi-truck me-1"></i>Courier Eligible
+                    </span>
+                  </div>
                 </td>
                 <td class="text-nowrap">{{ order.orderDate | date:'dd MMM yyyy' }}</td>
+
+                <!-- Customer / Receiver column -->
                 <td>
                   <div class="fw-semibold">{{ order.customerName || '—' }}</div>
-                  <div class="text-muted fs-7">{{ order.customerPhone || '' }}</div>
+                  <div class="text-muted fs-8">{{ order.customerPhone || '' }}</div>
+                  <ng-container *ngIf="order.receiverType !== RECEIVER_SELF">
+                    <div class="separator separator-dashed my-1"></div>
+                    <div class="text-muted fs-8 text-uppercase fw-bold">Receiver</div>
+                    <div class="fw-semibold text-info">{{ order.receiverName || '—' }}</div>
+                    <div class="text-muted fs-8">{{ order.receiverMobile || '' }}</div>
+                  </ng-container>
                 </td>
+
+                <!-- Delivery Info column -->
+                <td>
+                  <ng-container *ngIf="order.deliveryArea || order.courierStationName">
+                    <div class="fw-semibold">{{ order.deliveryArea || '—' }}</div>
+                    <div class="text-muted fs-8" *ngIf="order.courierProviderName">{{ order.courierProviderName }}</div>
+                    <div class="text-muted fs-8" *ngIf="order.courierStationName">{{ order.courierStationName }}</div>
+                  </ng-container>
+                  <span *ngIf="!order.deliveryArea && !order.courierStationName" class="text-muted">—</span>
+                </td>
+
                 <td>{{ order.totalQuantity | number }} kg</td>
                 <td class="fw-bold">৳ {{ order.totalAmount | number:'1.0-2' }}</td>
                 <td [class.text-danger]="order.dueAmount > 0">
                   ৳ {{ order.dueAmount | number:'1.0-2' }}
                 </td>
+
                 <td>
                   <span class="badge" [ngClass]="getOrderStatusBadgeClass(order.orderStatus)">
                     {{ getOrderStatusLabel(order.orderStatus) }}
                   </span>
                 </td>
+
                 <td>
                   <span class="badge" [ngClass]="getPaymentStatusBadgeClass(order.paymentStatus)">
                     {{ getPaymentStatusLabel(order.paymentStatus) }}
                   </span>
                 </td>
+
+                <td>
+                  <span class="badge" [ngClass]="getDeliveryStatusBadgeClass(order.deliveryStatus)">
+                    {{ getDeliveryStatusLabel(order.deliveryStatus) }}
+                  </span>
+                </td>
+
+                <td class="text-nowrap">
+                  {{ order.deliveryDate ? (order.deliveryDate | date:'dd MMM yyyy') : '—' }}
+                </td>
+
                 <td class="text-center">
                   <button type="button" class="btn btn-light btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                     Actions <i class="bi bi-three-dots-vertical ms-2"></i>
@@ -159,29 +246,19 @@
                       </a>
                     </div>
 
-                    <div class="separator my-2" *ngIf="canConfirm(order) || canProcess(order) || canShip(order) || canDeliver(order) || canCancel(order)"></div>
+                    <div class="separator my-2" *ngIf="hasAdminManage"></div>
+
+                    <div class="menu-item px-3" *ngIf="hasAdminManage">
+                      <a class="menu-link px-3 text-primary" (click)="openUpdateStatus(order)">
+                        <i class="bi bi-sliders me-2"></i>Update Status
+                      </a>
+                    </div>
+
+                    <div class="separator my-2" *ngIf="hasAdminManage && (canConfirm(order) || canCancel(order))"></div>
 
                     <div class="menu-item px-3" *ngIf="canConfirm(order)">
                       <a class="menu-link px-3 text-success" (click)="openAction(order, 'confirm')">
                         <i class="bi bi-check-circle me-2"></i>Confirm
-                      </a>
-                    </div>
-
-                    <div class="menu-item px-3" *ngIf="canProcess(order)">
-                      <a class="menu-link px-3 text-primary" (click)="openAction(order, 'process')">
-                        <i class="bi bi-gear me-2"></i>Process
-                      </a>
-                    </div>
-
-                    <div class="menu-item px-3" *ngIf="canShip(order)">
-                      <a class="menu-link px-3 text-primary" (click)="openAction(order, 'ship')">
-                        <i class="bi bi-truck me-2"></i>Ship
-                      </a>
-                    </div>
-
-                    <div class="menu-item px-3" *ngIf="canDeliver(order)">
-                      <a class="menu-link px-3 text-success" (click)="openAction(order, 'deliver')">
-                        <i class="bi bi-house-check me-2"></i>Deliver
                       </a>
                     </div>
 
