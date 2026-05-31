@@ -1,11 +1,9 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
 import { AuthFacade } from '../../auth.facade';
-import { TurnstileComponent } from '../turnstile/turnstile.component';
-import { AppConfigService } from 'src/app/core/services/app-config.service';
 
 @Component({
   selector: 'app-login',
@@ -13,16 +11,11 @@ import { AppConfigService } from 'src/app/core/services/app-config.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  @ViewChild('turnstile') turnstileRef?: TurnstileComponent;
-
   loginForm!: FormGroup;
   hasError = false;
   backendErrorMessage = '';
   isSubmitting = false;
   returnUrl = '/home';
-
-  turnstileToken: string | null = null;
-  turnstileLoadFailed = false;
 
   private readonly _destroy$ = new Subject<void>();
 
@@ -31,8 +24,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     private _authFacade: AuthFacade,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _cdRef: ChangeDetectorRef,
-    public appConfig: AppConfigService,
   ) {
     if (this._authFacade.currentUserValue) {
       this._router.navigate(['/home']);
@@ -47,21 +38,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this._destroy$.next();
     this._destroy$.complete();
-  }
-
-  onTurnstileResolved(token: string): void {
-    this.turnstileToken = token;
-    this._cdRef.detectChanges();
-  }
-
-  onTurnstileError(): void {
-    this.turnstileToken = null;
-    this._cdRef.detectChanges();
-  }
-
-  onTurnstileLoadFailed(): void {
-    this.turnstileLoadFailed = true;
-    this._cdRef.detectChanges();
   }
 
   private _initForm(): void {
@@ -91,14 +67,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   submit(): void {
     if (this.loginForm.invalid || this.isSubmitting) return;
-    if (this.appConfig.turnstileEnabled && this.appConfig.turnstileSiteKey && !this.turnstileToken) return;
 
     this.hasError = false;
     this.backendErrorMessage = '';
     this.isSubmitting = true;
 
     this._authFacade
-      .login(this.email?.value, this.password?.value, this.appConfig.turnstileEnabled ? (this.turnstileToken ?? undefined) : undefined)
+      .login(this.email?.value, this.password?.value)
       .pipe(
         takeUntil(this._destroy$),
         finalize(() => { this.isSubmitting = false; })
@@ -110,15 +85,11 @@ export class LoginComponent implements OnInit, OnDestroy {
           } else {
             this.hasError = true;
             this.backendErrorMessage = result.messages[0] ?? '';
-            this.turnstileToken = null;
-            this.turnstileRef?.reset();
           }
         },
         error: () => {
           this.hasError = true;
           this.backendErrorMessage = '';
-          this.turnstileToken = null;
-          this.turnstileRef?.reset();
         },
       });
   }

@@ -4,5 +4,4 @@ export interface RegisterModel {
   phoneNumber: string;
   email: string;
   password: string;
-  turnstileToken?: string;
 }

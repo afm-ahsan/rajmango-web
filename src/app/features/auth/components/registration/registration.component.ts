@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
@@ -8,8 +8,6 @@ import { ConfirmPasswordValidator } from './confirm-password.validator';
 import { RegisterModel } from '../../models/register.model';
 import { strongPasswordValidator } from 'src/app/shared/validators/password.validator';
 import { bdMobileValidator } from 'src/app/shared/validators/bd-mobile.validator';
-import { TurnstileComponent } from '../turnstile/turnstile.component';
-import { AppConfigService } from 'src/app/core/services/app-config.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -18,14 +16,10 @@ import Swal from 'sweetalert2';
   styleUrls: ['./registration.component.scss'],
 })
 export class RegistrationComponent implements OnInit, OnDestroy {
-  @ViewChild('turnstile') turnstileRef?: TurnstileComponent;
-
   registrationForm!: FormGroup;
   isLoading$: Observable<boolean>;
   hasError = false;
   isSubmitting = false;
-  turnstileToken: string | null = null;
-  turnstileLoadFailed = false;
   genericErrorMessage = '';
 
   private destroy$ = new Subject<void>();
@@ -35,7 +29,6 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router,
     private cdRef: ChangeDetectorRef,
-    public appConfig: AppConfigService,
   ) {
     this.isLoading$ = this.authService.isLoading$;
 
@@ -53,24 +46,8 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  onTurnstileResolved(token: string): void {
-    this.turnstileToken = token;
-    this.cdRef.detectChanges();
-  }
-
-  onTurnstileError(): void {
-    this.turnstileToken = null;
-    this.cdRef.detectChanges();
-  }
-
-  onTurnstileLoadFailed(): void {
-    this.turnstileLoadFailed = true;
-    this.cdRef.detectChanges();
-  }
-
   submit(): void {
     if (this.registrationForm.invalid || this.isSubmitting) return;
-    if (this.appConfig.turnstileEnabled && this.appConfig.turnstileSiteKey && !this.turnstileToken) return;
 
     this.hasError = false;
     this.genericErrorMessage = '';
@@ -79,12 +56,11 @@ export class RegistrationComponent implements OnInit, OnDestroy {
     const formValue = this.registrationForm.value;
 
     const newUser: RegisterModel = {
-      firstName: formValue.firstName,
-      lastName: formValue.lastName,
-      email: formValue.email,
+      firstName:   formValue.firstName,
+      lastName:    formValue.lastName,
+      email:       formValue.email,
       phoneNumber: formValue.phoneNumber,
-      password: formValue.password,
-      turnstileToken: this.appConfig.turnstileEnabled ? (this.turnstileToken ?? undefined) : undefined,
+      password:    formValue.password,
     };
 
     this.authService
@@ -110,16 +86,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
             });
           } else {
             this.applyBackendErrors(result.messages);
-            this.turnstileToken = null;
-            this.turnstileRef?.reset();
             this.cdRef.detectChanges();
           }
         },
         error: () => {
           this.hasError = true;
           this.genericErrorMessage = 'Registration failed. Please try again.';
-          this.turnstileToken = null;
-          this.turnstileRef?.reset();
           this.cdRef.detectChanges();
         },
       });
@@ -150,57 +122,54 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   private initializeForm(): void {
     this.registrationForm = this.fb.group(
       {
-        firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-        lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-        email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
+        firstName:   ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+        lastName:    ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+        email:       ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
         phoneNumber: ['', [Validators.required, bdMobileValidator()]],
-        password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), strongPasswordValidator()]],
-        cPassword: ['', [Validators.required]],
-        agree: [false, Validators.requiredTrue],
+        password:    ['', [Validators.required, Validators.minLength(6), Validators.maxLength(20), strongPasswordValidator()]],
+        cPassword:   ['', [Validators.required]],
+        agree:       [false, Validators.requiredTrue],
       },
-      {
-        validators: ConfirmPasswordValidator.MatchPassword,
-      }
+      { validators: ConfirmPasswordValidator.MatchPassword }
     );
   }
 
-  // Form accessors
-  get firstName() { return this.registrationForm.get('firstName'); }
-  get lastName()  { return this.registrationForm.get('lastName'); }
-  get email()     { return this.registrationForm.get('email'); }
+  get firstName()   { return this.registrationForm.get('firstName'); }
+  get lastName()    { return this.registrationForm.get('lastName'); }
+  get email()       { return this.registrationForm.get('email'); }
   get phoneNumber() { return this.registrationForm.get('phoneNumber'); }
-  get password()  { return this.registrationForm.get('password'); }
-  get cPassword() { return this.registrationForm.get('cPassword'); }
-  get agree()     { return this.registrationForm.get('agree'); }
+  get password()    { return this.registrationForm.get('password'); }
+  get cPassword()   { return this.registrationForm.get('cPassword'); }
+  get agree()       { return this.registrationForm.get('agree'); }
 
   readonly firstNameErrors = [
-    { key: 'required', msg: 'First name is required' },
+    { key: 'required',  msg: 'First name is required' },
     { key: 'minlength', msg: 'First name must be at least 2 characters' },
     { key: 'maxlength', msg: 'First name must be at most 50 characters' },
   ];
 
   readonly lastNameErrors = [
-    { key: 'required', msg: 'Last name is required' },
+    { key: 'required',  msg: 'Last name is required' },
     { key: 'minlength', msg: 'Last name must be at least 2 characters' },
     { key: 'maxlength', msg: 'Last name must be at most 50 characters' },
   ];
 
   readonly emailErrors = [
-    { key: 'required', msg: 'Email is required' },
-    { key: 'email', msg: 'Email is invalid' },
+    { key: 'required',  msg: 'Email is required' },
+    { key: 'email',     msg: 'Email is invalid' },
     { key: 'maxlength', msg: 'Email must be at most 255 characters' },
   ];
 
   readonly phoneNumberErrors = [
-    { key: 'required', msg: 'Phone number is required' },
-    { key: 'bdMobile', msg: 'Please enter a valid Bangladesh mobile number.' },
+    { key: 'required',  msg: 'Phone number is required' },
+    { key: 'bdMobile',  msg: 'Please enter a valid Bangladesh mobile number.' },
   ];
 
   readonly passwordErrors = [
-    { key: 'required', msg: 'Password is required' },
-    { key: 'minlength', msg: 'Password must be at least 6 characters' },
-    { key: 'maxlength', msg: 'Password must be at most 20 characters' },
-    { key: 'weakPassword', msg: 'Password must include upper/lowercase, number, and special character' },
+    { key: 'required',      msg: 'Password is required' },
+    { key: 'minlength',     msg: 'Password must be at least 6 characters' },
+    { key: 'maxlength',     msg: 'Password must be at most 20 characters' },
+    { key: 'weakPassword',  msg: 'Password must include upper/lowercase, number, and special character' },
   ];
 
   readonly confirmPasswordErrors = [

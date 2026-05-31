@@ -43,11 +43,11 @@ export class AuthService implements OnDestroy {
     });
   }
 
-  login(email: string, password: string, turnstileToken?: string): Observable<{ user: UserType; messages: string[] }> {
+  login(email: string, password: string): Observable<{ user: UserType; messages: string[] }> {
     if (!email || !password) return of({ user: undefined, messages: [] });
 
     this.isLoadingSubject.next(true);
-    return this.authHttpService.login(email, password, turnstileToken).pipe(
+    return this.authHttpService.login(email, password).pipe(
       switchMap((res: any) => {
         if (!res?.succeeded || !res?.data) {
           return of({ user: undefined as UserType, messages: (res?.messages as string[]) ?? [] });

@@ -12,10 +12,6 @@ export const environment = {
   USERID_KEY: 'authf172fc2a1f98',
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
-  turnstile: {
-    // Cloudflare Turnstile test key — always passes without interaction
-    siteKey: '1x00000000000000000000AA',
-  },
   application: {
     baseUrl,
     name: 'RajMango',
