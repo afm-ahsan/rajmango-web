@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin, of, switchMap } from 'rxjs';
+import { forkJoin, firstValueFrom, of, switchMap } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
@@ -46,6 +46,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   stationCheckRequired = false;
   isFallbackMode = false;
   isLoading = false;
+  isSubmitting = false;
   isCourierStationLoading = false;
   subs = new SubSink();
   private initialOrderDetailsSnapshot = '[]';
@@ -249,16 +250,25 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     this.orderForm.reset({
       mangoType: this.mango?.id ?? 0,
       crateType: 0,
-      area: 0,
+      area: null,
       quantity: 1,
       note: '',
+      courierStationId: null,
+      fallbackAddress: '',
       receiverType: ReceiverType.Self,
       receiverName: null,
       receiverMobileNumber: null,
     });
     this.updateReceiverValidators(ReceiverType.Self);
+    this.updateCourierValidation();
     this.isFallbackMode = false;
     this.availableStations = [];
+    this.previewProductTotal = null;
+    this.previewCourierCharge = null;
+    this.previewGrandTotal = null;
+    this.previewProviderName = null;
+    this.previewError = null;
+    this.cdRef.detectChanges();
   }
 
   getTotalPrice(): number {
@@ -313,6 +323,8 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
+    if (this.isSaveDisabled) return;
+
     Swal.fire({
       title: 'Confirm Order',
       text: 'Are you sure you want to place this order?',
@@ -322,30 +334,33 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
       cancelButtonText: 'Cancel',
       confirmButtonColor: '#0d6efd',
       cancelButtonColor: '#6c757d',
+      heightAuto: false,
+      scrollbarPadding: false,
+      allowOutsideClick: () => !Swal.isLoading(),
+      allowEscapeKey: true,
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        this.isSubmitting = true;
+        this.cdRef.detectChanges();
+        try {
+          this.prepareData();
+          const res: any = await firstValueFrom(this.orderService.create(this.orderInputDto));
+          if (res?.succeeded) return true;
+          Swal.showValidationMessage(res?.messages?.join('\n') ?? 'Order failed.');
+          return false;
+        } catch {
+          Swal.showValidationMessage('Order creation failed. Please try again.');
+          return false;
+        } finally {
+          this.isSubmitting = false;
+          this.cdRef.detectChanges();
+        }
+      },
     }).then((result) => {
-      if (result.isConfirmed) this.performSave();
-    });
-  }
-
-  private performSave(): void {
-    if (this.orderDetails.length === 0) {
-      Swal.fire('Order Missing', 'Please add at least one item to your order.', 'warning');
-      return;
-    }
-    this.prepareData();
-    this.subs.sink = this.orderService.create(this.orderInputDto).subscribe({
-      next: () => {
+      if (result.isConfirmed && result.value === true) {
+        Swal.fire({ title: 'Order Placed!', text: 'Your order has been placed successfully.', icon: 'success', confirmButtonColor: '#0d6efd', heightAuto: false, scrollbarPadding: false });
         this.modal.close('success');
-        Swal.fire({
-          icon: 'success',
-          title: 'Order Placed!',
-          text: 'Your order has been placed successfully.',
-          confirmButtonColor: '#0d6efd',
-        });
-      },
-      error: () => {
-        Swal.fire('Failed', 'Order creation failed. Please try again.', 'error');
-      },
+      }
     });
   }
 
@@ -465,7 +480,19 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   }
 
   get isSaveDisabled(): boolean {
-    return !this.orderForm || !this.orderForm.valid || this.orderDetails.length === 0 || this.isCourierStationLoading;
+    if (!this.orderForm || this.orderDetails.length === 0 || this.isSubmitting || this.isCourierStationLoading) return true;
+    if (this.orderForm.get('area')?.invalid) return true;
+    if (this.isFallbackMode) {
+      if (this.orderForm.get('fallbackAddress')?.invalid) return true;
+    } else {
+      if (this.orderForm.get('courierStationId')?.invalid) return true;
+    }
+    const receiverType = this.orderForm.get('receiverType')?.value;
+    if (receiverType === ReceiverType.Others) {
+      if (this.orderForm.get('receiverName')?.invalid) return true;
+      if (this.orderForm.get('receiverMobileNumber')?.invalid) return true;
+    }
+    return false;
   }
 
   get hasAreaSelected(): boolean {

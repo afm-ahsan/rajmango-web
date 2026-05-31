@@ -60,29 +60,19 @@ export class CustomerDashboardComponent implements OnInit, OnDestroy {
   }
 
   getOrderStatusBadgeClass(status: number): string {
-    const map: Record<number, string> = {
-      1: 'badge-light-warning',  // Pending
-      2: 'badge-light-info',     // Confirmed
-      3: 'badge-light-primary',  // Processing
-      4: 'badge-light-primary',  // Shipped
-      5: 'badge-light-success',  // Delivered
-      6: 'badge-light-danger',   // Cancelled
-      7: 'badge-light-warning',  // Returned
-      8: 'badge-light-danger',   // Failed
-    };
-    return map[status] ?? 'badge-light-secondary';
+    return EnumLabelUtils.getOrderStatusBadgeClass(status);
   }
 
   getPaymentStatusBadgeClass(status: number): string {
-    const map: Record<number, string> = {
-      1: 'badge-light-danger',   // Unpaid
-      2: 'badge-light-success',  // Paid
-      3: 'badge-light-warning',  // Partial
-      4: 'badge-light-danger',   // Failed
-      5: 'badge-light-info',     // Refunded
-      6: 'badge-light-secondary',// Cancelled
-    };
-    return map[status] ?? 'badge-light-secondary';
+    return EnumLabelUtils.getPaymentStatusBadgeClass(status);
+  }
+
+  getDeliveryStatusLabel(status: number): string {
+    return EnumLabelUtils.getDeliveryStatusLabel(status);
+  }
+
+  getDeliveryStatusBadgeClass(status: number): string {
+    return EnumLabelUtils.getDeliveryStatusBadgeClass(status);
   }
 
   private subscribeToRealtime(): void {

@@ -117,12 +117,13 @@
         <div class="table-responsive">
           <table class="table table-hover align-middle mb-0">
             <colgroup>
-              <col style="width: 15%">
-              <col style="width: 18%">
+              <col style="width: 13%">
+              <col style="width: 16%">
+              <col style="width: 11%">
               <col style="width: 12%">
-              <col style="width: 14%">
-              <col style="width: 21%">
-              <col style="width: 20%">
+              <col style="width: 16%">
+              <col style="width: 16%">
+              <col style="width: 16%">
             </colgroup>
             <thead class="table-light">
               <tr>
@@ -130,8 +131,9 @@
                 <th class="py-3">Customer</th>
                 <th class="py-3">Date</th>
                 <th class="text-end py-3">Amount</th>
-                <th class="text-center py-3">Status</th>
-                <th class="ps-4 pe-5 py-3">Payment</th>
+                <th class="text-center py-3">Order Status</th>
+                <th class="text-center py-3">Payment Status</th>
+                <th class="text-center pe-5 py-3">Delivery Status</th>
               </tr>
             </thead>
             <tbody>
@@ -145,14 +147,19 @@
                     {{ getOrderStatusLabel(order.orderStatus) }}
                   </span>
                 </td>
-                <td class="ps-4 pe-5 py-3">
+                <td class="text-center py-3">
                   <span class="badge fw-semibold fs-8" [ngClass]="getPaymentStatusBadgeClass(order.paymentStatus)">
                     {{ getPaymentStatusLabel(order.paymentStatus) }}
                   </span>
                 </td>
+                <td class="text-center pe-5 py-3">
+                  <span class="badge fw-semibold fs-8" [ngClass]="getDeliveryStatusBadgeClass(order.deliveryStatus)">
+                    {{ getDeliveryStatusLabel(order.deliveryStatus) }}
+                  </span>
+                </td>
               </tr>
               <tr *ngIf="!dashboard.recentOrders?.length">
-                <td colspan="6" class="text-center text-muted py-6">No recent orders.</td>
+                <td colspan="7" class="text-center text-muted py-6">No recent orders.</td>
               </tr>
             </tbody>
           </table>

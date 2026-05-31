@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
+import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
 import { FilterModel } from 'src/app/shared/models/filter.model';
@@ -103,12 +104,28 @@ export class OrderListComponent implements OnInit, OnDestroy {
       });
   }
 
-  getPaymentStatusLabel(paymentStatus: PaymentStatus): string {
-      return EnumLabelUtils.getPaymentStatusLabel(paymentStatus)
-    }
+  getOrderStatusLabel(status: OrderStatus): string {
+    return EnumLabelUtils.getOrderStatusLabel(status);
+  }
 
-  getOrderStatusLabel(orderStatus: OrderStatus): string {
-    return EnumLabelUtils.getOrderStatusLabel(orderStatus);
+  getOrderStatusBadgeClass(status: OrderStatus): string {
+    return EnumLabelUtils.getOrderStatusBadgeClass(status);
+  }
+
+  getPaymentStatusLabel(status: PaymentStatus): string {
+    return EnumLabelUtils.getPaymentStatusLabel(status);
+  }
+
+  getPaymentStatusBadgeClass(status: PaymentStatus): string {
+    return EnumLabelUtils.getPaymentStatusBadgeClass(status);
+  }
+
+  getDeliveryStatusLabel(status: DeliveryStatus): string {
+    return EnumLabelUtils.getDeliveryStatusLabel(status);
+  }
+
+  getDeliveryStatusBadgeClass(status: DeliveryStatus): string {
+    return EnumLabelUtils.getDeliveryStatusBadgeClass(status);
   }
 
   create(): void {

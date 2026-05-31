@@ -9895,6 +9895,7 @@ export class AdminRecentOrderDto implements IAdminRecentOrderDto {
     dueAmount!: number;
     orderStatus!: OrderStatus;
     paymentStatus!: PaymentStatus;
+    deliveryStatus!: DeliveryStatus;
 
     constructor(data?: IAdminRecentOrderDto) {
         if (data) {
@@ -9917,6 +9918,7 @@ export class AdminRecentOrderDto implements IAdminRecentOrderDto {
             this.dueAmount = _data["dueAmount"];
             this.orderStatus = _data["orderStatus"];
             this.paymentStatus = _data["paymentStatus"];
+            this.deliveryStatus = _data["deliveryStatus"];
         }
     }
 
@@ -9939,6 +9941,7 @@ export class AdminRecentOrderDto implements IAdminRecentOrderDto {
         data["dueAmount"] = this.dueAmount;
         data["orderStatus"] = this.orderStatus;
         data["paymentStatus"] = this.paymentStatus;
+        data["deliveryStatus"] = this.deliveryStatus;
         return data;
     }
 
@@ -9961,6 +9964,7 @@ export interface IAdminRecentOrderDto {
     dueAmount: number;
     orderStatus: OrderStatus;
     paymentStatus: PaymentStatus;
+    deliveryStatus: DeliveryStatus;
 }
 
 export class AppUserDto implements IAppUserDto {
@@ -13151,6 +13155,7 @@ export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
     dueAmount!: number;
     orderStatus!: OrderStatus;
     paymentStatus!: PaymentStatus;
+    deliveryStatus!: DeliveryStatus;
 
     constructor(data?: ICustomerRecentOrderDto) {
         if (data) {
@@ -13172,6 +13177,7 @@ export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
             this.dueAmount = _data["dueAmount"];
             this.orderStatus = _data["orderStatus"];
             this.paymentStatus = _data["paymentStatus"];
+            this.deliveryStatus = _data["deliveryStatus"];
         }
     }
 
@@ -13193,6 +13199,7 @@ export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
         data["dueAmount"] = this.dueAmount;
         data["orderStatus"] = this.orderStatus;
         data["paymentStatus"] = this.paymentStatus;
+        data["deliveryStatus"] = this.deliveryStatus;
         return data;
     }
 
@@ -13214,6 +13221,7 @@ export interface ICustomerRecentOrderDto {
     dueAmount: number;
     orderStatus: OrderStatus;
     paymentStatus: PaymentStatus;
+    deliveryStatus: DeliveryStatus;
 }
 
 export enum CustomerType {

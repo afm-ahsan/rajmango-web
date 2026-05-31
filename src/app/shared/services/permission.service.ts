@@ -24,9 +24,10 @@ export class PermissionService {
     5:  { 1: 'payment.view',              2: 'payment.create',              3: 'payment.update',              4: 'payment.delete'                                              },
     6:  { 1: 'expense.type.view',         2: 'expense.type.create',         3: 'expense.type.update',         4: 'expense.type.delete'                                         },
     7:  { 1: 'expense.view',              2: 'expense.create',              3: 'expense.update',              4: 'expense.delete'                                              },
-    8:  { 1: 'courier-provider.view',     2: 'courier-provider.create',     3: 'courier-provider.update',     4: 'courier-provider.delete'                                     },
-    9:  { 1: 'courier-station.view',      2: 'courier-station.create',      3: 'courier-station.update',      4: 'courier-station.delete'                                      },
-    10: { 1: 'courier-area-map.view',     2: 'courier-area-map.create',     3: 'courier-area-map.update',     4: 'courier-area-map.delete'                                     },
+    8:  { 1: 'courier.provider.view',     2: 'courier.provider.create',     3: 'courier.provider.update',     4: 'courier.provider.delete'                                     },
+    9:  { 1: 'courier.station.view',      2: 'courier.station.create',      3: 'courier.station.update',      4: 'courier.station.delete'                                      },
+    10: { 1: 'courier.area.map.view',     2: 'courier.area.map.create',     3: 'courier.area.map.update',     4: 'courier.area.map.delete'                                     },
+    20: { 1: 'courier.rate.config.view',  2: 'courier.rate.config.create',  3: 'courier.rate.config.update',  4: 'courier.rate.config.delete'                                  },
     11: { 1: 'feedback.admin.view'                                                                                                                                             },
     12: { 1: 'complaint.admin.view',      2: 'complaint.admin.manage'                                                                                                         },
     13: { 1: 'policy.view',               2: 'policy.manage',               3: 'policy.manage',               4: 'policy.manage'                                               },
@@ -202,6 +203,17 @@ export class PermissionService {
           {
             id: 10,
             title: 'Area Mapping',
+            hasAccess: false,
+            actionModels: [
+              { id: 1, action: 'View',   hasAccess: false },
+              { id: 2, action: 'Create', hasAccess: false },
+              { id: 3, action: 'Update', hasAccess: false },
+              { id: 4, action: 'Delete', hasAccess: false },
+            ],
+          },
+          {
+            id: 20,
+            title: 'Courier Rate Config',
             hasAccess: false,
             actionModels: [
               { id: 1, action: 'View',   hasAccess: false },

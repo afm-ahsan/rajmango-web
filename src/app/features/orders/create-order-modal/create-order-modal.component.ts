@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDate } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin, of, switchMap } from 'rxjs';
+import { forkJoin, firstValueFrom, of, switchMap } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
@@ -323,21 +323,30 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  reset(): void{
+  reset(): void {
     this.orderDetails = [];
     this.orderForm.reset({
       mangoType: 0,
       crateType: 0,
-      area: 0,
+      area: null,
       quantity: 1,
       note: '',
+      courierStationId: null,
+      fallbackAddress: '',
       receiverType: ReceiverType.Self,
       receiverName: null,
       receiverMobileNumber: null,
     });
     this.updateReceiverValidators(ReceiverType.Self);
+    this.updateCourierValidation();
     this.isFallbackMode = false;
     this.availableStations = [];
+    this.previewProductTotal = null;
+    this.previewCourierCharge = null;
+    this.previewGrandTotal = null;
+    this.previewProviderName = null;
+    this.previewError = null;
+    this.cdRef.detectChanges();
   }
 
   getTotalPrice(): number {
@@ -398,7 +407,9 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     this.orderDateObject = new Date(`${year}-${month}-${day}`);
   }
 
-  save() {
+  save(): void {
+    if (this.isSaveDisabled) return;
+
     Swal.fire({
       title: 'Confirm Save',
       text: 'Are you sure you want to save this order?',
@@ -410,26 +421,35 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       cancelButtonColor: '#6c757d',
       heightAuto: false,
       scrollbarPadding: false,
-      allowOutsideClick: false,
+      allowOutsideClick: () => !Swal.isLoading(),
       allowEscapeKey: true,
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        this.isSubmitting = true;
+        this.cdRef.detectChanges();
+        try {
+          this.prepareData();
+          const call$ = this.orderDto.id
+            ? this.orderService.update(this.id, this.orderInputDto)
+            : this.orderService.create(this.orderInputDto);
+          const res: any = await firstValueFrom(call$);
+          if (res?.succeeded) return true;
+          Swal.showValidationMessage(res?.messages?.join('\n') ?? 'Save failed.');
+          return false;
+        } catch {
+          Swal.showValidationMessage('Save failed. Please try again.');
+          return false;
+        } finally {
+          this.isSubmitting = false;
+          this.cdRef.detectChanges();
+        }
+      },
     }).then(result => {
-      if (result.isConfirmed) {
-        this.performSave();
+      if (result.isConfirmed && result.value === true) {
+        Swal.fire({ title: 'Success', text: 'Order saved successfully.', icon: 'success', heightAuto: false, scrollbarPadding: false });
+        this.modal.close('success');
       }
     });
-  }
-
-  private performSave(): void {
-    if (this.orderDetails.length === 0) {
-      Swal.fire({ title: 'Order Missing', text: 'Please complete your new order.', icon: 'warning', heightAuto: false, scrollbarPadding: false });
-      return;
-    }
-    this.prepareData();
-    if (this.orderDto.id) {
-      this.edit();
-    } else {
-      this.create();
-    }
   }
 
   cancel() {
@@ -457,46 +477,6 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     }
   });
 }
-
-  private edit(): void {
-    this.isSubmitting = true;
-    this.subs.sink = this.orderService.update(this.id, this.orderInputDto).pipe(
-      finalize(() => { this.isSubmitting = false; this.cdRef.detectChanges(); })
-    ).subscribe({
-      next: (res: any) => {
-        if (res?.succeeded) {
-          Swal.fire({ title: 'Success', text: 'Order updated successfully.', icon: 'success', heightAuto: false, scrollbarPadding: false });
-          this.modal.close('success');
-        } else {
-          const msg = res?.messages?.join('\n') ?? 'Order update failed.';
-          Swal.fire({ title: 'Update Failed', text: msg, icon: 'warning', heightAuto: false, scrollbarPadding: false });
-        }
-      },
-      error: () => {
-        Swal.fire({ title: 'Failed', text: 'Order update failed.', icon: 'error', heightAuto: false, scrollbarPadding: false });
-      }
-    });
-  }
-
-  private create(): void {
-    this.isSubmitting = true;
-    this.subs.sink = this.orderService.create(this.orderInputDto).pipe(
-      finalize(() => { this.isSubmitting = false; this.cdRef.detectChanges(); })
-    ).subscribe({
-      next: (res: any) => {
-        if (res?.succeeded) {
-          Swal.fire({ title: 'Success', text: 'Order created successfully.', icon: 'success', heightAuto: false, scrollbarPadding: false });
-          this.modal.close('success');
-        } else {
-          const msg = res?.messages?.join('\n') ?? 'Order creation failed.';
-          Swal.fire({ title: 'Order Not Placed', text: msg, icon: 'warning', heightAuto: false, scrollbarPadding: false });
-        }
-      },
-      error: () => {
-        Swal.fire({ title: 'Failed', text: 'Order creation failed.', icon: 'error', heightAuto: false, scrollbarPadding: false });
-      }
-    });
-  }
 
   private prepareData(): void {
     const userId = this.authService.getLoggedUserId();
@@ -560,7 +540,19 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   }
     
   get isSaveDisabled(): boolean {
-    return !this.orderForm || !this.orderForm.valid || this.orderDetails.length === 0 || this.isSubmitting || this.isCourierStationLoading;
+    if (!this.orderForm || this.orderDetails.length === 0 || this.isSubmitting || this.isCourierStationLoading) return true;
+    if (this.orderForm.get('area')?.invalid) return true;
+    if (this.isFallbackMode) {
+      if (this.orderForm.get('fallbackAddress')?.invalid) return true;
+    } else {
+      if (this.orderForm.get('courierStationId')?.invalid) return true;
+    }
+    const receiverType = this.orderForm.get('receiverType')?.value;
+    if (receiverType === ReceiverType.Others) {
+      if (this.orderForm.get('receiverName')?.invalid) return true;
+      if (this.orderForm.get('receiverMobileNumber')?.invalid) return true;
+    }
+    return false;
   }
 
   get hasAreaSelected(): boolean {

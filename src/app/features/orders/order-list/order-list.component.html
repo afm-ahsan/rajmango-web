@@ -56,8 +56,8 @@
                 <th class="cursor-pointer" (click)="onSort('paymentStatus')">Payment Status
                   <span *ngIf="filter.sortBy === 'paymentStatus'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
                 </th>
-                <th class="cursor-pointer" (click)="onSort('isDelivered')">Delivered
-                  <span *ngIf="filter.sortBy === 'isDelivered'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                <th class="cursor-pointer" (click)="onSort('deliveryStatus')">Delivery Status
+                  <span *ngIf="filter.sortBy === 'deliveryStatus'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
                 </th>
                 <th class="text-center">Actions</th>
               </tr>
@@ -72,9 +72,21 @@
                 <td>{{ order.orderDate | date }}</td>
                 <td>{{ order.totalQuantity }} Kg</td>
                 <td>{{ order.totalAmount }}</td>
-                <td>{{ getOrderStatusLabel(order.orderStatus) }}</td>
-                <td>{{ getPaymentStatusLabel(order.paymentStatus) }}</td>
-                <td>{{ order.isDelivered | yesNo }}</td>
+                <td>
+                  <span class="badge" [ngClass]="getOrderStatusBadgeClass(order.orderStatus)">
+                    {{ getOrderStatusLabel(order.orderStatus) }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="getPaymentStatusBadgeClass(order.paymentStatus)">
+                    {{ getPaymentStatusLabel(order.paymentStatus) }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="getDeliveryStatusBadgeClass(order.deliveryStatus)">
+                    {{ getDeliveryStatusLabel(order.deliveryStatus) }}
+                  </span>
+                </td>
                 <td class="text-center">
                   <button type="button" class="btn btn-light btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                     Actions <i class="bi bi-three-dots-vertical ms-2"></i>

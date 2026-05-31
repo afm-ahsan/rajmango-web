@@ -59,31 +59,31 @@ export const AppPermissions = {
   },
 
   CourierProviders: {
-    View:   'courier-provider.view',
-    Create: 'courier-provider.create',
-    Update: 'courier-provider.update',
-    Delete: 'courier-provider.delete',
+    View:   'courier.provider.view',
+    Create: 'courier.provider.create',
+    Update: 'courier.provider.update',
+    Delete: 'courier.provider.delete',
   },
 
   CourierStations: {
-    View:   'courier-station.view',
-    Create: 'courier-station.create',
-    Update: 'courier-station.update',
-    Delete: 'courier-station.delete',
+    View:   'courier.station.view',
+    Create: 'courier.station.create',
+    Update: 'courier.station.update',
+    Delete: 'courier.station.delete',
   },
 
   CourierAreaMaps: {
-    View:   'courier-area-map.view',
-    Create: 'courier-area-map.create',
-    Update: 'courier-area-map.update',
-    Delete: 'courier-area-map.delete',
+    View:   'courier.area.map.view',
+    Create: 'courier.area.map.create',
+    Update: 'courier.area.map.update',
+    Delete: 'courier.area.map.delete',
   },
 
   CourierRateConfigs: {
-    View:   'courier-rate-config.view',
-    Create: 'courier-rate-config.create',
-    Update: 'courier-rate-config.update',
-    Delete: 'courier-rate-config.delete',
+    View:   'courier.rate.config.view',
+    Create: 'courier.rate.config.create',
+    Update: 'courier.rate.config.update',
+    Delete: 'courier.rate.config.delete',
   },
 
   Customers: {
