@@ -9896,6 +9896,7 @@ export class AdminRecentOrderDto implements IAdminRecentOrderDto {
     orderStatus!: OrderStatus;
     paymentStatus!: PaymentStatus;
     deliveryStatus!: DeliveryStatus;
+    deliveryDate!: moment.Moment | undefined;
 
     constructor(data?: IAdminRecentOrderDto) {
         if (data) {
@@ -9919,6 +9920,7 @@ export class AdminRecentOrderDto implements IAdminRecentOrderDto {
             this.orderStatus = _data["orderStatus"];
             this.paymentStatus = _data["paymentStatus"];
             this.deliveryStatus = _data["deliveryStatus"];
+            this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
         }
     }
 
@@ -9942,6 +9944,7 @@ export class AdminRecentOrderDto implements IAdminRecentOrderDto {
         data["orderStatus"] = this.orderStatus;
         data["paymentStatus"] = this.paymentStatus;
         data["deliveryStatus"] = this.deliveryStatus;
+        data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
         return data;
     }
 
@@ -9965,6 +9968,7 @@ export interface IAdminRecentOrderDto {
     orderStatus: OrderStatus;
     paymentStatus: PaymentStatus;
     deliveryStatus: DeliveryStatus;
+    deliveryDate: moment.Moment | undefined;
 }
 
 export class AppUserDto implements IAppUserDto {
@@ -13156,6 +13160,7 @@ export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
     orderStatus!: OrderStatus;
     paymentStatus!: PaymentStatus;
     deliveryStatus!: DeliveryStatus;
+    deliveryDate!: moment.Moment | undefined;
 
     constructor(data?: ICustomerRecentOrderDto) {
         if (data) {
@@ -13178,6 +13183,7 @@ export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
             this.orderStatus = _data["orderStatus"];
             this.paymentStatus = _data["paymentStatus"];
             this.deliveryStatus = _data["deliveryStatus"];
+            this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
         }
     }
 
@@ -13200,6 +13206,7 @@ export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
         data["orderStatus"] = this.orderStatus;
         data["paymentStatus"] = this.paymentStatus;
         data["deliveryStatus"] = this.deliveryStatus;
+        data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
         return data;
     }
 
@@ -13222,6 +13229,7 @@ export interface ICustomerRecentOrderDto {
     orderStatus: OrderStatus;
     paymentStatus: PaymentStatus;
     deliveryStatus: DeliveryStatus;
+    deliveryDate: moment.Moment | undefined;
 }
 
 export enum CustomerType {
