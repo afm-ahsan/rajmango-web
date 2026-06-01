@@ -110,7 +110,6 @@ export class CreateCourierRateConfigModalComponent implements OnInit, OnDestroy 
       finalize(() => { this.isLoading = false; })
     ).subscribe({
       next: () => {
-        Swal.fire('Success', `Rate config ${this.id ? 'updated' : 'saved'} successfully.`, 'success');
         this.modal.close('success');
       },
       error: (error) => {

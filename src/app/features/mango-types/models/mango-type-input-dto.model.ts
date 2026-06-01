@@ -2,7 +2,7 @@ export interface MangoTypeInputDto {
   id: number;
   name: string;
   description: string;
-  imagePath: string;
+  imagePath: string | null;
   region: string;
   averageWeight: string;
   mangoGrade: number;

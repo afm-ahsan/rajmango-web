@@ -36,9 +36,9 @@
         <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Description</div>
         <div class="fw-semibold fs-6">{{ mangoTypeDto.description || '—' }}</div>
       </div>
-      <div class="col-12" *ngIf="mangoTypeDto.imagePath.length">
+      <div class="col-12" *ngIf="mangoTypeDto.imagePath?.length">
         <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Image</div>
-        <img [src]="createImagePath(mangoTypeDto.imagePath)" alt="Mango type image"
+        <img [src]="createImagePath(mangoTypeDto.imagePath || '')" alt="Mango type image"
           class="rounded" style="max-height: 200px; max-width: 100%;" />
       </div>
     </div>

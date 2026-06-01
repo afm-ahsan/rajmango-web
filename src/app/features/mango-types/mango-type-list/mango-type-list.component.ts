@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
+import Swal from 'sweetalert2';
 import { FilterModel } from 'src/app/shared/models/filter.model';
 import { ImagePathService } from 'src/app/shared/services/image-path.service';
 import { FilterUtils } from 'src/app/shared/utils/filter-utils';
@@ -54,7 +55,7 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
   }
 
   // 4. Public Methods
-  load(): void {
+  load(onSuccess?: () => void): void {
     this.isLoading = true;
     const dto = FilterUtils.createPagedRequest(this.filter, this.searchVal);
     this.subs.sink = this.mangoTypeFacade.getPagedWithCount(dto)
@@ -69,6 +70,7 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
         next: ([data, count]) => {
           this.mangoTypes = data;
           this.totalCount = count;
+          onSuccess?.();
         },
       });
   }
@@ -81,9 +83,12 @@ export class MangoTypeListComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(CreateMangoTypeModalComponent, { size: 'md' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(
-      (result: 'success' | 'dismissed') => {
-        //if (result === 'success') 
-        this.load();
+      (result: string) => {
+        if (result === 'success') {
+          this.load(() => {
+            Swal.fire({ icon: 'success', title: 'Mango type saved!', toast: true, position: 'top-end', showConfirmButton: false, timer: 2500, timerProgressBar: true });
+          });
+        }
       },
       () => {}
     );

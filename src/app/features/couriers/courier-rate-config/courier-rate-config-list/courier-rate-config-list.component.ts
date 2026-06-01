@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
@@ -54,7 +55,7 @@ export class CourierRateConfigListComponent implements OnInit, OnDestroy {
     this.subs.unsubscribe();
   }
 
-  load(): void {
+  load(onSuccess?: () => void): void {
     this.isLoading = true;
     const dto: CourierRateConfigPagedDto = {
       pageNumber: this.filter.pageNumber,
@@ -76,6 +77,7 @@ export class CourierRateConfigListComponent implements OnInit, OnDestroy {
         next: ([data, count]) => {
           this.items = data;
           this.totalCount = count;
+          onSuccess?.();
         },
         error: () => {
           this.items = [];
@@ -92,7 +94,21 @@ export class CourierRateConfigListComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(CreateCourierRateConfigModalComponent, { size: 'md' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(
-      (result: string) => { if (result === 'success') this.load(); },
+      (result: string) => {
+        if (result === 'success') {
+          this.load(() => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Rate config saved!',
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 2500,
+              timerProgressBar: true
+            });
+          });
+        }
+      },
       () => {}
     );
   }

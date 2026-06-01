@@ -66,7 +66,7 @@
               <tr *ngFor="let mangoType of mangoTypes">
                 <td>
                   <a href="javascript:void(0)" (click)="view(mangoType.id)">
-                    <img [src]="getImagePath(mangoType.imagePath)" alt="Mango" class="rounded" style="width:40px;height:40px;object-fit:cover;" />
+                    <img [src]="getImagePath(mangoType.imagePath || '')" alt="Mango" class="rounded" style="width:40px;height:40px;object-fit:cover;" />
                   </a>
                 </td>
                 <td>

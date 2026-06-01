@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { catchError, first, of } from 'rxjs';
+import { catchError, finalize, first, of } from 'rxjs';
 import { FileService } from 'src/app/shared/services/file-service.service';
 import { DropdownService } from 'src/app/shared/services/dropdown.service';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
@@ -27,7 +27,7 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   photos: string[] = [];
   newImagePath: string;
-  oldImagePath: string;
+  oldImagePath: string | null;
   isLoading = false;
   location = 'mango-types';
   gradeOptions: DropdownModel[] = [];
@@ -93,7 +93,10 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
   }
 
   save() {
+    this.formGroup.markAllAsTouched();
+    if (this.formGroup.invalid) return;
     this.prepareData();
+    this.isLoading = true;
     if (this.mangoTypeDto.id) {
       this.edit();
     } else {
@@ -104,16 +107,13 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
   edit() {
     this.subs.sink = this.mangoTypeService
       .update(this.id, this.mangoTypeInputDto)
+      .pipe(finalize(() => { this.isLoading = false; }))
       .subscribe({
-        next: (respone: MangoTypeDto) => {
-          this.mangoTypeDto = respone;
-          Swal.fire('SUCCESS', 'Data updated successfully.', 'success');
-          this.modal.close();
+        next: () => {
+          this.modal.close('success');
         },
-        error: (error) => {
-          this.modal.dismiss(error);
+        error: () => {
           Swal.fire('Failed', 'Data update failed.', 'error');
-          return of(this.initObject());
         }
       });
   }
@@ -121,22 +121,19 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
   create() {
     this.subs.sink = this.mangoTypeService
       .create(this.mangoTypeInputDto)
+      .pipe(finalize(() => { this.isLoading = false; }))
       .subscribe({
-        next: (response: MangoTypeDto) => {
-          this.mangoTypeDto = response;
-          Swal.fire('SUCCESS', 'Data saved successfully.', 'success');
-          this.modal.close();
+        next: () => {
+          this.modal.close('success');
         },
-        error: (error) => {
-          this.modal.dismiss(error);
+        error: () => {
           Swal.fire('Failed', 'Mango type creation failed.', 'error');
-          return of(this.initObject());
         }
       });
   }
 
   prepareData() {
-    const loggedUesrId = this.authService.getLoggedUserId();
+    const loggedUserId = this.authService.getLoggedUserId();
     const formData = this.formGroup.value;
     this.mangoTypeInputDto.name = formData.name;
     this.mangoTypeInputDto.description = formData.description;
@@ -144,20 +141,21 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
     this.mangoTypeInputDto.averageWeight = formData.averageWeight;
     this.mangoTypeInputDto.mangoGrade = formData.mangoGrade;
     this.mangoTypeInputDto.sweetnessLevel = +formData.sweetnessLevel;
+    this.mangoTypeInputDto.sequence = this.mangoTypeDto.sequence ?? 0;
 
-    if(this.newImagePath){
+    if (this.newImagePath) {
       this.mangoTypeInputDto.imagePath = this.newImagePath;
-    }else{
+    } else {
       this.mangoTypeInputDto.imagePath = this.oldImagePath;
     }
     if (this.mangoTypeDto.id) {
       this.mangoTypeInputDto.id = this.mangoTypeDto.id;
       this.mangoTypeInputDto.createdBy = this.mangoTypeDto.createdBy;
       this.mangoTypeInputDto.createdAt = this.mangoTypeDto.createdAt;
-      this.mangoTypeInputDto.updatedBy = loggedUesrId;
+      this.mangoTypeInputDto.updatedBy = loggedUserId;
     } else {
       this.mangoTypeInputDto.createdAt = new Date();
-      this.mangoTypeInputDto.createdBy = loggedUesrId;
+      this.mangoTypeInputDto.createdBy = loggedUserId;
     }
   }
 
@@ -195,9 +193,10 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
   };
 
   deleteFile(): void {
-    if (!this.oldImagePath) return;
+    const path = this.oldImagePath;
+    if (!path) return;
 
-    this.fileService.delete(this.oldImagePath).subscribe({
+    this.fileService.delete(path).subscribe({
       error: (error) => console.error('File delete failed:', error),
     });
   }

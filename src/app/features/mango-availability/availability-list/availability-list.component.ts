@@ -3,6 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SubSink } from 'subsink';
+import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { MangoAvailabilityDto, MangoAvailabilityServiceProxy } from 'src/app/services/client-proxy';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { AvailabilityModalComponent } from '../availability-modal/availability-modal.component';
@@ -32,6 +33,7 @@ export class AvailabilityListComponent implements OnInit, OnDestroy {
       finalize(() => {
         this.isLoading = false;
         this.cdRef.detectChanges();
+        MenuComponent.reinitialization();
       })
     ).subscribe({
       next: (res: any) => {
