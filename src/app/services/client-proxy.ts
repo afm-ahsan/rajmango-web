@@ -9784,6 +9784,7 @@ export class AdminDashboardDto implements IAdminDashboardDto {
     totalCustomers!: number;
     availableMangoTypes!: number;
     availableMangoes!: DashboardMangoAvailabilityDto[] | undefined;
+    upcomingMangoes!: DashboardUpcomingMangoDto[] | undefined;
     recentOrders!: AdminRecentOrderDto[] | undefined;
 
     constructor(data?: IAdminDashboardDto) {
@@ -9814,6 +9815,11 @@ export class AdminDashboardDto implements IAdminDashboardDto {
                 this.availableMangoes = [] as any;
                 for (let item of _data["availableMangoes"])
                     this.availableMangoes!.push(DashboardMangoAvailabilityDto.fromJS(item));
+            }
+            if (Array.isArray(_data["upcomingMangoes"])) {
+                this.upcomingMangoes = [] as any;
+                for (let item of _data["upcomingMangoes"])
+                    this.upcomingMangoes!.push(DashboardUpcomingMangoDto.fromJS(item));
             }
             if (Array.isArray(_data["recentOrders"])) {
                 this.recentOrders = [] as any;
@@ -9850,6 +9856,11 @@ export class AdminDashboardDto implements IAdminDashboardDto {
             for (let item of this.availableMangoes)
                 data["availableMangoes"].push(item ? item.toJSON() : <any>undefined);
         }
+        if (Array.isArray(this.upcomingMangoes)) {
+            data["upcomingMangoes"] = [];
+            for (let item of this.upcomingMangoes)
+                data["upcomingMangoes"].push(item ? item.toJSON() : <any>undefined);
+        }
         if (Array.isArray(this.recentOrders)) {
             data["recentOrders"] = [];
             for (let item of this.recentOrders)
@@ -9881,6 +9892,7 @@ export interface IAdminDashboardDto {
     totalCustomers: number;
     availableMangoTypes: number;
     availableMangoes: DashboardMangoAvailabilityDto[] | undefined;
+    upcomingMangoes: DashboardUpcomingMangoDto[] | undefined;
     recentOrders: AdminRecentOrderDto[] | undefined;
 }
 
@@ -13068,6 +13080,7 @@ export class CustomerDashboardDto implements ICustomerDashboardDto {
     totalDue!: number;
     recentOrders!: CustomerRecentOrderDto[] | undefined;
     availableMangoes!: DashboardMangoAvailabilityDto[] | undefined;
+    upcomingMangoes!: DashboardUpcomingMangoDto[] | undefined;
 
     constructor(data?: ICustomerDashboardDto) {
         if (data) {
@@ -13096,6 +13109,11 @@ export class CustomerDashboardDto implements ICustomerDashboardDto {
                 this.availableMangoes = [] as any;
                 for (let item of _data["availableMangoes"])
                     this.availableMangoes!.push(DashboardMangoAvailabilityDto.fromJS(item));
+            }
+            if (Array.isArray(_data["upcomingMangoes"])) {
+                this.upcomingMangoes = [] as any;
+                for (let item of _data["upcomingMangoes"])
+                    this.upcomingMangoes!.push(DashboardUpcomingMangoDto.fromJS(item));
             }
         }
     }
@@ -13126,6 +13144,11 @@ export class CustomerDashboardDto implements ICustomerDashboardDto {
             for (let item of this.availableMangoes)
                 data["availableMangoes"].push(item ? item.toJSON() : <any>undefined);
         }
+        if (Array.isArray(this.upcomingMangoes)) {
+            data["upcomingMangoes"] = [];
+            for (let item of this.upcomingMangoes)
+                data["upcomingMangoes"].push(item ? item.toJSON() : <any>undefined);
+        }
         return data;
     }
 
@@ -13147,6 +13170,7 @@ export interface ICustomerDashboardDto {
     totalDue: number;
     recentOrders: CustomerRecentOrderDto[] | undefined;
     availableMangoes: DashboardMangoAvailabilityDto[] | undefined;
+    upcomingMangoes: DashboardUpcomingMangoDto[] | undefined;
 }
 
 export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
@@ -13299,6 +13323,65 @@ export interface IDashboardMangoAvailabilityDto {
     mangoTypeName: string | undefined;
     pricePerKg: number;
     endDate: moment.Moment;
+}
+
+export class DashboardUpcomingMangoDto implements IDashboardUpcomingMangoDto {
+    id!: number;
+    mangoTypeId!: number;
+    mangoTypeName!: string | undefined;
+    pricePerKg!: number;
+    startDate!: moment.Moment;
+
+    constructor(data?: IDashboardUpcomingMangoDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.mangoTypeId = _data["mangoTypeId"];
+            this.mangoTypeName = _data["mangoTypeName"];
+            this.pricePerKg = _data["pricePerKg"];
+            this.startDate = _data["startDate"] ? moment(_data["startDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): DashboardUpcomingMangoDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new DashboardUpcomingMangoDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["mangoTypeId"] = this.mangoTypeId;
+        data["mangoTypeName"] = this.mangoTypeName;
+        data["pricePerKg"] = this.pricePerKg;
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
+        return data;
+    }
+
+    clone(): DashboardUpcomingMangoDto {
+        const json = this.toJSON();
+        let result = new DashboardUpcomingMangoDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IDashboardUpcomingMangoDto {
+    id: number;
+    mangoTypeId: number;
+    mangoTypeName: string | undefined;
+    pricePerKg: number;
+    startDate: moment.Moment;
 }
 
 export enum DeliveryStatus {

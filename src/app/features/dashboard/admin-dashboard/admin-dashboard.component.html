@@ -171,7 +171,7 @@
     </div>
 
     <!-- Available Mangoes -->
-    <div class="card border-0 shadow-sm">
+    <div class="card border-0 shadow-sm mb-6">
       <div class="card-header bg-white py-4">
         <h5 class="mb-0 fw-bold">Available Mangoes</h5>
       </div>
@@ -196,6 +196,38 @@
           <div class="text-center py-8 text-muted">
             <i class="bi bi-basket2 fs-1 d-block mb-3 opacity-50"></i>
             <p class="mb-0">No mangoes are currently available. Please check back soon.</p>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Upcoming Mangoes -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white py-4">
+        <h5 class="mb-0 fw-bold">Upcoming Mangoes</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3" *ngIf="dashboard.upcomingMangoes?.length; else noUpcoming">
+          <div class="col-12 col-sm-6 col-md-4 col-xl-3" *ngFor="let mango of dashboard.upcomingMangoes">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-body p-4 d-flex flex-column">
+                <div class="d-flex align-items-start justify-content-between mb-2">
+                  <h6 class="fw-bold mb-0 me-2 text-dark">{{ mango.mangoTypeName }}</h6>
+                  <span class="badge badge-light-warning flex-shrink-0">Coming Soon</span>
+                </div>
+                <div *ngIf="mango.pricePerKg > 0" class="fs-4 fw-bold text-warning mb-2">৳{{ mango.pricePerKg }}/kg</div>
+                <div *ngIf="!mango.pricePerKg" class="fs-6 text-muted mb-2">Price TBD</div>
+                <div class="fs-7 fw-medium text-gray-600 mt-auto">
+                  <i class="bi bi-calendar3 me-1"></i>Available from {{ mango.startDate.toDate() | date:'dd MMM yyyy' }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <ng-template #noUpcoming>
+          <div class="text-center py-8 text-muted">
+            <i class="bi bi-hourglass-split fs-1 d-block mb-3 opacity-50"></i>
+            <p class="mb-0">No upcoming mangoes at this time.</p>
           </div>
         </ng-template>
       </div>
