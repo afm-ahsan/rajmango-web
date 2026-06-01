@@ -141,7 +141,8 @@
               <th>#</th>
               <th>Mango Type</th>
               <th>Crate Type</th>
-              <th class="text-end">Qty</th>
+              <th class="text-end">Crates</th>
+              <th class="text-end">Weight</th>
               <th class="text-end">Unit Price</th>
               <th class="text-end">Total</th>
             </tr>
@@ -152,11 +153,12 @@
               <td>{{ item.mangoName }}</td>
               <td>{{ item.crateName }}</td>
               <td class="text-end">{{ item.quantity | number }}</td>
+              <td class="text-end">{{ getItemWeight(item) | number }} kg</td>
               <td class="text-end">{{ item.unitPrice | number }}</td>
               <td class="text-end">{{ item.totalPrice | number }}</td>
             </tr>
             <tr class="table-light fw-bold">
-              <td colspan="5" class="text-end">Total:</td>
+              <td colspan="6" class="text-end">Total:</td>
               <td class="text-end">{{ orderDto.totalAmount | number }}</td>
             </tr>
           </tbody>

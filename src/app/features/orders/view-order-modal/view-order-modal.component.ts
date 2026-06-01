@@ -7,9 +7,11 @@ import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
 import { ReceiverType } from 'src/app/shared/enums/receiver-type.enum';
+import { DomainUtils } from 'src/app/shared/utils/domain-utils';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
+import { OrderDetailDto } from '../models/order-detail-dto.model';
 import { OrderDto } from '../models/order-dto.model';
 import { OrderService } from '../order.service';
 
@@ -123,5 +125,9 @@ export class ViewOrderModalComponent implements OnInit, OnDestroy {
 
   getDeliveryStatusBadgeClass(status: DeliveryStatus): string {
     return EnumLabelUtils.getDeliveryStatusBadgeClass(status);
+  }
+
+  getItemWeight(detail: OrderDetailDto): number {
+    return detail.quantity * DomainUtils.getCrateWeight(detail.crateType);
   }
 }

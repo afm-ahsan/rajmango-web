@@ -282,6 +282,10 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     }, 0);
   }
 
+  getItemWeight(item: OrderDetailDto): number {
+    return item.quantity * DomainUtils.getCrateWeight(item.crateType);
+  }
+
   refreshPreview(): void {
     if (this.orderDetails.length === 0) {
       this.previewProductTotal = null;

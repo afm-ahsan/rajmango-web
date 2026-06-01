@@ -137,7 +137,7 @@
               placeholder="Optional note" rows="1" maxlength="512"></textarea>
           </div>
           <div class="col-12 col-md-4">
-            <label class="form-label fw-semibold required">Quantity (kg)</label>
+            <label class="form-label fw-semibold required">Number of Crates</label>
             <input type="number" class="form-control form-control-solid" formControlName="quantity"
               placeholder="Quantity" min="1"
               [class.is-invalid]="isControlInvalid('quantity') || (isControlTouched('quantity') && orderForm.hasError('minOrderKg'))" />
@@ -163,7 +163,8 @@
               <th>#</th>
               <th>Mango Type</th>
               <th>Crate Type</th>
-              <th class="text-end">Qty</th>
+              <th class="text-end">Crates</th>
+              <th class="text-end">Weight</th>
               <th class="text-end">Unit Price</th>
               <th class="text-end">Total</th>
               <th></th>
@@ -175,6 +176,7 @@
               <td>{{ order.mangoName }}</td>
               <td>{{ order.crateName }}</td>
               <td class="text-end">{{ order.quantity | number }}</td>
+              <td class="text-end">{{ getItemWeight(order) | number }} kg</td>
               <td class="text-end">{{ order.unitPrice }}</td>
               <td class="text-end">{{ order.totalPrice }}</td>
               <td>
@@ -184,7 +186,7 @@
               </td>
             </tr>
             <tr class="table-light fw-bold">
-              <td colspan="5" class="text-end">Total:</td>
+              <td colspan="6" class="text-end">Total:</td>
               <td class="text-end">{{ orderDto.totalAmount | number }}</td>
               <td></td>
             </tr>
