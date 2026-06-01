@@ -1,182 +1,75 @@
-<div
-  class="d-flex flex-column bgi-no-repeat rounded-top"
-  [style.background-image]="'url(./assets/media/misc/pattern-1.jpg)'"
->
-  <h3 class="text-white fw-bold px-9 mt-10 mb-6">
-    Notifications <span class="fs-8 opacity-75 ps-3">24 reports</span>
-  </h3>
-
-  <ul class="nav nav-line-tabs nav-line-tabs-2x nav-stretch fw-bold px-9">
-    <li class="nav-item">
-      <a
-        class="
-          nav-link
-          text-white
-          opacity-75 opacity-state-100
-          pb-4
-          cursor-pointer
-        "
-        data-bs-toggle="tab"
-        [ngClass]="activeTabId === 'kt_topbar_notifications_1' ? 'active' : ''"
-        (click)="setActiveTabId('kt_topbar_notifications_1')"
-      >
-        Alerts
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a
-        class="
-          nav-link
-          text-white
-          opacity-75 opacity-state-100
-          pb-4
-          cursor-pointer
-        "
-        data-bs-toggle="tab"
-        [ngClass]="activeTabId === 'kt_topbar_notifications_2' ? 'active' : ''"
-        (click)="setActiveTabId('kt_topbar_notifications_2')"
-      >
-        Updates
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a
-        class="
-          nav-link
-          text-white
-          opacity-75 opacity-state-100
-          pb-4
-          cursor-pointer
-        "
-        data-bs-toggle="tab"
-        [ngClass]="activeTabId === 'kt_topbar_notifications_3' ? 'active' : ''"
-        (click)="setActiveTabId('kt_topbar_notifications_3')"
-      >
-        Logs
-      </a>
-    </li>
-  </ul>
+<!-- Header -->
+<div class="d-flex flex-column bgi-no-repeat rounded-top"
+     [style.background-image]="'url(./assets/media/misc/pattern-1.jpg)'">
+  <div class="d-flex align-items-center justify-content-between px-9 mt-6 mb-4">
+    <h3 class="text-white fw-bold mb-0">
+      Notifications
+      <span *ngIf="unreadCount > 0" class="badge badge-light fs-8 ms-2">{{ unreadCount }} unread</span>
+    </h3>
+    <button *ngIf="unreadCount > 0"
+            class="btn btn-sm btn-light-warning py-1 px-3 fs-8"
+            [disabled]="isMarkingAll"
+            (click)="markAllAsRead()">
+      Mark all read
+    </button>
+  </div>
 </div>
 
-<div class="tab-content">
-  <div
-    class="tab-pane fade"
-    id="kt_topbar_notifications_1"
-    role="tabpanel"
-    [ngClass]="activeTabId === 'kt_topbar_notifications_1' ? 'show active' : ''"
-  >
-    <div class="scroll-y mh-325px my-5 px-8">
-      <div *ngFor="let alert of alerts" class="d-flex flex-stack py-4">
-        <div class="d-flex align-items-center">
-          <div class="symbol symbol-35px me-4">
-            <span class="symbol-label" [ngClass]="'bg-light-' + alert.state">
-              <span
-                [inlineSVG]="'./assets/media/' + alert.icon"
-                class="svg-icon svg-icon-2"
-                [ngClass]="'svg-icon-' + alert.state"
-              ></span>
-            </span>
-          </div>
+<!-- Loading -->
+<div *ngIf="isLoading" class="d-flex justify-content-center align-items-center py-8">
+  <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+</div>
 
-          <div class="mb-0 me-2">
-            <a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bolder">
-              {{ alert.title }}
-            </a>
-            <div class="text-gray-400 fs-7">{{ alert.description }}</div>
-          </div>
-        </div>
-
-        <span class="badge badge-light fs-8">{{ alert.time }}</span>
-      </div>
-    </div>
-
-    <div class="py-3 text-center border-top">
-      <a
-        routerLink="/customer-profile/profile"
-        class="btn btn-color-gray-600 btn-active-color-primary"
-      >
-        View All
-        <span
-          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr064.svg'"
-          class="svg-icon svg-icon-5"
-        ></span>
-      </a>
-    </div>
+<!-- Notification list -->
+<div *ngIf="!isLoading" class="scroll-y mh-300px">
+  <!-- Empty -->
+  <div *ngIf="notifications.length === 0"
+       class="d-flex flex-column align-items-center justify-content-center py-8 text-muted fs-7">
+    <i class="bi bi-bell-slash fs-3 mb-2"></i>
+    No notifications yet
   </div>
 
-  <div
-    class="tab-pane fade"
-    id="kt_topbar_notifications_2"
-    role="tabpanel"
-    [ngClass]="activeTabId === 'kt_topbar_notifications_2' ? 'show active' : ''"
-  >
-    <div class="d-flex flex-column px-9">
-      <div class="pt-10 pb-0">
-        <h3 class="text-dark text-center fw-bolder">Get Pro Access</h3>
+  <!-- Items -->
+  <div *ngFor="let n of notifications"
+       class="d-flex align-items-start px-8 py-3 border-bottom cursor-pointer notification-item"
+       [class.bg-light-warning]="!n.isRead"
+       (click)="markAsRead(n)">
 
-        <div class="text-center text-gray-600 fw-bold pt-1">
-          Outlines keep you honest. They stoping you from amazing poorly about
-          drive
-        </div>
-
-        <div class="text-center mt-5 mb-9">
-          <a
-            class="btn btn-sm btn-primary px-6 cursor-pointer"
-            data-bs-toggle="modal"
-            data-bs-target="#kt_modal_upgrade_plan"
-          >
-            Upgrade
-          </a>
-        </div>
-      </div>
-
-      <div class="text-center px-4">
-        <img
-          class="mw-100 mh-200px"
-          alt="metronic"
-          src="./assets/media/illustrations/sketchy-1/1.png"
-        />
-      </div>
+    <!-- Type icon -->
+    <div class="symbol symbol-35px me-3 flex-shrink-0">
+      <span class="symbol-label"
+            [class.bg-light-primary]="n.notificationType === 1"
+            [class.bg-light-success]="n.notificationType === 2"
+            [class.bg-light-info]="n.notificationType === 3"
+            [class.bg-light-warning]="n.notificationType === 4">
+        <i class="fs-5"
+           [class.bi-bag-check]="n.notificationType === 1"
+           [class.bi-credit-card]="n.notificationType === 2"
+           [class.bi-truck]="n.notificationType === 3"
+           [class.bi-calendar-check]="n.notificationType === 4"></i>
+      </span>
     </div>
+
+    <!-- Content -->
+    <div class="flex-grow-1 overflow-hidden">
+      <div class="d-flex align-items-center justify-content-between mb-1">
+        <span class="fw-bold fs-7 text-dark text-truncate" style="max-width: 210px;">{{ n.title }}</span>
+        <span class="text-muted fs-8 flex-shrink-0 ms-2">{{ timeAgo(n.createdAt) }}</span>
+      </div>
+      <p class="text-muted fs-8 mb-0 text-truncate">{{ n.message }}</p>
+      <span *ngIf="n.orderNumber" class="badge badge-light-primary fs-9 mt-1">{{ n.orderNumber }}</span>
+    </div>
+
+    <!-- Unread dot -->
+    <span *ngIf="!n.isRead"
+          class="bullet bullet-dot bg-warning h-6px w-6px ms-2 mt-2 flex-shrink-0"></span>
   </div>
+</div>
 
-  <div
-    class="tab-pane fade"
-    id="kt_topbar_notifications_3"
-    role="tabpanel"
-    [ngClass]="activeTabId === 'kt_topbar_notifications_3' ? 'show active' : ''"
-  >
-    <div class="scroll-y mh-325px my-5 px-8">
-      <div *ngFor="let log of logs" class="d-flex flex-stack py-4">
-        <div class="d-flex align-items-center me-2">
-          <span
-            class="w-70px badge"
-            [ngClass]="'badge-light-' + log.state + ' me-4'"
-          >
-            {{ log.code }}
-          </span>
-
-          <a class="text-gray-800 text-hover-primary fw-bold cursor-pointer">
-            {{ log.message }}
-          </a>
-
-          <span class="badge badge-light fs-8">{{ log.time }}</span>
-        </div>
-      </div>
-    </div>
-    <div class="py-3 text-center border-top">
-      <a
-        routerLink="/customer-profile/profile"
-        class="btn btn-color-gray-600 btn-active-color-primary"
-      >
-        View All
-        <span
-          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr064.svg'"
-          class="svg-icon svg-icon-5"
-        ></span>
-      </a>
-    </div>
-  </div>
+<!-- Footer -->
+<div class="py-3 text-center border-top">
+  <button class="btn btn-sm btn-color-gray-600 btn-active-color-primary" (click)="viewAll()">
+    View All
+    <i class="bi bi-arrow-right ms-1"></i>
+  </button>
 </div>

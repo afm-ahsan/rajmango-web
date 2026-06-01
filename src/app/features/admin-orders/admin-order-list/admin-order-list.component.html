@@ -246,7 +246,19 @@
                       </a>
                     </div>
 
+                    <div class="menu-item px-3" *ngIf="hasAdminManage">
+                      <a class="menu-link px-3 text-primary" (click)="edit(order.orderId)">
+                        <i class="bi bi-pencil-square me-2"></i>Edit
+                      </a>
+                    </div>
+
                     <div class="separator my-2" *ngIf="hasAdminManage"></div>
+
+                    <div class="menu-item px-3" *ngIf="canConfirm(order)">
+                      <a class="menu-link px-3 text-success" (click)="openAction(order, 'confirm')">
+                        <i class="bi bi-check-circle me-2"></i>Confirm
+                      </a>
+                    </div>
 
                     <div class="menu-item px-3" *ngIf="hasAdminManage">
                       <a class="menu-link px-3 text-primary" (click)="openUpdateStatus(order)">
@@ -254,13 +266,7 @@
                       </a>
                     </div>
 
-                    <div class="separator my-2" *ngIf="hasAdminManage && (canConfirm(order) || canCancel(order))"></div>
-
-                    <div class="menu-item px-3" *ngIf="canConfirm(order)">
-                      <a class="menu-link px-3 text-success" (click)="openAction(order, 'confirm')">
-                        <i class="bi bi-check-circle me-2"></i>Confirm
-                      </a>
-                    </div>
+                    <div class="separator my-2" *ngIf="canCancel(order)"></div>
 
                     <div class="menu-item px-3" *ngIf="canCancel(order)">
                       <a class="menu-link px-3 text-danger" (click)="openAction(order, 'cancel')">

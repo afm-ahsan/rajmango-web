@@ -15,6 +15,7 @@ import { CourierAreaMapService } from '../../couriers/courier-area-map/courier-a
 import { MangoTypeService } from '../../mango-types/mango-type.service';
 import { AdminOrderFilterModel, AdminOrderListDto } from '../../orders/models/admin-order-list-dto.model';
 import { OrderService } from '../../orders/order.service';
+import { CreateOrderModalComponent } from '../../orders/create-order-modal/create-order-modal.component';
 import { AdminOrderActionModalComponent } from '../admin-order-action-modal/admin-order-action-modal.component';
 import { AdminOrderUpdateStatusModalComponent } from '../admin-order-update-status-modal/admin-order-update-status-modal.component';
 import { AdminOrderViewModalComponent } from '../admin-order-view-modal/admin-order-view-modal.component';
@@ -199,6 +200,15 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     const ref = this.modalService.open(AdminOrderViewModalComponent, { size: 'lg' });
     ref.componentInstance.orderId = id;
     ref.result.then(() => {}, () => {});
+  }
+
+  edit(orderId: number): void {
+    const ref = this.modalService.open(CreateOrderModalComponent, { size: 'lg' });
+    ref.componentInstance.id = orderId;
+    ref.result.then(
+      (result: 'success' | 'dismissed') => { if (result === 'success') this.load(); },
+      () => {}
+    );
   }
 
   openUpdateStatus(order: AdminOrderListDto): void {

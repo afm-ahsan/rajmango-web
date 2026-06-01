@@ -1,0 +1,107 @@
+<!--begin::Notifications Page-->
+<div class="post d-flex flex-column-fluid" id="kt_notifications">
+  <div id="kt_content_container" class="container-xxl">
+    <div class="card">
+
+      <!--begin::Header-->
+      <div class="card-header border-0 pt-6 justify-content-between align-items-center gap-3">
+        <div class="card-title">
+          <h3 class="card-label fw-bold fs-3 mb-0">
+            Notifications
+            <span *ngIf="unreadCount > 0" class="badge badge-light-warning ms-2 fs-8">
+              {{ unreadCount }} unread
+            </span>
+          </h3>
+        </div>
+        <div class="card-toolbar" *ngIf="unreadCount > 0">
+          <button
+            type="button"
+            class="btn btn-sm btn-light-warning"
+            [disabled]="isMarkingAll"
+            (click)="markAllAsRead()">
+            <span *ngIf="isMarkingAll" class="spinner-border spinner-border-sm me-1" role="status"></span>
+            <i *ngIf="!isMarkingAll" class="bi bi-check2-all me-1"></i>
+            Mark All as Read
+          </button>
+        </div>
+      </div>
+      <!--end::Header-->
+
+      <!--begin::Loading-->
+      <div *ngIf="isLoading" class="card-body d-flex justify-content-center align-items-center" style="min-height: 200px;">
+        <span class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </span>
+      </div>
+      <!--end::Loading-->
+
+      <!--begin::Body-->
+      <div class="card-body py-0" *ngIf="!isLoading && notifications.length > 0">
+        <div class="notification-list">
+          <div
+            *ngFor="let n of notifications"
+            class="d-flex align-items-start px-4 py-4 border-bottom cursor-pointer notification-row"
+            [class.bg-light-warning]="!n.isRead"
+            (click)="markAsRead(n)">
+
+            <!-- Type icon -->
+            <div class="symbol symbol-40px me-4 flex-shrink-0">
+              <span class="symbol-label"
+                    [class.bg-light-primary]="n.notificationType === 1"
+                    [class.bg-light-success]="n.notificationType === 2"
+                    [class.bg-light-info]="n.notificationType === 3"
+                    [class.bg-light-warning]="n.notificationType === 4">
+                <i class="fs-4" [ngClass]="typeIcon(n.notificationType) + ' ' + typeIconColor(n.notificationType)"></i>
+              </span>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-grow-1">
+              <div class="d-flex align-items-center justify-content-between mb-1">
+                <span class="fw-bold fs-6 text-dark">{{ n.title }}</span>
+                <span class="text-muted fs-8 ms-3 flex-shrink-0">
+                  {{ n.createdAt | date:'dd MMM yyyy, h:mm a' }}
+                </span>
+              </div>
+              <p class="text-muted fs-7 mb-1">{{ n.message }}</p>
+              <span *ngIf="n.orderNumber" class="badge badge-light-primary fs-9">
+                Order {{ n.orderNumber }}
+              </span>
+            </div>
+
+            <!-- Unread / Read indicator -->
+            <div class="ms-4 flex-shrink-0 d-flex align-items-center">
+              <span *ngIf="!n.isRead" class="bullet bullet-dot bg-warning h-8px w-8px mt-1"></span>
+              <i *ngIf="n.isRead" class="bi bi-check2-all text-success fs-6"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end::Body-->
+
+      <!--begin::Pagination-->
+      <div class="card-footer py-3" *ngIf="!isLoading && totalCount > pageSize">
+        <app-pagination
+          [collectionSize]="totalCount"
+          [pageNumber]="pageNumber"
+          [pageSize]="pageSize"
+          (pageChange)="pageChanged($event)"
+          (pageSizeChange)="pageSizeChanged($event)">
+        </app-pagination>
+      </div>
+      <!--end::Pagination-->
+
+      <!--begin::Empty-->
+      <div class="card-body" *ngIf="!isLoading && notifications.length === 0">
+        <app-data-empty
+          icon="bi-bell-slash"
+          title="No Notifications"
+          message="You don't have any notifications yet. Updates to your orders will appear here.">
+        </app-data-empty>
+      </div>
+      <!--end::Empty-->
+
+    </div>
+  </div>
+</div>
+<!--end::Notifications Page-->

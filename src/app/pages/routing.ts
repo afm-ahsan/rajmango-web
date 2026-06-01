@@ -29,6 +29,11 @@ const Routing: Routes = [
       import('../features/customer-profile/customer-profile.module').then((m) => m.CustomerProfileModule),
   },
   {
+    path: 'notifications',
+    loadChildren: () =>
+      import('../features/notifications/notifications.module').then((m) => m.NotificationsModule),
+  },
+  {
     path: 'complaints',
     loadChildren: () =>
       import('../features/complaints/complaint.module').then((m) => m.ComplaintModule),

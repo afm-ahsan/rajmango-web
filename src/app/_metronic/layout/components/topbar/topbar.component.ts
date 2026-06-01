@@ -3,6 +3,8 @@ import { SubSink } from 'subsink';
 import { environment } from 'src/environments/environment';
 import { AuthService, UserType } from 'src/app/features/auth';
 import { LayoutService } from '../../core/layout.service';
+import { NotificationService } from 'src/app/features/notifications/notification.service';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
 
 @Component({
   selector: 'app-topbar',
@@ -18,12 +20,29 @@ export class TopbarComponent implements OnInit, OnDestroy {
   headerLeft: string = 'menu';
 
   currentUser: UserType;
+  unreadCount = 0;
 
-  constructor(private layout: LayoutService, private auth: AuthService) {}
+  constructor(
+    private layout: LayoutService,
+    private auth: AuthService,
+    private notificationService: NotificationService,
+    private signalR: SignalRService
+  ) {}
 
   ngOnInit(): void {
     this.headerLeft = this.layout.getProp('header.left') as string;
-    this.subs.sink = this.auth.currentUser$.subscribe(u => (this.currentUser = u));
+    this.subs.sink = this.auth.currentUser$.subscribe(u => {
+      this.currentUser = u;
+      if (u) {
+        this.notificationService.refreshUnreadCount();
+      }
+    });
+    this.subs.sink = this.notificationService.unreadCount$.subscribe(c => {
+      this.unreadCount = c;
+    });
+    this.subs.sink = this.signalR.orderStatusUpdated$.subscribe(() => {
+      this.notificationService.refreshUnreadCount();
+    });
   }
 
   headerAvatarUrl(): string {

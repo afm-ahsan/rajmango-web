@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { MangoAvailabilityServiceProxy } from 'src/app/services/client-proxy';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AdminOrdersComponent } from './admin-orders.component';
 import { AdminOrdersRoutingModule } from './admin-orders-routing.module';
@@ -25,6 +26,9 @@ import { AdminOrderUpdateStatusModalComponent } from './admin-order-update-statu
     AdminOrderViewModalComponent,
     AdminOrderActionModalComponent,
     AdminOrderUpdateStatusModalComponent,
+  ],
+  providers: [
+    MangoAvailabilityServiceProxy,
   ],
 })
 export class AdminOrdersModule {}
