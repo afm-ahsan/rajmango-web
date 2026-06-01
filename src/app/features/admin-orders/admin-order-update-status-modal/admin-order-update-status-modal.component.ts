@@ -60,11 +60,16 @@ export class AdminOrderUpdateStatusModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      orderStatus:    [this.order.orderStatus,    Validators.required],
-      paymentStatus:  [this.order.paymentStatus,  Validators.required],
-      deliveryStatus: [this.order.deliveryStatus, Validators.required],
-      deliveryDate:   [null],
+      orderStatus:    [this.order.orderStatus,                         Validators.required],
+      paymentStatus:  [this.order.paymentStatus,                       Validators.required],
+      deliveryStatus: [this.order.deliveryStatus,                      Validators.required],
+      deliveryDate:   [this.toDateInputValue(this.order.deliveryDate)],
     });
+  }
+
+  private toDateInputValue(value: string | null | undefined): string | null {
+    if (!value) return null;
+    return value.substring(0, 10);
   }
 
   ngOnDestroy(): void {
