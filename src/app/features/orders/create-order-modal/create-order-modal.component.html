@@ -148,10 +148,10 @@
           </div>
           <div class="col-12 col-md-8 d-flex align-items-end gap-2 pb-1">
             <button type="button" class="btn btn-primary btn-sm" (click)="addOrder()">
-              <i class="bi bi-plus-lg me-1"></i>Add Item
+              <i class="bi bi-plus-lg"></i> Add
             </button>
-            <button type="button" class="btn btn-light btn-sm" (click)="reset()">
-              <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+            <button type="button" class="btn btn-secondary btn-sm" (click)="reset()">
+              <i class="bi bi-arrow-counterclockwise"></i> Reset
             </button>
           </div>
         </div>
@@ -246,7 +246,11 @@
     </ng-container>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light btn-sm me-3" (click)="cancel()">Cancel</button>
-    <button type="button" class="btn btn-primary btn-sm" (click)="save()" [disabled]="isSaveDisabled">Save</button>
+    <button type="button" class="btn btn-light btn-sm me-3" (click)="cancel()">
+      <i class="bi bi-x-lg"></i> Cancel
+    </button>
+    <button type="button" class="btn btn-primary btn-sm" [disabled]="isSaveDisabled" (click)="save()">
+      <i class="bi bi-save"></i> Place Order 
+    </button>
   </div>
 </div>

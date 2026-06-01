@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { firstValueFrom, forkJoin, of, switchMap } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
-import { MangoAvailabilityDto, MangoAvailabilityServiceProxy } from 'src/app/services/client-proxy';
+import { MangoAvailabilityDto, MangoAvailabilityServiceProxy, MangoAvailabilityStatus } from 'src/app/services/client-proxy';
 import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
@@ -144,13 +144,20 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     }).pipe(
       switchMap(({ mangoTypes, courierAreas, availabilities }) => {
         this.mangoTypes = mangoTypes.data ?? [];
-        this.mangoTypeOptions = this.dropdownService.mapToEntityDropdown(this.mangoTypes, 'id', 'name');
         this.courierAreaOptions = courierAreas.data ?? [];
         const activeAvail: MangoAvailabilityDto[] = availabilities.data ?? [];
         this.priceMap = activeAvail.reduce((map, a) => {
           map[a.mangoTypeId] = a.pricePerKg;
           return map;
         }, {} as Record<number, number>);
+        const availableIds = new Set(
+          activeAvail
+            .filter(a => a.status === MangoAvailabilityStatus._1 || a.status === MangoAvailabilityStatus._2)
+            .map(a => a.mangoTypeId)
+        );
+        this.mangoTypeOptions = this.dropdownService.mapToEntityDropdown(
+          this.mangoTypes.filter(m => availableIds.has(m.id)), 'id', 'name'
+        );
 
         if (!this.id) {
           this.orderDto = this.initObject();

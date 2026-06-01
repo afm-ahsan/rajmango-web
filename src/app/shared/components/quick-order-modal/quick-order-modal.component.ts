@@ -151,6 +151,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
       receiverName: null,
       receiverMobileNumber: null,
     });
+    this.orderForm.get('mangoType')?.disable();
     this.updateReceiverValidators(ReceiverType.Self);
     this.orderForm.markAsPristine();
     this.orderForm.markAsUntouched();
@@ -188,7 +189,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   }
 
   addOrder(): void {
-    const formValue = this.orderForm.value;
+    const formValue = this.orderForm.getRawValue();
     const mangoTypeId = +formValue.mangoType;
     const crateType = +formValue.crateType;
     const quantity = +formValue.quantity;
@@ -259,6 +260,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
       receiverName: null,
       receiverMobileNumber: null,
     });
+    this.orderForm.get('mangoType')?.disable();
     this.updateReceiverValidators(ReceiverType.Self);
     this.updateCourierValidation();
     this.isFallbackMode = false;

@@ -16,16 +16,16 @@
         <!-- Row: Mango Type + Crate Type -->
         <div class="form-group row mt-2">
           <div class="col-md-6">
-            <label><b>Mango Type <span class="text-danger">*</span>:</b></label>
+            <label><b>Mango Type:</b></label>
             <select
               formControlName="mangoType"
-              class="form-control form-select"
-              [class.is-invalid]="isControlInvalid('mangoType')">
+              class="form-control form-select">
               <option value="0">Select Mango Type</option>
               <option *ngFor="let item of mangoTypeOptions" [value]="item.id">
                 {{ item.name }}
               </option>
             </select>
+            <small class="text-muted"><i class="bi bi-lock-fill me-1"></i>Fixed for this order</small>
           </div>
 
           <div class="col-md-6">
