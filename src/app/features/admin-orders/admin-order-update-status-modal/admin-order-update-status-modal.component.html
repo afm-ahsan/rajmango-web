@@ -11,35 +11,37 @@
 
     <form [formGroup]="form">
 
-      <div class="mb-4">
-        <label class="form-label fs-7 fw-semibold text-uppercase text-muted required">Order Status</label>
-        <select class="form-select form-select-solid" formControlName="orderStatus">
-          <option *ngFor="let s of orderStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
-        </select>
+      <div class="row g-4">
+        <div class="col-12 col-md-6">
+          <label class="form-label fs-7 fw-semibold text-uppercase text-muted required">Order Status</label>
+          <select class="form-select form-select-solid" formControlName="orderStatus">
+            <option *ngFor="let s of orderStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
+          </select>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label fs-7 fw-semibold text-uppercase text-muted required">Payment Status</label>
+          <select class="form-select form-select-solid" formControlName="paymentStatus">
+            <option *ngFor="let s of paymentStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
+          </select>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label fs-7 fw-semibold text-uppercase text-muted required">Delivery Status</label>
+          <select class="form-select form-select-solid" formControlName="deliveryStatus">
+            <option *ngFor="let s of deliveryStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
+          </select>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <label class="form-label fs-7 fw-semibold text-uppercase text-muted">
+            Delivery Date <span class="text-muted fw-normal fs-8">(optional)</span>
+          </label>
+          <input type="date" class="form-control form-control-solid" formControlName="deliveryDate" />
+        </div>
       </div>
 
-      <div class="mb-4">
-        <label class="form-label fs-7 fw-semibold text-uppercase text-muted required">Payment Status</label>
-        <select class="form-select form-select-solid" formControlName="paymentStatus">
-          <option *ngFor="let s of paymentStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
-        </select>
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label fs-7 fw-semibold text-uppercase text-muted required">Delivery Status</label>
-        <select class="form-select form-select-solid" formControlName="deliveryStatus">
-          <option *ngFor="let s of deliveryStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
-        </select>
-      </div>
-
-      <div class="mb-4">
-        <label class="form-label fs-7 fw-semibold text-uppercase text-muted">
-          Delivery Date <span class="text-muted fw-normal fs-8">(optional)</span>
-        </label>
-        <input type="date" class="form-control form-control-solid" formControlName="deliveryDate" />
-      </div>
-
-      <div class="alert alert-danger py-2 px-3 fs-7" *ngIf="errorMessage">
+      <div class="alert alert-danger py-2 px-3 fs-7 mt-4" *ngIf="errorMessage">
         {{ errorMessage }}
       </div>
 

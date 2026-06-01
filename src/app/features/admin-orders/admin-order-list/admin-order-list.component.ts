@@ -3,21 +3,21 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { UserPermissionKey } from 'src/app/core/constants/user-permission-keys.enum';
+import { UserPermissionService } from 'src/app/features/auth/services/user-permission.service';
 import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
-import { UserPermissionService } from 'src/app/features/auth/services/user-permission.service';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { FilterUtils } from 'src/app/shared/utils/filter-utils';
-import { SignalRService } from 'src/app/shared/services/signalr.service';
 import { SubSink } from 'subsink';
 import { CourierAreaMapService } from '../../couriers/courier-area-map/courier-area-map.service';
 import { MangoTypeService } from '../../mango-types/mango-type.service';
-import { OrderService } from '../../orders/order.service';
 import { AdminOrderFilterModel, AdminOrderListDto } from '../../orders/models/admin-order-list-dto.model';
-import { AdminOrderViewModalComponent } from '../admin-order-view-modal/admin-order-view-modal.component';
+import { OrderService } from '../../orders/order.service';
 import { AdminOrderActionModalComponent } from '../admin-order-action-modal/admin-order-action-modal.component';
 import { AdminOrderUpdateStatusModalComponent } from '../admin-order-update-status-modal/admin-order-update-status-modal.component';
+import { AdminOrderViewModalComponent } from '../admin-order-view-modal/admin-order-view-modal.component';
 
 // ReceiverType enum mirror for template use
 const RECEIVER_SELF = 0;
@@ -202,7 +202,7 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   }
 
   openUpdateStatus(order: AdminOrderListDto): void {
-    const ref = this.modalService.open(AdminOrderUpdateStatusModalComponent, { size: 'sm' });
+    const ref = this.modalService.open(AdminOrderUpdateStatusModalComponent, { size: 'md' });
     ref.componentInstance.order = order;
     ref.result.then(
       (result: 'success' | 'dismissed') => { if (result === 'success') this.load(); },
