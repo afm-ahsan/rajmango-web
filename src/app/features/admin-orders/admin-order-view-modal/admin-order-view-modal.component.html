@@ -241,7 +241,15 @@
     </div>
 
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer gap-2">
+    <a
+      *ngIf="order"
+      [href]="'/track-order?orderNumber=' + order.orderNumber"
+      target="_blank"
+      class="btn btn-light-primary"
+    >
+      <i class="bi bi-geo-alt me-1"></i>Track Order
+    </a>
     <button type="button" class="btn btn-light" (click)="modal.dismiss()">Close</button>
   </div>
 </div>

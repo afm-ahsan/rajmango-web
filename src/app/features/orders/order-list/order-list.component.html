@@ -104,6 +104,11 @@
                         <i class="bi bi-eye me-2 text-info"></i>View
                       </a>
                     </div>
+                    <div class="menu-item px-3">
+                      <a class="menu-link px-3" (click)="trackOrder(order.orderNumber)">
+                        <i class="bi bi-geo-alt me-2 text-primary"></i>Track
+                      </a>
+                    </div>
                     <div class="menu-item px-3" *ngIf="isEditable(order)">
                       <a class="menu-link px-3 text-danger" (click)="delete(order.id)">
                         <i class="bi bi-trash me-2"></i>Delete

@@ -199,7 +199,15 @@
 
     </ng-container>
   </div>
-  <div class="modal-footer">
+  <div class="modal-footer gap-2">
+    <a
+      *ngIf="orderDto?.orderNumber"
+      [href]="'/track-order?orderNumber=' + orderDto.orderNumber"
+      target="_blank"
+      class="btn btn-sm btn-light-primary"
+    >
+      <i class="bi bi-geo-alt me-1"></i>Track Order
+    </a>
     <button type="button" class="btn btn-light btn-sm" (click)="modal.dismiss()">Close</button>
   </div>
 </div>

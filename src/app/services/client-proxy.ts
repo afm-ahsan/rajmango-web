@@ -18,6 +18,611 @@ import moment from 'moment';
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 @Injectable()
+export class AdminOrderServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param sortBy (optional) 
+     * @param sortOrder (optional) 
+     * @param orderNumber (optional) 
+     * @param customerName (optional) 
+     * @param phoneNumber (optional) 
+     * @param orderStatus (optional) 
+     * @param paymentStatus (optional) 
+     * @param deliveryStatus (optional) 
+     * @param startDate (optional) 
+     * @param endDate (optional) 
+     * @param courierProviderId (optional) 
+     * @param courierStationId (optional) 
+     * @param mangoType (optional) 
+     * @param courierEligibleOnly (optional) 
+     * @param deliveryArea (optional) 
+     * @param receiverMobile (optional) 
+     * @return OK
+     */
+    getPaged(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortOrder: string | undefined, orderNumber: string | undefined, customerName: string | undefined, phoneNumber: string | undefined, orderStatus: OrderStatus | undefined, paymentStatus: PaymentStatus | undefined, deliveryStatus: DeliveryStatus | undefined, startDate: moment.Moment | undefined, endDate: moment.Moment | undefined, courierProviderId: number | undefined, courierStationId: number | undefined, mangoType: string | undefined, courierEligibleOnly: boolean | undefined, deliveryArea: string | undefined, receiverMobile: string | undefined): Observable<PaginatedResult_AdminOrderListDto> {
+        let url_ = this.baseUrl + "/api/admin/orders?";
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "pageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (sortBy === null)
+            throw new Error("The parameter 'sortBy' cannot be null.");
+        else if (sortBy !== undefined)
+            url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
+        if (sortOrder === null)
+            throw new Error("The parameter 'sortOrder' cannot be null.");
+        else if (sortOrder !== undefined)
+            url_ += "sortOrder=" + encodeURIComponent("" + sortOrder) + "&";
+        if (orderNumber === null)
+            throw new Error("The parameter 'orderNumber' cannot be null.");
+        else if (orderNumber !== undefined)
+            url_ += "orderNumber=" + encodeURIComponent("" + orderNumber) + "&";
+        if (customerName === null)
+            throw new Error("The parameter 'customerName' cannot be null.");
+        else if (customerName !== undefined)
+            url_ += "customerName=" + encodeURIComponent("" + customerName) + "&";
+        if (phoneNumber === null)
+            throw new Error("The parameter 'phoneNumber' cannot be null.");
+        else if (phoneNumber !== undefined)
+            url_ += "phoneNumber=" + encodeURIComponent("" + phoneNumber) + "&";
+        if (orderStatus === null)
+            throw new Error("The parameter 'orderStatus' cannot be null.");
+        else if (orderStatus !== undefined)
+            url_ += "orderStatus=" + encodeURIComponent("" + orderStatus) + "&";
+        if (paymentStatus === null)
+            throw new Error("The parameter 'paymentStatus' cannot be null.");
+        else if (paymentStatus !== undefined)
+            url_ += "paymentStatus=" + encodeURIComponent("" + paymentStatus) + "&";
+        if (deliveryStatus === null)
+            throw new Error("The parameter 'deliveryStatus' cannot be null.");
+        else if (deliveryStatus !== undefined)
+            url_ += "deliveryStatus=" + encodeURIComponent("" + deliveryStatus) + "&";
+        if (startDate === null)
+            throw new Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
+            url_ += "startDate=" + encodeURIComponent(startDate ? "" + startDate.toISOString() : "") + "&";
+        if (endDate === null)
+            throw new Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
+            url_ += "endDate=" + encodeURIComponent(endDate ? "" + endDate.toISOString() : "") + "&";
+        if (courierProviderId === null)
+            throw new Error("The parameter 'courierProviderId' cannot be null.");
+        else if (courierProviderId !== undefined)
+            url_ += "courierProviderId=" + encodeURIComponent("" + courierProviderId) + "&";
+        if (courierStationId === null)
+            throw new Error("The parameter 'courierStationId' cannot be null.");
+        else if (courierStationId !== undefined)
+            url_ += "courierStationId=" + encodeURIComponent("" + courierStationId) + "&";
+        if (mangoType === null)
+            throw new Error("The parameter 'mangoType' cannot be null.");
+        else if (mangoType !== undefined)
+            url_ += "mangoType=" + encodeURIComponent("" + mangoType) + "&";
+        if (courierEligibleOnly === null)
+            throw new Error("The parameter 'courierEligibleOnly' cannot be null.");
+        else if (courierEligibleOnly !== undefined)
+            url_ += "courierEligibleOnly=" + encodeURIComponent("" + courierEligibleOnly) + "&";
+        if (deliveryArea === null)
+            throw new Error("The parameter 'deliveryArea' cannot be null.");
+        else if (deliveryArea !== undefined)
+            url_ += "deliveryArea=" + encodeURIComponent("" + deliveryArea) + "&";
+        if (receiverMobile === null)
+            throw new Error("The parameter 'receiverMobile' cannot be null.");
+        else if (receiverMobile !== undefined)
+            url_ += "receiverMobile=" + encodeURIComponent("" + receiverMobile) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaged(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaged(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedResult_AdminOrderListDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedResult_AdminOrderListDto>;
+        }));
+    }
+
+    protected processGetPaged(response: HttpResponseBase): Observable<PaginatedResult_AdminOrderListDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedResult_AdminOrderListDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getDetails(id: number): Observable<Result_AdminOrderDetailsDto> {
+        let url_ = this.baseUrl + "/api/admin/orders/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetDetails(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetDetails(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_AdminOrderDetailsDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_AdminOrderDetailsDto>;
+        }));
+    }
+
+    protected processGetDetails(response: HttpResponseBase): Observable<Result_AdminOrderDetailsDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_AdminOrderDetailsDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    confirm(id: number): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/admin/orders/{id}/confirm";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processConfirm(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processConfirm(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processConfirm(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    process(id: number): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/admin/orders/{id}/process";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcess(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcess(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processProcess(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    ship(id: number, body: ShipOrderRequest | undefined): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/admin/orders/{id}/ship";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processShip(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processShip(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processShip(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deliver(id: number): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/admin/orders/{id}/deliver";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeliver(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeliver(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processDeliver(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    cancel(id: number): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/admin/orders/{id}/cancel";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCancel(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCancel(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processCancel(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    updateStatus(id: number, body: UpdateAdminOrderStatusCommand | undefined): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/admin/orders/{id}/update-status";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateStatus(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processUpdateStatus(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
 export class AuthServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -131,53 +736,6 @@ export class AuthServiceProxy {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Result_Boolean.fromJS(resultData200);
             return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
-     * @return OK
-     */
-    getConfig(): Observable<void> {
-        let url_ = this.baseUrl + "/api/auth/config";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetConfig(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetConfig(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<void>;
-        }));
-    }
-
-    protected processGetConfig(response: HttpResponseBase): Observable<void> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -2210,10 +2768,20 @@ export class CourierRateConfigurationServiceProxy {
     }
 
     /**
+     * @param filter (optional) 
+     * @param locationType (optional) 
      * @return OK
      */
-    getCount(): Observable<Result_Int32> {
-        let url_ = this.baseUrl + "/api/courier-rate-config/count";
+    getCount(filter: string | undefined, locationType: number | undefined): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/courier-rate-config/count?";
+        if (filter === null)
+            throw new Error("The parameter 'filter' cannot be null.");
+        else if (filter !== undefined)
+            url_ += "filter=" + encodeURIComponent("" + filter) + "&";
+        if (locationType === null)
+            throw new Error("The parameter 'locationType' cannot be null.");
+        else if (locationType !== undefined)
+            url_ += "locationType=" + encodeURIComponent("" + locationType) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -2273,11 +2841,13 @@ export class CourierRateConfigurationServiceProxy {
      * @param pageSize (optional) 
      * @param sortBy (optional) 
      * @param sortOrder (optional) 
+     * @param filter (optional) 
+     * @param locationType (optional) 
      * @param courierProviderId (optional) 
      * @param isActive (optional) 
      * @return OK
      */
-    getPaged(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortOrder: string | undefined, courierProviderId: number | undefined, isActive: boolean | undefined): Observable<PaginatedResult_CourierRateConfigurationDto> {
+    getPaged(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortOrder: string | undefined, filter: string | undefined, locationType: number | undefined, courierProviderId: number | undefined, isActive: boolean | undefined): Observable<PaginatedResult_CourierRateConfigurationDto> {
         let url_ = this.baseUrl + "/api/courier-rate-config/paged?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -2295,6 +2865,14 @@ export class CourierRateConfigurationServiceProxy {
             throw new Error("The parameter 'sortOrder' cannot be null.");
         else if (sortOrder !== undefined)
             url_ += "sortOrder=" + encodeURIComponent("" + sortOrder) + "&";
+        if (filter === null)
+            throw new Error("The parameter 'filter' cannot be null.");
+        else if (filter !== undefined)
+            url_ += "filter=" + encodeURIComponent("" + filter) + "&";
+        if (locationType === null)
+            throw new Error("The parameter 'locationType' cannot be null.");
+        else if (locationType !== undefined)
+            url_ += "locationType=" + encodeURIComponent("" + locationType) + "&";
         if (courierProviderId === null)
             throw new Error("The parameter 'courierProviderId' cannot be null.");
         else if (courierProviderId !== undefined)
@@ -6870,6 +7448,70 @@ export class OrderServiceProxy {
      * @param body (optional) 
      * @return OK
      */
+    calculatePreview(body: CalculateOrderPreviewQuery | undefined): Observable<Result_OrderPreviewDto> {
+        let url_ = this.baseUrl + "/api/order/calculate-preview";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCalculatePreview(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCalculatePreview(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_OrderPreviewDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_OrderPreviewDto>;
+        }));
+    }
+
+    protected processCalculatePreview(response: HttpResponseBase): Observable<Result_OrderPreviewDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_OrderPreviewDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
     updateStatus(id: number, body: UpdateOrderStatusCommand | undefined): Observable<Result_Int32> {
         let url_ = this.baseUrl + "/api/order/{id}/status";
         if (id === undefined || id === null)
@@ -6991,6 +7633,62 @@ export class OrderServiceProxy {
         } else if (status === 403) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    track(body: TrackOrderQuery | undefined): Observable<Result_OrderTrackingDto> {
+        let url_ = this.baseUrl + "/api/order/track";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTrack(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTrack(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_OrderTrackingDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_OrderTrackingDto>;
+        }));
+    }
+
+    protected processTrack(response: HttpResponseBase): Observable<Result_OrderTrackingDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_OrderTrackingDto.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -9896,6 +10594,506 @@ export interface IAdminDashboardDto {
     recentOrders: AdminRecentOrderDto[] | undefined;
 }
 
+export class AdminOrderDetailsDto implements IAdminOrderDetailsDto {
+    orderId!: number;
+    orderNumber!: string | undefined;
+    orderDate!: moment.Moment;
+    totalQuantity!: number;
+    customerId!: number;
+    customerName!: string | undefined;
+    customerPhone!: string | undefined;
+    customerEmail!: string | undefined;
+    customerAddress!: string | undefined;
+    productTotal!: number;
+    totalAmount!: number;
+    paidAmount!: number;
+    dueAmount!: number;
+    orderStatus!: OrderStatus;
+    paymentStatus!: PaymentStatus;
+    deliveryStatus!: DeliveryStatus;
+    trackingNumber!: string | undefined;
+    deliveryDate!: moment.Moment | undefined;
+    fallbackAddress!: string | undefined;
+    receiverType!: ReceiverType;
+    receiverName!: string | undefined;
+    receiverMobileNumber!: string | undefined;
+    deliveryNote!: string | undefined;
+    courierProviderId!: number | undefined;
+    courierProviderName!: string | undefined;
+    courierStationId!: number | undefined;
+    courierStationName!: string | undefined;
+    courierStationAddress!: string | undefined;
+    deliveryArea!: string | undefined;
+    courierLocationType!: CourierLocationType;
+    isCourierEligible!: boolean;
+    courierRatePerKg!: number;
+    courierChargeCalculated!: number;
+    courierChargeOverrideAmount!: number | undefined;
+    isCourierChargeOverridden!: boolean;
+    courierChargeNote!: string | undefined;
+    readonly finalCourierCharge!: number;
+    orderItems!: AdminOrderItemDto[] | undefined;
+    payments!: AdminOrderPaymentDto[] | undefined;
+    createdAt!: moment.Moment;
+    updatedAt!: moment.Moment | undefined;
+
+    constructor(data?: IAdminOrderDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderId = _data["orderId"];
+            this.orderNumber = _data["orderNumber"];
+            this.orderDate = _data["orderDate"] ? moment(_data["orderDate"].toString()) : <any>undefined;
+            this.totalQuantity = _data["totalQuantity"];
+            this.customerId = _data["customerId"];
+            this.customerName = _data["customerName"];
+            this.customerPhone = _data["customerPhone"];
+            this.customerEmail = _data["customerEmail"];
+            this.customerAddress = _data["customerAddress"];
+            this.productTotal = _data["productTotal"];
+            this.totalAmount = _data["totalAmount"];
+            this.paidAmount = _data["paidAmount"];
+            this.dueAmount = _data["dueAmount"];
+            this.orderStatus = _data["orderStatus"];
+            this.paymentStatus = _data["paymentStatus"];
+            this.deliveryStatus = _data["deliveryStatus"];
+            this.trackingNumber = _data["trackingNumber"];
+            this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
+            this.fallbackAddress = _data["fallbackAddress"];
+            this.receiverType = _data["receiverType"];
+            this.receiverName = _data["receiverName"];
+            this.receiverMobileNumber = _data["receiverMobileNumber"];
+            this.deliveryNote = _data["deliveryNote"];
+            this.courierProviderId = _data["courierProviderId"];
+            this.courierProviderName = _data["courierProviderName"];
+            this.courierStationId = _data["courierStationId"];
+            this.courierStationName = _data["courierStationName"];
+            this.courierStationAddress = _data["courierStationAddress"];
+            this.deliveryArea = _data["deliveryArea"];
+            this.courierLocationType = _data["courierLocationType"];
+            this.isCourierEligible = _data["isCourierEligible"];
+            this.courierRatePerKg = _data["courierRatePerKg"];
+            this.courierChargeCalculated = _data["courierChargeCalculated"];
+            this.courierChargeOverrideAmount = _data["courierChargeOverrideAmount"];
+            this.isCourierChargeOverridden = _data["isCourierChargeOverridden"];
+            this.courierChargeNote = _data["courierChargeNote"];
+            (<any>this).finalCourierCharge = _data["finalCourierCharge"];
+            if (Array.isArray(_data["orderItems"])) {
+                this.orderItems = [] as any;
+                for (let item of _data["orderItems"])
+                    this.orderItems!.push(AdminOrderItemDto.fromJS(item));
+            }
+            if (Array.isArray(_data["payments"])) {
+                this.payments = [] as any;
+                for (let item of _data["payments"])
+                    this.payments!.push(AdminOrderPaymentDto.fromJS(item));
+            }
+            this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
+            this.updatedAt = _data["updatedAt"] ? moment(_data["updatedAt"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AdminOrderDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AdminOrderDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderId"] = this.orderId;
+        data["orderNumber"] = this.orderNumber;
+        data["orderDate"] = this.orderDate ? this.orderDate.toISOString() : <any>undefined;
+        data["totalQuantity"] = this.totalQuantity;
+        data["customerId"] = this.customerId;
+        data["customerName"] = this.customerName;
+        data["customerPhone"] = this.customerPhone;
+        data["customerEmail"] = this.customerEmail;
+        data["customerAddress"] = this.customerAddress;
+        data["productTotal"] = this.productTotal;
+        data["totalAmount"] = this.totalAmount;
+        data["paidAmount"] = this.paidAmount;
+        data["dueAmount"] = this.dueAmount;
+        data["orderStatus"] = this.orderStatus;
+        data["paymentStatus"] = this.paymentStatus;
+        data["deliveryStatus"] = this.deliveryStatus;
+        data["trackingNumber"] = this.trackingNumber;
+        data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
+        data["fallbackAddress"] = this.fallbackAddress;
+        data["receiverType"] = this.receiverType;
+        data["receiverName"] = this.receiverName;
+        data["receiverMobileNumber"] = this.receiverMobileNumber;
+        data["deliveryNote"] = this.deliveryNote;
+        data["courierProviderId"] = this.courierProviderId;
+        data["courierProviderName"] = this.courierProviderName;
+        data["courierStationId"] = this.courierStationId;
+        data["courierStationName"] = this.courierStationName;
+        data["courierStationAddress"] = this.courierStationAddress;
+        data["deliveryArea"] = this.deliveryArea;
+        data["courierLocationType"] = this.courierLocationType;
+        data["isCourierEligible"] = this.isCourierEligible;
+        data["courierRatePerKg"] = this.courierRatePerKg;
+        data["courierChargeCalculated"] = this.courierChargeCalculated;
+        data["courierChargeOverrideAmount"] = this.courierChargeOverrideAmount;
+        data["isCourierChargeOverridden"] = this.isCourierChargeOverridden;
+        data["courierChargeNote"] = this.courierChargeNote;
+        data["finalCourierCharge"] = this.finalCourierCharge;
+        if (Array.isArray(this.orderItems)) {
+            data["orderItems"] = [];
+            for (let item of this.orderItems)
+                data["orderItems"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.payments)) {
+            data["payments"] = [];
+            for (let item of this.payments)
+                data["payments"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+        return data;
+    }
+
+    clone(): AdminOrderDetailsDto {
+        const json = this.toJSON();
+        let result = new AdminOrderDetailsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAdminOrderDetailsDto {
+    orderId: number;
+    orderNumber: string | undefined;
+    orderDate: moment.Moment;
+    totalQuantity: number;
+    customerId: number;
+    customerName: string | undefined;
+    customerPhone: string | undefined;
+    customerEmail: string | undefined;
+    customerAddress: string | undefined;
+    productTotal: number;
+    totalAmount: number;
+    paidAmount: number;
+    dueAmount: number;
+    orderStatus: OrderStatus;
+    paymentStatus: PaymentStatus;
+    deliveryStatus: DeliveryStatus;
+    trackingNumber: string | undefined;
+    deliveryDate: moment.Moment | undefined;
+    fallbackAddress: string | undefined;
+    receiverType: ReceiverType;
+    receiverName: string | undefined;
+    receiverMobileNumber: string | undefined;
+    deliveryNote: string | undefined;
+    courierProviderId: number | undefined;
+    courierProviderName: string | undefined;
+    courierStationId: number | undefined;
+    courierStationName: string | undefined;
+    courierStationAddress: string | undefined;
+    deliveryArea: string | undefined;
+    courierLocationType: CourierLocationType;
+    isCourierEligible: boolean;
+    courierRatePerKg: number;
+    courierChargeCalculated: number;
+    courierChargeOverrideAmount: number | undefined;
+    isCourierChargeOverridden: boolean;
+    courierChargeNote: string | undefined;
+    finalCourierCharge: number;
+    orderItems: AdminOrderItemDto[] | undefined;
+    payments: AdminOrderPaymentDto[] | undefined;
+    createdAt: moment.Moment;
+    updatedAt: moment.Moment | undefined;
+}
+
+export class AdminOrderItemDto implements IAdminOrderItemDto {
+    id!: number;
+    mangoTypeId!: number;
+    mangoTypeName!: string | undefined;
+    crateType!: CrateType;
+    quantity!: number;
+    unitPrice!: number;
+    discount!: number;
+    totalPrice!: number;
+    note!: string | undefined;
+
+    constructor(data?: IAdminOrderItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.mangoTypeId = _data["mangoTypeId"];
+            this.mangoTypeName = _data["mangoTypeName"];
+            this.crateType = _data["crateType"];
+            this.quantity = _data["quantity"];
+            this.unitPrice = _data["unitPrice"];
+            this.discount = _data["discount"];
+            this.totalPrice = _data["totalPrice"];
+            this.note = _data["note"];
+        }
+    }
+
+    static fromJS(data: any): AdminOrderItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AdminOrderItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["mangoTypeId"] = this.mangoTypeId;
+        data["mangoTypeName"] = this.mangoTypeName;
+        data["crateType"] = this.crateType;
+        data["quantity"] = this.quantity;
+        data["unitPrice"] = this.unitPrice;
+        data["discount"] = this.discount;
+        data["totalPrice"] = this.totalPrice;
+        data["note"] = this.note;
+        return data;
+    }
+
+    clone(): AdminOrderItemDto {
+        const json = this.toJSON();
+        let result = new AdminOrderItemDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAdminOrderItemDto {
+    id: number;
+    mangoTypeId: number;
+    mangoTypeName: string | undefined;
+    crateType: CrateType;
+    quantity: number;
+    unitPrice: number;
+    discount: number;
+    totalPrice: number;
+    note: string | undefined;
+}
+
+export class AdminOrderListDto implements IAdminOrderListDto {
+    orderId!: number;
+    orderNumber!: string | undefined;
+    orderDate!: moment.Moment;
+    customerName!: string | undefined;
+    customerPhone!: string | undefined;
+    receiverType!: ReceiverType;
+    receiverName!: string | undefined;
+    receiverMobile!: string | undefined;
+    courierProviderName!: string | undefined;
+    courierStationName!: string | undefined;
+    courierStationAddress!: string | undefined;
+    deliveryArea!: string | undefined;
+    totalQuantity!: number;
+    productTotal!: number;
+    courierCharge!: number;
+    totalAmount!: number;
+    paidAmount!: number;
+    dueAmount!: number;
+    orderStatus!: OrderStatus;
+    paymentStatus!: PaymentStatus;
+    deliveryStatus!: DeliveryStatus;
+    deliveryDate!: moment.Moment | undefined;
+    isCourierEligible!: boolean;
+    mangoTypeName!: string | undefined;
+
+    constructor(data?: IAdminOrderListDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderId = _data["orderId"];
+            this.orderNumber = _data["orderNumber"];
+            this.orderDate = _data["orderDate"] ? moment(_data["orderDate"].toString()) : <any>undefined;
+            this.customerName = _data["customerName"];
+            this.customerPhone = _data["customerPhone"];
+            this.receiverType = _data["receiverType"];
+            this.receiverName = _data["receiverName"];
+            this.receiverMobile = _data["receiverMobile"];
+            this.courierProviderName = _data["courierProviderName"];
+            this.courierStationName = _data["courierStationName"];
+            this.courierStationAddress = _data["courierStationAddress"];
+            this.deliveryArea = _data["deliveryArea"];
+            this.totalQuantity = _data["totalQuantity"];
+            this.productTotal = _data["productTotal"];
+            this.courierCharge = _data["courierCharge"];
+            this.totalAmount = _data["totalAmount"];
+            this.paidAmount = _data["paidAmount"];
+            this.dueAmount = _data["dueAmount"];
+            this.orderStatus = _data["orderStatus"];
+            this.paymentStatus = _data["paymentStatus"];
+            this.deliveryStatus = _data["deliveryStatus"];
+            this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
+            this.isCourierEligible = _data["isCourierEligible"];
+            this.mangoTypeName = _data["mangoTypeName"];
+        }
+    }
+
+    static fromJS(data: any): AdminOrderListDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AdminOrderListDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderId"] = this.orderId;
+        data["orderNumber"] = this.orderNumber;
+        data["orderDate"] = this.orderDate ? this.orderDate.toISOString() : <any>undefined;
+        data["customerName"] = this.customerName;
+        data["customerPhone"] = this.customerPhone;
+        data["receiverType"] = this.receiverType;
+        data["receiverName"] = this.receiverName;
+        data["receiverMobile"] = this.receiverMobile;
+        data["courierProviderName"] = this.courierProviderName;
+        data["courierStationName"] = this.courierStationName;
+        data["courierStationAddress"] = this.courierStationAddress;
+        data["deliveryArea"] = this.deliveryArea;
+        data["totalQuantity"] = this.totalQuantity;
+        data["productTotal"] = this.productTotal;
+        data["courierCharge"] = this.courierCharge;
+        data["totalAmount"] = this.totalAmount;
+        data["paidAmount"] = this.paidAmount;
+        data["dueAmount"] = this.dueAmount;
+        data["orderStatus"] = this.orderStatus;
+        data["paymentStatus"] = this.paymentStatus;
+        data["deliveryStatus"] = this.deliveryStatus;
+        data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
+        data["isCourierEligible"] = this.isCourierEligible;
+        data["mangoTypeName"] = this.mangoTypeName;
+        return data;
+    }
+
+    clone(): AdminOrderListDto {
+        const json = this.toJSON();
+        let result = new AdminOrderListDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAdminOrderListDto {
+    orderId: number;
+    orderNumber: string | undefined;
+    orderDate: moment.Moment;
+    customerName: string | undefined;
+    customerPhone: string | undefined;
+    receiverType: ReceiverType;
+    receiverName: string | undefined;
+    receiverMobile: string | undefined;
+    courierProviderName: string | undefined;
+    courierStationName: string | undefined;
+    courierStationAddress: string | undefined;
+    deliveryArea: string | undefined;
+    totalQuantity: number;
+    productTotal: number;
+    courierCharge: number;
+    totalAmount: number;
+    paidAmount: number;
+    dueAmount: number;
+    orderStatus: OrderStatus;
+    paymentStatus: PaymentStatus;
+    deliveryStatus: DeliveryStatus;
+    deliveryDate: moment.Moment | undefined;
+    isCourierEligible: boolean;
+    mangoTypeName: string | undefined;
+}
+
+export class AdminOrderPaymentDto implements IAdminOrderPaymentDto {
+    id!: number;
+    paidAmount!: number;
+    netAmount!: number;
+    paymentStatus!: PaymentStatus;
+    paymentMethod!: PaymentMethod;
+    transactionId!: string | undefined;
+    paidAt!: moment.Moment | undefined;
+    createdAt!: moment.Moment;
+
+    constructor(data?: IAdminOrderPaymentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.paidAmount = _data["paidAmount"];
+            this.netAmount = _data["netAmount"];
+            this.paymentStatus = _data["paymentStatus"];
+            this.paymentMethod = _data["paymentMethod"];
+            this.transactionId = _data["transactionId"];
+            this.paidAt = _data["paidAt"] ? moment(_data["paidAt"].toString()) : <any>undefined;
+            this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AdminOrderPaymentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AdminOrderPaymentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["paidAmount"] = this.paidAmount;
+        data["netAmount"] = this.netAmount;
+        data["paymentStatus"] = this.paymentStatus;
+        data["paymentMethod"] = this.paymentMethod;
+        data["transactionId"] = this.transactionId;
+        data["paidAt"] = this.paidAt ? this.paidAt.toISOString() : <any>undefined;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        return data;
+    }
+
+    clone(): AdminOrderPaymentDto {
+        const json = this.toJSON();
+        let result = new AdminOrderPaymentDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAdminOrderPaymentDto {
+    id: number;
+    paidAmount: number;
+    netAmount: number;
+    paymentStatus: PaymentStatus;
+    paymentMethod: PaymentMethod;
+    transactionId: string | undefined;
+    paidAt: moment.Moment | undefined;
+    createdAt: moment.Moment;
+}
+
 export class AdminRecentOrderDto implements IAdminRecentOrderDto {
     id!: number;
     orderNumber!: string | undefined;
@@ -10404,6 +11602,61 @@ export interface IBkashInitiateResponseDto {
     bkashUrl: string | undefined;
     gatewayPaymentId: string | undefined;
     merchantInvoiceNumber: string | undefined;
+}
+
+export class CalculateOrderPreviewQuery implements ICalculateOrderPreviewQuery {
+    courierStationId!: number | undefined;
+    orderDetails!: OrderDetailInputDto[] | undefined;
+
+    constructor(data?: ICalculateOrderPreviewQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.courierStationId = _data["courierStationId"];
+            if (Array.isArray(_data["orderDetails"])) {
+                this.orderDetails = [] as any;
+                for (let item of _data["orderDetails"])
+                    this.orderDetails!.push(OrderDetailInputDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CalculateOrderPreviewQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new CalculateOrderPreviewQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["courierStationId"] = this.courierStationId;
+        if (Array.isArray(this.orderDetails)) {
+            data["orderDetails"] = [];
+            for (let item of this.orderDetails)
+                data["orderDetails"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+
+    clone(): CalculateOrderPreviewQuery {
+        const json = this.toJSON();
+        let result = new CalculateOrderPreviewQuery();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICalculateOrderPreviewQuery {
+    courierStationId: number | undefined;
+    orderDetails: OrderDetailInputDto[] | undefined;
 }
 
 export enum CallingConventions {
@@ -10980,6 +12233,9 @@ export class CourierAreaMap implements ICourierAreaMap {
     createdBy!: number;
     updatedAt!: moment.Moment | undefined;
     updatedBy!: number;
+    deletedAt!: moment.Moment | undefined;
+    deletedBy!: number;
+    isDeleted!: boolean;
     id!: number;
     courierStationId!: number;
     courierStation!: CourierStation;
@@ -11000,6 +12256,9 @@ export class CourierAreaMap implements ICourierAreaMap {
             this.createdBy = _data["createdBy"];
             this.updatedAt = _data["updatedAt"] ? moment(_data["updatedAt"].toString()) : <any>undefined;
             this.updatedBy = _data["updatedBy"];
+            this.deletedAt = _data["deletedAt"] ? moment(_data["deletedAt"].toString()) : <any>undefined;
+            this.deletedBy = _data["deletedBy"];
+            this.isDeleted = _data["isDeleted"];
             this.id = _data["id"];
             this.courierStationId = _data["courierStationId"];
             this.courierStation = _data["courierStation"] ? CourierStation.fromJS(_data["courierStation"]) : <any>undefined;
@@ -11020,6 +12279,9 @@ export class CourierAreaMap implements ICourierAreaMap {
         data["createdBy"] = this.createdBy;
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
         data["updatedBy"] = this.updatedBy;
+        data["deletedAt"] = this.deletedAt ? this.deletedAt.toISOString() : <any>undefined;
+        data["deletedBy"] = this.deletedBy;
+        data["isDeleted"] = this.isDeleted;
         data["id"] = this.id;
         data["courierStationId"] = this.courierStationId;
         data["courierStation"] = this.courierStation ? this.courierStation.toJSON() : <any>undefined;
@@ -11040,6 +12302,9 @@ export interface ICourierAreaMap {
     createdBy: number;
     updatedAt: moment.Moment | undefined;
     updatedBy: number;
+    deletedAt: moment.Moment | undefined;
+    deletedBy: number;
+    isDeleted: boolean;
     id: number;
     courierStationId: number;
     courierStation: CourierStation;
@@ -11450,7 +12715,7 @@ export class CourierRateConfigurationDto implements ICourierRateConfigurationDto
     id!: number;
     courierProviderId!: number;
     courierProviderName!: string | undefined;
-    courierLocationType!: CourierLocationType;
+    locationType!: number;
     ratePerKg!: number;
     minimumCharge!: number | undefined;
     isActive!: boolean;
@@ -11470,7 +12735,7 @@ export class CourierRateConfigurationDto implements ICourierRateConfigurationDto
             this.id = _data["id"];
             this.courierProviderId = _data["courierProviderId"];
             this.courierProviderName = _data["courierProviderName"];
-            this.courierLocationType = _data["courierLocationType"];
+            this.locationType = _data["locationType"];
             this.ratePerKg = _data["ratePerKg"];
             this.minimumCharge = _data["minimumCharge"];
             this.isActive = _data["isActive"];
@@ -11490,7 +12755,7 @@ export class CourierRateConfigurationDto implements ICourierRateConfigurationDto
         data["id"] = this.id;
         data["courierProviderId"] = this.courierProviderId;
         data["courierProviderName"] = this.courierProviderName;
-        data["courierLocationType"] = this.courierLocationType;
+        data["locationType"] = this.locationType;
         data["ratePerKg"] = this.ratePerKg;
         data["minimumCharge"] = this.minimumCharge;
         data["isActive"] = this.isActive;
@@ -11510,7 +12775,7 @@ export interface ICourierRateConfigurationDto {
     id: number;
     courierProviderId: number;
     courierProviderName: string | undefined;
-    courierLocationType: CourierLocationType;
+    locationType: number;
     ratePerKg: number;
     minimumCharge: number | undefined;
     isActive: boolean;
@@ -11975,7 +13240,7 @@ export interface ICreateCourierProviderCommand {
 
 export class CreateCourierRateConfigCommand implements ICreateCourierRateConfigCommand {
     courierProviderId!: number;
-    courierLocationType!: CourierLocationType;
+    locationType!: CourierLocationType;
     ratePerKg!: number;
     minimumCharge!: number | undefined;
     isActive!: boolean;
@@ -11993,7 +13258,7 @@ export class CreateCourierRateConfigCommand implements ICreateCourierRateConfigC
     init(_data?: any) {
         if (_data) {
             this.courierProviderId = _data["courierProviderId"];
-            this.courierLocationType = _data["courierLocationType"];
+            this.locationType = _data["locationType"];
             this.ratePerKg = _data["ratePerKg"];
             this.minimumCharge = _data["minimumCharge"];
             this.isActive = _data["isActive"];
@@ -12011,7 +13276,7 @@ export class CreateCourierRateConfigCommand implements ICreateCourierRateConfigC
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["courierProviderId"] = this.courierProviderId;
-        data["courierLocationType"] = this.courierLocationType;
+        data["locationType"] = this.locationType;
         data["ratePerKg"] = this.ratePerKg;
         data["minimumCharge"] = this.minimumCharge;
         data["isActive"] = this.isActive;
@@ -12029,7 +13294,7 @@ export class CreateCourierRateConfigCommand implements ICreateCourierRateConfigC
 
 export interface ICreateCourierRateConfigCommand {
     courierProviderId: number;
-    courierLocationType: CourierLocationType;
+    locationType: CourierLocationType;
     ratePerKg: number;
     minimumCharge: number | undefined;
     isActive: boolean;
@@ -14782,7 +16047,6 @@ export interface IGetAuthUserDto {
 export class GetAuthUserQuery implements IGetAuthUserQuery {
     email!: string | undefined;
     password!: string | undefined;
-    turnstileToken!: string | undefined;
 
     constructor(data?: IGetAuthUserQuery) {
         if (data) {
@@ -14797,7 +16061,6 @@ export class GetAuthUserQuery implements IGetAuthUserQuery {
         if (_data) {
             this.email = _data["email"];
             this.password = _data["password"];
-            this.turnstileToken = _data["turnstileToken"];
         }
     }
 
@@ -14812,7 +16075,6 @@ export class GetAuthUserQuery implements IGetAuthUserQuery {
         data = typeof data === 'object' ? data : {};
         data["email"] = this.email;
         data["password"] = this.password;
-        data["turnstileToken"] = this.turnstileToken;
         return data;
     }
 
@@ -14827,7 +16089,6 @@ export class GetAuthUserQuery implements IGetAuthUserQuery {
 export interface IGetAuthUserQuery {
     email: string | undefined;
     password: string | undefined;
-    turnstileToken: string | undefined;
 }
 
 export class GetCustomerByIdDto implements IGetCustomerByIdDto {
@@ -17517,6 +18778,7 @@ export class OrderDetailDto implements IOrderDetailDto {
     id!: number;
     orderId!: number;
     mangoTypeId!: number;
+    mangoName!: string | undefined;
     crateType!: CrateType;
     quantity!: number;
     unitPrice!: number;
@@ -17538,6 +18800,7 @@ export class OrderDetailDto implements IOrderDetailDto {
             this.id = _data["id"];
             this.orderId = _data["orderId"];
             this.mangoTypeId = _data["mangoTypeId"];
+            this.mangoName = _data["mangoName"];
             this.crateType = _data["crateType"];
             this.quantity = _data["quantity"];
             this.unitPrice = _data["unitPrice"];
@@ -17559,6 +18822,7 @@ export class OrderDetailDto implements IOrderDetailDto {
         data["id"] = this.id;
         data["orderId"] = this.orderId;
         data["mangoTypeId"] = this.mangoTypeId;
+        data["mangoName"] = this.mangoName;
         data["crateType"] = this.crateType;
         data["quantity"] = this.quantity;
         data["unitPrice"] = this.unitPrice;
@@ -17580,6 +18844,7 @@ export interface IOrderDetailDto {
     id: number;
     orderId: number;
     mangoTypeId: number;
+    mangoName: string | undefined;
     crateType: CrateType;
     quantity: number;
     unitPrice: number;
@@ -17681,6 +18946,7 @@ export class OrderDto implements IOrderDto {
     deliveryDate!: moment.Moment | undefined;
     trackingNumber!: string | undefined;
     courierStationId!: number | undefined;
+    courierStationName!: string | undefined;
     fallbackAddress!: string | undefined;
     receiverType!: ReceiverType;
     receiverName!: string | undefined;
@@ -17725,6 +18991,7 @@ export class OrderDto implements IOrderDto {
             this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
             this.trackingNumber = _data["trackingNumber"];
             this.courierStationId = _data["courierStationId"];
+            this.courierStationName = _data["courierStationName"];
             this.fallbackAddress = _data["fallbackAddress"];
             this.receiverType = _data["receiverType"];
             this.receiverName = _data["receiverName"];
@@ -17773,6 +19040,7 @@ export class OrderDto implements IOrderDto {
         data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
         data["trackingNumber"] = this.trackingNumber;
         data["courierStationId"] = this.courierStationId;
+        data["courierStationName"] = this.courierStationName;
         data["fallbackAddress"] = this.fallbackAddress;
         data["receiverType"] = this.receiverType;
         data["receiverName"] = this.receiverName;
@@ -17821,6 +19089,7 @@ export interface IOrderDto {
     deliveryDate: moment.Moment | undefined;
     trackingNumber: string | undefined;
     courierStationId: number | undefined;
+    courierStationName: string | undefined;
     fallbackAddress: string | undefined;
     receiverType: ReceiverType;
     receiverName: string | undefined;
@@ -17828,6 +19097,69 @@ export interface IOrderDto {
     deliveryNote: string | undefined;
     area: string | undefined;
     orderDetails: OrderDetailDto[] | undefined;
+}
+
+export class OrderPreviewDto implements IOrderPreviewDto {
+    productTotalAmount!: number;
+    totalWeightKg!: number;
+    courierCharge!: number | undefined;
+    totalAmount!: number;
+    courierProviderName!: string | undefined;
+    courierRatePerKg!: number | undefined;
+
+    constructor(data?: IOrderPreviewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.productTotalAmount = _data["productTotalAmount"];
+            this.totalWeightKg = _data["totalWeightKg"];
+            this.courierCharge = _data["courierCharge"];
+            this.totalAmount = _data["totalAmount"];
+            this.courierProviderName = _data["courierProviderName"];
+            this.courierRatePerKg = _data["courierRatePerKg"];
+        }
+    }
+
+    static fromJS(data: any): OrderPreviewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderPreviewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["productTotalAmount"] = this.productTotalAmount;
+        data["totalWeightKg"] = this.totalWeightKg;
+        data["courierCharge"] = this.courierCharge;
+        data["totalAmount"] = this.totalAmount;
+        data["courierProviderName"] = this.courierProviderName;
+        data["courierRatePerKg"] = this.courierRatePerKg;
+        return data;
+    }
+
+    clone(): OrderPreviewDto {
+        const json = this.toJSON();
+        let result = new OrderPreviewDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IOrderPreviewDto {
+    productTotalAmount: number;
+    totalWeightKg: number;
+    courierCharge: number | undefined;
+    totalAmount: number;
+    courierProviderName: string | undefined;
+    courierRatePerKg: number | undefined;
 }
 
 export enum OrderStatus {
@@ -18023,6 +19355,164 @@ export interface IOrderSummaryReportDto {
     orders: OrderSummaryLineDto[] | undefined;
 }
 
+export class OrderTrackingDto implements IOrderTrackingDto {
+    orderNumber!: string | undefined;
+    orderDate!: moment.Moment;
+    customerName!: string | undefined;
+    receiverName!: string | undefined;
+    deliveryArea!: string | undefined;
+    courierProviderName!: string | undefined;
+    courierStationName!: string | undefined;
+    totalQuantity!: number;
+    totalAmount!: number;
+    orderStatus!: OrderStatus;
+    paymentStatus!: PaymentStatus;
+    deliveryStatus!: DeliveryStatus;
+    deliveryDate!: moment.Moment | undefined;
+    timeline!: OrderTrackingTimelineItemDto[] | undefined;
+
+    constructor(data?: IOrderTrackingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderNumber = _data["orderNumber"];
+            this.orderDate = _data["orderDate"] ? moment(_data["orderDate"].toString()) : <any>undefined;
+            this.customerName = _data["customerName"];
+            this.receiverName = _data["receiverName"];
+            this.deliveryArea = _data["deliveryArea"];
+            this.courierProviderName = _data["courierProviderName"];
+            this.courierStationName = _data["courierStationName"];
+            this.totalQuantity = _data["totalQuantity"];
+            this.totalAmount = _data["totalAmount"];
+            this.orderStatus = _data["orderStatus"];
+            this.paymentStatus = _data["paymentStatus"];
+            this.deliveryStatus = _data["deliveryStatus"];
+            this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
+            if (Array.isArray(_data["timeline"])) {
+                this.timeline = [] as any;
+                for (let item of _data["timeline"])
+                    this.timeline!.push(OrderTrackingTimelineItemDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): OrderTrackingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderTrackingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderNumber"] = this.orderNumber;
+        data["orderDate"] = this.orderDate ? this.orderDate.toISOString() : <any>undefined;
+        data["customerName"] = this.customerName;
+        data["receiverName"] = this.receiverName;
+        data["deliveryArea"] = this.deliveryArea;
+        data["courierProviderName"] = this.courierProviderName;
+        data["courierStationName"] = this.courierStationName;
+        data["totalQuantity"] = this.totalQuantity;
+        data["totalAmount"] = this.totalAmount;
+        data["orderStatus"] = this.orderStatus;
+        data["paymentStatus"] = this.paymentStatus;
+        data["deliveryStatus"] = this.deliveryStatus;
+        data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
+        if (Array.isArray(this.timeline)) {
+            data["timeline"] = [];
+            for (let item of this.timeline)
+                data["timeline"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+
+    clone(): OrderTrackingDto {
+        const json = this.toJSON();
+        let result = new OrderTrackingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IOrderTrackingDto {
+    orderNumber: string | undefined;
+    orderDate: moment.Moment;
+    customerName: string | undefined;
+    receiverName: string | undefined;
+    deliveryArea: string | undefined;
+    courierProviderName: string | undefined;
+    courierStationName: string | undefined;
+    totalQuantity: number;
+    totalAmount: number;
+    orderStatus: OrderStatus;
+    paymentStatus: PaymentStatus;
+    deliveryStatus: DeliveryStatus;
+    deliveryDate: moment.Moment | undefined;
+    timeline: OrderTrackingTimelineItemDto[] | undefined;
+}
+
+export class OrderTrackingTimelineItemDto implements IOrderTrackingTimelineItemDto {
+    trackingStatus!: string | undefined;
+    title!: string | undefined;
+    description!: string | undefined;
+    createdAt!: moment.Moment;
+
+    constructor(data?: IOrderTrackingTimelineItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.trackingStatus = _data["trackingStatus"];
+            this.title = _data["title"];
+            this.description = _data["description"];
+            this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): OrderTrackingTimelineItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderTrackingTimelineItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["trackingStatus"] = this.trackingStatus;
+        data["title"] = this.title;
+        data["description"] = this.description;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        return data;
+    }
+
+    clone(): OrderTrackingTimelineItemDto {
+        const json = this.toJSON();
+        let result = new OrderTrackingTimelineItemDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IOrderTrackingTimelineItemDto {
+    trackingStatus: string | undefined;
+    title: string | undefined;
+    description: string | undefined;
+    createdAt: moment.Moment;
+}
+
 export class OverrideCourierChargeCommand implements IOverrideCourierChargeCommand {
     orderId!: number;
     courierChargeOverrideAmount!: number;
@@ -18072,6 +19562,105 @@ export interface IOverrideCourierChargeCommand {
     orderId: number;
     courierChargeOverrideAmount: number;
     courierChargeNote: string | undefined;
+}
+
+export class PaginatedResult_AdminOrderListDto implements IPaginatedResult_AdminOrderListDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: AdminOrderListDto[] | undefined;
+    exception!: Exception;
+    code!: number;
+    currentPage!: number;
+    totalPages!: number;
+    totalCount!: number;
+    pageSize!: number;
+    readonly hasPreviousPage!: boolean;
+    readonly hasNextPage!: boolean;
+
+    constructor(data?: IPaginatedResult_AdminOrderListDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(AdminOrderListDto.fromJS(item));
+            }
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+            this.currentPage = _data["currentPage"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.pageSize = _data["pageSize"];
+            (<any>this).hasPreviousPage = _data["hasPreviousPage"];
+            (<any>this).hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedResult_AdminOrderListDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedResult_AdminOrderListDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        data["currentPage"] = this.currentPage;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["pageSize"] = this.pageSize;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+
+    clone(): PaginatedResult_AdminOrderListDto {
+        const json = this.toJSON();
+        let result = new PaginatedResult_AdminOrderListDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPaginatedResult_AdminOrderListDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: AdminOrderListDto[] | undefined;
+    exception: Exception;
+    code: number;
+    currentPage: number;
+    totalPages: number;
+    totalCount: number;
+    pageSize: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
 }
 
 export class PaginatedResult_AppUserDto implements IPaginatedResult_AppUserDto {
@@ -19840,7 +21429,6 @@ export class RegisterUserCommand implements IRegisterUserCommand {
     phoneNumber!: string;
     email!: string;
     password!: string;
-    turnstileToken!: string | undefined;
 
     constructor(data?: IRegisterUserCommand) {
         if (data) {
@@ -19858,7 +21446,6 @@ export class RegisterUserCommand implements IRegisterUserCommand {
             this.phoneNumber = _data["phoneNumber"];
             this.email = _data["email"];
             this.password = _data["password"];
-            this.turnstileToken = _data["turnstileToken"];
         }
     }
 
@@ -19876,7 +21463,6 @@ export class RegisterUserCommand implements IRegisterUserCommand {
         data["phoneNumber"] = this.phoneNumber;
         data["email"] = this.email;
         data["password"] = this.password;
-        data["turnstileToken"] = this.turnstileToken;
         return data;
     }
 
@@ -19894,7 +21480,6 @@ export interface IRegisterUserCommand {
     phoneNumber: string;
     email: string;
     password: string;
-    turnstileToken: string | undefined;
 }
 
 export class Result_AdminDashboardDto implements IResult_AdminDashboardDto {
@@ -19960,6 +21545,73 @@ export interface IResult_AdminDashboardDto {
     messages: string[] | undefined;
     succeeded: boolean;
     data: AdminDashboardDto;
+    exception: Exception;
+    code: number;
+}
+
+export class Result_AdminOrderDetailsDto implements IResult_AdminOrderDetailsDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: AdminOrderDetailsDto;
+    exception!: Exception;
+    code!: number;
+
+    constructor(data?: IResult_AdminOrderDetailsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            this.data = _data["data"] ? AdminOrderDetailsDto.fromJS(_data["data"]) : <any>undefined;
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): Result_AdminOrderDetailsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result_AdminOrderDetailsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        return data;
+    }
+
+    clone(): Result_AdminOrderDetailsDto {
+        const json = this.toJSON();
+        let result = new Result_AdminOrderDetailsDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IResult_AdminOrderDetailsDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: AdminOrderDetailsDto;
     exception: Exception;
     code: number;
 }
@@ -23857,6 +25509,73 @@ export interface IResult_OrderDto {
     code: number;
 }
 
+export class Result_OrderPreviewDto implements IResult_OrderPreviewDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: OrderPreviewDto;
+    exception!: Exception;
+    code!: number;
+
+    constructor(data?: IResult_OrderPreviewDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            this.data = _data["data"] ? OrderPreviewDto.fromJS(_data["data"]) : <any>undefined;
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): Result_OrderPreviewDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result_OrderPreviewDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        return data;
+    }
+
+    clone(): Result_OrderPreviewDto {
+        const json = this.toJSON();
+        let result = new Result_OrderPreviewDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IResult_OrderPreviewDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: OrderPreviewDto;
+    exception: Exception;
+    code: number;
+}
+
 export class Result_OrderSummaryReportDto implements IResult_OrderSummaryReportDto {
     messages!: string[] | undefined;
     succeeded!: boolean;
@@ -23920,6 +25639,73 @@ export interface IResult_OrderSummaryReportDto {
     messages: string[] | undefined;
     succeeded: boolean;
     data: OrderSummaryReportDto;
+    exception: Exception;
+    code: number;
+}
+
+export class Result_OrderTrackingDto implements IResult_OrderTrackingDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: OrderTrackingDto;
+    exception!: Exception;
+    code!: number;
+
+    constructor(data?: IResult_OrderTrackingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            this.data = _data["data"] ? OrderTrackingDto.fromJS(_data["data"]) : <any>undefined;
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): Result_OrderTrackingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result_OrderTrackingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        return data;
+    }
+
+    clone(): Result_OrderTrackingDto {
+        const json = this.toJSON();
+        let result = new Result_OrderTrackingDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IResult_OrderTrackingDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: OrderTrackingDto;
     exception: Exception;
     code: number;
 }
@@ -24260,6 +26046,49 @@ export enum SecurityRuleSet {
     _2 = 2,
 }
 
+export class ShipOrderRequest implements IShipOrderRequest {
+    trackingNumber!: string | undefined;
+
+    constructor(data?: IShipOrderRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.trackingNumber = _data["trackingNumber"];
+        }
+    }
+
+    static fromJS(data: any): ShipOrderRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new ShipOrderRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["trackingNumber"] = this.trackingNumber;
+        return data;
+    }
+
+    clone(): ShipOrderRequest {
+        const json = this.toJSON();
+        let result = new ShipOrderRequest();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IShipOrderRequest {
+    trackingNumber: string | undefined;
+}
+
 export class StructLayoutAttribute implements IStructLayoutAttribute {
     readonly typeId!: any | undefined;
     value!: LayoutKind;
@@ -24438,6 +26267,53 @@ export enum SweetnessLevel {
     _2 = 2,
     _3 = 3,
     _4 = 4,
+}
+
+export class TrackOrderQuery implements ITrackOrderQuery {
+    orderNumber!: string | undefined;
+    phoneNumber!: string | undefined;
+
+    constructor(data?: ITrackOrderQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.orderNumber = _data["orderNumber"];
+            this.phoneNumber = _data["phoneNumber"];
+        }
+    }
+
+    static fromJS(data: any): TrackOrderQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new TrackOrderQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["orderNumber"] = this.orderNumber;
+        data["phoneNumber"] = this.phoneNumber;
+        return data;
+    }
+
+    clone(): TrackOrderQuery {
+        const json = this.toJSON();
+        let result = new TrackOrderQuery();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ITrackOrderQuery {
+    orderNumber: string | undefined;
+    phoneNumber: string | undefined;
 }
 
 export class Type implements IType {
@@ -25271,6 +27147,65 @@ export interface ITypeInfo {
     implementedInterfaces: Type[] | undefined;
 }
 
+export class UpdateAdminOrderStatusCommand implements IUpdateAdminOrderStatusCommand {
+    id!: number;
+    orderStatus!: OrderStatus;
+    paymentStatus!: PaymentStatus;
+    deliveryStatus!: DeliveryStatus;
+    deliveryDate!: moment.Moment | undefined;
+
+    constructor(data?: IUpdateAdminOrderStatusCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.orderStatus = _data["orderStatus"];
+            this.paymentStatus = _data["paymentStatus"];
+            this.deliveryStatus = _data["deliveryStatus"];
+            this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UpdateAdminOrderStatusCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateAdminOrderStatusCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["orderStatus"] = this.orderStatus;
+        data["paymentStatus"] = this.paymentStatus;
+        data["deliveryStatus"] = this.deliveryStatus;
+        data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
+        return data;
+    }
+
+    clone(): UpdateAdminOrderStatusCommand {
+        const json = this.toJSON();
+        let result = new UpdateAdminOrderStatusCommand();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IUpdateAdminOrderStatusCommand {
+    id: number;
+    orderStatus: OrderStatus;
+    paymentStatus: PaymentStatus;
+    deliveryStatus: DeliveryStatus;
+    deliveryDate: moment.Moment | undefined;
+}
+
 export class UpdateComplaintStatusCommand implements IUpdateComplaintStatusCommand {
     id!: number;
     status!: ComplaintStatus;
@@ -25439,7 +27374,7 @@ export interface IUpdateCourierProviderCommand {
 export class UpdateCourierRateConfigCommand implements IUpdateCourierRateConfigCommand {
     id!: number;
     courierProviderId!: number;
-    courierLocationType!: CourierLocationType;
+    locationType!: CourierLocationType;
     ratePerKg!: number;
     minimumCharge!: number | undefined;
     isActive!: boolean;
@@ -25458,7 +27393,7 @@ export class UpdateCourierRateConfigCommand implements IUpdateCourierRateConfigC
         if (_data) {
             this.id = _data["id"];
             this.courierProviderId = _data["courierProviderId"];
-            this.courierLocationType = _data["courierLocationType"];
+            this.locationType = _data["locationType"];
             this.ratePerKg = _data["ratePerKg"];
             this.minimumCharge = _data["minimumCharge"];
             this.isActive = _data["isActive"];
@@ -25477,7 +27412,7 @@ export class UpdateCourierRateConfigCommand implements IUpdateCourierRateConfigC
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["courierProviderId"] = this.courierProviderId;
-        data["courierLocationType"] = this.courierLocationType;
+        data["locationType"] = this.locationType;
         data["ratePerKg"] = this.ratePerKg;
         data["minimumCharge"] = this.minimumCharge;
         data["isActive"] = this.isActive;
@@ -25496,7 +27431,7 @@ export class UpdateCourierRateConfigCommand implements IUpdateCourierRateConfigC
 export interface IUpdateCourierRateConfigCommand {
     id: number;
     courierProviderId: number;
-    courierLocationType: CourierLocationType;
+    locationType: CourierLocationType;
     ratePerKg: number;
     minimumCharge: number | undefined;
     isActive: boolean;
@@ -25975,8 +27910,8 @@ export class UpdateMangoTypeCommand implements IUpdateMangoTypeCommand {
     mangoGrade!: MangoGrade;
     sweetnessLevel!: SweetnessLevel;
     sequence!: number;
-    createdBy!: number;
-    createdAt!: moment.Moment;
+    createdBy!: number | undefined;
+    createdAt!: moment.Moment | undefined;
     updatedBy!: number | undefined;
     updatedAt!: moment.Moment | undefined;
 
@@ -26050,8 +27985,8 @@ export interface IUpdateMangoTypeCommand {
     mangoGrade: MangoGrade;
     sweetnessLevel: SweetnessLevel;
     sequence: number;
-    createdBy: number;
-    createdAt: moment.Moment;
+    createdBy: number | undefined;
+    createdAt: moment.Moment | undefined;
     updatedBy: number | undefined;
     updatedAt: moment.Moment | undefined;
 }

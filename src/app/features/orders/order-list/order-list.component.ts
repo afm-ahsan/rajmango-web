@@ -3,26 +3,26 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
+import { SubmitComplaintModalComponent } from 'src/app/features/complaints/submit-complaint-modal/submit-complaint-modal.component';
+import { SubmitFeedbackModalComponent } from 'src/app/features/feedback/submit-feedback-modal/submit-feedback-modal.component';
 import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
 import { FilterModel } from 'src/app/shared/models/filter.model';
 import { ImagePathService } from 'src/app/shared/services/image-path.service';
+import { SignalRService } from 'src/app/shared/services/signalr.service';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { FilterUtils } from 'src/app/shared/utils/filter-utils';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../auth';
+import { BkashPaymentModalComponent } from '../bkash-payment-modal/bkash-payment-modal.component';
 import { CreateOrderModalComponent } from '../create-order-modal/create-order-modal.component';
 import { DeleteOrderModalComponent } from '../delete-order-modal/delete-order-modal.component';
 import { OrderDto } from '../models/order-dto.model';
 import { OrderFacade } from '../order.facade';
 import { OrderService } from '../order.service';
 import { ViewOrderModalComponent } from '../view-order-modal/view-order-modal.component';
-import { SubmitFeedbackModalComponent } from 'src/app/features/feedback/submit-feedback-modal/submit-feedback-modal.component';
-import { SubmitComplaintModalComponent } from 'src/app/features/complaints/submit-complaint-modal/submit-complaint-modal.component';
-import { SignalRService } from 'src/app/shared/services/signalr.service';
-import { BkashPaymentModalComponent } from '../bkash-payment-modal/bkash-payment-modal.component';
 
 @Component({
   selector: 'app-order-list',
@@ -160,7 +160,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
   }
 
   view(id: number): void {
-    const modalRef = this.modalService.open(ViewOrderModalComponent, { size: 'md' });
+    const modalRef = this.modalService.open(ViewOrderModalComponent, { size: 'lg' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(
       (result: 'success' | 'dismissed') => {
@@ -206,6 +206,10 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
   private toast(icon: 'success' | 'info' | 'warning' | 'error', title: string): void {
     Swal.fire({ toast: true, position: 'top-end', icon, title, showConfirmButton: false, timer: 3500, timerProgressBar: true });
+  }
+
+  trackOrder(orderNumber: string): void {
+    window.open(`/track-order?orderNumber=${encodeURIComponent(orderNumber)}`, '_blank');
   }
 
   openFeedback(order: OrderDto): void {

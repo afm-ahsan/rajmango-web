@@ -29,6 +29,11 @@ export const routes: Routes = [
       import('./features/public/privacy-policy/privacy-policy.module').then((m) => m.PrivacyPolicyModule),
   },
   {
+    path: 'track-order',
+    loadChildren: () =>
+      import('./features/track-order/track-order.module').then((m) => m.TrackOrderModule),
+  },
+  {
     path: '',
     canActivate: [AuthGuard],
     loadChildren: () =>

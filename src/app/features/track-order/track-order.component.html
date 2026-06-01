@@ -1,0 +1,203 @@
+<div class="pub-page">
+
+  <!-- Scroll progress -->
+  <div class="pub-scroll-progress" [style.width.%]="scrollProgress"></div>
+
+  <!-- Header -->
+  <header class="pub-header">
+    <div class="pub-header-content">
+      <div class="pub-header-logo">
+        <img src="./assets/media/logos/logo-1.png" alt="RajMango" onerror="this.style.display='none'" />
+      </div>
+      <h1 class="pub-header-title">Track Your Order</h1>
+      <p class="pub-header-subtitle">Enter your order number and registered phone number to check the latest status.</p>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="pub-wrap">
+
+    <!-- Search Form -->
+    <div class="track-form-card" *ngIf="!result">
+      <div class="row g-3 align-items-end">
+        <div class="col-12 col-md-5">
+          <label class="track-label">Order Number</label>
+          <input
+            type="text"
+            class="track-input"
+            placeholder="e.g. 202606010001"
+            [(ngModel)]="orderNumber"
+            (keyup.enter)="track()"
+            autocomplete="off"
+          />
+        </div>
+        <div class="col-12 col-md-5">
+          <label class="track-label">Phone Number</label>
+          <input
+            type="tel"
+            class="track-input"
+            placeholder="e.g. 01XXXXXXXXX"
+            [(ngModel)]="phoneNumber"
+            (keyup.enter)="track()"
+            autocomplete="off"
+          />
+        </div>
+        <div class="col-12 col-md-2">
+          <button
+            class="track-btn w-100"
+            (click)="track()"
+            [disabled]="isLoading || !orderNumber.trim() || !phoneNumber.trim()"
+          >
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1" role="status"></span>
+            <span *ngIf="!isLoading">&#128269;</span>
+            Track
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="track-error">
+        <span>&#9888;</span> {{ errorMessage }}
+      </div>
+    </div>
+
+    <!-- Search Form (compact, shown when result is visible) -->
+    <div class="track-form-inline" *ngIf="result">
+      <div class="row g-2 align-items-end">
+        <div class="col-12 col-sm-4">
+          <input type="text" class="track-input track-input-sm" placeholder="Order Number" [(ngModel)]="orderNumber" autocomplete="off" />
+        </div>
+        <div class="col-12 col-sm-4">
+          <input type="tel" class="track-input track-input-sm" placeholder="Phone Number" [(ngModel)]="phoneNumber" autocomplete="off" />
+        </div>
+        <div class="col-12 col-sm-4">
+          <button class="track-btn track-btn-sm w-100" (click)="track()" [disabled]="isLoading || !orderNumber.trim() || !phoneNumber.trim()">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-1" role="status"></span>
+            Track Another
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <ng-container *ngIf="result">
+
+      <!-- Order Info -->
+      <div class="pub-highlight track-result-header">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+          <div>
+            <div class="track-order-num">Order {{ result.orderNumber }}</div>
+            <div class="track-order-date">Placed on {{ result.orderDate | date:'dd MMM yyyy' }}</div>
+          </div>
+          <div class="d-flex gap-2 flex-wrap">
+            <span class="track-badge" [ngClass]="getOrderStatusBadgeClass(result.orderStatus)">{{ getOrderStatusLabel(result.orderStatus) }}</span>
+            <span class="track-badge" [ngClass]="getPaymentStatusBadgeClass(result.paymentStatus)">{{ getPaymentStatusLabel(result.paymentStatus) }}</span>
+            <span class="track-badge" [ngClass]="getDeliveryStatusBadgeClass(result.deliveryStatus)">{{ getDeliveryStatusLabel(result.deliveryStatus) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail grid -->
+      <section class="pub-section">
+        <div class="pub-section-label">Shipment Details</div>
+        <div class="pub-cards track-detail-grid">
+          <div class="pub-card track-detail-card" *ngIf="result.customerName">
+            <div class="pub-card-icon">&#128100;</div>
+            <h3>Customer</h3>
+            <p>{{ result.customerName }}</p>
+          </div>
+          <div class="pub-card track-detail-card" *ngIf="result.receiverName">
+            <div class="pub-card-icon">&#128205;</div>
+            <h3>Receiver</h3>
+            <p>{{ result.receiverName }}</p>
+          </div>
+          <div class="pub-card track-detail-card" *ngIf="result.deliveryArea">
+            <div class="pub-card-icon">&#127968;</div>
+            <h3>Delivery Area</h3>
+            <p>{{ result.deliveryArea }}</p>
+          </div>
+          <div class="pub-card track-detail-card" *ngIf="result.courierProviderName">
+            <div class="pub-card-icon">&#128666;</div>
+            <h3>Courier</h3>
+            <p>{{ result.courierProviderName }}</p>
+          </div>
+          <div class="pub-card track-detail-card">
+            <div class="pub-card-icon">&#9878;</div>
+            <h3>Total Weight</h3>
+            <p>{{ result.totalQuantity | number }} kg</p>
+          </div>
+          <div class="pub-card track-detail-card">
+            <div class="pub-card-icon">&#128179;</div>
+            <h3>Amount</h3>
+            <p class="track-amount">&#2547; {{ result.totalAmount | number:'1.0-2' }}</p>
+          </div>
+          <div class="pub-card track-detail-card" *ngIf="result.deliveryDate">
+            <div class="pub-card-icon">&#9989;</div>
+            <h3>Delivered On</h3>
+            <p>{{ result.deliveryDate | date:'dd MMM yyyy' }}</p>
+          </div>
+        </div>
+        <div class="track-station" *ngIf="result.courierStationName">
+          <span>&#128204;</span> {{ result.courierStationName }}
+        </div>
+      </section>
+
+      <!-- Timeline -->
+      <section class="pub-section">
+        <div class="pub-section-label">Shipment Timeline</div>
+        <h2 class="pub-section-title">Live Tracking</h2>
+        <div class="timeline-stepper">
+          <div
+            *ngFor="let step of timelineSteps; let last = last"
+            class="timeline-step"
+            [class.completed]="isStepCompleted(step)"
+          >
+            <div class="step-connector" *ngIf="!last" [class.connector-filled]="isStepCompleted(step)"></div>
+            <div class="step-row">
+              <div class="step-circle" [class]="isStepCompleted(step) ? step.colorClass : 'step-inactive'">
+                <i class="bi" [class]="step.icon"></i>
+              </div>
+              <div class="step-content">
+                <div class="fw-bold" [class.text-muted]="!isStepCompleted(step)">{{ step.label }}</div>
+                <div *ngIf="getStepTimestamp(step) as ts" class="track-ts">{{ ts | date:'dd MMM yyyy, hh:mm a' }}</div>
+                <div *ngIf="!isStepCompleted(step)" class="track-ts">Pending</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </ng-container>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="pub-footer">
+    <div class="pub-footer-content">
+      <div class="pub-footer-section">
+        <h3>RajMango</h3>
+        <ul>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/contact-us">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="pub-footer-section">
+        <h3>Customer</h3>
+        <ul>
+          <li><a href="/auth/login">Sign In</a></li>
+          <li><a href="/auth/registration">Create Account</a></li>
+        </ul>
+      </div>
+      <div class="pub-footer-section">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="/terms-and-conditions">Terms &amp; Conditions</a></li>
+          <li><a href="/privacy-policy">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="pub-footer-bottom">
+      &copy; {{ currentYear }} RajMango. All rights reserved.
+    </div>
+  </footer>
+
+</div>

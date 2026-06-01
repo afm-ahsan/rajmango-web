@@ -110,6 +110,12 @@ export class OrderService {
       .pipe(catchError(this.handleError));
   }
 
+  trackOrder(dto: { orderNumber: string; phoneNumber: string }): Observable<any> {
+    return this.httpClient
+      .post(`${this.apiUrl}/order/track`, dto)
+      .pipe(catchError(this.handleError));
+  }
+
   // ─── Admin Order Management ───────────────────────────────────────────
 
   getAdminPaged(filter: AdminOrderFilterModel): Observable<any> {

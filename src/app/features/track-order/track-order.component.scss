@@ -1,0 +1,343 @@
+// ── Brand tokens (mirrors other pub-pages) ──────────────────────────────────
+$primary:    #d4824b;
+$secondary:  #2d5016;
+$accent:     #f4a34a;
+$dark-text:  #1f1f1f;
+$text-muted: #4a4a4a;
+$border:     #e0e0e0;
+$font-serif: 'Georgia', 'Garamond', serif;
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ── Pub-page foundation (same as about / contact-us) ────────────────────────
+.pub-page {
+  background: #ffffff;
+  color: $dark-text;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.8;
+  font-size: 16px;
+  min-height: 100vh;
+}
+
+.pub-scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, $primary, $accent);
+  z-index: 1100;
+  transition: width 0.1s linear;
+}
+
+.pub-header {
+  background: linear-gradient(135deg, rgba(212,130,75,0.98), rgba(45,80,22,0.85));
+  padding: 3rem 2rem;
+  text-align: center;
+
+  &-content { max-width: 800px; margin: 0 auto; }
+
+  &-logo {
+    margin-bottom: 1.25rem;
+    img {
+      max-width: 80px;
+      height: auto;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.3);
+    }
+  }
+
+  &-title {
+    font-family: $font-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  &-subtitle {
+    color: rgba(255,255,255,0.9);
+    font-size: 1.05rem;
+    margin: 0;
+  }
+}
+
+.pub-wrap {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+}
+
+.pub-highlight {
+  background: #f9f9f9;
+  border-left: 4px solid $primary;
+  padding: 1.25rem 1.5rem;
+  margin: 0 0 2rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.pub-section {
+  margin-bottom: 3rem;
+}
+
+.pub-section-label {
+  font-size: 0.82rem;
+  color: $accent;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 0.35rem;
+}
+
+.pub-section-title {
+  font-family: $font-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: $secondary;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid $border;
+}
+
+.pub-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.25rem;
+}
+
+.pub-card {
+  background: #fafafa;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  transition: $transition;
+
+  &:hover {
+    border-color: rgba(212,130,75,0.4);
+    box-shadow: 0 4px 12px rgba(212,130,75,0.08);
+  }
+
+  &-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+  h3 { font-size: 0.82rem; font-weight: 700; color: $secondary; margin-bottom: 0.35rem; text-transform: uppercase; letter-spacing: 0.5px; }
+  p  { font-size: 0.95rem; color: $text-muted; margin: 0; line-height: 1.5; }
+}
+
+.pub-footer {
+  background: linear-gradient(135deg, rgba(45,80,22,0.98), rgba(45,80,22,0.95));
+  color: #fff;
+  padding: 3rem 2rem 2rem;
+  margin-top: 4rem;
+  border-top: 1px solid rgba(212,130,75,0.2);
+
+  &-content {
+    max-width: 920px;
+    margin: 0 auto 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+    gap: 2rem;
+  }
+
+  &-section {
+    h3 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: $accent; margin-bottom: 0.85rem; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { margin-bottom: 0.5rem; }
+    a { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.92rem; transition: $transition; &:hover { color: $accent; } }
+  }
+
+  &-bottom {
+    max-width: 920px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.875rem;
+  }
+}
+
+// ── Track-specific styles ────────────────────────────────────────────────────
+.track-form-card {
+  background: #fafafa;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.track-form-inline {
+  background: #fafafa;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.track-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $secondary;
+  margin-bottom: 0.4rem;
+}
+
+.track-input {
+  display: block;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  font-size: 0.95rem;
+  border: 1px solid $border;
+  border-radius: 6px;
+  background: #fff;
+  color: $dark-text;
+  transition: $transition;
+  outline: none;
+
+  &::placeholder { color: #aaa; }
+  &:focus { border-color: $primary; box-shadow: 0 0 0 3px rgba(212,130,75,0.12); }
+
+  &-sm { padding: 0.5rem 0.85rem; font-size: 0.88rem; }
+}
+
+.track-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.65rem 1.5rem;
+  background: $primary;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: $transition;
+
+  &:hover:not(:disabled) { background: darken($primary, 8%); }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+  &-sm { padding: 0.5rem 1rem; font-size: 0.88rem; }
+}
+
+.track-error {
+  margin-top: 1.25rem;
+  padding: 0.85rem 1.25rem;
+  background: #fff5f5;
+  border: 1px solid #fcc;
+  border-radius: 6px;
+  color: #c0392b;
+  font-size: 0.92rem;
+}
+
+.track-result-header {
+  margin-bottom: 0;
+  border-radius: 8px;
+}
+
+.track-order-num {
+  font-family: $font-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: $secondary;
+}
+
+.track-order-date { font-size: 0.9rem; color: $text-muted; margin-top: 0.15rem; }
+
+.track-badge {
+  display: inline-block;
+  padding: 0.3em 0.75em;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  // Metronic badge colours used across the app
+  &.badge-light-warning  { background: rgba(255,199,0,0.18);  color: #b08d00; }
+  &.badge-light-success  { background: rgba(80,205,137,0.15); color: #1a7a45; }
+  &.badge-light-danger   { background: rgba(241,65,108,0.12); color: #c0392b; }
+  &.badge-light-info     { background: rgba(114,57,234,0.1);  color: #5e35b1; }
+  &.badge-light-primary  { background: rgba(0,158,247,0.12);  color: #0070c0; }
+  &.badge-light-secondary{ background: rgba(180,180,180,0.15);color: #666; }
+}
+
+.track-detail-grid { margin-top: 1rem; }
+
+.track-detail-card p { word-break: break-word; }
+
+.track-amount { font-weight: 700; color: $secondary; }
+
+.track-station {
+  margin-top: 1.25rem;
+  padding: 0.6rem 1rem;
+  background: rgba(45,80,22,0.05);
+  border: 1px solid rgba(45,80,22,0.15);
+  border-radius: 6px;
+  font-size: 0.92rem;
+  color: $secondary;
+}
+
+.track-ts { font-size: 0.82rem; color: $text-muted; margin-top: 0.2rem; }
+
+// ── Timeline ─────────────────────────────────────────────────────────────────
+.timeline-stepper { padding-top: 0.5rem; }
+
+.timeline-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.step-connector {
+  width: 2px;
+  min-height: 24px;
+  background: $border;
+  margin-left: 19px;
+
+  &.connector-filled { background: $primary; }
+}
+
+.step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.step-circle {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+
+  &.step-inactive   { background: #f1f3f6; color: #b0b8c1; }
+  &.step-primary    { background: rgba(212,130,75,0.12); color: $primary; }
+  &.step-success    { background: rgba(45,80,22,0.1);   color: $secondary; }
+  &.step-info       { background: rgba(0,158,247,0.1);  color: #009ef7; }
+  &.step-warning    { background: rgba(255,199,0,0.15); color: #b08d00; }
+}
+
+.step-content {
+  flex: 1;
+  padding-top: 8px;
+  padding-bottom: 16px;
+}
+
+.completed .step-circle { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .pub-header-title { font-size: 1.7rem; }
+  .pub-wrap         { padding: 2rem 1rem; }
+  .track-form-card  { padding: 1.25rem; }
+  .pub-cards        { grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); }
+}
+
+@media (max-width: 480px) {
+  .pub-header         { padding: 2rem 1rem; }
+  .pub-header-title   { font-size: 1.4rem; }
+  .pub-section-title  { font-size: 1.3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
