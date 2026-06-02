@@ -1,132 +1,201 @@
-<!--begin::Wrapper-->
 <div data-kt-search-element="wrapper">
 
-  <!--begin::Form-->
+  <!-- Search Input -->
   <form data-kt-search-element="form" class="w-100 position-relative mb-3" autocomplete="off">
-    <!--begin::Icon-->
-    <span
-      [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
-      class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 position-absolute top-50 translate-middle-y ms-0"
-    ></span>
-    <!--end::Icon-->
+    <span [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
+          class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 position-absolute top-50 translate-middle-y ms-0"></span>
 
-    <!--begin::Input-->
-    <input type="text" class="form-control form-control-flush ps-10" name="search" value="" placeholder="Search..." data-kt-search-element="input" [ngModel]="keyword" (ngModelChange)="search($event)"/>
-    <!--end::Input-->
+    <input type="text"
+           class="form-control form-control-flush ps-10"
+           name="search"
+           placeholder="Search orders, customers, stations..."
+           data-kt-search-element="input"
+           [ngModel]="keyword"
+           (ngModelChange)="onInput($event)" />
 
-    <!--begin::Spinner-->
-    <span class="position-absolute top-50 end-0 translate-middle-y lh-0 me-1" data-kt-search-element="spinner" [ngClass]="searching ? '' : 'd-none'">
-        <span class="spinner-border h-15px w-15px align-middle text-gray-400"></span>
+    <span class="position-absolute top-50 end-0 translate-middle-y lh-0 me-1"
+          [class.d-none]="!isSearching">
+      <span class="spinner-border h-15px w-15px align-middle text-gray-400"></span>
     </span>
-    <!--end::Spinner-->
 
-    <!--begin::Reset-->
-    <span class="btn btn-flush btn-active-color-primary position-absolute top-50 end-0 translate-middle-y lh-0" data-kt-search-element="clear" [ngClass]="searching || keyword.length === 0 ? 'd-none' : ''" (click)="clearSearch()">
-        <span
-          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
-          class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
-        ></span>
+    <span class="btn btn-flush btn-active-color-primary position-absolute top-50 end-0 translate-middle-y lh-0"
+          [class.d-none]="isSearching || keyword.length === 0"
+          (click)="clearSearch()">
+      <span [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
+            class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"></span>
     </span>
-    <!--end::Reset-->
-
-    <!--begin::Toolbar-->
-    <div class="position-absolute top-50 end-0 translate-middle-y" data-kt-search-element="toolbar" [ngClass]="searching || keyword.length > 0 ? 'd-none' : ''">
-      <!--begin::Preferences toggle-->
-      <div data-kt-search-element="preferences-show" class="btn btn-icon w-20px btn-sm btn-active-color-primary me-1" data-bs-toggle="tooltip" title="Show search preferences">
-          <span
-            [inlineSVG]="'./assets/media/icons/duotune/coding/cod001.svg'"
-            class="svg-icon svg-icon-1"
-          ></span>
-      </div>
-      <!--end::Preferences toggle-->
-
-      <!--begin::Advanced search toggle-->
-      <div data-kt-search-element="advanced-options-form-show" class="btn btn-icon w-20px btn-sm btn-active-color-primary" data-bs-toggle="tooltip" title="Show more search options">
-          <span
-            [inlineSVG]="'./assets/media/icons/duotune/arrows/arr072.svg'"
-            class="svg-icon svg-icon-2"
-          ></span>
-      </div>
-      <!--end::Advanced search toggle-->
-    </div>
-    <!--end::Toolbar-->
   </form>
-  <!--end::Form-->
 
-  <!--begin::Separator-->
-  <div class="separator border-gray-200 mb-6"></div>
-  <!--end::Separator-->
+  <div class="separator border-gray-200 mb-4"></div>
 
-
-  <!--begin::Recently viewed-->
-  <div data-kt-search-element="results" [ngClass]="searching || keyword.length === 0 ? 'd-none' : ''">
-    <!--begin::Items-->
-    <div class="scroll-y mh-200px mh-lg-325px">
-      <!--begin::Category title-->
-      <h3 class="fs-5 text-muted m-0 pb-5" data-kt-search-element="category-title">
-        Users
-      </h3>
-      <!--end::Category title-->
-
-      <!--begin::Item-->
-      <a href="#" *ngFor="let item of resultModels" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-        <!--begin::Symbol-->
-        <div class="symbol symbol-40px me-4">
-          <img src="{{ item.image }}" alt=""/>
-        </div>
-        <!--end::Symbol-->
-
-        <!--begin::Title-->
-        <div class="d-flex flex-column justify-content-start fw-bold">
-          <span class="fs-6 fw-bold">{{ item.title }}</span>
-          <span class="fs-7 fw-bold text-muted">{{ item.description }}</span>
-        </div>
-        <!--end::Title-->
-      </a>
-      <!--end::Item-->
-    </div>
-    <!--end::Items-->
+  <!-- Min-chars hint -->
+  <div *ngIf="keyword.length > 0 && keyword.length < 3 && !isSearching"
+       class="text-center text-muted fs-7 py-4">
+    <i class="bi bi-search me-1"></i>Type at least 3 characters to search
   </div>
-  <!--end::Recently viewed-->
 
-  <!--begin::Recently viewed-->
-  <div data-kt-search-element="results" [ngClass]="keyword.length > 0 ? 'd-none' : ''">
-    <!--begin::Items-->
-    <div class="scroll-y mh-200px mh-lg-325px">
-      <!--begin::Category title-->
-      <h3 class="fs-5 text-muted m-0 pb-5" data-kt-search-element="category-title">
-        Recently Searched
-      </h3>
-      <!--end::Category title-->
+  <!-- Initial state: recent searches + quick actions -->
+  <div *ngIf="showInitial" class="scroll-y mh-300px">
 
-      <!--begin::Item-->
-      <a href="#" *ngFor="let item of recentlySearchedModels" class="d-flex text-dark text-hover-primary align-items-center mb-5">
-        <!--begin::Symbol-->
-        <div class="symbol symbol-40px me-4">
-          <img *ngIf="item.image" src="{{ item.image }}" alt=""/>
-
-          <span class="symbol-label bg-light">
-            <span
-              *ngIf="item.icon"
-              [inlineSVG]="item.icon"
-              class="svg-icon svg-icon-2 svg-icon-primary"
-            ></span>
-          </span>
+    <!-- Recent Searches -->
+    <ng-container *ngIf="recentSearches.length > 0">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h6 class="text-muted fs-8 fw-semibold text-uppercase mb-0 ls-1">Recent Searches</h6>
+      </div>
+      <div *ngFor="let term of recentSearches"
+           class="d-flex align-items-center justify-content-between mb-2 px-3 py-2 rounded bg-hover-light cursor-pointer"
+           (click)="useRecent(term)">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-clock-history text-muted me-3 fs-6"></i>
+          <span class="fs-7 text-gray-700">{{ term }}</span>
         </div>
-        <!--end::Symbol-->
+        <button class="btn btn-flush btn-sm text-muted p-0" (click)="removeRecent(term, $event)">
+          <i class="bi bi-x fs-6"></i>
+        </button>
+      </div>
+      <div class="separator border-gray-200 my-3"></div>
+    </ng-container>
 
-        <!--begin::Title-->
-        <div class="d-flex flex-column justify-content-start fw-bold">
-          <span class="fs-6 fw-bold">{{ item.title }}</span>
-          <span class="fs-7 fw-bold text-muted">{{ item.description }}</span>
+    <!-- Quick Actions -->
+    <h6 class="text-muted fs-8 fw-semibold text-uppercase mb-3 ls-1">Quick Actions</h6>
+
+    <ng-container *ngIf="!isAdmin">
+      <a class="d-flex align-items-center mb-3 px-3 py-2 rounded bg-hover-light cursor-pointer"
+         (click)="orderMangoes()">
+        <span class="d-flex align-items-center justify-content-center w-30px h-30px rounded bg-light-primary me-3">
+          <i class="bi bi-cart-plus text-primary fs-6"></i>
+        </span>
+        <div>
+          <span class="fs-7 fw-bold text-gray-800 d-block">Order Mangoes</span>
+          <span class="fs-8 text-muted">Place a new mango order</span>
         </div>
-        <!--end::Title-->
       </a>
-      <!--end::Item-->
-    </div>
-    <!--end::Items-->
+      <a class="d-flex align-items-center mb-3 px-3 py-2 rounded bg-hover-light cursor-pointer"
+         (click)="go('/orders/order-list')">
+        <span class="d-flex align-items-center justify-content-center w-30px h-30px rounded bg-light-success me-3">
+          <i class="bi bi-bag text-success fs-6"></i>
+        </span>
+        <div>
+          <span class="fs-7 fw-bold text-gray-800 d-block">My Orders</span>
+          <span class="fs-8 text-muted">View your order history</span>
+        </div>
+      </a>
+    </ng-container>
+
+    <ng-container *ngIf="isAdmin">
+      <a class="d-flex align-items-center mb-3 px-3 py-2 rounded bg-hover-light cursor-pointer"
+         (click)="go('/admin-orders/list')">
+        <span class="d-flex align-items-center justify-content-center w-30px h-30px rounded bg-light-primary me-3">
+          <i class="bi bi-bag-check text-primary fs-6"></i>
+        </span>
+        <div>
+          <span class="fs-7 fw-bold text-gray-800 d-block">Manage Orders</span>
+          <span class="fs-8 text-muted">View and update all orders</span>
+        </div>
+      </a>
+      <a class="d-flex align-items-center mb-3 px-3 py-2 rounded bg-hover-light cursor-pointer"
+         (click)="go('/customers/customer-list')">
+        <span class="d-flex align-items-center justify-content-center w-30px h-30px rounded bg-light-info me-3">
+          <i class="bi bi-people text-info fs-6"></i>
+        </span>
+        <div>
+          <span class="fs-7 fw-bold text-gray-800 d-block">Customers</span>
+          <span class="fs-8 text-muted">Browse customer records</span>
+        </div>
+      </a>
+    </ng-container>
   </div>
-  <!--end::Recently viewed-->
+
+  <!-- Results state -->
+  <div *ngIf="showResults" class="scroll-y mh-325px">
+
+    <!-- Empty -->
+    <div *ngIf="totalResults === 0"
+         class="d-flex flex-column align-items-center justify-content-center py-8 text-muted">
+      <i class="bi bi-search fs-2x mb-3"></i>
+      <span class="fs-7">No results for "<strong>{{ keyword }}</strong>"</span>
+    </div>
+
+    <!-- Orders -->
+    <ng-container *ngIf="results.orders.length > 0">
+      <h6 class="text-muted fs-8 fw-semibold text-uppercase mb-3 ls-1">
+        <i class="bi bi-bag me-1"></i>Orders
+      </h6>
+      <a *ngFor="let o of results.orders"
+         class="d-flex align-items-start mb-3 px-3 py-2 rounded bg-hover-light cursor-pointer"
+         (click)="openOrder(o)">
+        <span class="d-flex align-items-center justify-content-center w-35px h-35px rounded bg-light-primary flex-shrink-0 me-3 mt-1">
+          <i class="bi bi-receipt text-primary fs-7"></i>
+        </span>
+        <div class="flex-grow-1 overflow-hidden">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="fs-7 fw-bold text-gray-800">{{ o.orderNumber }}</span>
+            <span class="badge fs-9 ms-2 flex-shrink-0" [ngClass]="orderStatusClass(o.orderStatus)">
+              {{ orderStatusLabel(o.orderStatus) }}
+            </span>
+          </div>
+          <span class="fs-8 text-muted d-block text-truncate">{{ o.customerName }} · {{ o.customerPhone }}</span>
+          <span *ngIf="o.mangoTypeName" class="fs-9 text-muted">{{ o.mangoTypeName }}</span>
+        </div>
+      </a>
+      <div class="separator border-gray-200 my-3"></div>
+    </ng-container>
+
+    <!-- Customers (admin only) -->
+    <ng-container *ngIf="results.customers.length > 0">
+      <h6 class="text-muted fs-8 fw-semibold text-uppercase mb-3 ls-1">
+        <i class="bi bi-people me-1"></i>Customers
+      </h6>
+      <a *ngFor="let c of results.customers"
+         class="d-flex align-items-center mb-3 px-3 py-2 rounded bg-hover-light cursor-pointer"
+         (click)="openCustomer(c)">
+        <span class="d-flex align-items-center justify-content-center w-35px h-35px rounded bg-light-info flex-shrink-0 me-3">
+          <i class="bi bi-person text-info fs-7"></i>
+        </span>
+        <div class="flex-grow-1 overflow-hidden">
+          <span class="fs-7 fw-bold text-gray-800 d-block">{{ c.name }}</span>
+          <span class="fs-8 text-muted text-truncate d-block">{{ c.phone }}{{ c.email ? ' · ' + c.email : '' }}</span>
+        </div>
+      </a>
+      <div class="separator border-gray-200 my-3"></div>
+    </ng-container>
+
+    <!-- Courier Stations (admin only) -->
+    <ng-container *ngIf="results.courierStations.length > 0">
+      <h6 class="text-muted fs-8 fw-semibold text-uppercase mb-3 ls-1">
+        <i class="bi bi-truck me-1"></i>Courier Stations
+      </h6>
+      <a *ngFor="let s of results.courierStations"
+         class="d-flex align-items-center mb-3 px-3 py-2 rounded bg-hover-light cursor-pointer"
+         (click)="openStation(s)">
+        <span class="d-flex align-items-center justify-content-center w-35px h-35px rounded bg-light-warning flex-shrink-0 me-3">
+          <i class="bi bi-geo-alt text-warning fs-7"></i>
+        </span>
+        <div class="flex-grow-1 overflow-hidden">
+          <span class="fs-7 fw-bold text-gray-800 d-block">{{ s.name }}</span>
+          <span class="fs-8 text-muted text-truncate d-block">{{ s.area }}, {{ s.city }} · {{ s.providerName }}</span>
+        </div>
+      </a>
+      <div class="separator border-gray-200 my-3"></div>
+    </ng-container>
+
+    <!-- Mango Types -->
+    <ng-container *ngIf="results.mangoes.length > 0">
+      <h6 class="text-muted fs-8 fw-semibold text-uppercase mb-3 ls-1">
+        <i class="bi bi-grid me-1"></i>Mango Types
+      </h6>
+      <a *ngFor="let m of results.mangoes"
+         class="d-flex align-items-center mb-3 px-3 py-2 rounded bg-hover-light cursor-pointer"
+         (click)="openMango(m)">
+        <span class="d-flex align-items-center justify-content-center w-35px h-35px rounded bg-light-success flex-shrink-0 me-3">
+          <i class="bi bi-grid-1x2 text-success fs-7"></i>
+        </span>
+        <div>
+          <span class="fs-7 fw-bold text-gray-800 d-block">{{ m.name }}</span>
+          <span *ngIf="m.region" class="fs-8 text-muted">{{ m.region }}</span>
+        </div>
+      </a>
+    </ng-container>
+  </div>
 
 </div>
-<!--end::Wrapper-->

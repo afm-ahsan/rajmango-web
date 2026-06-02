@@ -1,104 +1,194 @@
-import {ChangeDetectorRef, Component, HostBinding, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { EMPTY, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
+import { SubSink } from 'subsink';
+import { AuthService } from 'src/app/features/auth';
+import { UserPermissionService } from 'src/app/features/auth/services/user-permission.service';
+import { UserPermissionKey } from 'src/app/core/constants/user-permission-keys.enum';
+import { GlobalSearchService } from 'src/app/features/search/search.service';
+import {
+  GlobalSearchResult,
+  OrderSearchItem,
+  CustomerSearchItem,
+  StationSearchItem,
+  MangoSearchItem,
+} from 'src/app/features/search/models/search-result.model';
+import { MenuComponent } from 'src/app/_metronic/kt/components';
+
+const EMPTY_RESULT: GlobalSearchResult = { orders: [], customers: [], courierStations: [], mangoes: [] };
 
 @Component({
   selector: 'app-search-result-inner',
   templateUrl: './search-result-inner.component.html',
 })
-export class SearchResultInnerComponent implements OnInit {
+export class SearchResultInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class') class = 'menu menu-sub menu-sub-dropdown p-7 w-325px w-md-375px';
   @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
   @HostBinding('attr.data-kt-search-element') dataKtSearch = 'content';
 
-  resultModels: Array<ResultModel> = resultModels;
-  recentlySearchedModels: Array<ResultModel> = recentlySearchedModels;
+  keyword = '';
+  isSearching = false;
+  hasSearched = false;
+  isAdmin = false;
 
-  keyword: string = '';
-  searching: boolean = false;
+  results: GlobalSearchResult = { ...EMPTY_RESULT };
+  recentSearches: string[] = [];
 
-  constructor(private cdr: ChangeDetectorRef) {
-  }
+  private input$ = new Subject<string>();
+  private subs = new SubSink();
+
+  constructor(
+    private searchService: GlobalSearchService,
+    private auth: AuthService,
+    private permissionService: UserPermissionService,
+    private router: Router,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
+    this.subs.sink = this.auth.currentUser$
+      .pipe(filter(u => !!u))
+      .subscribe(() => {
+        this.isAdmin = this.permissionService.hasAccess(UserPermissionKey.HasAdminAccess);
+        this.recentSearches = this.searchService.getRecentSearches();
+        this.cdRef.detectChanges();
+      });
+
+    this.subs.sink = this.input$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(term => {
+        if (term.length < 3) {
+          // Reset without emitting — EMPTY prevents subscribe from running
+          this.isSearching = false;
+          this.hasSearched = false;
+          this.results = { ...EMPTY_RESULT };
+          this.cdRef.detectChanges();
+          return EMPTY;
+        }
+        this.isSearching = true;
+        this.cdRef.detectChanges();
+        return this.searchService.search(term);
+      })
+    ).subscribe({
+      next: (res: any) => {
+        this.isSearching = false;
+        this.hasSearched = true;
+        this.results = (res?.data as GlobalSearchResult) ?? { ...EMPTY_RESULT };
+        if (res?.succeeded && this.keyword.trim().length >= 3) {
+          this.searchService.saveRecentSearch(this.keyword.trim());
+          this.recentSearches = this.searchService.getRecentSearches();
+        }
+        this.cdRef.detectChanges();
+      },
+      error: () => {
+        this.isSearching = false;
+        this.hasSearched = true;
+        this.results = { ...EMPTY_RESULT };
+        this.cdRef.detectChanges();
+      },
+    });
   }
 
-  search(keyword: string) {
-    this.keyword = keyword;
-    this.searching = true;
-
-    setTimeout(() => {
-      this.searching = false;
-      this.cdr.detectChanges();
-    }, 1000);
+  onInput(term: string): void {
+    this.keyword = term;
+    this.input$.next(term);
   }
 
-  clearSearch() {
+  clearSearch(): void {
     this.keyword = '';
+    this.hasSearched = false;
+    this.isSearching = false;
+    this.results = { ...EMPTY_RESULT };
+    this.input$.next('');
+    this.cdRef.detectChanges();
+  }
+
+  useRecent(term: string): void {
+    this.keyword = term;
+    this.input$.next(term);
+  }
+
+  removeRecent(term: string, event: Event): void {
+    event.stopPropagation();
+    this.searchService.removeRecentSearch(term);
+    this.recentSearches = this.searchService.getRecentSearches();
+    this.cdRef.detectChanges();
+  }
+
+  // ── Navigation ────────────────────────────────────────────────────────────
+
+  openOrder(order: OrderSearchItem): void {
+    MenuComponent.hideDropdowns(undefined);
+    if (this.isAdmin) {
+      this.router.navigate(['/admin-orders/list'], { queryParams: { orderNumber: order.orderNumber } });
+    } else {
+      this.router.navigate(['/orders/order-list'], { queryParams: { filter: order.orderNumber } });
+    }
+  }
+
+  openCustomer(_customer: CustomerSearchItem): void {
+    MenuComponent.hideDropdowns(undefined);
+    this.router.navigate(['/customers/customer-list']);
+  }
+
+  openStation(_station: StationSearchItem): void {
+    MenuComponent.hideDropdowns(undefined);
+    this.router.navigate(['/couriers/courier-station-list']);
+  }
+
+  openMango(_mango: MangoSearchItem): void {
+    MenuComponent.hideDropdowns(undefined);
+    this.router.navigate(['/mango-catalog/catalog']);
+  }
+
+  orderMangoes(): void {
+    MenuComponent.hideDropdowns(undefined);
+    this.router.navigate(['/orders/order-list'], { queryParams: { new: '1' } });
+  }
+
+  go(path: string): void {
+    MenuComponent.hideDropdowns(undefined);
+    this.router.navigate([path]);
+  }
+
+  // ── Computed ──────────────────────────────────────────────────────────────
+
+  get totalResults(): number {
+    return this.results.orders.length
+      + this.results.customers.length
+      + this.results.courierStations.length
+      + this.results.mangoes.length;
+  }
+
+  get showInitial(): boolean {
+    return this.keyword.length < 3 && !this.isSearching;
+  }
+
+  get showResults(): boolean {
+    return this.keyword.length >= 3 && !this.isSearching && this.hasSearched;
+  }
+
+  orderStatusLabel(status: number): string {
+    const labels: Record<number, string> = {
+      0: 'Pending', 1: 'Confirmed', 2: 'Processing',
+      3: 'Shipped',  4: 'Delivered', 5: 'Cancelled',
+      6: 'Returned', 7: 'Failed',
+    };
+    return labels[status] ?? 'Unknown';
+  }
+
+  orderStatusClass(status: number): string {
+    const classes: Record<number, string> = {
+      0: 'badge-light-warning',   1: 'badge-light-info',    2: 'badge-light-primary',
+      3: 'badge-light-info',      4: 'badge-light-success', 5: 'badge-light-danger',
+      6: 'badge-light-secondary', 7: 'badge-light-danger',
+    };
+    return classes[status] ?? 'badge-light';
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 }
-
-interface ResultModel {
-  icon?: string;
-  image?: string;
-  title: string;
-  description: string;
-}
-
-const resultModels: Array<ResultModel> = [
-  {
-    'image': './assets/media/avatars/300-6.jpg',
-    'title': 'Karina Clark',
-    'description': 'Marketing Manager'
-  },
-  {
-    'image': './assets/media/avatars/300-2.jpg',
-    'title': 'Olivia Bold',
-    'description': 'Software Engineer'
-  },
-  {
-    'image': './assets/media/avatars/300-9.jpg',
-    'title': 'Ana Clark',
-    'description': 'UI/UX Designer'
-  },
-  {
-    'image': './assets/media/avatars/300-14.jpg',
-    'title': 'Nick Pitola',
-    'description': 'Art Director'
-  },
-  {
-    'image': './assets/media/avatars/300-11.jpg',
-    'title': 'Edward Kulnic',
-    'description': 'System Administrator'
-  }
-];
-
-const recentlySearchedModels: Array<ResultModel> = [
-  {
-    'icon': './assets/media/icons/duotune/electronics/elc004.svg',
-    'title': 'BoomApp by Keenthemes',
-    'description': '#45789'
-  }, {
-    'icon': './assets/media/icons/duotune/graphs/gra001.svg',
-    'title': '"Kept API Project Meeting',
-    'description': '#84050'
-  }, {
-    'icon': './assets/media/icons/duotune/graphs/gra006.svg',
-    'title': '"KPI Monitoring App Launch',
-    'description': '#84250'
-  }, {
-    'icon': './assets/media/icons/duotune/graphs/gra002.svg',
-    'title': 'Project Reference FAQ',
-    'description': '#67945'
-  }, {
-    'icon': './assets/media/icons/duotune/communication/com010.svg',
-    'title': '"FitPro App Development',
-    'description': '#84250'
-  }, {
-    'icon': './assets/media/icons/duotune/finance/fin001.svg',
-    'title': 'Shopix Mobile App',
-    'description': '#45690'
-  }, {
-    'icon': './assets/media/icons/duotune/graphs/gra002.svg',
-    'title': '"Landing UI Design" Launch',
-    'description': '#24005'
-  }
-];
