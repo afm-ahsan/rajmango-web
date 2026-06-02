@@ -68,9 +68,13 @@ export class OrderListComponent implements OnInit, OnDestroy {
     this.load();
     this.route.queryParams.subscribe((params) => {
       const mangoTypeId = +params['mangoTypeId'];
+      const openNew = params['new'] === '1';
       if (mangoTypeId) {
         this.router.navigate([], { queryParams: {}, replaceUrl: true });
         this.openCreateModal(0, mangoTypeId);
+      } else if (openNew) {
+        this.router.navigate([], { queryParams: {}, replaceUrl: true });
+        this.openCreateModal(0);
       }
     });
     this.subscribeToRealtime();

@@ -1,105 +1,130 @@
-<div
-  class="d-flex flex-column flex-center bgi-no-repeat rounded-top px-9 py-10"
-  [style.background-image]="'url(./assets/media/misc/pattern-1.jpg)'"
->
-  <h3 class="text-white fw-bold mb-3">Quick Links</h3>
-  <span class="badge bg-primary py-2 px-3">25 pending tasks</span>
+<!-- Header -->
+<div class="d-flex flex-column bgi-no-repeat rounded-top px-8 py-6"
+     [style.background-image]="'url(./assets/media/misc/pattern-1.jpg)'">
+  <div class="d-flex align-items-center justify-content-between">
+    <h3 class="text-white fw-bold mb-0 fs-5">Quick Links</h3>
+    <span class="badge fs-9"
+          [class.badge-light-warning]="isAdmin"
+          [class.badge-light-success]="!isAdmin">
+      {{ isAdmin ? 'Admin' : 'Customer' }}
+    </span>
+  </div>
+  <div class="d-flex gap-2 mt-3" *ngIf="isAdmin && pendingOrderCount > 0">
+    <span class="badge badge-light-danger fs-9">
+      <i class="bi bi-clock me-1"></i>{{ pendingOrderCount }} pending orders
+    </span>
+  </div>
 </div>
 
-<div class="row g-0">
+<!-- Admin Tiles -->
+<div class="row g-0" *ngIf="isAdmin">
   <div class="col-6">
-    <a
-      class="
-        d-flex
-        flex-column flex-center
-        h-100
-        p-6
-        bg-hover-light
-        border-end border-bottom
-        cursor-pointer
-      "
-    >
-      <span
-        [inlineSVG]="'./assets/media/icons/duotune/finance/fin009.svg'"
-        class="svg-icon svg-icon-3x svg-icon-primary mb-2"
-      ></span>
-      <span class="fs-5 fw-bold text-gray-800 mb-0">Accounting</span>
-      <span class="fs-7 text-gray-400">eCommerce</span>
+    <a class="d-flex flex-column flex-center position-relative h-100 p-6 bg-hover-light border-end border-bottom cursor-pointer quick-link-tile"
+       (click)="go('/admin-orders/list')">
+      <i class="bi bi-bag-check fs-2x text-primary mb-3"></i>
+      <span class="fs-7 fw-bold text-gray-800 text-center lh-sm">Manage Orders</span>
+      <span *ngIf="pendingOrderCount > 0"
+            class="badge badge-light-warning mt-2 fs-9">{{ pendingOrderCount }} pending</span>
     </a>
   </div>
-
   <div class="col-6">
-    <a
-      class="
-        d-flex
-        flex-column flex-center
-        h-100
-        p-6
-        bg-hover-light
-        border-bottom
-        cursor-pointer
-      "
-    >
-      <span
-        [inlineSVG]="'./assets/media/icons/duotune/communication/com010.svg'"
-        class="svg-icon svg-icon-3x svg-icon-primary mb-2"
-      ></span>
-      <span class="fs-5 fw-bold text-gray-800 mb-0">Administration</span>
-      <span class="fs-7 text-gray-400">Console</span>
+    <a class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-bottom cursor-pointer quick-link-tile"
+       (click)="go('/mango-availability/availability-list')">
+      <i class="bi bi-grid-1x2 fs-2x text-success mb-3"></i>
+      <span class="fs-7 fw-bold text-gray-800 text-center lh-sm">Mango Availability</span>
     </a>
   </div>
-
   <div class="col-6">
-    <a
-      class="
-        d-flex
-        flex-column flex-center
-        h-100
-        p-6
-        bg-hover-light
-        border-end
-        cursor-pointer
-      "
-    >
-      <span
-        [inlineSVG]="'./assets/media/icons/duotune/abstract/abs042.svg'"
-        class="svg-icon svg-icon-3x svg-icon-primary mb-2"
-      ></span>
-      <span class="fs-5 fw-bold text-gray-800 mb-0">Projects</span>
-      <span class="fs-7 text-gray-400">Pending Tasks</span>
+    <a class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end cursor-pointer quick-link-tile"
+       (click)="go('/couriers/courier-rate-config-list')">
+      <i class="bi bi-currency-dollar fs-2x text-warning mb-3"></i>
+      <span class="fs-7 fw-bold text-gray-800 text-center lh-sm">Courier Rates</span>
     </a>
   </div>
-
   <div class="col-6">
-    <a
-      class="
-        d-flex
-        flex-column flex-center
-        h-100
-        p-6
-        bg-hover-light
-        cursor-pointer
-      "
-    >
-      <span
-        [inlineSVG]="'./assets/media/icons/duotune/finance/fin006.svg'"
-        class="svg-icon svg-icon-3x svg-icon-primary mb-2"
-      ></span>
-      <span class="fs-5 fw-bold text-gray-800 mb-0">Customers</span>
-      <span class="fs-7 text-gray-400">Latest cases</span>
+    <a class="d-flex flex-column flex-center h-100 p-6 bg-hover-light cursor-pointer quick-link-tile"
+       (click)="go('/reports/overview')">
+      <i class="bi bi-bar-chart-line fs-2x text-info mb-3"></i>
+      <span class="fs-7 fw-bold text-gray-800 text-center lh-sm">Reports</span>
     </a>
   </div>
 </div>
 
-<div class="py-2 text-center border-top">
-  <a
-    routerLink="/customer-profile/profile"
-    class="btn btn-color-gray-600 btn-active-color-primary"
-  >
-    View All
-    <span
-      [inlineSVG]="'./assets/media/icons/duotune/arrows/arr064.svg'"
-      class="svg-icon svg-icon-5"
-    ></span>
-  </a>
+<!-- Customer Tiles -->
+<div class="row g-0" *ngIf="!isAdmin">
+  <div class="col-6">
+    <a class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end border-bottom cursor-pointer quick-link-tile"
+       (click)="orderMangoes()">
+      <i class="bi bi-cart-plus fs-2x text-primary mb-3"></i>
+      <span class="fs-7 fw-bold text-gray-800 text-center lh-sm">Order Mangoes</span>
+    </a>
+  </div>
+  <div class="col-6">
+    <a class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-bottom cursor-pointer quick-link-tile"
+       (click)="go('/orders/order-list')">
+      <i class="bi bi-bag fs-2x text-success mb-3"></i>
+      <span class="fs-7 fw-bold text-gray-800 text-center lh-sm">My Orders</span>
+    </a>
+  </div>
+  <div class="col-6">
+    <a class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end cursor-pointer quick-link-tile"
+       (click)="openTrackOrder()">
+      <i class="bi bi-geo-alt fs-2x text-warning mb-3"></i>
+      <span class="fs-7 fw-bold text-gray-800 text-center lh-sm">Track Order</span>
+    </a>
+  </div>
+  <div class="col-6">
+    <a class="d-flex flex-column flex-center h-100 p-6 bg-hover-light cursor-pointer quick-link-tile"
+       (click)="go('/customer-profile/profile')">
+      <i class="bi bi-person-circle fs-2x text-info mb-3"></i>
+      <span class="fs-7 fw-bold text-gray-800 text-center lh-sm">My Profile</span>
+    </a>
+  </div>
+</div>
+
+<!-- View All — Customer -->
+<div class="px-7 pt-4 pb-3 border-top" *ngIf="!isAdmin">
+  <p class="text-muted fs-9 fw-semibold text-uppercase mb-3 ls-1">More</p>
+  <div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/notifications')">
+      Notifications
+      <span *ngIf="unreadCount > 0" class="badge badge-circle badge-primary ms-1 fs-9">{{ unreadCount }}</span>
+    </a>
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/policies/view')">
+      Policies
+    </a>
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/complaints/mine')">
+      Complaints
+    </a>
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="openContactUs()">
+      Contact Us
+    </a>
+  </div>
+</div>
+
+<!-- View All — Admin -->
+<div class="px-7 pt-4 pb-3 border-top" *ngIf="isAdmin">
+  <p class="text-muted fs-9 fw-semibold text-uppercase mb-3 ls-1">More</p>
+  <div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/users/user-list')">Users</a>
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/roles/role-list')">Roles</a>
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/payments/payment-list')">Payments</a>
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/expenses/expense-list')">Expenses</a>
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/customers/customer-list')">Customers</a>
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/policies/manage')">Policies</a>
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/complaints/all')">Complaints</a>
+    <a class="btn btn-sm btn-light btn-active-light-primary py-1 px-3 fs-8"
+       (click)="go('/feedback/feedback-list')">Feedback</a>
+  </div>
 </div>
