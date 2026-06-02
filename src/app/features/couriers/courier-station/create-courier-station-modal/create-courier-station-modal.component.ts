@@ -90,7 +90,7 @@ export class CreateCourierStationModalComponent implements OnInit, OnDestroy {
 
   initializeForm(): void {
     this.formGroup = this.fb.group({
-      courierProviderId: [this.courierStationDto.courierProviderId, Validators.required],
+      courierProviderId: [this.courierStationDto.courierProviderId || null, [Validators.required]],
       name: [this.courierStationDto.name, [Validators.required, Validators.maxLength(100)]],
       addressLine: [this.courierStationDto.addressLine, [Validators.required, Validators.maxLength(500)]],
       city: [this.courierStationDto.city, [Validators.required, Validators.maxLength(50)]],
@@ -118,13 +118,15 @@ export class CreateCourierStationModalComponent implements OnInit, OnDestroy {
     this.subs.sink = request$.pipe(
       finalize(() => this.completeLoading())
     ).subscribe({
-      next: (response: CourierStationDto) => {
-        this.courierStationDto = response;
-        Swal.fire('SUCCESS', `Data ${this.id ? 'updated' : 'saved'} successfully.`, 'success');
+      next: (res: any) => {
+        if (res?.succeeded === false) {
+          Swal.fire('Failed', res?.messages?.join('\n') || `Courier Station ${this.id ? 'update' : 'creation'} failed.`, 'error');
+          return;
+        }
+        Swal.fire('Success', `Courier Station ${this.id ? 'updated' : 'created'} successfully.`, 'success');
         this.modal.close('success');
       },
-      error: (error) => {
-        this.modal.dismiss(error);
+      error: () => {
         Swal.fire('Failed', `Courier Station ${this.id ? 'update' : 'creation'} failed.`, 'error');
       }
     });

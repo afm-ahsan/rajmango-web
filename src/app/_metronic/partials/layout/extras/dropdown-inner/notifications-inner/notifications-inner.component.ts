@@ -1,9 +1,12 @@
 import { ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { filter } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { SubSink } from 'subsink';
+import { AuthService } from 'src/app/features/auth';
 import { NotificationDto } from 'src/app/features/notifications/models/notification.model';
 import { NotificationService } from 'src/app/features/notifications/notification.service';
+import { MenuComponent } from 'src/app/_metronic/kt/components';
 
 @Component({
   selector: 'app-notifications-inner',
@@ -23,11 +26,16 @@ export class NotificationsInnerComponent implements OnInit, OnDestroy {
   constructor(
     private notificationService: NotificationService,
     private cdRef: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.load();
+    // Load only after auth is confirmed — avoids a 401 race on app boot
+    // where the layout initialises before the token resolves.
+    this.subs.sink = this.auth.currentUser$
+      .pipe(filter(u => !!u))
+      .subscribe(() => this.load());
   }
 
   load(): void {
@@ -41,8 +49,12 @@ export class NotificationsInnerComponent implements OnInit, OnDestroy {
         next: (res: any) => {
           this.notifications = res?.data ?? [];
           this.notificationService.refreshUnreadCount();
+          this.cdRef.detectChanges();
         },
-        error: () => { this.notifications = []; },
+        error: () => {
+          this.notifications = [];
+          this.cdRef.detectChanges();
+        },
       });
   }
 
@@ -72,6 +84,7 @@ export class NotificationsInnerComponent implements OnInit, OnDestroy {
   }
 
   viewAll(): void {
+    MenuComponent.hideDropdowns(undefined);
     this.router.navigate(['/notifications']);
   }
 

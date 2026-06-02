@@ -13,10 +13,10 @@
           <label class="form-label fw-semibold required">Courier Provider</label>
           <select class="form-select form-select-solid" formControlName="courierProviderId"
             [class.is-invalid]="isControlInvalid('courierProviderId')">
-            <option value="0" disabled>Select a courier provider</option>
-            <option *ngFor="let provider of courierProviderOptions" [value]="provider.id">{{ provider.name }}</option>
+            <option [ngValue]="null" disabled>Select a courier provider</option>
+            <option *ngFor="let provider of courierProviderOptions" [ngValue]="provider.id">{{ provider.name }}</option>
           </select>
-          <div *ngIf="controlHasError('required', 'courierProviderId')" class="text-danger fs-7 mt-1">Provider is required.</div>
+          <div *ngIf="isControlInvalid('courierProviderId')" class="text-danger fs-7 mt-1">Provider is required.</div>
         </div>
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold required">Station Name</label>
@@ -46,11 +46,13 @@
           <label class="form-label fw-semibold required">City</label>
           <input type="text" class="form-control form-control-solid" formControlName="city"
             placeholder="City" [class.is-invalid]="isControlInvalid('city')" />
+          <div *ngIf="isControlInvalid('city')" class="text-danger fs-7 mt-1">City is required.</div>
         </div>
         <div class="col-12 col-md-6">
-          <label class="form-label fw-semibold">Area</label>
+          <label class="form-label fw-semibold required">Area</label>
           <input type="text" class="form-control form-control-solid" formControlName="area"
-            placeholder="Area" />
+            placeholder="Area" [class.is-invalid]="isControlInvalid('area')" />
+          <div *ngIf="isControlInvalid('area')" class="text-danger fs-7 mt-1">Area is required.</div>
         </div>
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold">Latitude</label>
