@@ -107,7 +107,9 @@ export class CreateCourierStationModalComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (!this.formGroup || this.formGroup.invalid) return;
+    if (!this.formGroup) return;
+    this.formGroup.markAllAsTouched();
+    if (this.formGroup.invalid) return;
 
     this.startLoading();
     this.prepareDto();
@@ -135,22 +137,24 @@ export class CreateCourierStationModalComponent implements OnInit, OnDestroy {
 
   prepareDto(): void {
     const currentUserId = this.authService.getLoggedUserId();
-    const formData = this.formGroup.value;
+    const f = this.formGroup.value;
+    // Send null (not "") for optional string fields — [EmailAddress] on backend rejects ""
+    const nullIfEmpty = (v: string | null | undefined) => (v?.trim() ? v.trim() : null);
 
     this.createDto = {
       id: this.courierStationDto.id || 0,
-      courierProviderId: formData.courierProviderId,
-      name: formData.name,
-      addressLine: formData.addressLine,
-      city: formData.city,
-      area: formData.area,
-      supportPhone1: formData.supportPhone1,
-      supportPhone2: formData.supportPhone2,
-      email: formData.email,
-      latitude: formData.latitude,
-      longitude: formData.longitude,
-      googleMapUrl: formData.googleMapUrl,
-      isActive: formData.isActive,
+      courierProviderId: f.courierProviderId,
+      name: f.name,
+      addressLine: f.addressLine,
+      city: f.city,
+      area: f.area,
+      supportPhone1: f.supportPhone1,
+      supportPhone2: nullIfEmpty(f.supportPhone2),
+      email: nullIfEmpty(f.email),
+      latitude: f.latitude || null,
+      longitude: f.longitude || null,
+      googleMapUrl: nullIfEmpty(f.googleMapUrl),
+      isActive: f.isActive,
       createdBy: this.id ? 0 : currentUserId,
       updatedBy: this.id ? currentUserId : 0
     };

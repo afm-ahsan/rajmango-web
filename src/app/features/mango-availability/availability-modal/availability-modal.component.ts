@@ -94,6 +94,8 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
     const v = this.form.value;
     this.isLoading = true;
 
+    const notesVal = v.notes?.trim() || null;
+
     if (this.isEdit) {
       const command = new UpdateMangoAvailabilityCommand({
         id: this.item!.id,
@@ -102,12 +104,17 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
         endDate: moment(v.endDate),
         pricePerKg: +v.pricePerKg,
         status: +v.status as MangoAvailabilityStatus,
-        notes: v.notes || undefined,
+        notes: notesVal ?? undefined,
         updatedBy: this.authService.getLoggedUserId(),
       });
       this.subs.sink = this.proxy.update(this.item!.id, command).subscribe({
-        next: () => {
+        next: (res: any) => {
           this.isLoading = false;
+          if (res?.succeeded === false) {
+            const msg = res?.messages?.join('\n') || 'Failed to update record.';
+            Swal.fire('Failed', msg, 'error');
+            return;
+          }
           Swal.fire('Success', 'Availability record updated.', 'success');
           this.modal.close('success');
         },
@@ -124,12 +131,17 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
         endDate: moment(v.endDate),
         pricePerKg: +v.pricePerKg,
         status: +v.status as MangoAvailabilityStatus,
-        notes: v.notes || undefined,
+        notes: notesVal ?? undefined,
         createdBy: this.authService.getLoggedUserId(),
       });
       this.subs.sink = this.proxy.create(command).subscribe({
-        next: () => {
+        next: (res: any) => {
           this.isLoading = false;
+          if (res?.succeeded === false) {
+            const msg = res?.messages?.join('\n') || 'Failed to create record.';
+            Swal.fire('Failed', msg, 'error');
+            return;
+          }
           Swal.fire('Success', 'Availability record created.', 'success');
           this.modal.close('success');
         },

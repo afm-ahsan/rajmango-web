@@ -1,5 +1,5 @@
 export interface CreateCourierStationDto {
-  id?: number; // Optional for edit mode
+  id?: number;
 
   courierProviderId: number;
 
@@ -9,17 +9,16 @@ export interface CreateCourierStationDto {
   area: string;
 
   supportPhone1: string;
-  supportPhone2?: string;
-  email?: string;
+  supportPhone2: string | null;
+  email: string | null;
 
-  latitude?: number;
-  longitude?: number;
+  latitude: number | null;
+  longitude: number | null;
 
-  googleMapUrl?: string;
+  googleMapUrl: string | null;
 
   isActive: boolean;
 
   createdBy?: number;
   updatedBy?: number;
 }
-
