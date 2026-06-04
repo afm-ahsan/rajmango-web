@@ -2,12 +2,13 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
-import { AppUserDto, UserServiceProxy } from 'src/app/services/client-proxy';
 import { FilterModel } from 'src/app/shared/models/filter.model';
+import { FilterUtils } from 'src/app/shared/utils/filter-utils';
 import { SubSink } from 'subsink';
 import _ from 'underscore';
 import { RoleDto } from '../../roles/models/role-dto.model';
 import { RoleService } from '../../roles/role.service';
+import { UserService } from '../user.service';
 import { CreateUserModalComponent } from '../create-user-modal/create-user-modal.component';
 import { DeleteUserModalComponent } from '../delete-user-modal/delete-user-modal.component';
 import { ViewUserModalComponent } from '../view-user-modal/view-user-modal.component';
@@ -20,15 +21,16 @@ import { ViewUserModalComponent } from '../view-user-modal/view-user-modal.compo
 export class UserListComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   isLoading = false;
-  users: AppUserDto[] = [];
+  users: any[] = [];
   roles: RoleDto[] = [];
   totalCount = 0;
+  searchVal = '';
   filter: FilterModel = {
     offset: 0,
     limit: 0,
     pageNumber: 1,
     pageSize: 10,
-    sortBy: 'userName',
+    sortBy: 'firstName',
     sortOrder: 'asc',
     isDesc: false,
     userId: 0
@@ -37,7 +39,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
-    private userProxy: UserServiceProxy,
+    private userService: UserService,
     private roleService: RoleService
   ) {}
 
@@ -48,79 +50,59 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   load() {
     this.isLoading = true;
-    this.subs.sink = this.userProxy.get().pipe(
+    const dto = FilterUtils.createPagedRequest(this.filter, this.searchVal);
+    this.subs.sink = this.userService.getAll(dto).pipe(
       finalize(() => {
         this.isLoading = false;
         this.cdRef.detectChanges();
         MenuComponent.reinitialization();
       })
     ).subscribe({
-      next: (res) => {
-        this.users = res.data ?? [];
-        this.totalCount = this.users.length;
+      next: (response: any) => {
+        this.users = response.data ?? [];
+        this.totalCount = response.totalCount ?? this.users.length;
       },
     });
   }
 
   loadRole() {
-    this.subs.sink = this.roleService
-      .list()
-      .subscribe({
-        next: (response: any) => {
-          this.roles = response.data ?? [];
-        },
-        error: () => {},
-      });
+    this.subs.sink = this.roleService.list().subscribe({
+      next: (response: any) => { this.roles = response.data ?? []; },
+      error: () => {},
+    });
   }
 
   getRoleName(id: number) {
-    var role = _.find(this.roles, (item) => {
-      return item.id == id;
-    });
-    if (role) {
-      return role.name;
-    }
+    const role = _.find(this.roles, (item) => item.id == id);
+    return role ? role.name : '';
   }
 
-  create() {
-    this.edit(0);
+  onSearchChange(event: Event): void {
+    this.searchVal = (event.target as HTMLInputElement).value;
+    this.filter.pageNumber = 1;
+    this.load();
   }
+
+  create() { this.edit(0); }
 
   edit(id: number): void {
-    const modalRef = this.modalService.open(CreateUserModalComponent, {
-      size: 'md',
-    });
+    const modalRef = this.modalService.open(CreateUserModalComponent, { size: 'md' });
     modalRef.componentInstance.id = id;
     modalRef.componentInstance.roles = this.roles;
-    modalRef.result.then(
-      () => {
-        this.load();
-      },
-      () => {}
-    );
+    modalRef.result.then(() => { this.load(); }, () => {});
   }
 
   delete(id: number): void {
     const modalRef = this.modalService.open(DeleteUserModalComponent);
     modalRef.componentInstance.id = id;
-    modalRef.result.then(
-      () => {
-        this.load();
-      },
-      () => {}
-    );
+    modalRef.result.then(() => { this.load(); }, () => {});
   }
 
   view(id: number, roleId: number): void {
-    const modalRef = this.modalService.open(ViewUserModalComponent, {
-      size: 'md',
-    });
+    const modalRef = this.modalService.open(ViewUserModalComponent, { size: 'md' });
     modalRef.componentInstance.id = id;
     modalRef.componentInstance.roleName = this.getRoleName(roleId);
-    modalRef.result.then(
-      () => { this.load(); },
-      () => {}
-    );
+    modalRef.result.then(() => { this.load(); }, () => {});
   }
 
   pageChanged($event: any) {
@@ -134,7 +116,5 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.load();
   }
 
-  ngOnDestroy() {
-    this.subs.unsubscribe();
-  }
+  ngOnDestroy() { this.subs.unsubscribe(); }
 }

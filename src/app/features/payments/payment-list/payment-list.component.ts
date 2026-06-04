@@ -1,10 +1,13 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
+import { MenuComponent } from 'src/app/_metronic/kt/components';
+import { FilterModel } from 'src/app/shared/models/filter.model';
+import { FilterUtils } from 'src/app/shared/utils/filter-utils';
 import { SubSink } from 'subsink';
-import { GetAllPaymentDto, PaymentServiceProxy } from 'src/app/services/client-proxy';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { SignalRService } from 'src/app/shared/services/signalr.service';
+import { PaymentService } from '../payment.service';
 import { RecordPaymentModalComponent } from '../record-payment-modal/record-payment-modal.component';
 import { ViewPaymentModalComponent } from '../view-payment-modal/view-payment-modal.component';
 
@@ -15,11 +18,22 @@ import { ViewPaymentModalComponent } from '../view-payment-modal/view-payment-mo
 export class PaymentListComponent implements OnInit, OnDestroy {
   subs = new SubSink();
   isLoading = false;
-  payments: GetAllPaymentDto[] = [];
+  payments: any[] = [];
+  totalCount = 0;
   searchVal = '';
+  filter: FilterModel = {
+    offset: 0,
+    limit: 0,
+    pageNumber: 1,
+    pageSize: 10,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    isDesc: true,
+    userId: 0
+  };
 
   constructor(
-    private paymentProxy: PaymentServiceProxy,
+    private paymentService: PaymentService,
     private modalService: NgbModal,
     private signalR: SignalRService,
     private cdRef: ChangeDetectorRef
@@ -32,25 +46,25 @@ export class PaymentListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.subs.sink = this.paymentProxy.get().pipe(
+    const dto = FilterUtils.createPagedRequest(this.filter, this.searchVal);
+    this.subs.sink = this.paymentService.getAll(dto).pipe(
       finalize(() => {
         this.isLoading = false;
         this.cdRef.detectChanges();
+        MenuComponent.reinitialization();
       })
     ).subscribe({
-      next: (res: any) => {
-        this.payments = res?.data ?? [];
+      next: (response: any) => {
+        this.payments = response.data ?? [];
+        this.totalCount = response.totalCount ?? this.payments.length;
       },
     });
   }
 
-  get filteredPayments(): GetAllPaymentDto[] {
-    const term = this.searchVal.toLowerCase().trim();
-    if (!term) return this.payments;
-    return this.payments.filter(p =>
-      p.orderId?.toString().includes(term) ||
-      p.transactionId?.toLowerCase().includes(term)
-    );
+  onSearchChange(event: Event): void {
+    this.searchVal = (event.target as HTMLInputElement).value;
+    this.filter.pageNumber = 1;
+    this.load();
   }
 
   record(orderId = 0): void {
@@ -66,6 +80,17 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ViewPaymentModalComponent, { size: 'md' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(() => {}, () => {});
+  }
+
+  pageChanged($event: any): void {
+    this.filter.pageNumber = $event;
+    this.load();
+  }
+
+  pageSizeChanged($event: any): void {
+    this.filter.pageNumber = 1;
+    this.filter.pageSize = $event;
+    this.load();
   }
 
   getPaymentStatusLabel(status: any): string {

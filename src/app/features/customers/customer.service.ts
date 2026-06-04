@@ -43,10 +43,12 @@ export class CustomerService {
 
   //'https://localhost:7213/api/customer-information/paged?pageNumber=1&pageSize=10'
   getAll(pagedAndSortedDto: PagedAndSortedDto): Observable<any> {
-    var params = new HttpParams();
-    params = params.set('pageNumber', pagedAndSortedDto.pageNumber);
-    params = params.set('pageSize', pagedAndSortedDto.pageSize);
-    //params = params.set('filter', pagedAndSortedDto.filter);
+    let params = new HttpParams()
+      .set('pageNumber', pagedAndSortedDto.pageNumber)
+      .set('pageSize', pagedAndSortedDto.pageSize)
+      .set('sortBy', pagedAndSortedDto.sortBy ?? '')
+      .set('sortOrder', pagedAndSortedDto.sortOrder ?? 'asc')
+      .set('filter', pagedAndSortedDto.filter ?? '');
     return this.httpClient
       .get(`${this.apiUrl}/customer/paged`, { params })
       .pipe(catchError(this.handleError));

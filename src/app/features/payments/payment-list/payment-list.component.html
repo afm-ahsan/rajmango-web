@@ -1,4 +1,4 @@
-﻿<!--begin::Payment List-->
+<!--begin::Payment List-->
 <div class="post d-flex flex-column-fluid" id="kt_payments">
   <div id="kt_content_container" class="container-xxl">
     <div class="card">
@@ -12,7 +12,7 @@
               type="search"
               class="form-control form-control-solid w-100 w-sm-250px ps-10"
               placeholder="Search by order or transaction"
-              [(ngModel)]="searchVal"
+              (input)="onSearchChange($event)"
             />
           </div>
         </div>
@@ -33,7 +33,7 @@
       <!--end::Loading-->
 
       <!--begin::Body-->
-      <div class="card-body py-4" *ngIf="!isLoading && filteredPayments.length > 0">
+      <div class="card-body py-4" *ngIf="!isLoading && payments.length > 0">
         <div class="table-responsive">
           <table class="table table-striped table-hover align-middle fs-6 gy-5">
             <thead>
@@ -49,8 +49,8 @@
               </tr>
             </thead>
             <tbody class="text-gray-600 fw-semibold">
-              <tr *ngFor="let p of filteredPayments; index as i">
-                <td>{{ i + 1 }}</td>
+              <tr *ngFor="let p of payments; index as i">
+                <td>{{ (filter.pageNumber - 1) * filter.pageSize + i + 1 }}</td>
                 <td>
                   <a href="javascript:void(0)" (click)="view(p.id)" class="text-gray-800 text-hover-primary">
                     #{{ p.orderId }}
@@ -82,11 +82,18 @@
             </tbody>
           </table>
         </div>
+        <app-pagination
+          [collectionSize]="totalCount"
+          [pageSize]="filter.pageSize"
+          [pageNumber]="filter.pageNumber"
+          (pageChange)="pageChanged($event)"
+          (pageSizeChange)="pageSizeChanged($event)">
+        </app-pagination>
       </div>
       <!--end::Body-->
 
       <!--begin::Empty-->
-      <div class="card-body" *ngIf="!isLoading && !filteredPayments.length">
+      <div class="card-body" *ngIf="!isLoading && !payments.length">
         <app-data-empty
           icon="bi-cash-stack"
           title="No Payments Found"

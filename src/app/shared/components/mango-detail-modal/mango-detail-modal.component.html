@@ -72,8 +72,9 @@
         </div>
       </div>
 
-      <!-- Notes -->
-      <p *ngIf="mango.availabilityNotes" class="text-muted fs-7 fst-italic border-start border-warning border-3 ps-3 mb-0">
+      <!-- Notes — only shown when different from the description above -->
+      <p *ngIf="mango.availabilityNotes && mango.availabilityNotes.trim() !== mango.description?.trim()"
+         class="text-muted fs-7 fst-italic border-start border-warning border-3 ps-3 mb-0">
         {{ mango.availabilityNotes }}
       </p>
     </div>
