@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, first, of } from 'rxjs';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
@@ -94,8 +95,7 @@ export class CreateExpenseTypeModalComponent implements OnInit, OnDestroy {
           this.modal.close();
         },
         (error) => {
-          this.modal.dismiss(error);
-          Swal.fire('Failed', 'Data update failed.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(error, 'Data update failed.'), 'error');
           return of(this.initObject());
         }
       );
@@ -111,8 +111,7 @@ export class CreateExpenseTypeModalComponent implements OnInit, OnDestroy {
           this.modal.close();
         },
         (error) => {
-          this.modal.dismiss(error);
-          Swal.fire('Failed', 'ExpenseType creation failed.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(error, 'Expense type creation failed.'), 'error');
           return of(this.initObject());
         }
       );

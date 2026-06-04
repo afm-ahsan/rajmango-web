@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import { OrderService } from '../../orders/order.service';
@@ -87,7 +88,7 @@ export class AdminOrderActionModalComponent implements OnDestroy {
         this.modal.close('success');
       },
       error: (err: any) => {
-        this.errorMessage = err?.error?.messages?.join(' ') ?? 'Action failed. Please try again.';
+        this.errorMessage = extractApiErrorMessage(err, 'Action failed. Please try again.');
         this.cdRef.detectChanges();
       }
     });

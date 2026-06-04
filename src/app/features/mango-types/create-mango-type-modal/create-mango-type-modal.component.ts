@@ -8,6 +8,7 @@ import { DropdownModel } from 'src/app/shared/models/dropdown.model';
 import { environment } from 'src/environments/environment';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { AuthService } from '../../auth';
 import { MangoTypeService } from '../mango-type.service';
 import { MangoTypeDto } from '../models/mango-type-dto.model';
@@ -112,8 +113,8 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
         next: () => {
           this.modal.close('success');
         },
-        error: () => {
-          Swal.fire('Failed', 'Data update failed.', 'error');
+        error: (err: any) => {
+          Swal.fire('Failed', extractApiErrorMessage(err, 'Data update failed.'), 'error');
         }
       });
   }
@@ -126,8 +127,8 @@ export class CreateMangoTypeModalComponent implements OnInit, OnDestroy {
         next: () => {
           this.modal.close('success');
         },
-        error: () => {
-          Swal.fire('Failed', 'Mango type creation failed.', 'error');
+        error: (err: any) => {
+          Swal.fire('Failed', extractApiErrorMessage(err, 'Mango type creation failed.'), 'error');
         }
       });
   }

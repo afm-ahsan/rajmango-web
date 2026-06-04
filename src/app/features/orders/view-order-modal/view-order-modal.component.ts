@@ -7,6 +7,7 @@ import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
 import { ReceiverType } from 'src/app/shared/enums/receiver-type.enum';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { DomainUtils } from 'src/app/shared/utils/domain-utils';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { SubSink } from 'subsink';
@@ -97,7 +98,7 @@ export class ViewOrderModalComponent implements OnInit, OnDestroy {
         this.loadOrder();
       },
       error: (err) => {
-        this.overrideSaveError = err?.error?.messages?.join(' ') ?? 'Failed to save courier charge override.';
+        this.overrideSaveError = extractApiErrorMessage(err, 'Failed to save courier charge override.');
         this.cdRef.detectChanges();
       }
     });

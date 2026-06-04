@@ -6,6 +6,7 @@ import { SubSink } from 'subsink';
 import { CreatePaymentCommand, PaymentMethod, PaymentServiceProxy } from 'src/app/services/client-proxy';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
 import { DropdownService } from 'src/app/shared/services/dropdown.service';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { dropdownRequiredValidator } from 'src/app/shared/validators/dropdown-validators';
 
 @Component({
@@ -68,9 +69,9 @@ export class RecordPaymentModalComponent implements OnInit, OnDestroy {
         Swal.fire('Success', 'Payment recorded successfully.', 'success');
         this.modal.close('success');
       },
-      error: () => {
+      error: (err: any) => {
         this.isLoading = false;
-        Swal.fire('Failed', 'Failed to record payment.', 'error');
+        Swal.fire('Failed', extractApiErrorMessage(err, 'Failed to record payment.'), 'error');
       },
     });
   }

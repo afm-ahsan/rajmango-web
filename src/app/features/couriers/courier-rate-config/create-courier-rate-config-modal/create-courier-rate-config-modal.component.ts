@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/features/auth';
 import { DropdownModel, EntityDropdownModel } from 'src/app/shared/models/dropdown.model';
 import { DropdownService } from 'src/app/shared/services/dropdown.service';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { dropdownRequiredValidator } from 'src/app/shared/validators/dropdown-validators';
 import { CourierRateConfigService } from '../courier-rate-config.service';
 import { CourierRateConfigDto } from '../models/courier-rate-config-dto';
@@ -113,7 +114,7 @@ export class CreateCourierRateConfigModalComponent implements OnInit, OnDestroy 
         this.modal.close('success');
       },
       error: (error) => {
-        const msg = error?.error?.messages?.join('\n') ?? `Rate config ${this.id ? 'update' : 'creation'} failed.`;
+        const msg = extractApiErrorMessage(error, `Rate config ${this.id ? 'update' : 'creation'} failed.`);
         Swal.fire('Failed', msg, 'error');
       }
     });

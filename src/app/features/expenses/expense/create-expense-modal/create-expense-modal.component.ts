@@ -4,6 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, first, of } from 'rxjs';
 import { AuthService } from 'src/app/features/auth/services/auth.service';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import _ from 'underscore';
@@ -120,8 +121,7 @@ export class CreateExpenseModalComponent implements OnInit, OnDestroy {
           this.modal.close();
         },
         (error) => {
-          this.modal.dismiss(error);
-          Swal.fire('Failed', 'Data update failed.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(error, 'Data update failed.'), 'error');
           return of(this.initObject());
         }
       );
@@ -137,8 +137,7 @@ export class CreateExpenseModalComponent implements OnInit, OnDestroy {
           this.modal.close();
         },
         (error) => {
-          this.modal.dismiss(error);
-          Swal.fire('Failed', 'Expense creation failed.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(error, 'Expense creation failed.'), 'error');
           return of(this.initObject());
         }
       );

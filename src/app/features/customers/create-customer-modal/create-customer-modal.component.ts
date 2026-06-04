@@ -6,6 +6,7 @@ import { catchError, first, of } from 'rxjs';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { AuthService } from '../../auth/services/auth.service';
 import { CustomerService } from '../customer.service';
 import { CustomerDto } from '../models/customer-dto.model';
@@ -106,8 +107,7 @@ export class CreateCustomerModalComponent implements OnInit, OnDestroy {
           this.modal.close();
         },
         (error) => {
-          this.modal.dismiss(error);
-          Swal.fire('Failed', 'Data update failed.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(error, 'Data update failed.'), 'error');
           return of(this.initObject());
         }
       );
@@ -123,8 +123,7 @@ export class CreateCustomerModalComponent implements OnInit, OnDestroy {
           this.modal.close();
         },
         (error) => {
-          this.modal.dismiss(error);
-          Swal.fire('Failed', 'Customer creation failed.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(error, 'Customer creation failed.'), 'error');
           return of(this.initObject());
         }
       );

@@ -6,6 +6,7 @@ import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 
 import { AuthService } from 'src/app/features/auth';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { CourierProviderService } from '../courier-provider.service';
 import { CourierProviderDto } from '../models/courier-provider-dto';
 import { CreateCourierProviderDto } from '../models/create-courier-provider-dto';
@@ -87,8 +88,7 @@ export class CreateCourierProviderModalComponent implements OnInit, OnDestroy {
         this.modal.close('success');
       },
       error: (error) => {
-        this.modal.dismiss(error);
-        Swal.fire('Failed', `Courier provider ${this.id ? 'update' : 'creation'} failed.`, 'error');
+        Swal.fire('Failed', extractApiErrorMessage(error, `Courier provider ${this.id ? 'update' : 'creation'} failed.`), 'error');
       }
     });
   }

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { ComplaintStatus } from 'src/app/shared/enums/complaint-status.enum';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { ComplaintService } from '../complaint.service';
 import { ComplaintDto } from '../models/complaint.model';
@@ -59,9 +60,9 @@ export class UpdateStatusModalComponent implements OnInit {
         }
         this.cdRef.detectChanges();
       },
-      error: () => {
+      error: (err: any) => {
         this.isSaving = false;
-        Swal.fire({ icon: 'error', title: 'Error', text: 'Something went wrong.' });
+        Swal.fire({ icon: 'error', title: 'Error', text: extractApiErrorMessage(err, 'Something went wrong.') });
         this.cdRef.detectChanges();
       },
     });

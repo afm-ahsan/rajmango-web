@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
 import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import { AdminOrderListDto } from '../../orders/models/admin-order-list-dto.model';
@@ -107,7 +108,7 @@ export class AdminOrderUpdateStatusModalComponent implements OnInit, OnDestroy {
         this.modal.close('success');
       },
       error: (err: any) => {
-        this.errorMessage = err?.error?.messages?.join(' ') ?? 'Update failed. Please try again.';
+        this.errorMessage = extractApiErrorMessage(err, 'Update failed. Please try again.');
         this.cdRef.detectChanges();
       }
     });

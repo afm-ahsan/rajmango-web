@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize, of, switchMap, tap } from 'rxjs';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { AuthService } from 'src/app/features/auth';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
@@ -126,8 +127,8 @@ export class CreateCourierStationModalComponent implements OnInit, OnDestroy {
         Swal.fire('Success', `Courier Station ${this.id ? 'updated' : 'created'} successfully.`, 'success');
         this.modal.close('success');
       },
-      error: () => {
-        Swal.fire('Failed', `Courier Station ${this.id ? 'update' : 'creation'} failed.`, 'error');
+      error: (err: any) => {
+        Swal.fire('Failed', extractApiErrorMessage(err, `Courier Station ${this.id ? 'update' : 'creation'} failed.`), 'error');
       }
     });
   }

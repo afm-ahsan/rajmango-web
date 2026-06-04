@@ -15,6 +15,7 @@ import {
 import { AuthService } from '../../auth';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
 import { DropdownService } from 'src/app/shared/services/dropdown.service';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 
 @Component({
   selector: 'app-availability-modal',
@@ -110,9 +111,9 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
           Swal.fire('Success', 'Availability record updated.', 'success');
           this.modal.close('success');
         },
-        error: () => {
+        error: (err: any) => {
           this.isLoading = false;
-          Swal.fire('Failed', 'Failed to update record.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(err, 'Failed to update record.'), 'error');
         },
       });
     } else {
@@ -132,9 +133,9 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
           Swal.fire('Success', 'Availability record created.', 'success');
           this.modal.close('success');
         },
-        error: () => {
+        error: (err: any) => {
           this.isLoading = false;
-          Swal.fire('Failed', 'Failed to create record.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(err, 'Failed to create record.'), 'error');
         },
       });
     }

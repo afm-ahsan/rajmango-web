@@ -10,6 +10,7 @@ import { FileService } from 'src/app/shared/services/file-service.service';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import _ from 'underscore';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { AuthService, ConfirmPasswordValidator } from '../../auth';
 import { RoleDto } from '../../roles/models/role-dto.model';
 import { RoleService } from '../../roles/role.service';
@@ -189,8 +190,7 @@ export class CreateUserModalComponent implements OnInit, OnDestroy {
           this.modal.close();
         },
         (error) => {
-          this.modal.dismiss(error);
-          Swal.fire('Failed', 'Data update failed.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(error, 'Data update failed.'), 'error');
           return of(this.initObject());
         }
       );

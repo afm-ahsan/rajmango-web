@@ -12,6 +12,7 @@ import {
 } from 'src/app/services/client-proxy';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
 import { DropdownService } from 'src/app/shared/services/dropdown.service';
+import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
 import { dropdownRequiredValidator } from 'src/app/shared/validators/dropdown-validators';
 
 @Component({
@@ -76,9 +77,9 @@ export class AddressModalComponent implements OnInit, OnDestroy {
           Swal.fire('Success', 'Address updated.', 'success');
           this.modal.close('success');
         },
-        error: () => {
+        error: (err: any) => {
           this.isLoading = false;
-          Swal.fire('Failed', 'Failed to update address.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(err, 'Failed to update address.'), 'error');
         },
       });
     } else {
@@ -96,9 +97,9 @@ export class AddressModalComponent implements OnInit, OnDestroy {
           Swal.fire('Success', 'Address added.', 'success');
           this.modal.close('success');
         },
-        error: () => {
+        error: (err: any) => {
           this.isLoading = false;
-          Swal.fire('Failed', 'Failed to add address.', 'error');
+          Swal.fire('Failed', extractApiErrorMessage(err, 'Failed to add address.'), 'error');
         },
       });
     }
