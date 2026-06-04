@@ -23,10 +23,6 @@ export class ErrorMessageService {
         // Business/validation errors — let the component show the actual message inline or in its own Swal.
         break;
 
-      case 401:
-        Swal.fire('Session Expired', 'Your session has expired. Please sign in again.', 'warning');
-        break;
-
       case 403:
         Swal.fire(
           'Access Denied',

@@ -37,11 +37,7 @@ export class AuthService implements OnDestroy {
     private router: Router,
     private authHttpService: AuthHttpService,
     private permissionService: UserPermissionService
-  ) {
-    this.subs.sink = this.getUserByToken().subscribe({
-      error: (err) => console.error('Failed to restore session on init:', err)
-    });
-  }
+  ) {}
 
   login(email: string, password: string): Observable<{ user: UserType; messages: string[] }> {
     if (!email || !password) return of({ user: undefined, messages: [] });
@@ -138,9 +134,7 @@ export class AuthService implements OnDestroy {
 
   getLoggedUserId(): number {
     const userId = localStorage.getItem(this.userIdKey);
-    const parsedId = userId ? parseInt(userId, 10) : 0;
-    if (!parsedId) this.logout();
-    return parsedId;
+    return userId ? parseInt(userId, 10) : 0;
   }
 
   private setAuthToLocalStorage(auth: any): boolean {

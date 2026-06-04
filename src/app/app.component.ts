@@ -3,6 +3,7 @@ import { NavigationCancel, NavigationEnd, NavigationError, Router } from '@angul
 import { TranslationService } from './features/i18n';
 import { locale as enLang } from './features/i18n/vocabs/en';
 import { LoaderService } from './shared/services/loader.service';
+import { IdleSessionService } from './shared/services/idle-session.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -13,9 +14,14 @@ import { LoaderService } from './shared/services/loader.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  constructor(private router: Router, 
-              private loader: LoaderService, 
-              private translationService: TranslationService) {
+  constructor(
+    private router: Router,
+    private loader: LoaderService,
+    private translationService: TranslationService,
+    // Injecting here ensures the singleton is created at app startup so it
+    // can subscribe to currentUser$ and start the idle watcher immediately.
+    private idleSessionService: IdleSessionService
+  ) {
     this.router.events.subscribe(event => {
       if (
         event instanceof NavigationEnd ||

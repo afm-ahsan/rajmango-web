@@ -5,13 +5,14 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { ErrorLoggerService } from 'src/app/shared/services/error-logger.service';
 import { ErrorMessageService } from 'src/app/shared/services/error-message.service';
+import { IdleSessionService } from 'src/app/shared/services/idle-session.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,18 @@ import { ErrorMessageService } from 'src/app/shared/services/error-message.servi
 export class GlobalHttpInterceptor implements HttpInterceptor {
   private readonly tokenKey = `${environment.appVersion}-${environment.USERDATA_KEY}`;
 
+  // Lazy reference to break circular DI:
+  // GlobalHttpInterceptor → IdleSessionService → AuthService → AuthHttpService → HttpClient → GlobalHttpInterceptor
+  private _idleSession: IdleSessionService | null = null;
+  private get idleSession(): IdleSessionService {
+    if (!this._idleSession) {
+      this._idleSession = this.injector.get(IdleSessionService);
+    }
+    return this._idleSession;
+  }
+
   constructor(
+    private injector: Injector,
     private router: Router,
     private errorLogger: ErrorLoggerService,
     private errorMessageService: ErrorMessageService
@@ -33,11 +45,22 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         this.errorLogger.logHttpError(error);
-        this.errorMessageService.handleHttpError(error);
 
         const onAuthPage = this.router.url.startsWith('/auth');
         const onErrorPage = this.router.url.startsWith('/error');
-        if ((error.status === 401 || error.status === 408) && !onAuthPage && !onErrorPage) {
+
+        // 401: session expired — show ONE alert and redirect ONCE
+        if (error.status === 401) {
+          if (!onAuthPage && !onErrorPage && !this.idleSession.isHandlingExpiry) {
+            this.idleSession.handleSessionExpired('Your session has expired. Please sign in again.');
+          }
+          return throwError(() => error);
+        }
+
+        // All other errors (400, 403, 404, 408, 409, 500, etc.)
+        this.errorMessageService.handleHttpError(error);
+
+        if (error.status === 408 && !onAuthPage && !onErrorPage) {
           this.router.navigateByUrl('/auth/login');
         }
 
