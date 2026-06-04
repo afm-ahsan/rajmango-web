@@ -49,7 +49,7 @@ export class AdminOrderServiceProxy {
      * @param receiverMobile (optional) 
      * @return OK
      */
-    getPaged(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortOrder: string | undefined, orderNumber: string | undefined, customerName: string | undefined, phoneNumber: string | undefined, orderStatus: OrderStatus | undefined, paymentStatus: PaymentStatus | undefined, deliveryStatus: DeliveryStatus | undefined, startDate: moment.Moment | undefined, endDate: moment.Moment | undefined, courierProviderId: number | undefined, courierStationId: number | undefined, mangoType: string | undefined, courierEligibleOnly: boolean | undefined, deliveryArea: string | undefined, receiverMobile: string | undefined): Observable<PaginatedResult_AdminOrderListDto> {
+    getPaged(pageNumber: number | undefined, pageSize: number | undefined, sortBy: string | undefined, sortOrder: string | undefined, orderNumber: string | undefined, customerName: string | undefined, phoneNumber: string | undefined, orderStatus: OrderStatus | undefined, paymentStatus: PaymentStatus | undefined, deliveryStatus: DeliveryStatus | undefined, startDate: moment.Moment | undefined, endDate: moment.Moment | undefined, courierProviderId: number | undefined, courierStationId: number | undefined, mangoType: string | undefined, courierEligibleOnly: boolean | undefined, deliveryArea: string | undefined, receiverMobile: string | undefined): Observable<AdminOrderPaginatedResult> {
         let url_ = this.baseUrl + "/api/admin/orders?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -140,14 +140,14 @@ export class AdminOrderServiceProxy {
                 try {
                     return this.processGetPaged(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<PaginatedResult_AdminOrderListDto>;
+                    return _observableThrow(e) as any as Observable<AdminOrderPaginatedResult>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<PaginatedResult_AdminOrderListDto>;
+                return _observableThrow(response_) as any as Observable<AdminOrderPaginatedResult>;
         }));
     }
 
-    protected processGetPaged(response: HttpResponseBase): Observable<PaginatedResult_AdminOrderListDto> {
+    protected processGetPaged(response: HttpResponseBase): Observable<AdminOrderPaginatedResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -158,7 +158,7 @@ export class AdminOrderServiceProxy {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedResult_AdminOrderListDto.fromJS(resultData200);
+            result200 = AdminOrderPaginatedResult.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 401) {
@@ -6972,6 +6972,331 @@ export class MangoTypeServiceProxy {
 }
 
 @Injectable()
+export class NotificationServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @return OK
+     */
+    getLatest(): Observable<Result_List_NotificationDto> {
+        let url_ = this.baseUrl + "/api/notifications/latest";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLatest(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLatest(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_List_NotificationDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_List_NotificationDto>;
+        }));
+    }
+
+    protected processGetLatest(response: HttpResponseBase): Observable<Result_List_NotificationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_List_NotificationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
+     * @param isRead (optional) 
+     * @return OK
+     */
+    getPaged(pageNumber: number | undefined, pageSize: number | undefined, isRead: boolean | undefined): Observable<PaginatedResult_NotificationDto> {
+        let url_ = this.baseUrl + "/api/notifications/paged?";
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "pageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (isRead === null)
+            throw new Error("The parameter 'isRead' cannot be null.");
+        else if (isRead !== undefined)
+            url_ += "isRead=" + encodeURIComponent("" + isRead) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaged(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaged(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedResult_NotificationDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedResult_NotificationDto>;
+        }));
+    }
+
+    protected processGetPaged(response: HttpResponseBase): Observable<PaginatedResult_NotificationDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedResult_NotificationDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getUnreadCount(): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/notifications/unread-count";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetUnreadCount(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetUnreadCount(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processGetUnreadCount(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    markAsRead(id: number): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/notifications/{id}/mark-as-read";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMarkAsRead(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMarkAsRead(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processMarkAsRead(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    markAllAsRead(): Observable<Result_Int32> {
+        let url_ = this.baseUrl + "/api/notifications/mark-all-as-read";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMarkAllAsRead(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMarkAllAsRead(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_Int32>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_Int32>;
+        }));
+    }
+
+    protected processMarkAllAsRead(response: HttpResponseBase): Observable<Result_Int32> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_Int32.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
 export class OrderServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -9343,6 +9668,87 @@ export class RoleServiceProxy {
 }
 
 @Injectable()
+export class SearchServiceProxy {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    /**
+     * @param term (optional) 
+     * @param maxPerSection (optional) 
+     * @return OK
+     */
+    search(term: string | undefined, maxPerSection: number | undefined): Observable<Result_GlobalSearchResultDto> {
+        let url_ = this.baseUrl + "/api/search?";
+        if (term === null)
+            throw new Error("The parameter 'term' cannot be null.");
+        else if (term !== undefined)
+            url_ += "term=" + encodeURIComponent("" + term) + "&";
+        if (maxPerSection === null)
+            throw new Error("The parameter 'maxPerSection' cannot be null.");
+        else if (maxPerSection !== undefined)
+            url_ += "maxPerSection=" + encodeURIComponent("" + maxPerSection) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_GlobalSearchResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_GlobalSearchResultDto>;
+        }));
+    }
+
+    protected processSearch(response: HttpResponseBase): Observable<Result_GlobalSearchResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_GlobalSearchResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
 export class UserServiceProxy {
     private http: HttpClient;
     private baseUrl: string;
@@ -11021,6 +11427,117 @@ export interface IAdminOrderListDto {
     deliveryDate: moment.Moment | undefined;
     isCourierEligible: boolean;
     mangoTypeName: string | undefined;
+}
+
+export class AdminOrderPaginatedResult implements IAdminOrderPaginatedResult {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: AdminOrderListDto[] | undefined;
+    exception!: Exception;
+    code!: number;
+    currentPage!: number;
+    totalPages!: number;
+    totalCount!: number;
+    pageSize!: number;
+    readonly hasPreviousPage!: boolean;
+    readonly hasNextPage!: boolean;
+    summaryTotalQuantityKg!: number;
+    summaryCrate10KgCount!: number;
+    summaryCrate20KgCount!: number;
+
+    constructor(data?: IAdminOrderPaginatedResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(AdminOrderListDto.fromJS(item));
+            }
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+            this.currentPage = _data["currentPage"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.pageSize = _data["pageSize"];
+            (<any>this).hasPreviousPage = _data["hasPreviousPage"];
+            (<any>this).hasNextPage = _data["hasNextPage"];
+            this.summaryTotalQuantityKg = _data["summaryTotalQuantityKg"];
+            this.summaryCrate10KgCount = _data["summaryCrate10KgCount"];
+            this.summaryCrate20KgCount = _data["summaryCrate20KgCount"];
+        }
+    }
+
+    static fromJS(data: any): AdminOrderPaginatedResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new AdminOrderPaginatedResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        data["currentPage"] = this.currentPage;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["pageSize"] = this.pageSize;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        data["summaryTotalQuantityKg"] = this.summaryTotalQuantityKg;
+        data["summaryCrate10KgCount"] = this.summaryCrate10KgCount;
+        data["summaryCrate20KgCount"] = this.summaryCrate20KgCount;
+        return data;
+    }
+
+    clone(): AdminOrderPaginatedResult {
+        const json = this.toJSON();
+        let result = new AdminOrderPaginatedResult();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IAdminOrderPaginatedResult {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: AdminOrderListDto[] | undefined;
+    exception: Exception;
+    code: number;
+    currentPage: number;
+    totalPages: number;
+    totalCount: number;
+    pageSize: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+    summaryTotalQuantityKg: number;
+    summaryCrate10KgCount: number;
+    summaryCrate20KgCount: number;
 }
 
 export class AdminOrderPaymentDto implements IAdminOrderPaymentDto {
@@ -14521,6 +15038,61 @@ export interface ICustomerRecentOrderDto {
     deliveryDate: moment.Moment | undefined;
 }
 
+export class CustomerSearchItemDto implements ICustomerSearchItemDto {
+    id!: number;
+    name!: string | undefined;
+    phone!: string | undefined;
+    email!: string | undefined;
+
+    constructor(data?: ICustomerSearchItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.phone = _data["phone"];
+            this.email = _data["email"];
+        }
+    }
+
+    static fromJS(data: any): CustomerSearchItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomerSearchItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["phone"] = this.phone;
+        data["email"] = this.email;
+        return data;
+    }
+
+    clone(): CustomerSearchItemDto {
+        const json = this.toJSON();
+        let result = new CustomerSearchItemDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface ICustomerSearchItemDto {
+    id: number;
+    name: string | undefined;
+    phone: string | undefined;
+    email: string | undefined;
+}
+
 export enum CustomerType {
     _0 = 0,
     _1 = 1,
@@ -14536,6 +15108,7 @@ export class DashboardMangoAvailabilityDto implements IDashboardMangoAvailabilit
     mangoTypeId!: number;
     mangoTypeName!: string | undefined;
     pricePerKg!: number;
+    startDate!: moment.Moment;
     endDate!: moment.Moment;
 
     constructor(data?: IDashboardMangoAvailabilityDto) {
@@ -14553,6 +15126,7 @@ export class DashboardMangoAvailabilityDto implements IDashboardMangoAvailabilit
             this.mangoTypeId = _data["mangoTypeId"];
             this.mangoTypeName = _data["mangoTypeName"];
             this.pricePerKg = _data["pricePerKg"];
+            this.startDate = _data["startDate"] ? moment(_data["startDate"].toString()) : <any>undefined;
             this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
         }
     }
@@ -14570,6 +15144,7 @@ export class DashboardMangoAvailabilityDto implements IDashboardMangoAvailabilit
         data["mangoTypeId"] = this.mangoTypeId;
         data["mangoTypeName"] = this.mangoTypeName;
         data["pricePerKg"] = this.pricePerKg;
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
         data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
         return data;
     }
@@ -14587,6 +15162,7 @@ export interface IDashboardMangoAvailabilityDto {
     mangoTypeId: number;
     mangoTypeName: string | undefined;
     pricePerKg: number;
+    startDate: moment.Moment;
     endDate: moment.Moment;
 }
 
@@ -14596,6 +15172,7 @@ export class DashboardUpcomingMangoDto implements IDashboardUpcomingMangoDto {
     mangoTypeName!: string | undefined;
     pricePerKg!: number;
     startDate!: moment.Moment;
+    endDate!: moment.Moment;
 
     constructor(data?: IDashboardUpcomingMangoDto) {
         if (data) {
@@ -14613,6 +15190,7 @@ export class DashboardUpcomingMangoDto implements IDashboardUpcomingMangoDto {
             this.mangoTypeName = _data["mangoTypeName"];
             this.pricePerKg = _data["pricePerKg"];
             this.startDate = _data["startDate"] ? moment(_data["startDate"].toString()) : <any>undefined;
+            this.endDate = _data["endDate"] ? moment(_data["endDate"].toString()) : <any>undefined;
         }
     }
 
@@ -14630,6 +15208,7 @@ export class DashboardUpcomingMangoDto implements IDashboardUpcomingMangoDto {
         data["mangoTypeName"] = this.mangoTypeName;
         data["pricePerKg"] = this.pricePerKg;
         data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
+        data["endDate"] = this.endDate ? this.endDate.toISOString() : <any>undefined;
         return data;
     }
 
@@ -14647,6 +15226,7 @@ export interface IDashboardUpcomingMangoDto {
     mangoTypeName: string | undefined;
     pricePerKg: number;
     startDate: moment.Moment;
+    endDate: moment.Moment;
 }
 
 export enum DeliveryStatus {
@@ -17603,6 +18183,93 @@ export interface IGetValidTokenQuery {
     token: string | undefined;
 }
 
+export class GlobalSearchResultDto implements IGlobalSearchResultDto {
+    orders!: OrderSearchItemDto[] | undefined;
+    customers!: CustomerSearchItemDto[] | undefined;
+    courierStations!: StationSearchItemDto[] | undefined;
+    mangoes!: MangoSearchItemDto[] | undefined;
+
+    constructor(data?: IGlobalSearchResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["orders"])) {
+                this.orders = [] as any;
+                for (let item of _data["orders"])
+                    this.orders!.push(OrderSearchItemDto.fromJS(item));
+            }
+            if (Array.isArray(_data["customers"])) {
+                this.customers = [] as any;
+                for (let item of _data["customers"])
+                    this.customers!.push(CustomerSearchItemDto.fromJS(item));
+            }
+            if (Array.isArray(_data["courierStations"])) {
+                this.courierStations = [] as any;
+                for (let item of _data["courierStations"])
+                    this.courierStations!.push(StationSearchItemDto.fromJS(item));
+            }
+            if (Array.isArray(_data["mangoes"])) {
+                this.mangoes = [] as any;
+                for (let item of _data["mangoes"])
+                    this.mangoes!.push(MangoSearchItemDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GlobalSearchResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GlobalSearchResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.orders)) {
+            data["orders"] = [];
+            for (let item of this.orders)
+                data["orders"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.customers)) {
+            data["customers"] = [];
+            for (let item of this.customers)
+                data["customers"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.courierStations)) {
+            data["courierStations"] = [];
+            for (let item of this.courierStations)
+                data["courierStations"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.mangoes)) {
+            data["mangoes"] = [];
+            for (let item of this.mangoes)
+                data["mangoes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+
+    clone(): GlobalSearchResultDto {
+        const json = this.toJSON();
+        let result = new GlobalSearchResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IGlobalSearchResultDto {
+    orders: OrderSearchItemDto[] | undefined;
+    customers: CustomerSearchItemDto[] | undefined;
+    courierStations: StationSearchItemDto[] | undefined;
+    mangoes: MangoSearchItemDto[] | undefined;
+}
+
 export class GrantPermissionRequest implements IGrantPermissionRequest {
     permissionId!: number;
 
@@ -17957,6 +18624,57 @@ export enum MangoGrade {
     _3 = 3,
     _4 = 4,
     _5 = 5,
+}
+
+export class MangoSearchItemDto implements IMangoSearchItemDto {
+    id!: number;
+    name!: string | undefined;
+    region!: string | undefined;
+
+    constructor(data?: IMangoSearchItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.region = _data["region"];
+        }
+    }
+
+    static fromJS(data: any): MangoSearchItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new MangoSearchItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["region"] = this.region;
+        return data;
+    }
+
+    clone(): MangoSearchItemDto {
+        const json = this.toJSON();
+        let result = new MangoSearchItemDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IMangoSearchItemDto {
+    id: number;
+    name: string | undefined;
+    region: string | undefined;
 }
 
 export class MemberInfo implements IMemberInfo {
@@ -18774,6 +19492,88 @@ export interface INearbyStationDto {
     distanceKm: number;
 }
 
+export class NotificationDto implements INotificationDto {
+    id!: number;
+    orderId!: number | undefined;
+    orderNumber!: string | undefined;
+    title!: string | undefined;
+    message!: string | undefined;
+    notificationType!: NotificationType;
+    isRead!: boolean;
+    readAt!: moment.Moment | undefined;
+    createdAt!: moment.Moment;
+
+    constructor(data?: INotificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.orderId = _data["orderId"];
+            this.orderNumber = _data["orderNumber"];
+            this.title = _data["title"];
+            this.message = _data["message"];
+            this.notificationType = _data["notificationType"];
+            this.isRead = _data["isRead"];
+            this.readAt = _data["readAt"] ? moment(_data["readAt"].toString()) : <any>undefined;
+            this.createdAt = _data["createdAt"] ? moment(_data["createdAt"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): NotificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new NotificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["orderId"] = this.orderId;
+        data["orderNumber"] = this.orderNumber;
+        data["title"] = this.title;
+        data["message"] = this.message;
+        data["notificationType"] = this.notificationType;
+        data["isRead"] = this.isRead;
+        data["readAt"] = this.readAt ? this.readAt.toISOString() : <any>undefined;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        return data;
+    }
+
+    clone(): NotificationDto {
+        const json = this.toJSON();
+        let result = new NotificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface INotificationDto {
+    id: number;
+    orderId: number | undefined;
+    orderNumber: string | undefined;
+    title: string | undefined;
+    message: string | undefined;
+    notificationType: NotificationType;
+    isRead: boolean;
+    readAt: moment.Moment | undefined;
+    createdAt: moment.Moment;
+}
+
+export enum NotificationType {
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+}
+
 export class OrderDetailDto implements IOrderDetailDto {
     id!: number;
     orderId!: number;
@@ -19160,6 +19960,77 @@ export interface IOrderPreviewDto {
     totalAmount: number;
     courierProviderName: string | undefined;
     courierRatePerKg: number | undefined;
+}
+
+export class OrderSearchItemDto implements IOrderSearchItemDto {
+    id!: number;
+    orderNumber!: string | undefined;
+    customerName!: string | undefined;
+    customerPhone!: string | undefined;
+    orderStatus!: number;
+    totalAmount!: number;
+    orderDate!: moment.Moment;
+    mangoTypeName!: string | undefined;
+
+    constructor(data?: IOrderSearchItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.orderNumber = _data["orderNumber"];
+            this.customerName = _data["customerName"];
+            this.customerPhone = _data["customerPhone"];
+            this.orderStatus = _data["orderStatus"];
+            this.totalAmount = _data["totalAmount"];
+            this.orderDate = _data["orderDate"] ? moment(_data["orderDate"].toString()) : <any>undefined;
+            this.mangoTypeName = _data["mangoTypeName"];
+        }
+    }
+
+    static fromJS(data: any): OrderSearchItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new OrderSearchItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["orderNumber"] = this.orderNumber;
+        data["customerName"] = this.customerName;
+        data["customerPhone"] = this.customerPhone;
+        data["orderStatus"] = this.orderStatus;
+        data["totalAmount"] = this.totalAmount;
+        data["orderDate"] = this.orderDate ? this.orderDate.toISOString() : <any>undefined;
+        data["mangoTypeName"] = this.mangoTypeName;
+        return data;
+    }
+
+    clone(): OrderSearchItemDto {
+        const json = this.toJSON();
+        let result = new OrderSearchItemDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IOrderSearchItemDto {
+    id: number;
+    orderNumber: string | undefined;
+    customerName: string | undefined;
+    customerPhone: string | undefined;
+    orderStatus: number;
+    totalAmount: number;
+    orderDate: moment.Moment;
+    mangoTypeName: string | undefined;
 }
 
 export enum OrderStatus {
@@ -19562,105 +20433,6 @@ export interface IOverrideCourierChargeCommand {
     orderId: number;
     courierChargeOverrideAmount: number;
     courierChargeNote: string | undefined;
-}
-
-export class PaginatedResult_AdminOrderListDto implements IPaginatedResult_AdminOrderListDto {
-    messages!: string[] | undefined;
-    succeeded!: boolean;
-    data!: AdminOrderListDto[] | undefined;
-    exception!: Exception;
-    code!: number;
-    currentPage!: number;
-    totalPages!: number;
-    totalCount!: number;
-    pageSize!: number;
-    readonly hasPreviousPage!: boolean;
-    readonly hasNextPage!: boolean;
-
-    constructor(data?: IPaginatedResult_AdminOrderListDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.succeeded = _data["succeeded"];
-            if (Array.isArray(_data["data"])) {
-                this.data = [] as any;
-                for (let item of _data["data"])
-                    this.data!.push(AdminOrderListDto.fromJS(item));
-            }
-            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
-            this.code = _data["code"];
-            this.currentPage = _data["currentPage"];
-            this.totalPages = _data["totalPages"];
-            this.totalCount = _data["totalCount"];
-            this.pageSize = _data["pageSize"];
-            (<any>this).hasPreviousPage = _data["hasPreviousPage"];
-            (<any>this).hasNextPage = _data["hasNextPage"];
-        }
-    }
-
-    static fromJS(data: any): PaginatedResult_AdminOrderListDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new PaginatedResult_AdminOrderListDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["succeeded"] = this.succeeded;
-        if (Array.isArray(this.data)) {
-            data["data"] = [];
-            for (let item of this.data)
-                data["data"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
-        data["code"] = this.code;
-        data["currentPage"] = this.currentPage;
-        data["totalPages"] = this.totalPages;
-        data["totalCount"] = this.totalCount;
-        data["pageSize"] = this.pageSize;
-        data["hasPreviousPage"] = this.hasPreviousPage;
-        data["hasNextPage"] = this.hasNextPage;
-        return data;
-    }
-
-    clone(): PaginatedResult_AdminOrderListDto {
-        const json = this.toJSON();
-        let result = new PaginatedResult_AdminOrderListDto();
-        result.init(json);
-        return result;
-    }
-}
-
-export interface IPaginatedResult_AdminOrderListDto {
-    messages: string[] | undefined;
-    succeeded: boolean;
-    data: AdminOrderListDto[] | undefined;
-    exception: Exception;
-    code: number;
-    currentPage: number;
-    totalPages: number;
-    totalCount: number;
-    pageSize: number;
-    hasPreviousPage: boolean;
-    hasNextPage: boolean;
 }
 
 export class PaginatedResult_AppUserDto implements IPaginatedResult_AppUserDto {
@@ -20742,6 +21514,105 @@ export interface IPaginatedResult_GetRoleWithPaginationDto {
     messages: string[] | undefined;
     succeeded: boolean;
     data: GetRoleWithPaginationDto[] | undefined;
+    exception: Exception;
+    code: number;
+    currentPage: number;
+    totalPages: number;
+    totalCount: number;
+    pageSize: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+}
+
+export class PaginatedResult_NotificationDto implements IPaginatedResult_NotificationDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: NotificationDto[] | undefined;
+    exception!: Exception;
+    code!: number;
+    currentPage!: number;
+    totalPages!: number;
+    totalCount!: number;
+    pageSize!: number;
+    readonly hasPreviousPage!: boolean;
+    readonly hasNextPage!: boolean;
+
+    constructor(data?: IPaginatedResult_NotificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(NotificationDto.fromJS(item));
+            }
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+            this.currentPage = _data["currentPage"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.pageSize = _data["pageSize"];
+            (<any>this).hasPreviousPage = _data["hasPreviousPage"];
+            (<any>this).hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedResult_NotificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedResult_NotificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        data["currentPage"] = this.currentPage;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["pageSize"] = this.pageSize;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+
+    clone(): PaginatedResult_NotificationDto {
+        const json = this.toJSON();
+        let result = new PaginatedResult_NotificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IPaginatedResult_NotificationDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: NotificationDto[] | undefined;
     exception: Exception;
     code: number;
     currentPage: number;
@@ -23291,6 +24162,73 @@ export interface IResult_GetRoleCountDto {
     code: number;
 }
 
+export class Result_GlobalSearchResultDto implements IResult_GlobalSearchResultDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: GlobalSearchResultDto;
+    exception!: Exception;
+    code!: number;
+
+    constructor(data?: IResult_GlobalSearchResultDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            this.data = _data["data"] ? GlobalSearchResultDto.fromJS(_data["data"]) : <any>undefined;
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): Result_GlobalSearchResultDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result_GlobalSearchResultDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        return data;
+    }
+
+    clone(): Result_GlobalSearchResultDto {
+        const json = this.toJSON();
+        let result = new Result_GlobalSearchResultDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IResult_GlobalSearchResultDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: GlobalSearchResultDto;
+    exception: Exception;
+    code: number;
+}
+
 export class Result_Int32 implements IResult_Int32 {
     messages!: string[] | undefined;
     succeeded!: boolean;
@@ -25008,6 +25946,81 @@ export interface IResult_List_NearbyStationDto {
     code: number;
 }
 
+export class Result_List_NotificationDto implements IResult_List_NotificationDto {
+    messages!: string[] | undefined;
+    succeeded!: boolean;
+    data!: NotificationDto[] | undefined;
+    exception!: Exception;
+    code!: number;
+
+    constructor(data?: IResult_List_NotificationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.succeeded = _data["succeeded"];
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(NotificationDto.fromJS(item));
+            }
+            this.exception = _data["exception"] ? Exception.fromJS(_data["exception"]) : <any>undefined;
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): Result_List_NotificationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new Result_List_NotificationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["succeeded"] = this.succeeded;
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["code"] = this.code;
+        return data;
+    }
+
+    clone(): Result_List_NotificationDto {
+        const json = this.toJSON();
+        let result = new Result_List_NotificationDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IResult_List_NotificationDto {
+    messages: string[] | undefined;
+    succeeded: boolean;
+    data: NotificationDto[] | undefined;
+    exception: Exception;
+    code: number;
+}
+
 export class Result_List_OrderDto implements IResult_List_OrderDto {
     messages!: string[] | undefined;
     succeeded!: boolean;
@@ -26087,6 +27100,65 @@ export class ShipOrderRequest implements IShipOrderRequest {
 
 export interface IShipOrderRequest {
     trackingNumber: string | undefined;
+}
+
+export class StationSearchItemDto implements IStationSearchItemDto {
+    id!: number;
+    name!: string | undefined;
+    area!: string | undefined;
+    city!: string | undefined;
+    providerName!: string | undefined;
+
+    constructor(data?: IStationSearchItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.area = _data["area"];
+            this.city = _data["city"];
+            this.providerName = _data["providerName"];
+        }
+    }
+
+    static fromJS(data: any): StationSearchItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new StationSearchItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["area"] = this.area;
+        data["city"] = this.city;
+        data["providerName"] = this.providerName;
+        return data;
+    }
+
+    clone(): StationSearchItemDto {
+        const json = this.toJSON();
+        let result = new StationSearchItemDto();
+        result.init(json);
+        return result;
+    }
+}
+
+export interface IStationSearchItemDto {
+    id: number;
+    name: string | undefined;
+    area: string | undefined;
+    city: string | undefined;
+    providerName: string | undefined;
 }
 
 export class StructLayoutAttribute implements IStructLayoutAttribute {

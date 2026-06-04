@@ -96,7 +96,6 @@ export class OrderService {
     if (filter.courierProviderId != null) params = params.set('courierProviderId', filter.courierProviderId);
     if (filter.courierStationId != null)  params = params.set('courierStationId', filter.courierStationId);
     if (filter.mangoType)             params = params.set('mangoType', filter.mangoType);
-    if (filter.courierEligibleOnly)   params = params.set('courierEligibleOnly', filter.courierEligibleOnly);
     if (filter.deliveryArea)          params = params.set('deliveryArea', filter.deliveryArea);
     if (filter.receiverMobile)        params = params.set('receiverMobile', filter.receiverMobile);
 

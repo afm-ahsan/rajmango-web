@@ -78,6 +78,8 @@ export class HomeComponent implements OnInit, OnDestroy {
             isAvailable:
               avail?.status === MangoAvailabilityStatus._1 ||
               avail?.status === MangoAvailabilityStatus._2,
+            startDate: avail?.startDate ?? null,
+            endDate: avail?.endDate ?? null,
             seasonYear: avail?.seasonYear ?? null,
             availabilityNotes: avail?.notes ?? null,
           };

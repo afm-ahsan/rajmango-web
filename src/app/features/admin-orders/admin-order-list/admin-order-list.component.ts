@@ -12,6 +12,7 @@ import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { FilterUtils } from 'src/app/shared/utils/filter-utils';
 import { SubSink } from 'subsink';
 import { CourierAreaMapService } from '../../couriers/courier-area-map/courier-area-map.service';
+import { CourierProviderService } from '../../couriers/courier-provider/courier-provider.service';
 import { MangoTypeService } from '../../mango-types/mango-type.service';
 import { AdminOrderFilterModel, AdminOrderListDto } from '../../orders/models/admin-order-list-dto.model';
 import { OrderService } from '../../orders/order.service';
@@ -44,6 +45,9 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
 
   deliveryAreaOptions: { id: number; name: string }[] = [];
   mangoTypeOptions: { id: number; name: string }[] = [];
+  courierProviderOptions: { id: number; name: string }[] = [];
+
+  summary = { totalQuantityKg: 0, crate10KgCount: 0, crate20KgCount: 0 };
 
   filter: AdminOrderFilterModel = {
     pageNumber: 1,
@@ -59,7 +63,7 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     startDate: null,
     endDate: null,
     mangoType: '',
-    courierEligibleOnly: false,
+    courierProviderId: null,
     deliveryArea: undefined,
     receiverMobile: '',
   };
@@ -99,7 +103,8 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private permissionService: UserPermissionService,
     private courierAreaMapService: CourierAreaMapService,
-    private mangoTypeService: MangoTypeService
+    private mangoTypeService: MangoTypeService,
+    private courierProviderService: CourierProviderService
   ) {}
 
   ngOnInit(): void {
@@ -116,6 +121,10 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     });
     this.subs.sink = this.mangoTypeService.list().subscribe({
       next: (res: any) => { this.mangoTypeOptions = Array.isArray(res) ? res : (res?.data ?? []); },
+      error: () => {}
+    });
+    this.subs.sink = this.courierProviderService.getDropdown().subscribe({
+      next: (res: any) => { this.courierProviderOptions = Array.isArray(res) ? res : (res?.data ?? []); },
       error: () => {}
     });
   }
@@ -136,6 +145,11 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.orders = res?.data ?? [];
         this.totalCount = res?.totalCount ?? 0;
+        this.summary = {
+          totalQuantityKg: res?.summaryTotalQuantityKg ?? 0,
+          crate10KgCount:  res?.summaryCrate10KgCount  ?? 0,
+          crate20KgCount:  res?.summaryCrate20KgCount  ?? 0,
+        };
       },
       error: () => {
         this.orders = [];
@@ -179,7 +193,7 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
       startDate: null,
       endDate: null,
       mangoType: '',
-      courierEligibleOnly: false,
+      courierProviderId: null,
       deliveryArea: undefined,
       receiverMobile: '',
     };

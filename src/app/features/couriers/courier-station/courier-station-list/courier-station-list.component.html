@@ -61,9 +61,9 @@
                       <th class="cursor-pointer" (click)="onSort('supportPhone2')">
                         Phone 2 <span *ngIf="filter.sortBy === 'supportPhone2'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
                       </th>
-                      <th class="cursor-pointer" (click)="onSort('googleMapUrl')">
+                      <!-- <th class="cursor-pointer" (click)="onSort('googleMapUrl')">
                         Map URL <span *ngIf="filter.sortBy === 'googleMapUrl'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
-                      </th>
+                      </th> -->
                       <th class="cursor-pointer" (click)="onSort('isActive')">
                         Active <span *ngIf="filter.sortBy === 'isActive'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
                       </th>
@@ -83,12 +83,12 @@
                 <td>{{ station.area }}</td>
                 <td>{{ station.supportPhone1 }}</td>
                 <td>{{ station.supportPhone2 }}</td>                
-                <td>
+                <!-- <td>
                   <ng-container *ngIf="station.googleMapUrl; else noMap">
                     <a [href]="station.googleMapUrl" target="_blank" rel="noopener noreferrer">Open Map</a>
                   </ng-container>
                   <ng-template #noMap>—</ng-template>
-                </td>
+                </td> -->
                 <!-- <td>
                   <span class="d-inline-block text-truncate" style="max-width: 160px;" [title]="station.email">
                     {{ station.email }}

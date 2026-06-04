@@ -51,7 +51,6 @@ export interface AdminOrderFilterModel {
   courierProviderId?: number | null;
   courierStationId?: number | null;
   mangoType?: string;
-  courierEligibleOnly?: boolean;
   deliveryArea?: string;
   receiverMobile?: string;
 }

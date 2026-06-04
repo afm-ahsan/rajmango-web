@@ -101,27 +101,58 @@
               placeholder="MM/DD/YYYY" [(ngModel)]="filter.endDate" />
           </div>
 
-          <div class="col-12 col-md-3 d-flex align-items-end">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="courierEligibleOnly"
-                [(ngModel)]="filter.courierEligibleOnly" />
-              <label class="form-check-label fw-semibold" for="courierEligibleOnly">
-                Courier Eligible Only
-              </label>
-              <div class="text-muted fs-8">Confirmed + Paid + Pending delivery</div>
-            </div>
+          <div class="col-12 col-md-3">
+            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Courier Provider</label>
+            <select class="form-select form-select-sm form-select-solid" [(ngModel)]="filter.courierProviderId">
+              <option [ngValue]="null">All</option>
+              <option *ngFor="let p of courierProviderOptions" [ngValue]="p.id">{{ p.name }}</option>
+            </select>
           </div>
 
         </div>
 
-        <div class="d-flex gap-2 mb-4">
-          <button type="button" class="btn btn-sm btn-primary" (click)="applyFilters()">
-            <i class="bi bi-search me-1"></i>Apply
-          </button>
-          <button type="button" class="btn btn-sm btn-light" (click)="clearFilters()">
-            <i class="bi bi-x-circle me-1"></i>Clear
-          </button>
+        <!--begin::Filter action row: summary left, buttons right-->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+
+          <!--begin::Summary block-->
+          <div class="d-flex flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2 border rounded px-3 py-2 bg-light">
+              <i class="bi bi-box-seam text-primary fs-5"></i>
+              <div>
+                <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">Total Qty</div>
+                <div class="fw-bold text-gray-800 fs-6 lh-1">{{ summary.totalQuantityKg | number }} kg</div>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2 border rounded px-3 py-2" style="background:#e8f4fd;">
+              <i class="bi bi-grid text-info fs-5"></i>
+              <div>
+                <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">10 kg Crates</div>
+                <div class="fw-bold text-info fs-6 lh-1">{{ summary.crate10KgCount | number }}</div>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2 border rounded px-3 py-2" style="background:#e9f7ef;">
+              <i class="bi bi-grid-3x3 text-success fs-5"></i>
+              <div>
+                <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">20 kg Crates</div>
+                <div class="fw-bold text-success fs-6 lh-1">{{ summary.crate20KgCount | number }}</div>
+              </div>
+            </div>
+          </div>
+          <!--end::Summary block-->
+
+          <!--begin::Action buttons-->
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-sm btn-primary" (click)="applyFilters()">
+              <i class="bi bi-search me-1"></i>Apply
+            </button>
+            <button type="button" class="btn btn-sm btn-light" (click)="clearFilters()">
+              <i class="bi bi-x-circle me-1"></i>Clear
+            </button>
+          </div>
+          <!--end::Action buttons-->
+
         </div>
+        <!--end::Filter action row-->
       </div>
       <!--end::Filter Panel-->
 

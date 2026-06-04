@@ -1,40 +1,88 @@
 <div class="modal-header">
-  <h5 class="modal-title">{{ mango.name }} - Detailed View</h5>
+  <h5 class="modal-title fw-bold">{{ mango.name }} — Detailed View</h5>
   <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
 </div>
+
 <div class="modal-body">
-  <div class="row g-4 align-items-center">
-    <div class="col-md-6">
-      <img [src]="mango.image" class="img-fluid rounded" [alt]="mango.name" />
+  <div class="row g-4 align-items-start">
+    <!-- Image -->
+    <div class="col-md-5">
+      <img [src]="mango.image" class="img-fluid rounded-3 w-100" [alt]="mango.name"
+           (error)="$any($event.target).src='assets/media/avatars/blank.png'" />
     </div>
-    <div class="col-md-6">
-      <h3>{{ mango.name }}</h3>
-      <p *ngIf="mango.description" class="text-muted">{{ mango.description }}</p>
-      <p><strong>Price:</strong> {{ mango.price | currency:'BDT' }}</p>
-      <p>
-        <strong>Availability:</strong>
-        <span class="badge ms-1" [ngClass]="mango.statusBadgeClass || (mango.isAvailable ? 'bg-success' : 'bg-danger')">
-          {{ mango.availabilityLabel || (mango.isAvailable ? 'Available' : 'Not Available') }}
+
+    <!-- Details -->
+    <div class="col-md-7">
+      <h3 class="fw-bold text-dark mb-1">{{ mango.name }}</h3>
+      <p *ngIf="mango.description" class="text-muted fs-7 mb-3">{{ mango.description }}</p>
+
+      <!-- Status + Price row -->
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <span class="badge fs-7" [ngClass]="mango.statusBadgeClass || 'badge-light-dark'">
+          {{ mango.availabilityLabel || 'Not Listed' }}
         </span>
-      </p>
-      <p><strong>Sweetness Level:</strong> {{ mango.sweetness }}</p>
-      <div class="progress mt-1 mb-3" style="height: 5px;">
-        <div
-          class="progress-bar bg-warning"
-          role="progressbar"
-          [style.width]="getSweetnessWidth(mango.sweetness)"
-        ></div>
+        <span *ngIf="mango.price" class="fs-2 fw-bolder text-success lh-1">
+          ৳{{ mango.price | number:'1.0-0' }}<span class="fs-7 fw-semibold">/kg</span>
+        </span>
+        <span *ngIf="!mango.price" class="fs-6 text-muted fst-italic">Price TBD</span>
       </div>
-      <p *ngIf="mango.region"><strong>Region:</strong> {{ mango.region }}</p>
-      <p *ngIf="mango.averageWeight"><strong>Avg. Weight:</strong> {{ mango.averageWeight }}</p>
-      <p *ngIf="mango.seasonYear"><strong>Season:</strong> {{ mango.seasonYear }}</p>
-      <p *ngIf="mango.availabilityNotes" class="text-muted small">{{ mango.availabilityNotes }}</p>
+
+      <!-- Season dates -->
+      <div *ngIf="mango.startDate || mango.endDate" class="d-flex flex-wrap gap-2 mb-3">
+        <span *ngIf="mango.startDate" class="badge badge-light-primary px-3 py-2">
+          <i class="bi bi-calendar-check me-1"></i>
+          Available from {{ mango.startDate.toDate() | date:'dd MMM yyyy' }}
+        </span>
+        <span *ngIf="mango.endDate" class="badge badge-light-warning px-3 py-2">
+          <i class="bi bi-calendar-x me-1"></i>
+          Until {{ mango.endDate.toDate() | date:'dd MMM yyyy' }}
+        </span>
+      </div>
+
+      <!-- Properties -->
+      <div class="row g-2 mb-3">
+        <div class="col-6" *ngIf="mango.region">
+          <div class="detail-chip">
+            <span class="text-muted fs-8 d-block text-uppercase fw-semibold">Region</span>
+            <span class="fw-semibold text-dark fs-7">{{ mango.region }}</span>
+          </div>
+        </div>
+        <div class="col-6" *ngIf="mango.averageWeight">
+          <div class="detail-chip">
+            <span class="text-muted fs-8 d-block text-uppercase fw-semibold">Avg. Weight</span>
+            <span class="fw-semibold text-dark fs-7">{{ mango.averageWeight }}</span>
+          </div>
+        </div>
+        <div class="col-6" *ngIf="mango.seasonYear">
+          <div class="detail-chip">
+            <span class="text-muted fs-8 d-block text-uppercase fw-semibold">Season</span>
+            <span class="fw-semibold text-dark fs-7">{{ mango.seasonYear }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sweetness -->
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="text-muted fs-8 text-uppercase fw-semibold">Sweetness Level</span>
+          <span class="fw-semibold fs-7 text-dark">{{ mango.sweetness }}</span>
+        </div>
+        <div class="progress" style="height: 7px; border-radius: 4px;">
+          <div class="progress-bar bg-warning" role="progressbar" [style.width]="getSweetnessWidth(mango.sweetness)"></div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <p *ngIf="mango.availabilityNotes" class="text-muted fs-7 fst-italic border-start border-warning border-3 ps-3 mb-0">
+        {{ mango.availabilityNotes }}
+      </p>
     </div>
   </div>
 </div>
+
 <div class="modal-footer">
-    <button class="btn btn-outline-secondary btn-sm" (click)="activeModal.close()">Close</button>
-    <button class="btn btn-primary btn-sm" [disabled]="!mango.isAvailable" (click)="proceedToOrder()">
-        Proceed to Order
-    </button>
+  <button class="btn btn-outline-secondary btn-sm" (click)="activeModal.close()">Close</button>
+  <button class="btn btn-success btn-sm" [disabled]="!mango.isAvailable" (click)="proceedToOrder()">
+    <i class="bi bi-cart-plus me-1"></i>Proceed to Order
+  </button>
 </div>

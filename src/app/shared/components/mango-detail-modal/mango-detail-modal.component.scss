@@ -1,13 +1,14 @@
-// mango-detail-modal.component.scss
 .modal-body img {
-  max-height: 300px;
+  max-height: 320px;
   object-fit: cover;
-}
-
-.modal-header h5 {
-  font-weight: 600;
 }
 
 .modal-footer {
   justify-content: space-between;
+}
+
+.detail-chip {
+  background: var(--bs-gray-100, #f5f5f5);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
 }

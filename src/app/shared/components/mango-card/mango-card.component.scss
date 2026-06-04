@@ -1,50 +1,44 @@
 .mango-card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 0.75rem;
+  border-radius: 0.85rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 
   &:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12) !important;
   }
 
   .card-img-top {
-    height: 240px;
+    height: 220px;
     object-fit: cover;
-    border-top-left-radius: 0.75rem;
-    border-top-right-radius: 0.75rem;
+    border-top-left-radius: 0.85rem;
+    border-top-right-radius: 0.85rem;
     transition: transform 0.3s ease;
-  }
-
-  .card-title {
-    font-weight: 600;
-    font-size: 1.15rem;
   }
 
   .image-link {
     display: block;
     overflow: hidden;
-    border-top-left-radius: 0.75rem;
-    border-top-right-radius: 0.75rem;
-  }
-}
+    border-top-left-radius: 0.85rem;
+    border-top-right-radius: 0.85rem;
 
-button.btn-primary {
-  font-weight: 500;
-  border-radius: 0.4rem;
-  transition: background-color 0.3s ease;
-
-  i {
-    vertical-align: middle;
+    &:hover .card-img-top {
+      transform: scale(1.04);
+    }
   }
 
-  &:hover {
-    background-color: darken(#0d6efd, 5%);
+  .mango-price {
+    line-height: 1.1;
+  }
+
+  .mango-date-chip {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.3em 0.6em;
+    border-radius: 0.4rem;
+    letter-spacing: 0.01em;
+  }
+
+  .letter-spacing-1 {
+    letter-spacing: 0.06em;
   }
 }
-
-.btn-sm {
-  font-weight: 500;
-  min-width: 120px;
-}
-
-

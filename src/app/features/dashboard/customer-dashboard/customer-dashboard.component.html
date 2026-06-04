@@ -122,20 +122,34 @@
     <!-- Available Mangoes -->
     <div class="card border-0 shadow-sm mb-6">
       <div class="card-header bg-white py-4">
-        <h5 class="mb-0 fw-bold">Available Mangoes</h5>
+        <h5 class="mb-0 fw-bold">
+          <i class="bi bi-basket2-fill text-success me-2"></i>Available Mangoes
+        </h5>
       </div>
       <div class="card-body">
         <div class="row g-3" *ngIf="dashboard.availableMangoes?.length; else noMangoes">
           <div class="col-12 col-sm-6 col-md-4 col-xl-3" *ngFor="let mango of dashboard.availableMangoes">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="card border-0 border-start border-4 border-success shadow-sm h-100">
               <div class="card-body p-4 d-flex flex-column">
+                <!-- Name + badge -->
                 <div class="d-flex align-items-start justify-content-between mb-2">
                   <h6 class="fw-bold mb-0 me-2 text-dark">{{ mango.mangoTypeName }}</h6>
                   <span class="badge badge-light-success flex-shrink-0">Available</span>
                 </div>
-                <div class="fs-4 fw-bold text-success mb-2">৳{{ mango.pricePerKg }}/kg</div>
-                <div class="fs-7 fw-medium text-gray-600 mt-auto">
-                  <i class="bi bi-calendar3 me-1"></i>Until {{ mango.endDate.toDate() | date:'dd MMM yyyy' }}
+                <!-- Price -->
+                <div class="mb-3">
+                  <span class="fs-3 fw-bolder text-success lh-1">
+                    ৳{{ mango.pricePerKg | number:'1.0-0' }}<span class="fs-8 fw-semibold">/kg</span>
+                  </span>
+                </div>
+                <!-- Dates -->
+                <div class="d-flex flex-column gap-1 mt-auto">
+                  <span *ngIf="mango.startDate" class="badge badge-light-primary text-start py-2 px-3">
+                    <i class="bi bi-calendar-check me-1"></i>From {{ mango.startDate.toDate() | date:'dd MMM yyyy' }}
+                  </span>
+                  <span class="badge badge-light-warning text-start py-2 px-3">
+                    <i class="bi bi-calendar-x me-1"></i>Until {{ mango.endDate.toDate() | date:'dd MMM yyyy' }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -153,21 +167,35 @@
     <!-- Upcoming Mangoes -->
     <div class="card border-0 shadow-sm">
       <div class="card-header bg-white py-4">
-        <h5 class="mb-0 fw-bold">Upcoming Mangoes</h5>
+        <h5 class="mb-0 fw-bold">
+          <i class="bi bi-hourglass-split text-warning me-2"></i>Upcoming Mangoes
+        </h5>
       </div>
       <div class="card-body">
         <div class="row g-3" *ngIf="dashboard.upcomingMangoes?.length; else noUpcoming">
           <div class="col-12 col-sm-6 col-md-4 col-xl-3" *ngFor="let mango of dashboard.upcomingMangoes">
-            <div class="card border-0 shadow-sm h-100">
+            <div class="card border-0 border-start border-4 border-warning shadow-sm h-100">
               <div class="card-body p-4 d-flex flex-column">
+                <!-- Name + badge -->
                 <div class="d-flex align-items-start justify-content-between mb-2">
                   <h6 class="fw-bold mb-0 me-2 text-dark">{{ mango.mangoTypeName }}</h6>
                   <span class="badge badge-light-warning flex-shrink-0">Coming Soon</span>
                 </div>
-                <div *ngIf="mango.pricePerKg > 0" class="fs-4 fw-bold text-warning mb-2">৳{{ mango.pricePerKg }}/kg</div>
-                <div *ngIf="!mango.pricePerKg" class="fs-6 text-muted mb-2">Price TBD</div>
-                <div class="fs-7 fw-medium text-gray-600 mt-auto">
-                  <i class="bi bi-calendar3 me-1"></i>Available from {{ mango.startDate.toDate() | date:'dd MMM yyyy' }}
+                <!-- Price -->
+                <div class="mb-3">
+                  <span *ngIf="mango.pricePerKg > 0" class="fs-3 fw-bolder text-warning lh-1">
+                    ৳{{ mango.pricePerKg | number:'1.0-0' }}<span class="fs-8 fw-semibold">/kg</span>
+                  </span>
+                  <span *ngIf="!mango.pricePerKg" class="fs-7 text-muted fst-italic">Price TBD</span>
+                </div>
+                <!-- Dates -->
+                <div class="d-flex flex-column gap-1 mt-auto">
+                  <span class="badge badge-light-primary text-start py-2 px-3">
+                    <i class="bi bi-calendar-check me-1"></i>From {{ mango.startDate.toDate() | date:'dd MMM yyyy' }}
+                  </span>
+                  <span *ngIf="mango.endDate" class="badge badge-light-danger text-start py-2 px-3">
+                    <i class="bi bi-calendar-x me-1"></i>Until {{ mango.endDate.toDate() | date:'dd MMM yyyy' }}
+                  </span>
                 </div>
               </div>
             </div>
