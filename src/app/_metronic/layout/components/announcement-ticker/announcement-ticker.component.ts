@@ -12,7 +12,7 @@ export class AnnouncementTickerComponent {
   readonly items = [
     '🥭 Fresh seasonal mangoes now available',
     '🌿 Naturally ripened premium mangoes',
-    '⭐ Now delivering premium Gopalbhog mangoes',
+    '⭐ Now delivering premium Himsagor mangoes',
     '🚚 Delivery across major areas in Bangladesh',
     '💳 bKash payment supported',
   ];
