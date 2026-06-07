@@ -1,9 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { SubSink } from 'subsink';
-import * as moment from 'moment';
 import {
   CreateMangoAvailabilityCommand,
   MangoAvailabilityDto,
@@ -16,12 +15,13 @@ import { AuthService } from '../../auth';
 import { DropdownModel } from 'src/app/shared/models/dropdown.model';
 import { DropdownService } from 'src/app/shared/services/dropdown.service';
 import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
+import { DateUtils } from 'src/app/shared/utils/date.utils';
 
 @Component({
   selector: 'app-availability-modal',
   templateUrl: './availability-modal.component.html',
 })
-export class AvailabilityModalComponent implements OnInit, OnDestroy {
+export class AvailabilityModalComponent implements OnInit, OnChanges, OnDestroy {
   @Input() item?: MangoAvailabilityDto;
 
   subs = new SubSink();
@@ -45,25 +45,58 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.statusOptions = this.dropdownService.getMangoAvailabilityStatusOptions();
     this.loadMangoTypes();
+    this.buildForm();
+    // item may already be set if NgBootstrap assigned it before ngOnInit
+    if (this.item) {
+      this.patchForm();
+    }
+  }
 
+  // NgBootstrap sets @Input() via componentInstance AFTER open() returns.
+  // If ngOnInit fires first (item is still undefined), ngOnChanges picks it up here.
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['item'] && this.form) {
+      this.patchForm();
+      this.syncMangoTypeDisabledState();
+    }
+  }
+
+  private buildForm(): void {
     this.form = this.fb.group({
-      mangoTypeId: [this.item?.mangoTypeId ?? 0, [Validators.required, Validators.min(1)]],
+      mangoTypeId: [0, [Validators.required, Validators.min(1)]],
       seasonYear: [
-        this.item?.seasonYear ?? new Date().getFullYear(),
+        new Date().getFullYear(),
         [Validators.required, Validators.min(2020), Validators.max(2100)],
       ],
-      startDate: [
-        this.item ? this.item.startDate.format('YYYY-MM-DD') : '',
-        [Validators.required],
-      ],
-      endDate: [
-        this.item ? this.item.endDate.format('YYYY-MM-DD') : '',
-        [Validators.required],
-      ],
-      pricePerKg: [this.item?.pricePerKg ?? null, [Validators.required, Validators.min(0.01)]],
-      status: [this.item?.status ?? 0, [Validators.required]],
-      notes: [this.item?.notes ?? ''],
+      startDate: ['', [Validators.required]],
+      endDate: ['', [Validators.required]],
+      pricePerKg: [null, [Validators.required, Validators.min(0.01)]],
+      status: [0, [Validators.required]],
+      notes: [''],
     });
+    this.syncMangoTypeDisabledState();
+  }
+
+  private patchForm(): void {
+    if (!this.item || !this.form) return;
+    this.form.patchValue({
+      mangoTypeId: this.item.mangoTypeId,
+      seasonYear: this.item.seasonYear,
+      startDate: this.item.startDate.format('YYYY-MM-DD'),
+      endDate: this.item.endDate.format('YYYY-MM-DD'),
+      pricePerKg: this.item.pricePerKg,
+      status: this.item.status,
+      notes: this.item.notes ?? '',
+    });
+  }
+
+  // Disabling via formControl.disable() is the Angular-idiomatic approach:
+  // it visually disables the DOM element via setDisabledState() AND excludes
+  // the control from validators — so mangoTypeId = 0 never fails min(1) on edit.
+  private syncMangoTypeDisabledState(): void {
+    const ctrl = this.form?.get('mangoTypeId');
+    if (!ctrl) return;
+    this.isEdit ? ctrl.disable() : ctrl.enable();
   }
 
   private loadMangoTypes(): void {
@@ -91,7 +124,8 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
 
-    const v = this.form.value;
+    // getRawValue() includes disabled controls (mangoTypeId is disabled on edit)
+    const v = this.form.getRawValue();
     this.isLoading = true;
 
     const notesVal = v.notes?.trim() || null;
@@ -100,8 +134,8 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
       const command = new UpdateMangoAvailabilityCommand({
         id: this.item!.id,
         seasonYear: +v.seasonYear,
-        startDate: moment(v.startDate),
-        endDate: moment(v.endDate),
+        startDate: DateUtils.toUtcMoment(v.startDate)!,
+        endDate: DateUtils.toUtcMoment(v.endDate)!,
         pricePerKg: +v.pricePerKg,
         status: +v.status as MangoAvailabilityStatus,
         notes: notesVal ?? undefined,
@@ -127,8 +161,8 @@ export class AvailabilityModalComponent implements OnInit, OnDestroy {
       const command = new CreateMangoAvailabilityCommand({
         mangoTypeId: +v.mangoTypeId,
         seasonYear: +v.seasonYear,
-        startDate: moment(v.startDate),
-        endDate: moment(v.endDate),
+        startDate: DateUtils.toUtcMoment(v.startDate)!,
+        endDate: DateUtils.toUtcMoment(v.endDate)!,
         pricePerKg: +v.pricePerKg,
         status: +v.status as MangoAvailabilityStatus,
         notes: notesVal ?? undefined,

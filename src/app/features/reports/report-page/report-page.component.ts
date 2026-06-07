@@ -1,13 +1,11 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import * as moment from 'moment';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { finalize } from 'rxjs';
 import { SubSink } from 'subsink';
 import {
   ExpenseSummaryReportDto,
   OrderSummaryReportDto,
   PaymentSummaryReportDto,
-  ReportServiceProxy,
 } from 'src/app/services/client-proxy';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { environment } from 'src/environments/environment';
@@ -34,8 +32,9 @@ export class ReportPageComponent implements OnInit, OnDestroy {
 
   isExporting = false;
 
+  private readonly apiBase = `${environment.apis.default.url}/api/reports`;
+
   constructor(
-    private reportProxy: ReportServiceProxy,
     private http: HttpClient,
     private cdRef: ChangeDetectorRef
   ) {}
@@ -50,12 +49,17 @@ export class ReportPageComponent implements OnInit, OnDestroy {
     this.loadExpenses();
   }
 
+  private dateParams(): HttpParams {
+    let params = new HttpParams();
+    if (this.fromDate) params = params.set('from', this.fromDate);
+    if (this.toDate)   params = params.set('to',   this.toDate);
+    return params;
+  }
+
   loadOrders(): void {
     this.isLoadingOrders = true;
     this.orderReport = null;
-    const from = this.fromDate ? moment(this.fromDate) : undefined;
-    const to = this.toDate ? moment(this.toDate) : undefined;
-    this.subs.sink = this.reportProxy.getOrderSummary(from, to).pipe(
+    this.subs.sink = this.http.get<any>(`${this.apiBase}/orders`, { params: this.dateParams() }).pipe(
       finalize(() => { this.isLoadingOrders = false; this.cdRef.detectChanges(); })
     ).subscribe({
       next: (res: any) => { this.orderReport = res?.data ?? null; },
@@ -65,9 +69,7 @@ export class ReportPageComponent implements OnInit, OnDestroy {
   loadPayments(): void {
     this.isLoadingPayments = true;
     this.paymentReport = null;
-    const from = this.fromDate ? moment(this.fromDate) : undefined;
-    const to = this.toDate ? moment(this.toDate) : undefined;
-    this.subs.sink = this.reportProxy.getPaymentSummary(from, to).pipe(
+    this.subs.sink = this.http.get<any>(`${this.apiBase}/payments`, { params: this.dateParams() }).pipe(
       finalize(() => { this.isLoadingPayments = false; this.cdRef.detectChanges(); })
     ).subscribe({
       next: (res: any) => { this.paymentReport = res?.data ?? null; },
@@ -77,9 +79,7 @@ export class ReportPageComponent implements OnInit, OnDestroy {
   loadExpenses(): void {
     this.isLoadingExpenses = true;
     this.expenseReport = null;
-    const from = this.fromDate ? moment(this.fromDate) : undefined;
-    const to = this.toDate ? moment(this.toDate) : undefined;
-    this.subs.sink = this.reportProxy.getExpenseSummary(from, to).pipe(
+    this.subs.sink = this.http.get<any>(`${this.apiBase}/expenses`, { params: this.dateParams() }).pipe(
       finalize(() => { this.isLoadingExpenses = false; this.cdRef.detectChanges(); })
     ).subscribe({
       next: (res: any) => { this.expenseReport = res?.data ?? null; },

@@ -9,10 +9,9 @@
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold required">Mango Type</label>
           <select class="form-select form-select-solid" formControlName="mangoTypeId"
-            [class.is-invalid]="isInvalid('mangoTypeId')"
-            [attr.disabled]="isEdit ? true : null">
-            <option [value]="0">-- Select Mango Type --</option>
-            <option *ngFor="let opt of mangoTypeOptions" [value]="opt.id">{{ opt.label }}</option>
+            [class.is-invalid]="isInvalid('mangoTypeId')">
+            <option [ngValue]="0">-- Select Mango Type --</option>
+            <option *ngFor="let opt of mangoTypeOptions" [ngValue]="opt.id">{{ opt.label }}</option>
           </select>
           <div *ngIf="isInvalid('mangoTypeId')" class="text-danger fs-7 mt-1">Mango type is required.</div>
         </div>
@@ -44,7 +43,7 @@
           <label class="form-label fw-semibold required">Status</label>
           <select class="form-select form-select-solid" formControlName="status"
             [class.is-invalid]="isInvalid('status')">
-            <option *ngFor="let opt of statusOptions" [value]="opt.id">{{ opt.label }}</option>
+            <option *ngFor="let opt of statusOptions" [ngValue]="opt.id">{{ opt.label }}</option>
           </select>
           <div *ngIf="isInvalid('status')" class="text-danger fs-7 mt-1">Status is required.</div>
         </div>
