@@ -57,8 +57,10 @@ export class GlobalHttpInterceptor implements HttpInterceptor {
           return throwError(() => error);
         }
 
-        // All other errors (400, 403, 404, 408, 409, 500, etc.)
-        this.errorMessageService.handleHttpError(error);
+        // Auth page handles errors inline — skip global Swal to avoid duplicate alerts.
+        if (!onAuthPage && !onErrorPage) {
+          this.errorMessageService.handleHttpError(error);
+        }
 
         if (error.status === 408 && !onAuthPage && !onErrorPage) {
           this.router.navigateByUrl('/auth/login');

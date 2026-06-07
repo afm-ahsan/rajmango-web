@@ -45,8 +45,12 @@ export class AuthService implements OnDestroy {
     this.isLoadingSubject.next(true);
     return this.authHttpService.login(email, password).pipe(
       switchMap((res: any) => {
-        if (!res?.succeeded || !res?.data) {
-          return of({ user: undefined as UserType, messages: (res?.messages as string[]) ?? [] });
+        // Explicit strict check: succeeded must be exactly true AND data must be present
+        if (res?.succeeded !== true || !res?.data) {
+          const messages: string[] = Array.isArray(res?.messages)
+            ? (res.messages as any[]).filter((m: any): m is string => typeof m === 'string')
+            : [];
+          return of({ user: undefined as UserType, messages });
         }
         this.setAuthToLocalStorage(res.data);
         return this.getUserByToken().pipe(
@@ -54,8 +58,18 @@ export class AuthService implements OnDestroy {
         );
       }),
       catchError((err: any) => {
-        console.error('Login error:', err);
-        return of({ user: undefined as UserType, messages: [] as string[] });
+        let messages: string[] = [];
+        if (err?.status === 0) {
+          messages = ['Unable to connect to the server. Please check your internet connection and try again.'];
+        } else {
+          const body = err?.error;
+          if (Array.isArray(body?.messages) && body.messages.length > 0) {
+            messages = (body.messages as any[]).filter((m): m is string => typeof m === 'string');
+          } else if (Array.isArray(body) && body.length > 0) {
+            messages = (body as any[]).filter((m): m is string => typeof m === 'string');
+          }
+        }
+        return of({ user: undefined as UserType, messages });
       }),
       finalize(() => this.isLoadingSubject.next(false))
     );

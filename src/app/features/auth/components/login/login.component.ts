@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { AuthFacade } from '../../auth.facade';
 
 @Component({
@@ -10,20 +9,19 @@ import { AuthFacade } from '../../auth.facade';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   hasError = false;
   backendErrorMessage = '';
   isSubmitting = false;
   returnUrl = '/home';
 
-  private readonly _destroy$ = new Subject<void>();
-
   constructor(
     private _fb: FormBuilder,
     private _authFacade: AuthFacade,
     private _route: ActivatedRoute,
     private _router: Router,
+    private _cdr: ChangeDetectorRef,
   ) {
     if (this._authFacade.currentUserValue) {
       this._router.navigate(['/home']);
@@ -33,11 +31,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this._initForm();
     this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/home';
-  }
-
-  ngOnDestroy(): void {
-    this._destroy$.next();
-    this._destroy$.complete();
   }
 
   private _initForm(): void {
@@ -65,33 +58,33 @@ export class LoginComponent implements OnInit, OnDestroy {
   get email()    { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }
 
-  submit(): void {
+  async submit(): Promise<void> {
     if (this.loginForm.invalid || this.isSubmitting) return;
 
     this.hasError = false;
     this.backendErrorMessage = '';
     this.isSubmitting = true;
+    this._cdr.detectChanges();
 
-    this._authFacade
-      .login(this.email?.value, this.password?.value)
-      .pipe(
-        takeUntil(this._destroy$),
-        finalize(() => { this.isSubmitting = false; })
-      )
-      .subscribe({
-        next: (result) => {
-          if (result.user) {
-            this._router.navigate([this.returnUrl]);
-          } else {
-            this.hasError = true;
-            this.backendErrorMessage = result.messages[0] ?? '';
-          }
-        },
-        error: () => {
-          this.hasError = true;
-          this.backendErrorMessage = '';
-        },
-      });
+    try {
+      const result = await firstValueFrom(
+        this._authFacade.login(this.email?.value, this.password?.value)
+      );
+
+      if (result.user) {
+        this._router.navigate([this.returnUrl]);
+      } else {
+        this.hasError = true;
+        this.backendErrorMessage =
+          result.messages?.[0] || 'Invalid email or password. Please try again.';
+      }
+    } catch {
+      this.hasError = true;
+      this.backendErrorMessage = 'Invalid email or password. Please try again.';
+    } finally {
+      this.isSubmitting = false;
+      this._cdr.detectChanges();
+    }
   }
 
   readonly emailErrors    = LoginComponentValidation.email;

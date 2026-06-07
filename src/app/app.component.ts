@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, Router } from '@angular/router';
 import { TranslationService } from './features/i18n';
 import { locale as enLang } from './features/i18n/vocabs/en';
@@ -11,7 +11,6 @@ import { IdleSessionService } from './shared/services/idle-session.service';
   selector: 'body[root]',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
   constructor(
