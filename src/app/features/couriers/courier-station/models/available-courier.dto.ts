@@ -6,4 +6,6 @@ export interface AvailableCourierDto {
   area: string;
   phone: string;
   mapUrl: string;
+  /** 1 = InsideDhaka, 2 = OutsideDhaka */
+  locationType: number;
 }

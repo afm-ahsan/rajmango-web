@@ -41,13 +41,29 @@
               [items]="courierAreaOptions"
               bindLabel="name"
               bindValue="name"
-              placeholder="Select Delivery Area"
+              [typeahead]="areaTypeahead$"
+              [loading]="isAreaSearching"
+              loadingText="Searching areas..."
+              [minTermLength]="2"
+              placeholder="Search your delivery area (e.g. Adabor, Mirpur, Uttara)"
               [searchable]="true"
-              [clearable]="false"
-              notFoundText="No matching results found."
+              [clearable]="true"
+              notFoundText="Type at least 2 characters to search."
               (change)="onAreaChanged()"
               [class.is-invalid]="isControlInvalid('area')">
+              <!-- Selected chip: always show the short name -->
+              <ng-template ng-label-tmp let-item="item">
+                {{ item.name }}
+              </ng-template>
+              <!-- Dropdown row: show full descriptive label when available -->
+              <ng-template ng-option-tmp let-item="item">
+                {{ item.label || item.name }}
+              </ng-template>
             </ng-select>
+            <div *ngIf="areaHasNoMatch && !isAreaSearching" class="text-muted fs-7 mt-1">
+              <i class="bi bi-info-circle me-1"></i>No matching delivery area found.
+              Select <strong>Others</strong> from the list to provide your delivery address manually.
+            </div>
             <div *ngIf="isControlInvalid('area')" class="text-danger fs-7 mt-1">Please select a delivery area.</div>
           </div>
           <!-- Courier station: loading state -->
@@ -67,19 +83,28 @@
               [items]="availableStations"
               bindValue="stationId"
               [searchFn]="searchStation"
-              placeholder="Select Courier Station"
+              placeholder="Select nearest courier station"
               [searchable]="true"
-              [clearable]="false"
+              [clearable]="true"
               notFoundText="No matching results found."
               [disabled]="!hasAreaSelected"
               [class.is-invalid]="isControlInvalid('courierStationId')">
               <ng-template ng-label-tmp let-item="item">
-                {{ item.providerName }} - {{ item.stationName }} ({{ item.area }})
+                {{ item.providerName }} — {{ item.stationName }}
               </ng-template>
               <ng-template ng-option-tmp let-item="item">
-                {{ item.providerName }} - {{ item.stationName }} ({{ item.area }})
+                <div class="fw-semibold lh-sm">{{ item.providerName }} — {{ item.stationName }}</div>
+                <div class="text-muted fs-8">
+                  Covers: {{ item.area }}
+                  <span *ngIf="item.locationType" class="ms-2 badge badge-light-{{ item.locationType === 1 ? 'primary' : 'warning' }} fs-9">
+                    {{ getLocationTypeLabel(item.locationType) }}
+                  </span>
+                </div>
               </ng-template>
             </ng-select>
+            <div class="text-muted fs-7 mt-1">
+              <i class="bi bi-info-circle me-1"></i>Choose the courier station where the receiver will collect the mangoes.
+            </div>
             <div *ngIf="isControlInvalid('courierStationId')" class="text-danger fs-7 mt-1">Please select a courier station.</div>
           </div>
           <!-- Courier station: fallback manual address -->
@@ -156,6 +181,20 @@
           </div>
         </div>
       </form>
+      <!-- Item added confirmation -->
+      <div *ngIf="itemAddedFeedback && lastAddedItem"
+           class="alert alert-success d-flex align-items-start gap-3 py-3 px-4 mt-3 mb-0">
+        <i class="bi bi-check-circle-fill text-success fs-5 mt-1 flex-shrink-0"></i>
+        <div>
+          <div class="fw-bold">{{ lastAddedItem.mangoName }}</div>
+          <div class="fs-7 text-muted">
+            {{ lastAddedItem.crateName }} &times; {{ lastAddedItem.quantity }}
+            &nbsp;&mdash;&nbsp;Weight: {{ getItemWeight(lastAddedItem) | number }} kg
+          </div>
+          <div class="fw-semibold text-success fs-7">Amount: ৳ {{ lastAddedItem.totalPrice | number:'1.0-0' }}</div>
+        </div>
+      </div>
+
       <div class="table-responsive mt-4" *ngIf="orderDetails.length > 0">
         <table class="table table-striped align-middle">
           <thead>
@@ -177,8 +216,8 @@
               <td>{{ order.crateName }}</td>
               <td class="text-end">{{ order.quantity | number }}</td>
               <td class="text-end">{{ getItemWeight(order) | number }} kg</td>
-              <td class="text-end">{{ order.unitPrice }}</td>
-              <td class="text-end">{{ order.totalPrice }}</td>
+              <td class="text-end">৳ {{ order.unitPrice | number:'1.0-0' }}</td>
+              <td class="text-end">৳ {{ order.totalPrice | number:'1.0-0' }}</td>
               <td>
                 <a href="javascript:void(0)" (click)="remove(order.id)" title="Remove" class="text-danger">
                   <i class="bi bi-x-lg"></i>
@@ -187,7 +226,7 @@
             </tr>
             <tr class="table-light fw-bold">
               <td colspan="6" class="text-end">Total:</td>
-              <td class="text-end">{{ orderDto.totalAmount | number }}</td>
+              <td class="text-end">৳ {{ orderDto.totalAmount | number:'1.0-0' }}</td>
               <td></td>
             </tr>
           </tbody>
@@ -216,13 +255,34 @@
               <span class="text-muted">Total Weight</span>
               <span class="fw-semibold">{{ getTotalWeight() | number }} kg</span>
             </div>
+            <ng-container *ngIf="previewProviderName || previewLocationType !== null || previewRatePerKg !== null">
+              <hr class="my-2" />
+              <div *ngIf="previewProviderName" class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Courier Provider</span>
+                <span class="fw-semibold">{{ previewProviderName }}</span>
+              </div>
+              <div *ngIf="previewLocationType !== null" class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Location Type</span>
+                <span class="fw-semibold">{{ getLocationTypeLabel(previewLocationType) }}</span>
+              </div>
+              <div *ngIf="previewRatePerKg !== null" class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Rate Per Kg</span>
+                <span class="fw-semibold">৳ {{ previewRatePerKg | number:'1.0-2' }} / kg</span>
+              </div>
+              <div *ngIf="previewMinimumCharge !== null && previewMinimumCharge > 0" class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Minimum Charge</span>
+                <span class="fw-semibold">৳ {{ previewMinimumCharge | number:'1.0-0' }}</span>
+              </div>
+              <hr class="my-2" />
+            </ng-container>
             <ng-container *ngIf="previewCourierCharge !== null">
               <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">
-                  Courier Charge
-                  <span *ngIf="previewProviderName" class="ms-1 fs-7">({{ previewProviderName }})</span>
-                </span>
+                <span class="text-muted">Courier Charge</span>
                 <span class="fw-semibold">৳ {{ previewCourierCharge | number:'1.0-2' }}</span>
+              </div>
+              <div *ngIf="previewChargeCalculated !== null && previewChargeCalculated < previewCourierCharge"
+                   class="text-muted fs-8 fst-italic mb-2 text-end">
+                (calculated ৳ {{ previewChargeCalculated | number:'1.0-0' }}, minimum applied)
               </div>
             </ng-container>
             <ng-container *ngIf="previewCourierCharge === null && !previewError">

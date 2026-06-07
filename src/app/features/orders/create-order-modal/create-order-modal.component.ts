@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbDate } from '@ng-bootstrap/ng-bootstrap';
-import { firstValueFrom, forkJoin, of, switchMap } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { firstValueFrom, forkJoin, of, Subject, switchMap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, filter, finalize, tap } from 'rxjs/operators';
 import { MangoAvailabilityDto, MangoAvailabilityServiceProxy, MangoAvailabilityStatus } from 'src/app/services/client-proxy';
 import { DeliveryStatus } from 'src/app/shared/enums/delivery-status.enum';
 import { OrderStatus } from 'src/app/shared/enums/order-status.enum';
@@ -63,8 +63,20 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   previewCourierCharge: number | null = null;
   previewGrandTotal: number | null = null;
   previewProviderName: string | null = null;
+  previewRatePerKg: number | null = null;
+  previewLocationType: number | null = null;
+  previewMinimumCharge: number | null = null;
+  previewChargeCalculated: number | null = null;
   isPreviewLoading = false;
   previewError: string | null = null;
+
+  lastAddedItem: OrderDetailDto | null = null;
+  itemAddedFeedback = false;
+  private _feedbackTimer: ReturnType<typeof setTimeout> | null = null;
+
+  areaTypeahead$ = new Subject<string>();
+  isAreaSearching = false;
+  areaHasNoMatch = false;
 
   readonly searchStation = (term: string, item: AvailableCourierDto): boolean => {
     const q = term.toLowerCase();
@@ -130,21 +142,16 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     const mangoTypes$ = this.mangoTypeService.list().pipe(
       catchError(() => { this.loadFailed = true; return of({ data: [] }); })
     );
-    const courierAreas$ = this.courierAreaService.getDropdown().pipe(
-      catchError(() => { this.loadFailed = true; return of({ data: [] }); })
-    );
     const availabilities$ = this.availabilityProxy.get().pipe(
       catchError(() => { this.loadFailed = true; return of({ data: [] }); })
     );
 
     this.subs.sink = forkJoin({
       mangoTypes: mangoTypes$,
-      courierAreas: courierAreas$,
       availabilities: availabilities$,
     }).pipe(
-      switchMap(({ mangoTypes, courierAreas, availabilities }) => {
+      switchMap(({ mangoTypes, availabilities }) => {
         this.mangoTypes = mangoTypes.data ?? [];
-        this.courierAreaOptions = courierAreas.data ?? [];
         const activeAvail: MangoAvailabilityDto[] = availabilities.data ?? [];
         this.priceMap = activeAvail.reduce((map, a) => {
           map[a.mangoTypeId] = a.pricePerKg;
@@ -190,6 +197,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   }
 
   private afterDataLoad(isEditMode: boolean): void {
+    this.setupAreaTypeahead();
     this.orderForm = this.buildForm();
 
     this.subs.sink = this.orderForm.get('receiverType')!.valueChanges.subscribe(type => {
@@ -202,6 +210,10 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     });
 
     if (isEditMode) {
+      // Seed the options with the saved area so ng-select can display the label immediately
+      if (this.orderDto.area) {
+        this.courierAreaOptions = [{ id: 0, name: this.orderDto.area }];
+      }
       if(this.orderDto.courierStationId){
         this.isFallbackMode = false;
         this.orderForm.patchValue({
@@ -278,12 +290,12 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       item.mangoTypeId === mangoTypeId &&
       item.crateType === crateType
     );
-    
+
     if (existingItem) {
-      // Update existing item
       existingItem.quantity += quantity;
       existingItem.totalPrice += totalPrice;
-    }else{
+      this.lastAddedItem = { ...existingItem };
+    } else {
       const orderDetail: OrderDetailDto = {
         id: this.createId(),
         mangoTypeId,
@@ -296,9 +308,11 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         crateName: EnumLabelUtils.getCrateTypeLabel(crateType),
       };
       this.orderDetails.push(orderDetail);
-    }    
+      this.lastAddedItem = orderDetail;
+    }
     this.orderDto.totalAmount = this.getTotalPrice();
     this.orderForm.patchValue({ quantity: 1, note: '' });
+    this.showAddedFeedback();
     this.cdRef.detectChanges();
     this.refreshPreview();
   }
@@ -348,11 +362,19 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     this.updateCourierValidation();
     this.isFallbackMode = false;
     this.availableStations = [];
+    this.courierAreaOptions = [];
+    this.areaHasNoMatch = false;
     this.previewProductTotal = null;
     this.previewCourierCharge = null;
     this.previewGrandTotal = null;
     this.previewProviderName = null;
+    this.previewRatePerKg = null;
+    this.previewLocationType = null;
+    this.previewMinimumCharge = null;
+    this.previewChargeCalculated = null;
     this.previewError = null;
+    this.lastAddedItem = null;
+    this.itemAddedFeedback = false;
     this.cdRef.detectChanges();
   }
 
@@ -371,12 +393,60 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     return item.quantity * DomainUtils.getCrateWeight(item.crateType);
   }
 
+  private setupAreaTypeahead(): void {
+    this.subs.sink = this.areaTypeahead$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      filter(term => !!term && term.length >= 2),
+      tap(() => { this.isAreaSearching = true; this.areaHasNoMatch = false; this.cdRef.detectChanges(); }),
+      switchMap(term => this.courierAreaService.search(term).pipe(
+        catchError(() => of({ data: [] }))
+      ))
+    ).subscribe(res => {
+      // Strip any "Others" the backend may have included, then de-duplicate by normalised name
+      const seen = new Set<string>();
+      const realAreas = (res.data ?? []).filter((a: any) => {
+        const key = (a.name ?? '').trim().toLowerCase();
+        if (key === 'others' || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      this.areaHasNoMatch = realAreas.length === 0;
+
+      // Exactly one descriptive fallback – always last in the list
+      this.courierAreaOptions = [
+        ...realAreas,
+        {
+          id: -1,
+          name: 'Others',
+          label: 'Others – My delivery area is not listed. I will provide my full delivery address.',
+        },
+      ];
+      this.isAreaSearching = false;
+      this.cdRef.detectChanges();
+    });
+  }
+
+  showAddedFeedback(): void {
+    this.itemAddedFeedback = true;
+    if (this._feedbackTimer) clearTimeout(this._feedbackTimer);
+    this._feedbackTimer = setTimeout(() => {
+      this.itemAddedFeedback = false;
+      this.cdRef.detectChanges();
+    }, 2500);
+  }
+
   refreshPreview(): void {
     if (this.orderDetails.length === 0) {
       this.previewProductTotal = null;
       this.previewCourierCharge = null;
       this.previewGrandTotal = null;
       this.previewProviderName = null;
+      this.previewRatePerKg = null;
+      this.previewLocationType = null;
+      this.previewMinimumCharge = null;
+      this.previewChargeCalculated = null;
       this.previewError = null;
       this.cdRef.detectChanges();
       return;
@@ -399,6 +469,10 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         this.previewCourierCharge = data?.courierCharge ?? null;
         this.previewGrandTotal = data?.totalAmount ?? null;
         this.previewProviderName = data?.courierProviderName ?? null;
+        this.previewRatePerKg        = data?.courierRatePerKg       ?? null;
+        this.previewLocationType     = data?.courierLocationType    ?? null;
+        this.previewMinimumCharge    = data?.minimumCharge          ?? null;
+        this.previewChargeCalculated = data?.courierChargeCalculated ?? null;
         this.cdRef.detectChanges();
       },
       error: () => {
@@ -577,6 +651,8 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       this.availableStations = [];
       this.isFallbackMode = false;
       this.isCourierStationLoading = false;
+      this.courierAreaOptions = [];
+      this.areaHasNoMatch = false;
       this.orderForm.get('courierStationId')?.reset();
       this.updateCourierValidation();
       this.cdRef.detectChanges();
@@ -695,7 +771,12 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this._feedbackTimer) clearTimeout(this._feedbackTimer);
     this.subs.unsubscribe();
+  }
+
+  getLocationTypeLabel(type: number | null): string {
+    return EnumLabelUtils.getCourierLocationTypeLabel(type);
   }
 
   isControlValid(controlName: string): boolean {

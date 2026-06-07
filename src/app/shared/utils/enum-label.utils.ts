@@ -150,6 +150,13 @@ export class EnumLabelUtils {
     return classes[grade] ?? 'badge-light-secondary';
   }
 
+  /** 1 = Inside Dhaka, 2 = Outside Dhaka */
+  static getCourierLocationTypeLabel(type: number | null | undefined): string {
+    if (type === 1) return 'Inside Dhaka';
+    if (type === 2) return 'Outside Dhaka';
+    return '—';
+  }
+
   static getSweetnessLevelBadgeClass(level: number): string {
     const classes: Record<number, string> = {
       1: 'badge-light-secondary',

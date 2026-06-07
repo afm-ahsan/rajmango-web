@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin, firstValueFrom, of, switchMap } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { forkJoin, firstValueFrom, of, Subject, switchMap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, filter, finalize, tap } from 'rxjs/operators';
+import { MangoAvailabilityDto, MangoAvailabilityServiceProxy, MangoAvailabilityStatus } from 'src/app/services/client-proxy';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/features/auth';
@@ -55,8 +56,21 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   previewCourierCharge: number | null = null;
   previewGrandTotal: number | null = null;
   previewProviderName: string | null = null;
+  previewRatePerKg: number | null = null;
+  previewLocationType: number | null = null;
+  previewMinimumCharge: number | null = null;
+  previewChargeCalculated: number | null = null;
   isPreviewLoading = false;
   previewError: string | null = null;
+
+  lastAddedItem: OrderDetailDto | null = null;
+  itemAddedFeedback = false;
+  private priceMap: Record<number, number> = {};
+  private _feedbackTimer: ReturnType<typeof setTimeout> | null = null;
+
+  areaTypeahead$ = new Subject<string>();
+  isAreaSearching = false;
+  areaHasNoMatch = false;
 
   readonly searchStation = (term: string, item: AvailableCourierDto): boolean => {
     const q = term.toLowerCase();
@@ -74,7 +88,8 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     private dropdownService: DropdownService,
     private mangoTypeService: MangoTypeService,
     private courierService: CourierStationService,
-    private courierAreaService: CourierAreaMapService
+    private courierAreaService: CourierAreaMapService,
+    private availabilityProxy: MangoAvailabilityServiceProxy,
   ) {}
 
   ngOnInit(): void {
@@ -108,13 +123,16 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.subs.sink = forkJoin({
       mangoTypes: this.mangoTypeService.list(),
-      courierAreas: this.courierAreaService.getDropdown(),
+      availabilities: this.availabilityProxy.get().pipe(catchError(() => of({ data: [] }))),
     })
       .pipe(
-        switchMap(({ mangoTypes, courierAreas }) => {
+        switchMap(({ mangoTypes, availabilities }) => {
           this.mangoTypes = mangoTypes.data;
           this.mangoTypeOptions = this.dropdownService.mapToEntityDropdown(this.mangoTypes, 'id', 'name');
-          this.courierAreaOptions = courierAreas.data;
+          const activeAvail: MangoAvailabilityDto[] = availabilities.data ?? [];
+          this.priceMap = activeAvail
+            .filter(a => a.status === MangoAvailabilityStatus._1 || a.status === MangoAvailabilityStatus._2)
+            .reduce((map, a) => { map[a.mangoTypeId] = a.pricePerKg; return map; }, {} as Record<number, number>);
           this.orderDto = this.initObject();
           this.afterDataLoad();
           return of(null);
@@ -130,6 +148,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   }
 
   private afterDataLoad(): void {
+    this.setupAreaTypeahead();
     this.orderForm = this.buildForm();
 
     this.subs.sink = this.orderForm.get('receiverType')!.valueChanges.subscribe(type => {
@@ -200,7 +219,8 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     }
 
     const mangoType = this.getMangoType(mangoTypeId);
-    const unitPrice = this.mango?.price || 0;
+    // Use fresh availability price; fall back to mango.price from card if not yet loaded
+    const unitPrice = this.priceMap[mangoTypeId] ?? this.mango?.price ?? 0;
     const crateWeight = DomainUtils.getCrateWeight(crateType);
     const totalPrice = quantity * unitPrice * crateWeight;
 
@@ -211,6 +231,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     if (existingItem) {
       existingItem.quantity += quantity;
       existingItem.totalPrice += totalPrice;
+      this.lastAddedItem = { ...existingItem };
     } else {
       const orderDetail: OrderDetailDto = {
         id: this.createId(),
@@ -224,10 +245,12 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
         crateName: EnumLabelUtils.getCrateTypeLabel(crateType),
       };
       this.orderDetails.push(orderDetail);
+      this.lastAddedItem = orderDetail;
     }
 
     this.orderDto.totalAmount = this.getTotalPrice();
     this.orderForm.patchValue({ quantity: 1, note: '' });
+    this.showAddedFeedback();
     this.cdRef.detectChanges();
     this.refreshPreview();
   }
@@ -265,11 +288,19 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     this.updateCourierValidation();
     this.isFallbackMode = false;
     this.availableStations = [];
+    this.courierAreaOptions = [];
+    this.areaHasNoMatch = false;
     this.previewProductTotal = null;
     this.previewCourierCharge = null;
     this.previewGrandTotal = null;
     this.previewProviderName = null;
+    this.previewRatePerKg = null;
+    this.previewLocationType = null;
+    this.previewMinimumCharge = null;
+    this.previewChargeCalculated = null;
     this.previewError = null;
+    this.lastAddedItem = null;
+    this.itemAddedFeedback = false;
     this.cdRef.detectChanges();
   }
 
@@ -288,12 +319,58 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     return item.quantity * DomainUtils.getCrateWeight(item.crateType);
   }
 
+  private setupAreaTypeahead(): void {
+    this.subs.sink = this.areaTypeahead$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      filter(term => !!term && term.length >= 2),
+      tap(() => { this.isAreaSearching = true; this.areaHasNoMatch = false; this.cdRef.detectChanges(); }),
+      switchMap(term => this.courierAreaService.search(term).pipe(
+        catchError(() => of({ data: [] }))
+      ))
+    ).subscribe(res => {
+      const seen = new Set<string>();
+      const realAreas = (res.data ?? []).filter((a: any) => {
+        const key = (a.name ?? '').trim().toLowerCase();
+        if (key === 'others' || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      this.areaHasNoMatch = realAreas.length === 0;
+
+      this.courierAreaOptions = [
+        ...realAreas,
+        {
+          id: -1,
+          name: 'Others',
+          label: 'Others – My delivery area is not listed. I will provide my full delivery address.',
+        },
+      ];
+      this.isAreaSearching = false;
+      this.cdRef.detectChanges();
+    });
+  }
+
+  showAddedFeedback(): void {
+    this.itemAddedFeedback = true;
+    if (this._feedbackTimer) clearTimeout(this._feedbackTimer);
+    this._feedbackTimer = setTimeout(() => {
+      this.itemAddedFeedback = false;
+      this.cdRef.detectChanges();
+    }, 2500);
+  }
+
   refreshPreview(): void {
     if (this.orderDetails.length === 0) {
       this.previewProductTotal = null;
       this.previewCourierCharge = null;
       this.previewGrandTotal = null;
       this.previewProviderName = null;
+      this.previewRatePerKg = null;
+      this.previewLocationType = null;
+      this.previewMinimumCharge = null;
+      this.previewChargeCalculated = null;
       this.previewError = null;
       this.cdRef.detectChanges();
       return;
@@ -316,6 +393,10 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
         this.previewCourierCharge = data?.courierCharge ?? null;
         this.previewGrandTotal = data?.totalAmount ?? null;
         this.previewProviderName = data?.courierProviderName ?? null;
+        this.previewRatePerKg        = data?.courierRatePerKg        ?? null;
+        this.previewLocationType     = data?.courierLocationType     ?? null;
+        this.previewMinimumCharge    = data?.minimumCharge           ?? null;
+        this.previewChargeCalculated = data?.courierChargeCalculated ?? null;
         this.cdRef.detectChanges();
       },
       error: () => {
@@ -434,6 +515,8 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
       this.availableStations = [];
       this.isFallbackMode = false;
       this.isCourierStationLoading = false;
+      this.courierAreaOptions = [];
+      this.areaHasNoMatch = false;
       this.orderForm.get('courierStationId')?.reset();
       this.updateCourierValidation();
       this.cdRef.detectChanges();
@@ -506,6 +589,10 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     return !!v && v !== '0';
   }
 
+  getLocationTypeLabel(type: number | null): string {
+    return EnumLabelUtils.getCourierLocationTypeLabel(type);
+  }
+
   isControlValid(controlName: string): boolean {
     const control = this.orderForm.controls[controlName];
     return control.valid && (control.dirty || control.touched);
@@ -527,6 +614,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this._feedbackTimer) clearTimeout(this._feedbackTimer);
     this.subs.unsubscribe();
   }
 }

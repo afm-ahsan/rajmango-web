@@ -22,26 +22,62 @@
 
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Order Number</label>
-            <input type="text" class="form-control form-control-sm form-control-solid"
-              placeholder="e.g. 202601010001" [(ngModel)]="filter.orderNumber" />
+            <div class="position-relative">
+              <input type="text" class="form-control form-control-sm form-control-solid"
+                [class.pe-6]="filter.orderNumber"
+                placeholder="e.g. 202601010001" [(ngModel)]="filter.orderNumber" />
+              <span *ngIf="filter.orderNumber"
+                (click)="filter.orderNumber = ''"
+                class="position-absolute end-0 top-50 translate-middle-y me-2 cursor-pointer text-muted text-hover-danger"
+                title="Clear">
+                <i class="bi bi-x-circle fs-6"></i>
+              </span>
+            </div>
           </div>
 
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Customer Name</label>
-            <input type="text" class="form-control form-control-sm form-control-solid"
-              placeholder="Customer name" [(ngModel)]="filter.customerName" />
+            <div class="position-relative">
+              <input type="text" class="form-control form-control-sm form-control-solid"
+                [class.pe-6]="filter.customerName"
+                placeholder="Customer name" [(ngModel)]="filter.customerName" />
+              <span *ngIf="filter.customerName"
+                (click)="filter.customerName = ''"
+                class="position-absolute end-0 top-50 translate-middle-y me-2 cursor-pointer text-muted text-hover-danger"
+                title="Clear">
+                <i class="bi bi-x-circle fs-6"></i>
+              </span>
+            </div>
           </div>
 
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Customer Mobile</label>
-            <input type="text" class="form-control form-control-sm form-control-solid"
-              placeholder="e.g. 01712345678" [(ngModel)]="filter.phoneNumber" />
+            <div class="position-relative">
+              <input type="text" class="form-control form-control-sm form-control-solid"
+                [class.pe-6]="filter.phoneNumber"
+                placeholder="e.g. 01712345678" [(ngModel)]="filter.phoneNumber" />
+              <span *ngIf="filter.phoneNumber"
+                (click)="filter.phoneNumber = ''"
+                class="position-absolute end-0 top-50 translate-middle-y me-2 cursor-pointer text-muted text-hover-danger"
+                title="Clear">
+                <i class="bi bi-x-circle fs-6"></i>
+              </span>
+            </div>
           </div>
 
           <div class="col-12 col-md-3">
             <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Receiver Mobile</label>
-            <input type="text" class="form-control form-control-sm form-control-solid"
-              placeholder="e.g. 01712345678" [(ngModel)]="filter.receiverMobile" />
+            <div class="position-relative">
+              <input type="text" class="form-control form-control-sm form-control-solid"
+                [class.pe-6]="filter.receiverMobile"
+                placeholder="e.g. 01712345678" [(ngModel)]="filter.receiverMobile" />
+              <span *ngIf="filter.receiverMobile"
+                (click)="filter.receiverMobile = ''"
+                class="position-absolute end-0 top-50 translate-middle-y me-2 cursor-pointer text-muted text-hover-danger"
+                title="Clear">
+                <i class="bi bi-x-circle fs-6"></i>
+              </span>
+            </div>
           </div>
 
           <div class="col-12 col-md-3">
@@ -74,11 +110,27 @@
               [items]="deliveryAreaOptions"
               bindLabel="name"
               bindValue="name"
-              [minTermLength]="3"
+              [typeahead]="deliveryAreaTypeahead$"
+              [loading]="isAreaFilterSearching"
+              loadingText="Searching areas..."
+              [minTermLength]="2"
+              [searchable]="true"
               [clearable]="true"
-              placeholder="Search delivery area"
-              [(ngModel)]="filter.deliveryArea">
+              placeholder="Search your delivery area (e.g. Adabor, Mirpur, Uttara)"
+              notFoundText="No matching delivery area found."
+              [(ngModel)]="filter.deliveryArea"
+              (change)="onDeliveryAreaFilterChanged($event)">
+              <ng-template ng-label-tmp let-item="item">
+                {{ item.name }}
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                {{ item.label || item.name }}
+              </ng-template>
             </ng-select>
+            <!-- <div *ngIf="areaFilterHasNoMatch && !isAreaFilterSearching" class="text-muted fs-7 mt-1">
+              <i class="bi bi-info-circle me-1"></i>No matching delivery area found.
+              Select <strong>Others</strong> from the list to provide the delivery address manually.
+            </div> -->
           </div>
 
           <div class="col-12 col-md-3">

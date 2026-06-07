@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { finalize } from 'rxjs';
+import { finalize, of, Subject } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs/operators';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
 import { UserPermissionKey } from 'src/app/core/constants/user-permission-keys.enum';
 import { UserPermissionService } from 'src/app/features/auth/services/user-permission.service';
@@ -44,6 +45,9 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   hasAdminManage = false;
 
   deliveryAreaOptions: { id: number; name: string }[] = [];
+  isAreaFilterSearching = false;
+  areaFilterHasNoMatch = false;
+  deliveryAreaTypeahead$ = new Subject<string>();
   mangoTypeOptions: { id: number; name: string }[] = [];
   courierProviderOptions: { id: number; name: string }[] = [];
 
@@ -109,16 +113,54 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.hasAdminManage = this.permissionService.hasAccess(UserPermissionKey.HasAdminOrdersManageAccess);
+    this.setupDeliveryAreaTypeahead();
     this.loadDropdowns();
     this.load();
     this.subs.sink = this.signalR.orderStatusUpdated$.subscribe(() => this.load());
   }
 
-  private loadDropdowns(): void {
-    this.subs.sink = this.courierAreaMapService.getDropdown().subscribe({
-      next: (res: any) => { this.deliveryAreaOptions = Array.isArray(res) ? res : (res?.data ?? []); },
-      error: () => {}
+  private setupDeliveryAreaTypeahead(): void {
+    this.subs.sink = this.deliveryAreaTypeahead$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      filter(term => !!term && term.length >= 2),
+      tap(() => { this.isAreaFilterSearching = true; this.areaFilterHasNoMatch = false; this.cdRef.detectChanges(); }),
+      switchMap(term => this.courierAreaMapService.search(term).pipe(
+        catchError(() => of({ data: [] }))
+      ))
+    ).subscribe(res => {
+      const seen = new Set<string>();
+      const realAreas = (res.data ?? []).filter((a: any) => {
+        const key = (a.name ?? '').trim().toLowerCase();
+        if (key === 'others' || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      this.areaFilterHasNoMatch = realAreas.length === 0;
+
+      this.deliveryAreaOptions = [
+        ...realAreas,
+        {
+          id: -1,
+          name: 'Others',
+          label: 'Others – My delivery area is not listed. I will provide my full delivery address.',
+        },
+      ];
+      this.isAreaFilterSearching = false;
+      this.cdRef.detectChanges();
     });
+  }
+
+  onDeliveryAreaFilterChanged(value: any): void {
+    if (!value) {
+      this.deliveryAreaOptions = [];
+      this.areaFilterHasNoMatch = false;
+      this.cdRef.detectChanges();
+    }
+  }
+
+  private loadDropdowns(): void {
     this.subs.sink = this.mangoTypeService.list().subscribe({
       next: (res: any) => { this.mangoTypeOptions = Array.isArray(res) ? res : (res?.data ?? []); },
       error: () => {}

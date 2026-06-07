@@ -88,6 +88,13 @@ export class CourierAreaMapService {
       .get(`${this.apiUrl}/courier-area-map/dropdown`)
       .pipe(catchError(this.handleError));
   }
+
+  // Search areas by term (server-side typeahead, min 2 chars)
+  search(q: string, limit: number = 20): Observable<any> {
+    return this.httpClient
+      .get(`${this.apiUrl}/courier-area-map/search`, { params: { q, limit } })
+      .pipe(catchError(this.handleError));
+  }
 // Search By Name
   filterByTitle(title: any): Observable<any> {
     return this.httpClient
