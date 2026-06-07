@@ -30,7 +30,7 @@
       </div>
       <div class="col-12 col-md-6" *ngIf="payment.createdAt">
         <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Recorded At</div>
-        <div class="fw-semibold fs-6">{{ payment.createdAt.toDate() | date:'dd MMM yyyy, HH:mm' }}</div>
+        <div class="fw-semibold fs-6">{{ payment.createdAt | safeDate | date:'dd MMM yyyy, HH:mm' }}</div>
       </div>
       <div class="col-12">
         <hr class="my-0" />

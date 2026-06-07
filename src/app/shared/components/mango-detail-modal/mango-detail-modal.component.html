@@ -31,11 +31,11 @@
       <div *ngIf="mango.startDate || mango.endDate" class="d-flex flex-wrap gap-2 mb-3">
         <span *ngIf="mango.startDate" class="badge badge-light-primary px-3 py-2">
           <i class="bi bi-calendar-check me-1"></i>
-          Available from {{ mango.startDate.toDate() | date:'dd MMM yyyy' }}
+          Available from {{ mango.startDate | safeDate | date:'dd MMM yyyy' }}
         </span>
         <span *ngIf="mango.endDate" class="badge badge-light-warning px-3 py-2">
           <i class="bi bi-calendar-x me-1"></i>
-          Until {{ mango.endDate.toDate() | date:'dd MMM yyyy' }}
+          Until {{ mango.endDate | safeDate | date:'dd MMM yyyy' }}
         </span>
       </div>
 

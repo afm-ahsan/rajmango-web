@@ -250,7 +250,7 @@
       <i class="bi bi-x-lg"></i> Cancel
     </button>
     <button type="button" class="btn btn-primary btn-sm" [disabled]="isSaveDisabled" (click)="save()">
-      <i class="bi bi-save"></i> Save 
+      <i class="bi bi-save"></i> {{ orderDto.id ? 'Update Order' : 'Save Order' }}
     </button>
   </div>
 </div>

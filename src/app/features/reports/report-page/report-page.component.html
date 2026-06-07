@@ -163,7 +163,7 @@
             <tbody>
               <tr *ngFor="let o of orderReport.orders">
                 <td class="fw-bold">{{ o.orderNumber }}</td>
-                <td>{{ o.orderDate.toDate() | date:'dd MMM yyyy' }}</td>
+                <td>{{ o.orderDate | safeDate | date:'dd MMM yyyy' }}</td>
                 <td>{{ o.customerName }}</td>
                 <td>{{ o.totalQuantity }}</td>
                 <td>{{ o.totalAmount | number:'1.0-0' }}</td>
@@ -280,7 +280,7 @@
                 <td class="text-success fw-bold">{{ p.paidAmount | number:'1.0-0' }}</td>
                 <td class="text-danger">{{ p.dueAmount | number:'1.0-0' }}</td>
                 <td>{{ getPaymentMethodLabel(p.paymentMethod) }}</td>
-                <td>{{ p.createdAt.toDate() | date:'dd MMM yyyy' }}</td>
+                <td>{{ p.createdAt | safeDate | date:'dd MMM yyyy' }}</td>
               </tr>
             </tbody>
           </table>
@@ -367,7 +367,7 @@
               <tr *ngFor="let e of expenseReport.expenses">
                 <td>{{ e.expenseTypeName }}</td>
                 <td>{{ e.name }}</td>
-                <td>{{ e.expenseDate.toDate() | date:'dd MMM yyyy' }}</td>
+                <td>{{ e.expenseDate | safeDate | date:'dd MMM yyyy' }}</td>
                 <td>{{ e.paidTo || '—' }}</td>
                 <td>{{ e.paymentReference || '—' }}</td>
                 <td class="fw-bold text-danger">{{ e.amount | number:'1.0-0' }}</td>

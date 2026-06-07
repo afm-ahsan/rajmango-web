@@ -25,10 +25,10 @@
     <!-- Dates -->
     <div class="d-flex flex-wrap gap-2 mb-2" *ngIf="mango.startDate || mango.endDate">
       <span *ngIf="mango.startDate" class="mango-date-chip badge badge-light-primary">
-        <i class="bi bi-calendar-check me-1"></i>From {{ mango.startDate.toDate() | date:'dd MMM yyyy' }}
+        <i class="bi bi-calendar-check me-1"></i>From {{ mango.startDate | safeDate | date:'dd MMM yyyy' }}
       </span>
       <span *ngIf="mango.endDate" class="mango-date-chip badge badge-light-warning">
-        <i class="bi bi-calendar-x me-1"></i>Until {{ mango.endDate.toDate() | date:'dd MMM yyyy' }}
+        <i class="bi bi-calendar-x me-1"></i>Until {{ mango.endDate | safeDate | date:'dd MMM yyyy' }}
       </span>
     </div>
 

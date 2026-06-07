@@ -14,6 +14,7 @@ import { SingleFileUploadComponent } from './components/single-file-upload/singl
 import { UploadComponent } from './components/upload/upload.component';
 import { CheckChildrenDirective } from './directives/check-children.directive';
 import { SelectGroupDirective } from './directives/select-group.directive';
+import { SafeDatePipe } from './pipes/safe-date.pipe';
 import { TreePipe } from './pipes/tree.pipe';
 //import { NgxSpinnerModule } from "ngx-spinner";
 import { RouterModule } from '@angular/router';
@@ -43,6 +44,7 @@ import { CreateOrderModalComponent } from '../features/orders/create-order-modal
     RouterModule,
   ],
   declarations: [
+    SafeDatePipe,
     TreePipe,
     YesNoPipe,
     LoaderComponent,
@@ -69,6 +71,7 @@ import { CreateOrderModalComponent } from '../features/orders/create-order-modal
   ],
   exports: [
     NgSelectModule,
+    SafeDatePipe,
     TreePipe,
     YesNoPipe,
     LoaderComponent,
