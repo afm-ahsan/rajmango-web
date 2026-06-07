@@ -61,10 +61,24 @@ export class AdminOrderUpdateStatusModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      orderStatus:    [this.order.orderStatus,                         Validators.required],
-      paymentStatus:  [this.order.paymentStatus,                       Validators.required],
-      deliveryStatus: [this.order.deliveryStatus,                      Validators.required],
-      deliveryDate:   [this.toDateInputValue(this.order.deliveryDate)],
+      orderStatus:           [this.order.orderStatus,                   Validators.required],
+      paymentStatus:         [this.order.paymentStatus,                 Validators.required],
+      deliveryStatus:        [this.order.deliveryStatus,                Validators.required],
+      deliveryDate:          [this.toDateInputValue(this.order.deliveryDate)],
+      shouldNotifyReceiver:  [true],
+      shouldNotifySender:    [false],
+    });
+
+    // Rule 4: mutually exclusive — checking one unchecks the other.
+    this.subs.sink = this.form.get('shouldNotifyReceiver')!.valueChanges.subscribe(value => {
+      if (value) {
+        this.form.get('shouldNotifySender')!.setValue(false, { emitEvent: false });
+      }
+    });
+    this.subs.sink = this.form.get('shouldNotifySender')!.valueChanges.subscribe(value => {
+      if (value) {
+        this.form.get('shouldNotifyReceiver')!.setValue(false, { emitEvent: false });
+      }
     });
   }
 
@@ -83,13 +97,16 @@ export class AdminOrderUpdateStatusModalComponent implements OnInit, OnDestroy {
     this.errorMessage = null;
     this.isSaving = true;
 
-    const { orderStatus, paymentStatus, deliveryStatus, deliveryDate } = this.form.value;
+    const { orderStatus, paymentStatus, deliveryStatus, deliveryDate,
+            shouldNotifyReceiver, shouldNotifySender } = this.form.value;
 
     this.subs.sink = this.orderService.adminUpdateStatus(this.order.orderId, {
       orderStatus,
       paymentStatus,
       deliveryStatus,
       deliveryDate: deliveryDate || null,
+      shouldNotifyReceiver,
+      shouldNotifySender,
     }).pipe(
       finalize(() => { this.isSaving = false; this.cdRef.detectChanges(); })
     ).subscribe({

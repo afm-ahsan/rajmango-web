@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 @Injectable({ providedIn: 'root' })
 export class IdleSessionService implements OnDestroy {
-  private static readonly IDLE_TIMEOUT_MS    = 1 * 60 * 1000; // 60 minutes
+  private static readonly IDLE_TIMEOUT_MS    = 60 * 60 * 1000; // 60 minutes
   private static readonly WARNING_DURATION_MS = 3 * 60 * 1000; // 3 minutes
   private static readonly ACTIVITY_EVENTS = ['mousemove', 'click', 'keydown', 'scroll', 'touchstart'];
   private static readonly BROADCAST_CHANNEL = 'rajmango_session';

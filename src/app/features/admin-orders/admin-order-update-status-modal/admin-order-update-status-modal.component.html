@@ -39,6 +39,29 @@
           </label>
           <input type="date" class="form-control form-control-solid" formControlName="deliveryDate" />
         </div>
+
+        <div class="col-12">
+          <label class="form-label fs-7 fw-semibold text-uppercase text-muted">SMS Notification</label>
+          <div class="d-flex flex-column gap-2 mt-1">
+            <div class="form-check form-check-custom form-check-solid">
+              <input class="form-check-input" type="checkbox" id="shouldNotifyReceiver"
+                     formControlName="shouldNotifyReceiver" />
+              <label class="form-check-label fs-7" for="shouldNotifyReceiver">
+                Send SMS notification to receiver
+              </label>
+            </div>
+            <div class="form-check form-check-custom form-check-solid">
+              <input class="form-check-input" type="checkbox" id="shouldNotifySender"
+                     formControlName="shouldNotifySender" />
+              <label class="form-check-label fs-7" for="shouldNotifySender">
+                Notify sender instead
+              </label>
+            </div>
+            <div class="text-muted fs-8 mt-1">
+              Use "Notify sender instead" for gift orders where the receiver should not receive SMS updates.
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="alert alert-danger py-2 px-3 fs-7 mt-4" *ngIf="errorMessage">
