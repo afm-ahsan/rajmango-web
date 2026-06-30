@@ -21,6 +21,10 @@
               <span *ngIf="isExporting" class="spinner-border spinner-border-sm"></span>
               <i *ngIf="!isExporting" class="bi bi-file-earmark-excel"></i>
             </button>
+            <button *ngIf="activeTab === 'orders'" class="btn btn-light-danger btn-lg" (click)="exportOrdersPdf()" [disabled]="isExportingPdf" title="Export to PDF">
+              <span *ngIf="isExportingPdf" class="spinner-border spinner-border-sm"></span>
+              <i *ngIf="!isExportingPdf" class="bi bi-file-earmark-pdf"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -46,8 +50,74 @@
     </li>
   </ul>
 
+  <!-- Initial state: nothing loads until Run Report is clicked -->
+  <div *ngIf="!hasRun" class="text-center text-muted py-15">
+    <i class="bi bi-bar-chart-fill fs-1 d-block mb-3 opacity-50"></i>
+    Select a date range and click <strong>Run Report</strong> to load data.
+  </div>
+
   <!-- ── Orders Report ── -->
-  <ng-container *ngIf="activeTab === 'orders'">
+  <ng-container *ngIf="hasRun && activeTab === 'orders'">
+
+    <!-- Order Lines Filters (mirrors admin-orders/list) -->
+    <div class="card mb-4" *ngIf="hasRun">
+      <div class="card-header border-0 pt-4 pb-4">
+        <div class="card-title">
+          <h6 class="fw-bold mb-0">Order Lines Filters</h6>
+        </div>
+        <div class="card-toolbar">
+          <button type="button" class="btn btn-sm btn-light-primary" (click)="toggleOrderFilters()">
+            <i class="bi bi-funnel me-1"></i>{{ showOrderFilters ? 'Hide Filters' : 'Filters' }}
+          </button>
+        </div>
+      </div>
+      <div class="card-body pt-0" *ngIf="showOrderFilters">
+        <div class="row g-3 mb-3">
+          <div class="col-12 col-md-3">
+            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Customer Name</label>
+            <input type="text" class="form-control form-control-sm form-control-solid"
+              placeholder="Customer name" [(ngModel)]="orderFilter.customerName" />
+          </div>
+          <div class="col-12 col-md-3">
+            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Order Status</label>
+            <select class="form-select form-select-sm form-select-solid" [(ngModel)]="orderFilter.orderStatus">
+              <option [ngValue]="null">All</option>
+              <option *ngFor="let s of orderStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-3">
+            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Payment Status</label>
+            <select class="form-select form-select-sm form-select-solid" [(ngModel)]="orderFilter.paymentStatus">
+              <option [ngValue]="null">All</option>
+              <option *ngFor="let s of paymentStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-3">
+            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Delivery Status</label>
+            <select class="form-select form-select-sm form-select-solid" [(ngModel)]="orderFilter.deliveryStatus">
+              <option [ngValue]="null">All</option>
+              <option *ngFor="let s of deliveryStatusOptions" [ngValue]="s.value">{{ s.label }}</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-3">
+            <label class="form-label fs-7 fw-semibold text-muted text-uppercase">Mango Type</label>
+            <select class="form-select form-select-sm form-select-solid" [(ngModel)]="orderFilter.mangoType">
+              <option [ngValue]="''">All</option>
+              <option *ngFor="let t of mangoTypeOptions" [ngValue]="t.name">{{ t.name }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-primary" (click)="applyOrderFilters()">
+            <i class="bi bi-search me-1"></i>Apply
+          </button>
+          <button type="button" class="btn btn-sm btn-light" (click)="clearOrderFilters()">
+            <i class="bi bi-x-circle me-1"></i>Clear
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div *ngIf="isLoadingOrders" class="text-center py-10">
       <div class="spinner-border text-primary" role="status"></div>
     </div>
@@ -152,6 +222,7 @@
               <tr class="fw-bold text-muted">
                 <th>Order #</th>
                 <th>Date</th>
+                <th>Mango Type</th>
                 <th>Customer</th>
                 <th>Qty</th>
                 <th>Total (৳)</th>
@@ -164,6 +235,7 @@
               <tr *ngFor="let o of orderReport.orders">
                 <td class="fw-bold">{{ o.orderNumber }}</td>
                 <td>{{ o.orderDate | safeDate | date:'dd MMM yyyy' }}</td>
+                <td>{{ o.mangoTypeNames || '-' }}</td>
                 <td>{{ o.customerName }}</td>
                 <td>{{ o.totalQuantity }}</td>
                 <td>{{ o.totalAmount | number:'1.0-0' }}</td>
@@ -174,16 +246,25 @@
             </tbody>
           </table>
         </div>
+        <div class="card-body pt-0">
+          <app-pagination
+            [collectionSize]="ordersTotalCount"
+            [pageSize]="ordersPageSize"
+            [pageNumber]="ordersPageNumber"
+            (pageChange)="ordersPageChanged($event)"
+            (pageSizeChange)="ordersPageSizeChanged($event)">
+          </app-pagination>
+        </div>
       </div>
     </ng-container>
 
-    <div *ngIf="!isLoadingOrders && !orderReport" class="text-center text-muted py-10">
+    <div *ngIf="hasRun && !isLoadingOrders && !orderReport" class="text-center text-muted py-10">
       No data for the selected date range.
     </div>
   </ng-container>
 
   <!-- ── Payments Report ── -->
-  <ng-container *ngIf="activeTab === 'payments'">
+  <ng-container *ngIf="hasRun && activeTab === 'payments'">
     <div *ngIf="isLoadingPayments" class="text-center py-10">
       <div class="spinner-border text-primary" role="status"></div>
     </div>
@@ -288,13 +369,13 @@
       </div>
     </ng-container>
 
-    <div *ngIf="!isLoadingPayments && !paymentReport" class="text-center text-muted py-10">
+    <div *ngIf="hasRun && !isLoadingPayments && !paymentReport" class="text-center text-muted py-10">
       No data for the selected date range.
     </div>
   </ng-container>
 
   <!-- ── Expenses Report ── -->
-  <ng-container *ngIf="activeTab === 'expenses'">
+  <ng-container *ngIf="hasRun && activeTab === 'expenses'">
     <div *ngIf="isLoadingExpenses" class="text-center py-10">
       <div class="spinner-border text-primary" role="status"></div>
     </div>
@@ -379,7 +460,7 @@
       </div>
     </ng-container>
 
-    <div *ngIf="!isLoadingExpenses && !expenseReport" class="text-center text-muted py-10">
+    <div *ngIf="hasRun && !isLoadingExpenses && !expenseReport" class="text-center text-muted py-10">
       No data for the selected date range.
     </div>
   </ng-container>

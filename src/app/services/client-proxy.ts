@@ -8932,9 +8932,16 @@ export class ReportServiceProxy {
     /**
      * @param from (optional) 
      * @param to (optional) 
+     * @param customerName (optional) 
+     * @param orderStatus (optional) 
+     * @param paymentStatus (optional) 
+     * @param deliveryStatus (optional) 
+     * @param mangoType (optional) 
+     * @param pageNumber (optional) 
+     * @param pageSize (optional) 
      * @return OK
      */
-    getOrderSummary(from: moment.Moment | undefined, to: moment.Moment | undefined): Observable<Result_OrderSummaryReportDto> {
+    getOrderSummary(from: moment.Moment | undefined, to: moment.Moment | undefined, customerName: string | undefined, orderStatus: OrderStatus | undefined, paymentStatus: PaymentStatus | undefined, deliveryStatus: DeliveryStatus | undefined, mangoType: string | undefined, pageNumber: number | undefined, pageSize: number | undefined): Observable<Result_OrderSummaryReportDto> {
         let url_ = this.baseUrl + "/api/reports/orders?";
         if (from === null)
             throw new Error("The parameter 'from' cannot be null.");
@@ -8944,6 +8951,34 @@ export class ReportServiceProxy {
             throw new Error("The parameter 'to' cannot be null.");
         else if (to !== undefined)
             url_ += "to=" + encodeURIComponent(to ? "" + to.toISOString() : "") + "&";
+        if (customerName === null)
+            throw new Error("The parameter 'customerName' cannot be null.");
+        else if (customerName !== undefined)
+            url_ += "customerName=" + encodeURIComponent("" + customerName) + "&";
+        if (orderStatus === null)
+            throw new Error("The parameter 'orderStatus' cannot be null.");
+        else if (orderStatus !== undefined)
+            url_ += "orderStatus=" + encodeURIComponent("" + orderStatus) + "&";
+        if (paymentStatus === null)
+            throw new Error("The parameter 'paymentStatus' cannot be null.");
+        else if (paymentStatus !== undefined)
+            url_ += "paymentStatus=" + encodeURIComponent("" + paymentStatus) + "&";
+        if (deliveryStatus === null)
+            throw new Error("The parameter 'deliveryStatus' cannot be null.");
+        else if (deliveryStatus !== undefined)
+            url_ += "deliveryStatus=" + encodeURIComponent("" + deliveryStatus) + "&";
+        if (mangoType === null)
+            throw new Error("The parameter 'mangoType' cannot be null.");
+        else if (mangoType !== undefined)
+            url_ += "mangoType=" + encodeURIComponent("" + mangoType) + "&";
+        if (pageNumber === null)
+            throw new Error("The parameter 'pageNumber' cannot be null.");
+        else if (pageNumber !== undefined)
+            url_ += "pageNumber=" + encodeURIComponent("" + pageNumber) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -9001,9 +9036,14 @@ export class ReportServiceProxy {
     /**
      * @param from (optional) 
      * @param to (optional) 
+     * @param customerName (optional) 
+     * @param orderStatus (optional) 
+     * @param paymentStatus (optional) 
+     * @param deliveryStatus (optional) 
+     * @param mangoType (optional) 
      * @return OK
      */
-    exportOrders(from: moment.Moment | undefined, to: moment.Moment | undefined): Observable<void> {
+    exportOrders(from: moment.Moment | undefined, to: moment.Moment | undefined, customerName: string | undefined, orderStatus: OrderStatus | undefined, paymentStatus: PaymentStatus | undefined, deliveryStatus: DeliveryStatus | undefined, mangoType: string | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/reports/orders/export?";
         if (from === null)
             throw new Error("The parameter 'from' cannot be null.");
@@ -9013,6 +9053,26 @@ export class ReportServiceProxy {
             throw new Error("The parameter 'to' cannot be null.");
         else if (to !== undefined)
             url_ += "to=" + encodeURIComponent(to ? "" + to.toISOString() : "") + "&";
+        if (customerName === null)
+            throw new Error("The parameter 'customerName' cannot be null.");
+        else if (customerName !== undefined)
+            url_ += "customerName=" + encodeURIComponent("" + customerName) + "&";
+        if (orderStatus === null)
+            throw new Error("The parameter 'orderStatus' cannot be null.");
+        else if (orderStatus !== undefined)
+            url_ += "orderStatus=" + encodeURIComponent("" + orderStatus) + "&";
+        if (paymentStatus === null)
+            throw new Error("The parameter 'paymentStatus' cannot be null.");
+        else if (paymentStatus !== undefined)
+            url_ += "paymentStatus=" + encodeURIComponent("" + paymentStatus) + "&";
+        if (deliveryStatus === null)
+            throw new Error("The parameter 'deliveryStatus' cannot be null.");
+        else if (deliveryStatus !== undefined)
+            url_ += "deliveryStatus=" + encodeURIComponent("" + deliveryStatus) + "&";
+        if (mangoType === null)
+            throw new Error("The parameter 'mangoType' cannot be null.");
+        else if (mangoType !== undefined)
+            url_ += "mangoType=" + encodeURIComponent("" + mangoType) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -9037,6 +9097,96 @@ export class ReportServiceProxy {
     }
 
     protected processExportOrders(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param from (optional) 
+     * @param to (optional) 
+     * @param customerName (optional) 
+     * @param orderStatus (optional) 
+     * @param paymentStatus (optional) 
+     * @param deliveryStatus (optional) 
+     * @param mangoType (optional) 
+     * @return OK
+     */
+    exportOrdersPdf(from: moment.Moment | undefined, to: moment.Moment | undefined, customerName: string | undefined, orderStatus: OrderStatus | undefined, paymentStatus: PaymentStatus | undefined, deliveryStatus: DeliveryStatus | undefined, mangoType: string | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/reports/orders/export-pdf?";
+        if (from === null)
+            throw new Error("The parameter 'from' cannot be null.");
+        else if (from !== undefined)
+            url_ += "from=" + encodeURIComponent(from ? "" + from.toISOString() : "") + "&";
+        if (to === null)
+            throw new Error("The parameter 'to' cannot be null.");
+        else if (to !== undefined)
+            url_ += "to=" + encodeURIComponent(to ? "" + to.toISOString() : "") + "&";
+        if (customerName === null)
+            throw new Error("The parameter 'customerName' cannot be null.");
+        else if (customerName !== undefined)
+            url_ += "customerName=" + encodeURIComponent("" + customerName) + "&";
+        if (orderStatus === null)
+            throw new Error("The parameter 'orderStatus' cannot be null.");
+        else if (orderStatus !== undefined)
+            url_ += "orderStatus=" + encodeURIComponent("" + orderStatus) + "&";
+        if (paymentStatus === null)
+            throw new Error("The parameter 'paymentStatus' cannot be null.");
+        else if (paymentStatus !== undefined)
+            url_ += "paymentStatus=" + encodeURIComponent("" + paymentStatus) + "&";
+        if (deliveryStatus === null)
+            throw new Error("The parameter 'deliveryStatus' cannot be null.");
+        else if (deliveryStatus !== undefined)
+            url_ += "deliveryStatus=" + encodeURIComponent("" + deliveryStatus) + "&";
+        if (mangoType === null)
+            throw new Error("The parameter 'mangoType' cannot be null.");
+        else if (mangoType !== undefined)
+            url_ += "mangoType=" + encodeURIComponent("" + mangoType) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processExportOrdersPdf(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processExportOrdersPdf(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processExportOrdersPdf(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -20207,6 +20357,7 @@ export class OrderSummaryLineDto implements IOrderSummaryLineDto {
     orderNumber!: string | undefined;
     orderDate!: moment.Moment;
     customerName!: string | undefined;
+    mangoTypeNames!: string | undefined;
     totalQuantity!: number;
     totalAmount!: number;
     paidAmount!: number;
@@ -20229,6 +20380,7 @@ export class OrderSummaryLineDto implements IOrderSummaryLineDto {
             this.orderNumber = _data["orderNumber"];
             this.orderDate = _data["orderDate"] ? moment(_data["orderDate"].toString()) : <any>undefined;
             this.customerName = _data["customerName"];
+            this.mangoTypeNames = _data["mangoTypeNames"];
             this.totalQuantity = _data["totalQuantity"];
             this.totalAmount = _data["totalAmount"];
             this.paidAmount = _data["paidAmount"];
@@ -20251,6 +20403,7 @@ export class OrderSummaryLineDto implements IOrderSummaryLineDto {
         data["orderNumber"] = this.orderNumber;
         data["orderDate"] = this.orderDate ? this.orderDate.toISOString() : <any>undefined;
         data["customerName"] = this.customerName;
+        data["mangoTypeNames"] = this.mangoTypeNames;
         data["totalQuantity"] = this.totalQuantity;
         data["totalAmount"] = this.totalAmount;
         data["paidAmount"] = this.paidAmount;
@@ -20273,6 +20426,7 @@ export interface IOrderSummaryLineDto {
     orderNumber: string | undefined;
     orderDate: moment.Moment;
     customerName: string | undefined;
+    mangoTypeNames: string | undefined;
     totalQuantity: number;
     totalAmount: number;
     paidAmount: number;
@@ -20296,6 +20450,9 @@ export class OrderSummaryReportDto implements IOrderSummaryReportDto {
     totalCollected!: number;
     totalOutstanding!: number;
     orders!: OrderSummaryLineDto[] | undefined;
+    ordersTotalCount!: number;
+    ordersPageNumber!: number;
+    ordersPageSize!: number;
 
     constructor(data?: IOrderSummaryReportDto) {
         if (data) {
@@ -20326,6 +20483,9 @@ export class OrderSummaryReportDto implements IOrderSummaryReportDto {
                 for (let item of _data["orders"])
                     this.orders!.push(OrderSummaryLineDto.fromJS(item));
             }
+            this.ordersTotalCount = _data["ordersTotalCount"];
+            this.ordersPageNumber = _data["ordersPageNumber"];
+            this.ordersPageSize = _data["ordersPageSize"];
         }
     }
 
@@ -20356,6 +20516,9 @@ export class OrderSummaryReportDto implements IOrderSummaryReportDto {
             for (let item of this.orders)
                 data["orders"].push(item ? item.toJSON() : <any>undefined);
         }
+        data["ordersTotalCount"] = this.ordersTotalCount;
+        data["ordersPageNumber"] = this.ordersPageNumber;
+        data["ordersPageSize"] = this.ordersPageSize;
         return data;
     }
 
@@ -20382,6 +20545,9 @@ export interface IOrderSummaryReportDto {
     totalCollected: number;
     totalOutstanding: number;
     orders: OrderSummaryLineDto[] | undefined;
+    ordersTotalCount: number;
+    ordersPageNumber: number;
+    ordersPageSize: number;
 }
 
 export class OrderTrackingDto implements IOrderTrackingDto {

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet add *)",
+      "Bash(taskkill //PID 28220 //F)",
+      "Bash(python -m json.tool)",
+      "Bash(taskkill //PID 21236 //F)",
+      "Bash(python -c ' *)",
+      "Bash(node test-reports.tmp.js)",
+      "Bash(rm -f d:/Workspace/Projects/RajMango/rajmango-ai-governance/rajmango-web/test-reports.tmp.js *)"
+    ],
+    "additionalDirectories": [
+      "\\tmp"
+    ]
+  }
+}
