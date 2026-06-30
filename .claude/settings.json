@@ -36,7 +36,15 @@
       "Bash(cp \"C:\\\\Users\\\\afmah\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d--Workspace-Projects-RajMango-rajmango-ai-governance-rajmango-web\\\\29870f33-3da4-487c-ace1-fe01930d76c3\\\\scratchpad\\\\test-bkash-final.js\" d:/Workspace/Projects/RajMango/rajmango-ai-governance/rajmango-web/test-bkash-final.tmp.js)",
       "Bash(node test-bkash-final.tmp.js)",
       "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"DELETE FROM Payments WHERE OrderId = 150 AND GatewayPaymentId = 'TR0011PfTIotU1782835486230'; SELECT @@ROWCOUNT AS Deleted;\")",
-      "Bash(taskkill //PID 20992 //F)"
+      "Bash(taskkill //PID 20992 //F)",
+      "Bash(taskkill //PID 29112 //F)",
+      "Bash(dotnet tool *)",
+      "Bash(dotnet ef *)",
+      "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'Payments' AND COLUMN_NAME = 'BkashUrl'\")",
+      "Bash(curl -sk -X POST https://localhost:7215/api/payments/bkash/create -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -H 'Content-Type: application/json' -d '{\"orderId\": 134}' --max-time 20)",
+      "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"SELECT Id, GatewayPaymentId, PaymentStatus, CreatedAt FROM Payments WHERE OrderId = 134 ORDER BY Id\")",
+      "Bash(curl -sk -X POST https://localhost:7215/api/admin/orders/134/update-status -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(curl -sk -X POST https://localhost:7215/api/payments/bkash/create -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -H 'Content-Type: application/json' -d '{\"orderId\": 134}' --max-time 15)"
     ],
     "additionalDirectories": [
       "\\tmp",
@@ -44,7 +52,9 @@
       "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api",
       "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api\\src\\RajMango.Application\\Interfaces",
       "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api\\src\\RajMango.Infrastructure\\Services",
-      "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api\\src\\RajMango.Application\\Features\\Payment\\Commands"
+      "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api\\src\\RajMango.Application\\Features\\Payment\\Commands",
+      "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api\\src\\RajMango.Domain\\Entities",
+      "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api\\src\\RajMango.Application\\DTOs\\Bkash"
     ]
   }
 }

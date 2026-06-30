@@ -8,7 +8,14 @@ import { API_BASE_URL } from 'src/app/services/client-proxy';
 export interface BkashCreateResult {
   succeeded: boolean;
   messages?: string[];
-  data?: { bkashUrl: string; gatewayPaymentId?: string; merchantInvoiceNumber?: string } | null;
+  data?: {
+    bkashUrl: string;
+    gatewayPaymentId?: string;
+    merchantInvoiceNumber?: string;
+    // True when this response resumes an existing, not-yet-expired bKash payment session
+    // rather than a freshly created one — show a confirmation before redirecting.
+    isExistingSession?: boolean;
+  } | null;
 }
 
 @Injectable()

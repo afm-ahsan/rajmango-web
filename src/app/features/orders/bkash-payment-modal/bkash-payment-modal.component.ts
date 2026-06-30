@@ -21,6 +21,11 @@ export class BkashPaymentModalComponent implements OnInit, OnDestroy {
 
   isPaying = false;
   errorMessage = '';
+  // Set when the API resumes an existing, not-yet-expired bKash session instead of creating a
+  // new one — the customer must explicitly confirm before we redirect them again.
+  existingSessionUrl: string | null = null;
+  // Set when the API reports the order as already paid (possibly just-now, via reconciliation).
+  alreadyPaid = false;
 
   private subs = new SubSink();
 
@@ -94,17 +99,26 @@ export class BkashPaymentModalComponent implements OnInit, OnDestroy {
   payNow(): void {
     if (!this.order) return;
     this.errorMessage = '';
+    this.existingSessionUrl = null;
+    this.alreadyPaid = false;
     this.isPaying = true;
     this.subs.sink = this.bkashService.initiate(this.order.id).pipe(
       finalize(() => { this.isPaying = false; this.cdRef.detectChanges(); })
     ).subscribe({
       next: (result) => {
         if (result?.succeeded && result?.data?.bkashUrl) {
-          window.location.href = result.data.bkashUrl;
-        } else {
-          this.errorMessage = (result?.messages?.length ? result.messages.join(' ') : '')
-            || 'Payment initiation failed. Please try again.';
+          if (result.data.isExistingSession) {
+            // Resume the existing session — let the customer confirm before redirecting again.
+            this.existingSessionUrl = result.data.bkashUrl;
+          } else {
+            window.location.href = result.data.bkashUrl;
+          }
+          return;
         }
+        const message = (result?.messages?.length ? result.messages.join(' ') : '')
+          || 'Payment initiation failed. Please try again.';
+        this.errorMessage = message;
+        this.alreadyPaid = /already paid/i.test(message);
       },
       error: (err) => {
         this.errorMessage = extractApiErrorMessage(err, 'Payment initiation failed. Please try again.');
@@ -112,12 +126,24 @@ export class BkashPaymentModalComponent implements OnInit, OnDestroy {
     });
   }
 
+  continueExistingPayment(): void {
+    if (this.existingSessionUrl) {
+      window.location.href = this.existingSessionUrl;
+    }
+  }
+
   retryLoad(): void {
     this.loadOrder();
   }
 
   cancel(): void {
-    this.modal.dismiss();
+    // When the order turned out to already be paid, resolve (not dismiss) so order-list refreshes
+    // and picks up the now-current Paid status instead of showing stale data.
+    if (this.alreadyPaid) {
+      this.modal.close('refresh');
+    } else {
+      this.modal.dismiss();
+    }
   }
 
   ngOnDestroy(): void {

@@ -253,7 +253,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
     const ref = this.modalService.open(BkashPaymentModalComponent, { size: 'lg' });
     ref.componentInstance.orderId = order.id;
     ref.result.then(
-      () => {},
+      (result: string) => { if (result === 'refresh') this.load(); },
       () => {}
     );
   }

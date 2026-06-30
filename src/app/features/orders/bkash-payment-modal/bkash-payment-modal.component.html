@@ -117,13 +117,26 @@
       </div>
 
       <!-- Error Message -->
-      <div class="alert alert-danger d-flex align-items-center py-3" *ngIf="errorMessage">
+      <!-- Existing session notice -->
+      <div class="alert alert-info d-flex align-items-center py-3" *ngIf="existingSessionUrl">
+        <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+        <span>A payment session already exists. Continue payment?</span>
+      </div>
+
+      <!-- Already paid notice -->
+      <div class="alert alert-success d-flex align-items-center py-3" *ngIf="alreadyPaid">
+        <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Error Message -->
+      <div class="alert alert-danger d-flex align-items-center py-3" *ngIf="errorMessage && !alreadyPaid">
         <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
         <span>{{ errorMessage }}</span>
       </div>
 
       <!-- bKash redirect notice -->
-      <div class="alert alert-light-warning border border-warning d-flex align-items-start py-3 gap-2" *ngIf="!errorMessage">
+      <div class="alert alert-light-warning border border-warning d-flex align-items-start py-3 gap-2" *ngIf="!errorMessage && !existingSessionUrl">
         <i class="bi bi-info-circle-fill text-warning fs-5 flex-shrink-0 mt-1"></i>
         <div class="fs-7 text-gray-700">
           Clicking <strong>Pay Now</strong> will redirect you to the secure bKash payment page.
@@ -142,9 +155,18 @@
       class="btn btn-light btn-sm"
       (click)="cancel()"
       [disabled]="isPaying">
-      Cancel
+      {{ alreadyPaid ? 'Close' : 'Cancel' }}
     </button>
     <button
+      *ngIf="existingSessionUrl"
+      type="button"
+      class="btn btn-sm"
+      style="background-color:#E2136E; color:#fff;"
+      (click)="continueExistingPayment()">
+      <i class="bi bi-arrow-right-circle me-2"></i>Continue Payment
+    </button>
+    <button
+      *ngIf="!alreadyPaid && !existingSessionUrl"
       type="button"
       class="btn btn-sm"
       style="background-color:#E2136E; color:#fff;"
