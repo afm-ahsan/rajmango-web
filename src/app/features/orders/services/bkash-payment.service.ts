@@ -3,10 +3,12 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from 'src/app/services/client-proxy';
 
+// Mirrors the backend's Result<T> envelope (RajMango.Shared.Result<T>) — field names must match
+// exactly: `succeeded` (not isSuccess), `messages` (a string array, not a single `message`).
 export interface BkashCreateResult {
-  isSuccess: boolean;
-  message: string;
-  data?: { bkashUrl: string };
+  succeeded: boolean;
+  messages?: string[];
+  data?: { bkashUrl: string; gatewayPaymentId?: string; merchantInvoiceNumber?: string } | null;
 }
 
 @Injectable()

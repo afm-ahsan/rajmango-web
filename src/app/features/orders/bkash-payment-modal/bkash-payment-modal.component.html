@@ -10,88 +10,128 @@
   </div>
 
   <!-- Body -->
-  <div class="modal-body py-6 px-lg-8" *ngIf="order">
+  <div class="modal-body py-6 px-lg-8">
 
-    <!-- Order Info -->
-    <div class="row g-3 mb-6">
-      <div class="col-6 col-md-4">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Number</div>
-        <div class="fw-bold fs-6">{{ order.orderNumber }}</div>
+    <!-- Loading skeleton -->
+    <div *ngIf="isLoadingOrder" class="py-4">
+      <div class="d-flex justify-content-center mb-6">
+        <span class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading order details…</span>
+        </span>
       </div>
-      <div class="col-6 col-md-4">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Status</div>
-        <div>
-          <span class="badge fs-7" [ngClass]="getOrderStatusBadgeClass()">
-            {{ orderStatusLabel }}
-          </span>
+      <div class="row g-3 mb-6">
+        <div class="col-6 col-md-4" *ngFor="let _ of [1,2,3,4,5,6]">
+          <div class="placeholder-glow">
+            <span class="placeholder col-6 d-block mb-2" style="height: 0.75rem;"></span>
+            <span class="placeholder col-9 d-block" style="height: 1rem;"></span>
+          </div>
         </div>
       </div>
-      <div class="col-6 col-md-4">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Payment Status</div>
-        <div>
-          <span class="badge fs-7" [ngClass]="getPaymentStatusBadgeClass()">
-            {{ paymentStatusLabel }}
-          </span>
+      <div class="placeholder-glow">
+        <span class="placeholder col-12 d-block" style="height: 6rem;"></span>
+      </div>
+    </div>
+
+    <!-- Load error -->
+    <div *ngIf="!isLoadingOrder && loadError" class="text-center py-6">
+      <div class="alert alert-danger d-flex align-items-center py-3 text-start">
+        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+        <span>{{ loadError }}</span>
+      </div>
+      <button type="button" class="btn btn-sm btn-light-primary" (click)="retryLoad()">
+        <i class="bi bi-arrow-clockwise me-2"></i>Retry
+      </button>
+    </div>
+
+    <!-- Loaded content -->
+    <ng-container *ngIf="!isLoadingOrder && !loadError && order">
+
+      <!-- Order Info -->
+      <div class="row g-3 mb-6">
+        <div class="col-6 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Number</div>
+          <div class="fw-bold fs-6">{{ order.orderNumber }}</div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Order Status</div>
+          <div>
+            <span class="badge fs-7" [ngClass]="getOrderStatusBadgeClass()">
+              {{ orderStatusLabel }}
+            </span>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Payment Status</div>
+          <div>
+            <span class="badge fs-7" [ngClass]="getPaymentStatusBadgeClass()">
+              {{ paymentStatusLabel }}
+            </span>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Status</div>
+          <div>
+            <span class="badge fs-7" [ngClass]="getDeliveryStatusBadgeClass()">
+              {{ deliveryStatusLabel }}
+            </span>
+          </div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Due Amount</div>
+          <div class="fw-bold fs-6 text-danger">৳ {{ order.dueAmount | number }}</div>
+        </div>
+        <div class="col-6 col-md-4">
+          <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Amount</div>
+          <div class="fw-bold fs-6">৳ {{ order.totalAmount | number }}</div>
         </div>
       </div>
-      <div class="col-6 col-md-4">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Delivery Status</div>
-        <div class="fw-semibold fs-6">{{ deliveryStatusLabel }}</div>
-      </div>
-      <div class="col-6 col-md-4">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Due Amount</div>
-        <div class="fw-bold fs-6 text-danger">৳ {{ order.dueAmount | number }}</div>
-      </div>
-      <div class="col-6 col-md-4">
-        <div class="text-muted fs-7 fw-semibold text-uppercase mb-1">Total Amount</div>
-        <div class="fw-bold fs-6">৳ {{ order.totalAmount | number }}</div>
-      </div>
-    </div>
 
-    <!-- Items Table -->
-    <div class="table-responsive mb-4" *ngIf="order.orderDetails.length">
-      <table class="table table-striped align-middle fs-7">
-        <thead>
-          <tr class="text-muted fw-bolder text-uppercase">
-            <th>#</th>
-            <th>Mango</th>
-            <th>Crate</th>
-            <th class="text-end">Qty (Kg)</th>
-            <th class="text-end">Unit Price</th>
-            <th class="text-end">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of order.orderDetails; index as i">
-            <td>{{ i + 1 }}</td>
-            <td>{{ item.mangoName || '—' }}</td>
-            <td>{{ item.crateName || '—' }}</td>
-            <td class="text-end">{{ item.quantity | number }}</td>
-            <td class="text-end">৳ {{ item.unitPrice | number }}</td>
-            <td class="text-end">৳ {{ item.totalPrice | number }}</td>
-          </tr>
-          <tr class="table-light fw-bold">
-            <td colspan="5" class="text-end">Total</td>
-            <td class="text-end">৳ {{ order.totalAmount | number }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Error Message -->
-    <div class="alert alert-danger d-flex align-items-center py-3" *ngIf="errorMessage">
-      <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
-      <span>{{ errorMessage }}</span>
-    </div>
-
-    <!-- bKash redirect notice -->
-    <div class="alert alert-light-warning border border-warning d-flex align-items-start py-3 gap-2" *ngIf="!errorMessage">
-      <i class="bi bi-info-circle-fill text-warning fs-5 flex-shrink-0 mt-1"></i>
-      <div class="fs-7 text-gray-700">
-        Clicking <strong>Pay Now</strong> will redirect you to the secure bKash payment page.
-        Do not close the browser during payment.
+      <!-- Items Table -->
+      <div class="table-responsive mb-4" *ngIf="order.orderDetails.length">
+        <table class="table table-striped align-middle fs-7">
+          <thead>
+            <tr class="text-muted fw-bolder text-uppercase">
+              <th>#</th>
+              <th>Mango</th>
+              <th>Crate</th>
+              <th class="text-end">Qty (Kg)</th>
+              <th class="text-end">Unit Price</th>
+              <th class="text-end">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of order.orderDetails; index as i">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item.mangoName || '—' }}</td>
+              <td>{{ item.crateName || '—' }}</td>
+              <td class="text-end">{{ item.quantity | number }}</td>
+              <td class="text-end">৳ {{ item.unitPrice | number }}</td>
+              <td class="text-end">৳ {{ item.totalPrice | number }}</td>
+            </tr>
+            <tr class="table-light fw-bold">
+              <td colspan="5" class="text-end">Total</td>
+              <td class="text-end">৳ {{ order.totalAmount | number }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
+
+      <!-- Error Message -->
+      <div class="alert alert-danger d-flex align-items-center py-3" *ngIf="errorMessage">
+        <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- bKash redirect notice -->
+      <div class="alert alert-light-warning border border-warning d-flex align-items-start py-3 gap-2" *ngIf="!errorMessage">
+        <i class="bi bi-info-circle-fill text-warning fs-5 flex-shrink-0 mt-1"></i>
+        <div class="fs-7 text-gray-700">
+          Clicking <strong>Pay Now</strong> will redirect you to the secure bKash payment page.
+          Do not close the browser during payment.
+        </div>
+      </div>
+
+    </ng-container>
 
   </div>
 
@@ -109,7 +149,7 @@
       class="btn btn-sm"
       style="background-color:#E2136E; color:#fff;"
       (click)="payNow()"
-      [disabled]="isPaying">
+      [disabled]="isPaying || isLoadingOrder || !order || !!loadError">
       <span *ngIf="isPaying" class="spinner-border spinner-border-sm me-2" role="status"></span>
       <span *ngIf="!isPaying"><i class="bi bi-credit-card-2-front me-2"></i></span>
       {{ isPaying ? 'Redirecting…' : 'Pay Now' }}

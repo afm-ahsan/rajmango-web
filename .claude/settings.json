@@ -7,10 +7,44 @@
       "Bash(taskkill //PID 21236 //F)",
       "Bash(python -c ' *)",
       "Bash(node test-reports.tmp.js)",
-      "Bash(rm -f d:/Workspace/Projects/RajMango/rajmango-ai-governance/rajmango-web/test-reports.tmp.js *)"
+      "Bash(rm -f d:/Workspace/Projects/RajMango/rajmango-ai-governance/rajmango-web/test-reports.tmp.js *)",
+      "Bash(taskkill //PID 20724 //F)",
+      "Bash(sqlcmd -?)",
+      "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"SELECT TOP 1 Id, OrderNumber, UserId, TotalAmount, DueAmount, PaymentStatus FROM Orders WHERE DueAmount > 0 ORDER BY Id DESC\")",
+      "Bash(sqlcmd -S 'localhost\\\\SQLEXPRESS' -d RajMango -E -C -Q ' *)",
+      "Bash(curl -sk -o /dev/null -D - \"https://localhost:7215/api/payments/bkash/callback?paymentID=TESTPAY-CANCEL-001&status=cancel\" --max-time 10)",
+      "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"SELECT Id, GatewayPaymentId, PaymentStatus, BkashCallbackStatus FROM Payments WHERE GatewayPaymentId IN \\('TESTPAY-CANCEL-001','TESTPAY-RACE-001'\\)\")",
+      "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"SELECT Id, GatewayPaymentId, PaymentStatus, PaidAmount, UpdatedAt FROM Payments WHERE GatewayPaymentId = 'TESTPAY-RACE-001'\")",
+      "Bash(curl -sk -o /dev/null -D - \"https://localhost:7215/api/payments/bkash/callback?paymentID=TESTPAY-ALREADYPAID-001&status=success\" --max-time 10)",
+      "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"DELETE FROM Payments WHERE GatewayPaymentId = 'TESTPAY-ALREADYPAID-001';\")",
+      "Bash(taskkill //PID 27276 //F)",
+      "Bash(node test-bkash-modal.tmp.js)",
+      "Bash(cp \"C:\\\\Users\\\\afmah\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d--Workspace-Projects-RajMango-rajmango-ai-governance-rajmango-web\\\\29870f33-3da4-487c-ace1-fe01930d76c3\\\\scratchpad\\\\test-bkash-modal2.js\" d:/Workspace/Projects/RajMango/rajmango-ai-governance/rajmango-web/test-bkash-modal2.tmp.js)",
+      "Bash(node test-bkash-modal2.tmp.js)",
+      "Bash(cp \"C:\\\\Users\\\\afmah\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d--Workspace-Projects-RajMango-rajmango-ai-governance-rajmango-web\\\\29870f33-3da4-487c-ace1-fe01930d76c3\\\\scratchpad\\\\test-bkash-3.js\" d:/Workspace/Projects/RajMango/rajmango-ai-governance/rajmango-web/test-bkash-3.tmp.js)",
+      "Bash(node test-bkash-3.tmp.js)",
+      "Bash(cp \"C:\\\\Users\\\\afmah\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d--Workspace-Projects-RajMango-rajmango-ai-governance-rajmango-web\\\\29870f33-3da4-487c-ace1-fe01930d76c3\\\\scratchpad\\\\test-bkash-4.js\" d:/Workspace/Projects/RajMango/rajmango-ai-governance/rajmango-web/test-bkash-4.tmp.js)",
+      "Bash(node test-bkash-4.tmp.js)",
+      "Read(//c/Users/afmah/AppData/Roaming/Microsoft/UserSecrets/412e7ab9-9612-4a5f-8a4c-145a24f4a9ce/**)",
+      "WebFetch(domain:developer.bka.sh)",
+      "Bash(taskkill //PID 14272 //F)",
+      "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"SELECT Id, OrderId, PaymentStatus, GatewayPaymentId FROM Payments WHERE OrderId = 134\")",
+      "Bash(taskkill //PID 8412 //F)",
+      "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"SELECT TOP 1 Id, OrderId, PaymentStatus, GatewayPaymentId, MerchantInvoiceNumber FROM Payments WHERE OrderId = 134 ORDER BY Id DESC\")",
+      "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"DELETE FROM Payments WHERE Id = 6 AND OrderId = 134 AND GatewayPaymentId = 'TR0011LHUGIsX1782835393289'; SELECT @@ROWCOUNT AS Deleted;\")",
+      "Bash(python -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('userId', d['data']['userId'], 'orderNumber', d['data']['orderNumber']\\)\")",
+      "Bash(cp \"C:\\\\Users\\\\afmah\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d--Workspace-Projects-RajMango-rajmango-ai-governance-rajmango-web\\\\29870f33-3da4-487c-ace1-fe01930d76c3\\\\scratchpad\\\\test-bkash-final.js\" d:/Workspace/Projects/RajMango/rajmango-ai-governance/rajmango-web/test-bkash-final.tmp.js)",
+      "Bash(node test-bkash-final.tmp.js)",
+      "Bash(sqlcmd -S \"localhost\\\\SQLEXPRESS\" -d RajMango -E -C -Q \"DELETE FROM Payments WHERE OrderId = 150 AND GatewayPaymentId = 'TR0011PfTIotU1782835486230'; SELECT @@ROWCOUNT AS Deleted;\")",
+      "Bash(taskkill //PID 20992 //F)"
     ],
     "additionalDirectories": [
-      "\\tmp"
+      "\\tmp",
+      "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api\\src\\RajMango.Infrastructure\\Extensions",
+      "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api",
+      "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api\\src\\RajMango.Application\\Interfaces",
+      "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api\\src\\RajMango.Infrastructure\\Services",
+      "d:\\Workspace\\Projects\\RajMango\\rajmango-ai-governance\\rajmango-api\\src\\RajMango.Application\\Features\\Payment\\Commands"
     ]
   }
 }
