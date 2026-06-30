@@ -14,7 +14,20 @@ export function extractApiErrorMessage(
     return 'Unable to connect to the server. Please check your internet connection and try again.';
   }
 
-  const body = error.error;
+  let body = error.error;
+
+  // NSwag-generated ApiException (thrown by *ServiceProxy classes in client-proxy.ts) doesn't
+  // carry a parsed `.error` like Angular's HttpErrorResponse — the response body is only
+  // available as a raw JSON string on `.response`. Without this, every error from a generated
+  // proxy silently falls through to `fallback` no matter what the API actually said.
+  if (!body && typeof error.response === 'string' && error.response.trim()) {
+    try {
+      body = JSON.parse(error.response);
+    } catch {
+      body = error.response;
+    }
+  }
+
   if (!body) return fallback;
 
   // Plain string body

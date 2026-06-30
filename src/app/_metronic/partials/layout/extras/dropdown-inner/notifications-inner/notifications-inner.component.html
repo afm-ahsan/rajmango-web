@@ -54,7 +54,7 @@
     <div class="flex-grow-1 overflow-hidden">
       <div class="d-flex align-items-center justify-content-between mb-1">
         <span class="fw-bold fs-7 text-dark text-truncate" style="max-width: 210px;">{{ n.title }}</span>
-        <span class="text-muted fs-8 flex-shrink-0 ms-2">{{ timeAgo(n.createdAt) }}</span>
+        <span class="text-muted fs-8 flex-shrink-0 ms-2">{{ getTimeAgo(n) }}</span>
       </div>
       <p class="text-muted fs-8 mb-0 text-truncate">{{ n.message }}</p>
       <span *ngIf="n.orderNumber" class="badge badge-light-primary fs-9 mt-1">{{ n.orderNumber }}</span>

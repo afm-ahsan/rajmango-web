@@ -21,6 +21,15 @@ export class NotificationsInnerComponent implements OnInit, OnDestroy {
   notifications: NotificationDto[] = [];
   isMarkingAll = false;
 
+  // "Time ago" labels are precomputed here (not called from the template) — calling something
+  // like `new Date()`-based logic directly in a template binding re-evaluates on every change
+  // detection pass, and once real time crosses a minute boundary between two such passes the
+  // returned string differs, which throws NG0100 (ExpressionChangedAfterItHasBeenCheckedError).
+  // This map is only updated at controlled points (load, and the periodic timer below), each
+  // followed by a single markForCheck(), so a value never changes mid-check.
+  private timeAgoById = new Map<number, string>();
+  private timeAgoRefreshHandle: ReturnType<typeof setInterval> | undefined;
+
   private subs = new SubSink();
 
   constructor(
@@ -36,6 +45,12 @@ export class NotificationsInnerComponent implements OnInit, OnDestroy {
     this.subs.sink = this.auth.currentUser$
       .pipe(filter(u => !!u))
       .subscribe(() => this.load());
+
+    // Minute-granularity labels only need to be refreshed every so often, not on every CD pass.
+    this.timeAgoRefreshHandle = setInterval(() => {
+      this.recomputeTimeAgo();
+      this.cdRef.markForCheck();
+    }, 30000);
   }
 
   load(): void {
@@ -48,6 +63,7 @@ export class NotificationsInnerComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: any) => {
           this.notifications = res?.data ?? [];
+          this.recomputeTimeAgo();
           this.notificationService.refreshUnreadCount();
           this.cdRef.detectChanges();
         },
@@ -92,7 +108,21 @@ export class NotificationsInnerComponent implements OnInit, OnDestroy {
     return this.notifications.filter(n => !n.isRead).length;
   }
 
-  timeAgo(dateStr: string): string {
+  // Template binds to this (a stable Map lookup) instead of computing time-ago live —
+  // see the comment on `timeAgoById` above for why.
+  getTimeAgo(n: NotificationDto): string {
+    return this.timeAgoById.get(n.id) ?? this.computeTimeAgo(n.createdAt);
+  }
+
+  private recomputeTimeAgo(): void {
+    const map = new Map<number, string>();
+    for (const n of this.notifications) {
+      map.set(n.id, this.computeTimeAgo(n.createdAt));
+    }
+    this.timeAgoById = map;
+  }
+
+  private computeTimeAgo(dateStr: string): string {
     const now = new Date();
     const d = new Date(dateStr);
     const diffMs = now.getTime() - d.getTime();
@@ -108,5 +138,6 @@ export class NotificationsInnerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+    if (this.timeAgoRefreshHandle) clearInterval(this.timeAgoRefreshHandle);
   }
 }

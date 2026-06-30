@@ -10,8 +10,10 @@
           <label class="form-label fw-semibold required">Order ID</label>
           <input type="number" class="form-control form-control-solid" formControlName="orderId"
             [class.is-invalid]="isInvalid('orderId')" placeholder="Enter order ID" />
+          <div class="text-muted fs-8 mt-1">The order's internal ID (shown in the order list URL/details), not the Order Number.</div>
           <div *ngIf="hasError('orderId', 'required')" class="text-danger fs-7 mt-1">Order ID is required.</div>
           <div *ngIf="hasError('orderId', 'min')" class="text-danger fs-7 mt-1">Order ID must be a valid number.</div>
+          <div *ngIf="hasError('orderId', 'max')" class="text-danger fs-7 mt-1">That number is too large to be an Order ID — make sure you entered the Order ID, not the Order Number.</div>
         </div>
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold required">Paid Amount</label>

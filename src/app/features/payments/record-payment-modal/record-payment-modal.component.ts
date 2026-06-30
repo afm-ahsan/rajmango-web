@@ -28,10 +28,15 @@ export class RecordPaymentModalComponent implements OnInit, OnDestroy {
     private dropdownService: DropdownService
   ) {}
 
+  // Server-side OrderId is a 32-bit int — order NUMBERS (e.g. 202606290011) are 12 digits and
+  // overflow it, causing a raw model-binding 400 with no useful message. Capping client-side
+  // catches the common "typed the order number instead of the ID" mistake before it ever hits the API.
+  private static readonly MAX_ORDER_ID = 2147483647;
+
   ngOnInit(): void {
     this.paymentMethodOptions = this.dropdownService.getPaymentMethodOptions();
     this.form = this.fb.group({
-      orderId: [this.orderId, [Validators.required, Validators.min(1)]],
+      orderId: [this.orderId, [Validators.required, Validators.min(1), Validators.max(RecordPaymentModalComponent.MAX_ORDER_ID)]],
       paidAmount: [null, [Validators.required, Validators.min(0.01)]],
       paymentMethod: [0, [dropdownRequiredValidator()]],
       transactionId: [''],
@@ -64,8 +69,12 @@ export class RecordPaymentModalComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     this.subs.sink = this.paymentProxy.create(command).subscribe({
-      next: () => {
+      next: (result) => {
         this.isLoading = false;
+        if (result?.succeeded === false) {
+          Swal.fire('Failed', result?.messages?.join(' ') || 'Failed to record payment.', 'error');
+          return;
+        }
         Swal.fire('Success', 'Payment recorded successfully.', 'success');
         this.modal.close('success');
       },
