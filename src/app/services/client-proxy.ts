@@ -1881,6 +1881,75 @@ export class CourierAreaMapServiceProxy {
     }
 
     /**
+     * @param q (optional) 
+     * @param limit (optional) 
+     * @return OK
+     */
+    search(q: string | undefined, limit: number | undefined): Observable<Result_List_CourierAreaDropdownDto> {
+        let url_ = this.baseUrl + "/api/courier-area-map/search?";
+        if (q === null)
+            throw new Error("The parameter 'q' cannot be null.");
+        else if (q !== undefined)
+            url_ += "q=" + encodeURIComponent("" + q) + "&";
+        if (limit === null)
+            throw new Error("The parameter 'limit' cannot be null.");
+        else if (limit !== undefined)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSearch(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSearch(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Result_List_CourierAreaDropdownDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Result_List_CourierAreaDropdownDto>;
+        }));
+    }
+
+    protected processSearch(response: HttpResponseBase): Observable<Result_List_CourierAreaDropdownDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Result_List_CourierAreaDropdownDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Unauthorized", status, _responseText, _headers);
+            }));
+        } else if (status === 403) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("Forbidden", status, _responseText, _headers);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param sortBy (optional) 
@@ -4050,9 +4119,12 @@ export class CustomerServiceProxy {
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
+     * @param filter (optional) 
+     * @param sortBy (optional) 
+     * @param sortOrder (optional) 
      * @return OK
      */
-    getCustomerWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedResult_GetCustomerWithPaginationDto> {
+    getCustomerWithPagination(pageNumber: number | undefined, pageSize: number | undefined, filter: string | undefined, sortBy: string | undefined, sortOrder: string | undefined): Observable<PaginatedResult_GetCustomerWithPaginationDto> {
         let url_ = this.baseUrl + "/api/customer/paged?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -4062,6 +4134,18 @@ export class CustomerServiceProxy {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (filter === null)
+            throw new Error("The parameter 'filter' cannot be null.");
+        else if (filter !== undefined)
+            url_ += "filter=" + encodeURIComponent("" + filter) + "&";
+        if (sortBy === null)
+            throw new Error("The parameter 'sortBy' cannot be null.");
+        else if (sortBy !== undefined)
+            url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
+        if (sortOrder === null)
+            throw new Error("The parameter 'sortOrder' cannot be null.");
+        else if (sortOrder !== undefined)
+            url_ += "sortOrder=" + encodeURIComponent("" + sortOrder) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -4634,9 +4718,12 @@ export class ExpenseServiceProxy {
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
+     * @param filter (optional) 
+     * @param sortBy (optional) 
+     * @param sortOrder (optional) 
      * @return OK
      */
-    getExpenseWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedResult_GetExpenseWithPaginationDto> {
+    getExpenseWithPagination(pageNumber: number | undefined, pageSize: number | undefined, filter: string | undefined, sortBy: string | undefined, sortOrder: string | undefined): Observable<PaginatedResult_GetExpenseWithPaginationDto> {
         let url_ = this.baseUrl + "/api/expense/paged?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -4646,6 +4733,18 @@ export class ExpenseServiceProxy {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (filter === null)
+            throw new Error("The parameter 'filter' cannot be null.");
+        else if (filter !== undefined)
+            url_ += "filter=" + encodeURIComponent("" + filter) + "&";
+        if (sortBy === null)
+            throw new Error("The parameter 'sortBy' cannot be null.");
+        else if (sortBy !== undefined)
+            url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
+        if (sortOrder === null)
+            throw new Error("The parameter 'sortOrder' cannot be null.");
+        else if (sortOrder !== undefined)
+            url_ += "sortOrder=" + encodeURIComponent("" + sortOrder) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -5088,9 +5187,12 @@ export class ExpenseTypeServiceProxy {
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
+     * @param filter (optional) 
+     * @param sortBy (optional) 
+     * @param sortOrder (optional) 
      * @return OK
      */
-    getExpenseTypeWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedResult_GetExpenseTypeWithPaginationDto> {
+    getExpenseTypeWithPagination(pageNumber: number | undefined, pageSize: number | undefined, filter: string | undefined, sortBy: string | undefined, sortOrder: string | undefined): Observable<PaginatedResult_GetExpenseTypeWithPaginationDto> {
         let url_ = this.baseUrl + "/api/expense-type/paged?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -5100,6 +5202,18 @@ export class ExpenseTypeServiceProxy {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (filter === null)
+            throw new Error("The parameter 'filter' cannot be null.");
+        else if (filter !== undefined)
+            url_ += "filter=" + encodeURIComponent("" + filter) + "&";
+        if (sortBy === null)
+            throw new Error("The parameter 'sortBy' cannot be null.");
+        else if (sortBy !== undefined)
+            url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
+        if (sortOrder === null)
+            throw new Error("The parameter 'sortOrder' cannot be null.");
+        else if (sortOrder !== undefined)
+            url_ += "sortOrder=" + encodeURIComponent("" + sortOrder) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -8412,9 +8526,10 @@ export class PaymentServiceProxy {
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
      * @param orderId (optional) 
+     * @param filter (optional) 
      * @return OK
      */
-    getPaged(pageNumber: number | undefined, pageSize: number | undefined, orderId: number | undefined): Observable<PaginatedResult_GetPaymentWithPaginationDto> {
+    getPaged(pageNumber: number | undefined, pageSize: number | undefined, orderId: number | undefined, filter: string | undefined): Observable<PaginatedResult_GetPaymentWithPaginationDto> {
         let url_ = this.baseUrl + "/api/payment/paged?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -8428,6 +8543,10 @@ export class PaymentServiceProxy {
             throw new Error("The parameter 'orderId' cannot be null.");
         else if (orderId !== undefined)
             url_ += "orderId=" + encodeURIComponent("" + orderId) + "&";
+        if (filter === null)
+            throw new Error("The parameter 'filter' cannot be null.");
+        else if (filter !== undefined)
+            url_ += "filter=" + encodeURIComponent("" + filter) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -9600,9 +9719,12 @@ export class RoleServiceProxy {
     /**
      * @param pageNumber (optional) 
      * @param pageSize (optional) 
+     * @param filter (optional) 
+     * @param sortBy (optional) 
+     * @param sortOrder (optional) 
      * @return OK
      */
-    getRoleWithPagination(pageNumber: number | undefined, pageSize: number | undefined): Observable<PaginatedResult_GetRoleWithPaginationDto> {
+    getRoleWithPagination(pageNumber: number | undefined, pageSize: number | undefined, filter: string | undefined, sortBy: string | undefined, sortOrder: string | undefined): Observable<PaginatedResult_GetRoleWithPaginationDto> {
         let url_ = this.baseUrl + "/api/role/paged?";
         if (pageNumber === null)
             throw new Error("The parameter 'pageNumber' cannot be null.");
@@ -9612,6 +9734,18 @@ export class RoleServiceProxy {
             throw new Error("The parameter 'pageSize' cannot be null.");
         else if (pageSize !== undefined)
             url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (filter === null)
+            throw new Error("The parameter 'filter' cannot be null.");
+        else if (filter !== undefined)
+            url_ += "filter=" + encodeURIComponent("" + filter) + "&";
+        if (sortBy === null)
+            throw new Error("The parameter 'sortBy' cannot be null.");
+        else if (sortBy !== undefined)
+            url_ += "sortBy=" + encodeURIComponent("" + sortBy) + "&";
+        if (sortOrder === null)
+            throw new Error("The parameter 'sortOrder' cannot be null.");
+        else if (sortOrder !== undefined)
+            url_ += "sortOrder=" + encodeURIComponent("" + sortOrder) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -11624,6 +11758,7 @@ export class AdminRecentOrderDto implements IAdminRecentOrderDto {
     paymentStatus!: PaymentStatus;
     deliveryStatus!: DeliveryStatus;
     deliveryDate!: moment.Moment | undefined;
+    mangoTypeNames!: string | undefined;
 
     constructor(data?: IAdminRecentOrderDto) {
         if (data) {
@@ -11648,6 +11783,7 @@ export class AdminRecentOrderDto implements IAdminRecentOrderDto {
             this.paymentStatus = _data["paymentStatus"];
             this.deliveryStatus = _data["deliveryStatus"];
             this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
+            this.mangoTypeNames = _data["mangoTypeNames"];
         }
     }
 
@@ -11672,6 +11808,7 @@ export class AdminRecentOrderDto implements IAdminRecentOrderDto {
         data["paymentStatus"] = this.paymentStatus;
         data["deliveryStatus"] = this.deliveryStatus;
         data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
+        data["mangoTypeNames"] = this.mangoTypeNames;
         return data;
     }
 
@@ -11696,6 +11833,7 @@ export interface IAdminRecentOrderDto {
     paymentStatus: PaymentStatus;
     deliveryStatus: DeliveryStatus;
     deliveryDate: moment.Moment | undefined;
+    mangoTypeNames: string | undefined;
 }
 
 export class AppUserDto implements IAppUserDto {
@@ -12011,6 +12149,7 @@ export class AvailableCourierStationDto implements IAvailableCourierStationDto {
     area!: string | undefined;
     phone!: string | undefined;
     mapUrl!: string | undefined;
+    locationType!: CourierLocationType;
 
     constructor(data?: IAvailableCourierStationDto) {
         if (data) {
@@ -12030,6 +12169,7 @@ export class AvailableCourierStationDto implements IAvailableCourierStationDto {
             this.area = _data["area"];
             this.phone = _data["phone"];
             this.mapUrl = _data["mapUrl"];
+            this.locationType = _data["locationType"];
         }
     }
 
@@ -12049,6 +12189,7 @@ export class AvailableCourierStationDto implements IAvailableCourierStationDto {
         data["area"] = this.area;
         data["phone"] = this.phone;
         data["mapUrl"] = this.mapUrl;
+        data["locationType"] = this.locationType;
         return data;
     }
 
@@ -12068,6 +12209,7 @@ export interface IAvailableCourierStationDto {
     area: string | undefined;
     phone: string | undefined;
     mapUrl: string | undefined;
+    locationType: CourierLocationType;
 }
 
 export class BkashInitiateResponseDto implements IBkashInitiateResponseDto {
@@ -14967,6 +15109,7 @@ export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
     paymentStatus!: PaymentStatus;
     deliveryStatus!: DeliveryStatus;
     deliveryDate!: moment.Moment | undefined;
+    mangoTypeNames!: string | undefined;
 
     constructor(data?: ICustomerRecentOrderDto) {
         if (data) {
@@ -14990,6 +15133,7 @@ export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
             this.paymentStatus = _data["paymentStatus"];
             this.deliveryStatus = _data["deliveryStatus"];
             this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
+            this.mangoTypeNames = _data["mangoTypeNames"];
         }
     }
 
@@ -15013,6 +15157,7 @@ export class CustomerRecentOrderDto implements ICustomerRecentOrderDto {
         data["paymentStatus"] = this.paymentStatus;
         data["deliveryStatus"] = this.deliveryStatus;
         data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
+        data["mangoTypeNames"] = this.mangoTypeNames;
         return data;
     }
 
@@ -15036,6 +15181,7 @@ export interface ICustomerRecentOrderDto {
     paymentStatus: PaymentStatus;
     deliveryStatus: DeliveryStatus;
     deliveryDate: moment.Moment | undefined;
+    mangoTypeNames: string | undefined;
 }
 
 export class CustomerSearchItemDto implements ICustomerSearchItemDto {
@@ -19906,6 +20052,9 @@ export class OrderPreviewDto implements IOrderPreviewDto {
     totalAmount!: number;
     courierProviderName!: string | undefined;
     courierRatePerKg!: number | undefined;
+    courierLocationType!: CourierLocationType;
+    minimumCharge!: number | undefined;
+    courierChargeCalculated!: number | undefined;
 
     constructor(data?: IOrderPreviewDto) {
         if (data) {
@@ -19924,6 +20073,9 @@ export class OrderPreviewDto implements IOrderPreviewDto {
             this.totalAmount = _data["totalAmount"];
             this.courierProviderName = _data["courierProviderName"];
             this.courierRatePerKg = _data["courierRatePerKg"];
+            this.courierLocationType = _data["courierLocationType"];
+            this.minimumCharge = _data["minimumCharge"];
+            this.courierChargeCalculated = _data["courierChargeCalculated"];
         }
     }
 
@@ -19942,6 +20094,9 @@ export class OrderPreviewDto implements IOrderPreviewDto {
         data["totalAmount"] = this.totalAmount;
         data["courierProviderName"] = this.courierProviderName;
         data["courierRatePerKg"] = this.courierRatePerKg;
+        data["courierLocationType"] = this.courierLocationType;
+        data["minimumCharge"] = this.minimumCharge;
+        data["courierChargeCalculated"] = this.courierChargeCalculated;
         return data;
     }
 
@@ -19960,6 +20115,9 @@ export interface IOrderPreviewDto {
     totalAmount: number;
     courierProviderName: string | undefined;
     courierRatePerKg: number | undefined;
+    courierLocationType: CourierLocationType;
+    minimumCharge: number | undefined;
+    courierChargeCalculated: number | undefined;
 }
 
 export class OrderSearchItemDto implements IOrderSearchItemDto {
@@ -28225,6 +28383,8 @@ export class UpdateAdminOrderStatusCommand implements IUpdateAdminOrderStatusCom
     paymentStatus!: PaymentStatus;
     deliveryStatus!: DeliveryStatus;
     deliveryDate!: moment.Moment | undefined;
+    shouldNotifyReceiver!: boolean;
+    shouldNotifySender!: boolean;
 
     constructor(data?: IUpdateAdminOrderStatusCommand) {
         if (data) {
@@ -28242,6 +28402,8 @@ export class UpdateAdminOrderStatusCommand implements IUpdateAdminOrderStatusCom
             this.paymentStatus = _data["paymentStatus"];
             this.deliveryStatus = _data["deliveryStatus"];
             this.deliveryDate = _data["deliveryDate"] ? moment(_data["deliveryDate"].toString()) : <any>undefined;
+            this.shouldNotifyReceiver = _data["shouldNotifyReceiver"];
+            this.shouldNotifySender = _data["shouldNotifySender"];
         }
     }
 
@@ -28259,6 +28421,8 @@ export class UpdateAdminOrderStatusCommand implements IUpdateAdminOrderStatusCom
         data["paymentStatus"] = this.paymentStatus;
         data["deliveryStatus"] = this.deliveryStatus;
         data["deliveryDate"] = this.deliveryDate ? this.deliveryDate.toISOString() : <any>undefined;
+        data["shouldNotifyReceiver"] = this.shouldNotifyReceiver;
+        data["shouldNotifySender"] = this.shouldNotifySender;
         return data;
     }
 
@@ -28276,6 +28440,8 @@ export interface IUpdateAdminOrderStatusCommand {
     paymentStatus: PaymentStatus;
     deliveryStatus: DeliveryStatus;
     deliveryDate: moment.Moment | undefined;
+    shouldNotifyReceiver: boolean;
+    shouldNotifySender: boolean;
 }
 
 export class UpdateComplaintStatusCommand implements IUpdateComplaintStatusCommand {

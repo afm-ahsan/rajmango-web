@@ -44,6 +44,9 @@
                 <th class="cursor-pointer" (click)="onSort('orderDate')">Order Date
                   <span *ngIf="filter.sortBy === 'orderDate'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
                 </th>
+                <th class="cursor-pointer" (click)="onSort('mangoType')">Mango Type
+                  <span *ngIf="filter.sortBy === 'mangoType'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                </th>
                 <th class="cursor-pointer" (click)="onSort('totalQuantity')">Total Qty
                   <span *ngIf="filter.sortBy === 'totalQuantity'">{{ filter.sortOrder === 'asc' ? '▲' : '▼' }}</span>
                 </th>
@@ -71,6 +74,7 @@
                   </a>
                 </td>
                 <td>{{ order.orderDate | date }}</td>
+                <td>{{ getMangoTypeNames(order) }}</td>
                 <td>{{ order.totalQuantity }} Kg</td>
                 <td>{{ order.totalAmount }}</td>
                 <td>

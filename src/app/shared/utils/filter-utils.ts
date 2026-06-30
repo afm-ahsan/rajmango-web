@@ -10,7 +10,8 @@ export class FilterUtils {
     return {
       ...filter,
       sortBy: field,
-      sortOrder
+      sortOrder,
+      pageNumber: 1
     };
   }
 

@@ -132,6 +132,11 @@ export class OrderListComponent implements OnInit, OnDestroy {
     return EnumLabelUtils.getDeliveryStatusBadgeClass(status);
   }
 
+  getMangoTypeNames(order: OrderDto): string {
+    const names = (order.orderDetails ?? []).map(d => d.mangoName).filter(Boolean);
+    return names.length ? names.join(', ') : '-';
+  }
+
   create(): void {
     this.openCreateModal(0);
   }

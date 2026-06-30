@@ -119,17 +119,19 @@
             <colgroup>
               <col style="width: 12%">
               <col style="width: 14%">
-              <col style="width: 10%">
               <col style="width: 11%">
-              <col style="width: 14%">
-              <col style="width: 13%">
-              <col style="width: 13%">
-              <col style="width: 13%">
+              <col style="width: 10%">
+              <col style="width: 9%">
+              <col style="width: 11%">
+              <col style="width: 11%">
+              <col style="width: 11%">
+              <col style="width: 11%">
             </colgroup>
             <thead class="table-light">
               <tr>
                 <th class="ps-5 py-3">Order #</th>
                 <th class="py-3">Customer</th>
+                <th class="py-3">Mango Type</th>
                 <th class="py-3">Date</th>
                 <th class="text-end py-3">Amount</th>
                 <th class="text-center py-3">Order Status</th>
@@ -142,6 +144,7 @@
               <tr *ngFor="let order of dashboard.recentOrders">
                 <td class="ps-5 py-3 fw-semibold text-nowrap">{{ order.orderNumber }}</td>
                 <td class="py-3">{{ order.customerName }}</td>
+                <td class="py-3">{{ order.mangoTypeNames || '-' }}</td>
                 <td class="py-3 text-nowrap">{{ order.orderDate | safeDate | date:'dd MMM yyyy' }}</td>
                 <td class="text-end py-3 fw-semibold">৳{{ order.totalAmount | number:'1.0-0' }}</td>
                 <td class="text-center py-3">
@@ -162,7 +165,7 @@
                 <td class="text-center pe-5 py-3 text-nowrap">{{ order.deliveryDate ? (order.deliveryDate | safeDate | date:'dd MMM yyyy') : '-' }}</td>
               </tr>
               <tr *ngIf="!dashboard.recentOrders?.length">
-                <td colspan="8" class="text-center text-muted py-6">No recent orders.</td>
+                <td colspan="9" class="text-center text-muted py-6">No recent orders.</td>
               </tr>
             </tbody>
           </table>
