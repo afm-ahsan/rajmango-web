@@ -5,5 +5,6 @@ export enum PaymentStatus {
   Failed = 3,
   Refunded = 4,
   Cancelled = 5,
-  Pending = 6
+  Pending = 6,
+  Expired = 7
 }

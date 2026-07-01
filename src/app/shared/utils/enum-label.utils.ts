@@ -190,6 +190,7 @@ export class EnumLabelUtils {
       [PaymentStatus.Refunded]:  'badge-light-info',
       [PaymentStatus.Cancelled]: 'badge-light-secondary',
       [PaymentStatus.Pending]:   'badge-light-warning',
+      [PaymentStatus.Expired]:   'badge-light-secondary',
     };
     return classes[status] ?? 'badge-light-secondary';
   }
