@@ -40,8 +40,9 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   readonly DeliveryStatus = DeliveryStatus;
   readonly RECEIVER_SELF = RECEIVER_SELF;
 
-  showFilters = false;
+  showFilters = true;
   showDivider = false;
+  hasLoaded = false;
   hasAdminManage = false;
 
   deliveryAreaOptions: { id: number; name: string }[] = [];
@@ -51,7 +52,7 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   mangoTypeOptions: { id: number; name: string }[] = [];
   courierProviderOptions: { id: number; name: string }[] = [];
 
-  summary = { totalQuantityKg: 0, crate10KgCount: 0, crate20KgCount: 0 };
+  summary = { totalQuantityKg: 0, crate10KgCount: 0, crate20KgCount: 0, totalAmount: 0, totalPaid: 0, totalDue: 0 };
 
   filter: AdminOrderFilterModel = {
     pageNumber: 1,
@@ -115,8 +116,9 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     this.hasAdminManage = this.permissionService.hasAccess(UserPermissionKey.HasAdminOrdersManageAccess);
     this.setupDeliveryAreaTypeahead();
     this.loadDropdowns();
-    this.load();
-    this.subs.sink = this.signalR.orderStatusUpdated$.subscribe(() => this.load());
+    this.subs.sink = this.signalR.orderStatusUpdated$.subscribe(() => {
+      if (this.hasLoaded) this.load();
+    });
   }
 
   private setupDeliveryAreaTypeahead(): void {
@@ -191,6 +193,9 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
           totalQuantityKg: res?.summaryTotalQuantityKg ?? 0,
           crate10KgCount:  res?.summaryCrate10KgCount  ?? 0,
           crate20KgCount:  res?.summaryCrate20KgCount  ?? 0,
+          totalAmount:     res?.summaryTotalAmount      ?? 0,
+          totalPaid:       res?.summaryTotalPaid        ?? 0,
+          totalDue:        res?.summaryTotalDue         ?? 0,
         };
       },
       error: () => {
@@ -219,6 +224,8 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   applyFilters(): void {
     this.filter = { ...this.filter, pageNumber: 1 };
     this.showDivider = true;
+    this.hasLoaded = true;
+    this.showFilters = true;
     this.load();
   }
 
@@ -239,7 +246,12 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
       deliveryArea: undefined,
       receiverMobile: '',
     };
-    this.load();
+    this.hasLoaded = false;
+    this.showFilters = true;
+    this.orders = [];
+    this.totalCount = 0;
+    this.summary = { totalQuantityKg: 0, crate10KgCount: 0, crate20KgCount: 0, totalAmount: 0, totalPaid: 0, totalDue: 0 };
+    this.cdRef.detectChanges();
   }
 
   pageChanged(page: number): void {

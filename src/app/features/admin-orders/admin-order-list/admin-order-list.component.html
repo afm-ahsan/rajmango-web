@@ -10,7 +10,7 @@
         </div>
         <div class="card-toolbar gap-2">
           <button type="button" class="btn btn-sm btn-light-primary" (click)="toggleFilters()">
-            <i class="bi bi-funnel me-1"></i>{{ showFilters ? 'Hide Filters' : 'Filters' }}
+            <i class="bi bi-funnel me-1"></i>{{ showFilters ? 'Hide Filters' : 'Show Filters' }}
           </button>
         </div>
       </div>
@@ -127,10 +127,6 @@
                 {{ item.label || item.name }}
               </ng-template>
             </ng-select>
-            <!-- <div *ngIf="areaFilterHasNoMatch && !isAreaFilterSearching" class="text-muted fs-7 mt-1">
-              <i class="bi bi-info-circle me-1"></i>No matching delivery area found.
-              Select <strong>Others</strong> from the list to provide the delivery address manually.
-            </div> -->
           </div>
 
           <div class="col-12 col-md-3">
@@ -163,52 +159,69 @@
 
         </div>
 
-        <!--begin::Filter action row: summary left, buttons right-->
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
-
-          <!--begin::Summary block-->
-          <div class="d-flex flex-wrap gap-2">
-            <div class="d-flex align-items-center gap-2 border rounded px-3 py-2 bg-light">
-              <i class="bi bi-box-seam text-primary fs-5"></i>
-              <div>
-                <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">Total Qty</div>
-                <div class="fw-bold text-gray-800 fs-6 lh-1">{{ summary.totalQuantityKg | number }} kg</div>
-              </div>
-            </div>
-            <div class="d-flex align-items-center gap-2 border rounded px-3 py-2" style="background:#e8f4fd;">
-              <i class="bi bi-grid text-info fs-5"></i>
-              <div>
-                <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">10 kg Crates</div>
-                <div class="fw-bold text-info fs-6 lh-1">{{ summary.crate10KgCount | number }}</div>
-              </div>
-            </div>
-            <div class="d-flex align-items-center gap-2 border rounded px-3 py-2" style="background:#e9f7ef;">
-              <i class="bi bi-grid-3x3 text-success fs-5"></i>
-              <div>
-                <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">20 kg Crates</div>
-                <div class="fw-bold text-success fs-6 lh-1">{{ summary.crate20KgCount | number }}</div>
-              </div>
-            </div>
-          </div>
-          <!--end::Summary block-->
-
-          <!--begin::Action buttons-->
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-sm btn-primary" (click)="applyFilters()">
-              <i class="bi bi-search me-1"></i>Apply
-            </button>
-            <button type="button" class="btn btn-sm btn-light" (click)="clearFilters()">
-              <i class="bi bi-x-circle me-1"></i>Clear
-            </button>
-          </div>
-          <!--end::Action buttons-->
-
+        <!--begin::Filter action buttons-->
+        <div class="d-flex justify-content-end gap-2 mb-4">
+          <button type="button" class="btn btn-sm btn-primary" (click)="applyFilters()">
+            <i class="bi bi-search me-1"></i>Apply
+          </button>
+          <button type="button" class="btn btn-sm btn-light" (click)="clearFilters()">
+            <i class="bi bi-x-circle me-1"></i>Clear
+          </button>
         </div>
-        <!--end::Filter action row-->
+        <!--end::Filter action buttons-->
       </div>
       <!--end::Filter Panel-->
 
-      <hr *ngIf="showFilters" class="my-0" />
+      <!--begin::Summary Cards — visible after Apply regardless of filter panel state-->
+      <div class="card-body pt-3 pb-2" *ngIf="hasLoaded">
+        <div class="d-flex flex-wrap gap-2">
+          <div class="d-flex align-items-center gap-2 border rounded px-3 py-1 bg-light">
+            <i class="bi bi-box-seam text-primary fs-6"></i>
+            <div>
+              <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">Total Qty</div>
+              <div class="fw-bold text-gray-800 fs-7 lh-1">{{ summary.totalQuantityKg | number }} kg</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 border rounded px-3 py-1" style="background:#e8f4fd;">
+            <i class="bi bi-grid text-info fs-6"></i>
+            <div>
+              <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">10 kg Crates</div>
+              <div class="fw-bold text-info fs-7 lh-1">{{ summary.crate10KgCount | number }}</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 border rounded px-3 py-1" style="background:#e9f7ef;">
+            <i class="bi bi-grid-3x3 text-success fs-6"></i>
+            <div>
+              <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">20 kg Crates</div>
+              <div class="fw-bold text-success fs-7 lh-1">{{ summary.crate20KgCount | number }}</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 border rounded px-3 py-1" style="background:#fff3cd;">
+            <i class="bi bi-cash-stack text-warning fs-6"></i>
+            <div>
+              <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">Total Amount</div>
+              <div class="fw-bold text-warning fs-7 lh-1">৳ {{ summary.totalAmount | number:'1.0-0' }}</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 border rounded px-3 py-1" style="background:#d4edda;">
+            <i class="bi bi-check-circle text-success fs-6"></i>
+            <div>
+              <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">Total Paid</div>
+              <div class="fw-bold text-success fs-7 lh-1">৳ {{ summary.totalPaid | number:'1.0-0' }}</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 border rounded px-3 py-1" style="background:#fde8e8;">
+            <i class="bi bi-exclamation-circle text-danger fs-6"></i>
+            <div>
+              <div class="text-muted fs-8 fw-semibold text-uppercase lh-1 mb-1">Total Due</div>
+              <div class="fw-bold text-danger fs-7 lh-1">৳ {{ summary.totalDue | number:'1.0-0' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end::Summary Cards-->
+
+      <hr *ngIf="showFilters || hasLoaded" class="my-0" />
 
       <!--begin::Loading-->
       <div class="card-body d-flex justify-content-center align-items-center" *ngIf="isLoading" style="min-height: 200px;">
@@ -219,7 +232,7 @@
       <!--end::Loading-->
 
       <!--begin::Body-->
-      <div class="card-body py-4" *ngIf="!isLoading && orders.length > 0">
+      <div class="card-body py-4" *ngIf="hasLoaded && !isLoading && orders.length > 0">
         <div class="table-responsive">
           <table class="table table-striped table-hover align-middle fs-7 gy-4">
             <thead>
@@ -375,7 +388,7 @@
       <!--end::Body-->
 
       <!--begin::Empty-->
-      <div class="card-body" *ngIf="!isLoading && !orders.length">
+      <div class="card-body" *ngIf="hasLoaded && !isLoading && !orders.length">
         <app-data-empty
           icon="bi-bag-x"
           title="No Orders Found"
