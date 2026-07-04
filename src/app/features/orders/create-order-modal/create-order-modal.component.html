@@ -1,6 +1,8 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h2 class="modal-title">{{ orderDto.id ? 'Edit Order' : 'New Order' }}</h2>
+    <h2 class="modal-title">
+      {{ orderDto.id ? 'Edit Order' : (isAdminCreate ? 'Create Order for Customer' : 'New Order') }}
+    </h2>
     <button type="button" class="btn-close" (click)="cancel()"></button>
   </div>
   <div class="modal-body py-6 px-lg-8">
@@ -13,6 +15,55 @@
       <span>Unable to load order form data. Please try again or contact support.</span>
     </div>
     <ng-container *ngIf="!loadFailed">
+
+      <!-- ── Admin: Customer Selector (create mode only) ── -->
+      <ng-container *ngIf="isAdminCreate && !id">
+        <div class="mb-5 p-4 rounded-2 border" style="background:#f8f9fa;">
+          <label class="form-label fw-bold text-gray-800 mb-2 required">
+            <i class="bi bi-person-circle me-1 text-primary"></i>Select Customer
+          </label>
+
+          <!-- Selected customer chip -->
+          <div *ngIf="selectedCustomer" class="d-flex align-items-center gap-2 p-2 rounded border border-success bg-white">
+            <div class="flex-grow-1">
+              <div class="fw-semibold text-gray-800 fs-6">{{ selectedCustomer.fullName }}</div>
+              <div class="text-muted fs-7">{{ selectedCustomer.phoneNumber }}
+                <span *ngIf="selectedCustomer.email"> · {{ selectedCustomer.email }}</span>
+              </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-icon btn-light-danger" (click)="clearSelectedCustomer()" title="Change customer">
+              <i class="bi bi-x-lg fs-7"></i>
+            </button>
+          </div>
+
+          <!-- Search input (hidden once customer is selected) -->
+          <ng-container *ngIf="!selectedCustomer">
+            <div class="position-relative">
+              <input type="text" class="form-control form-control-solid"
+                placeholder="Search by name, phone, or email (min 2 chars)…"
+                (input)="customerSearch$.next($any($event.target).value)"
+                autocomplete="off" />
+              <span *ngIf="isCustomerSearching" class="position-absolute end-0 top-50 translate-middle-y me-3">
+                <span class="spinner-border spinner-border-sm text-primary"></span>
+              </span>
+            </div>
+            <ul *ngIf="customerResults.length" class="list-group mt-1 shadow-sm" style="max-height:200px;overflow-y:auto;z-index:9999;position:relative;">
+              <li *ngFor="let c of customerResults"
+                  class="list-group-item list-group-item-action cursor-pointer py-2 px-3"
+                  (click)="selectCustomer(c)">
+                <div class="fw-semibold">{{ c.fullName }}</div>
+                <div class="text-muted fs-7">{{ c.phoneNumber }}<span *ngIf="c.email"> · {{ c.email }}</span></div>
+              </li>
+            </ul>
+            <div *ngIf="!isCustomerSearching && !selectedCustomer" class="text-muted fs-8 mt-1">
+              <i class="bi bi-info-circle me-1"></i>Type at least 2 characters to search customers.
+            </div>
+          </ng-container>
+        </div>
+        <hr class="my-0 mb-4" />
+      </ng-container>
+      <!-- ── End Customer Selector ── -->
+
       <form [formGroup]="orderForm">
         <div class="row g-4">
           <div class="col-12 col-md-6">
@@ -156,11 +207,18 @@
             </div>
           </ng-container>
 
+          <!-- Delivery Note: overall order instruction (maps to Order.DeliveryNote) -->
           <div class="col-12">
-            <label class="form-label fw-semibold">Note</label>
-            <textarea class="form-control form-control-solid" formControlName="note"
-              placeholder="Optional note" rows="1" maxlength="512"></textarea>
+            <label class="form-label fw-semibold">
+              <i class="bi bi-chat-left-text me-1 text-muted"></i>
+              Order Note / Delivery Instructions
+              <span class="text-muted fw-normal fs-7">(Optional)</span>
+            </label>
+            <textarea class="form-control form-control-solid" formControlName="deliveryNote"
+              rows="1" maxlength="500"
+              placeholder="e.g. Please send after 5 days…"></textarea>
           </div>
+
           <div class="col-12 col-md-4">
             <label class="form-label fw-semibold required">Number of Crates</label>
             <input type="number" class="form-control form-control-solid" formControlName="quantity"

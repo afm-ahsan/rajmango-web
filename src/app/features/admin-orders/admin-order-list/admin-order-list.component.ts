@@ -21,6 +21,7 @@ import { CreateOrderModalComponent } from '../../orders/create-order-modal/creat
 import { AdminOrderActionModalComponent } from '../admin-order-action-modal/admin-order-action-modal.component';
 import { AdminOrderUpdateStatusModalComponent } from '../admin-order-update-status-modal/admin-order-update-status-modal.component';
 import { AdminOrderViewModalComponent } from '../admin-order-view-modal/admin-order-view-modal.component';
+import { AdminOrderPermanentDeleteModalComponent } from '../admin-order-permanent-delete-modal/admin-order-permanent-delete-modal.component';
 
 // ReceiverType enum mirror for template use
 const RECEIVER_SELF = 0;
@@ -44,6 +45,8 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   showDivider = false;
   hasLoaded = false;
   hasAdminManage = false;
+  hasAdminCreateForCustomer = false;
+  hasAdminDeletePermanent = false;
 
   deliveryAreaOptions: { id: number; name: string }[] = [];
   isAreaFilterSearching = false;
@@ -113,7 +116,9 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.hasAdminManage = this.permissionService.hasAccess(UserPermissionKey.HasAdminOrdersManageAccess);
+    this.hasAdminManage             = this.permissionService.hasAccess(UserPermissionKey.HasAdminOrdersManageAccess);
+    this.hasAdminCreateForCustomer  = this.permissionService.hasAccess(UserPermissionKey.HasAdminOrdersCreateForCustomerAccess);
+    this.hasAdminDeletePermanent    = this.permissionService.hasAccess(UserPermissionKey.HasAdminOrdersDeletePermanentAccess);
     this.setupDeliveryAreaTypeahead();
     this.loadDropdowns();
     this.subs.sink = this.signalR.orderStatusUpdated$.subscribe(() => {
@@ -280,6 +285,25 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     );
   }
 
+  createForCustomer(): void {
+    const ref = this.modalService.open(CreateOrderModalComponent, { size: 'lg' });
+    ref.componentInstance.id = 0;
+    ref.componentInstance.isAdminCreate = true;
+    ref.result.then(
+      (result: 'success' | 'dismissed') => { if (result === 'success') this.load(); },
+      () => {}
+    );
+  }
+
+  openPermanentDelete(order: AdminOrderListDto): void {
+    const ref = this.modalService.open(AdminOrderPermanentDeleteModalComponent, { size: 'md' });
+    ref.componentInstance.order = order;
+    ref.result.then(
+      (result: 'success' | 'dismissed') => { if (result === 'success') this.load(); },
+      () => {}
+    );
+  }
+
   openUpdateStatus(order: AdminOrderListDto): void {
     const ref = this.modalService.open(AdminOrderUpdateStatusModalComponent, { size: 'md' });
     ref.componentInstance.order = order;
@@ -294,6 +318,7 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
     ref.componentInstance.orderId = order.orderId;
     ref.componentInstance.orderNumber = order.orderNumber;
     ref.componentInstance.action = action;
+    ref.componentInstance.deliveryNote = order.deliveryNote ?? null;
     ref.result.then(
       (result: 'success' | 'dismissed') => {
         if (result === 'success') this.load();

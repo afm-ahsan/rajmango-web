@@ -16,6 +16,8 @@ export class AdminOrderActionModalComponent implements OnDestroy {
   @Input() orderId!: number;
   @Input() orderNumber!: string;
   @Input() action!: AdminOrderAction;
+  /** Customer note from Order.DeliveryNote — displayed in the Confirm modal only. */
+  @Input() deliveryNote: string | null = null;
 
   trackingNumber = '';
   isSaving = false;
@@ -61,6 +63,15 @@ export class AdminOrderActionModalComponent implements OnDestroy {
 
   get isShipAction(): boolean {
     return this.action === 'ship';
+  }
+
+  get isConfirmAction(): boolean {
+    return this.action === 'confirm';
+  }
+
+  /** True when the order has a non-empty customer note that should be shown. */
+  get hasNote(): boolean {
+    return this.isConfirmAction && !!this.deliveryNote?.trim();
   }
 
   submit(): void {

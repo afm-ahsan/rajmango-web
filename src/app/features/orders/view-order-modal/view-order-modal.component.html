@@ -111,6 +111,15 @@
         </div>
       </div>
 
+      <!-- Customer Order Note -->
+      <div *ngIf="(orderDto.deliveryNote || '').trim()" class="rounded-2 border border-warning mb-4 px-4 py-3" style="background:#fffbf0;">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="bi bi-chat-left-text-fill text-warning fs-6"></i>
+          <span class="fw-bold text-gray-800 fs-7 text-uppercase">Order Note / Delivery Instructions</span>
+        </div>
+        <p class="text-gray-700 fs-6 mb-0" style="white-space:pre-wrap;">{{ orderDto.deliveryNote }}</p>
+      </div>
+
       <!-- Receiver Info -->
       <div class="row g-4 mb-4">
         <div class="col-12 col-md-4">

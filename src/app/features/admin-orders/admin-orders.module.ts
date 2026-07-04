@@ -10,6 +10,7 @@ import { AdminOrderListComponent } from './admin-order-list/admin-order-list.com
 import { AdminOrderViewModalComponent } from './admin-order-view-modal/admin-order-view-modal.component';
 import { AdminOrderActionModalComponent } from './admin-order-action-modal/admin-order-action-modal.component';
 import { AdminOrderUpdateStatusModalComponent } from './admin-order-update-status-modal/admin-order-update-status-modal.component';
+import { AdminOrderPermanentDeleteModalComponent } from './admin-order-permanent-delete-modal/admin-order-permanent-delete-modal.component';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { AdminOrderUpdateStatusModalComponent } from './admin-order-update-statu
     AdminOrderViewModalComponent,
     AdminOrderActionModalComponent,
     AdminOrderUpdateStatusModalComponent,
+    AdminOrderPermanentDeleteModalComponent,
   ],
   providers: [
     MangoAvailabilityServiceProxy,

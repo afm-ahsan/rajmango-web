@@ -1,0 +1,94 @@
+<div class="modal-content">
+  <div class="modal-header bg-danger">
+    <h5 class="modal-title text-white fw-bold">
+      <i class="bi bi-trash3-fill me-2"></i>Permanent Delete Order
+    </h5>
+    <button type="button" class="btn-close btn-close-white" (click)="dismiss()" [disabled]="isDeleting"></button>
+  </div>
+
+  <div class="modal-body py-5 px-6">
+
+    <!-- Warning banner -->
+    <div class="alert alert-danger d-flex align-items-start gap-3 mb-5">
+      <i class="bi bi-exclamation-triangle-fill fs-4 flex-shrink-0 mt-1"></i>
+      <div>
+        <div class="fw-bold mb-1">This action cannot be undone.</div>
+        <div class="fs-7">
+          The order will be permanently removed from all lists, dashboards, and totals.
+          Payment records are preserved for accounting purposes.
+        </div>
+      </div>
+    </div>
+
+    <!-- Order summary -->
+    <div class="rounded-2 border p-4 mb-5 bg-light">
+      <div class="row g-2 fs-7">
+        <div class="col-6">
+          <span class="text-muted">Order Number</span>
+          <div class="fw-bold fs-6 text-gray-800">{{ order?.orderNumber }}</div>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Customer</span>
+          <div class="fw-semibold">{{ order?.customerName || '—' }}</div>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Total Amount</span>
+          <div class="fw-bold text-danger">৳ {{ order?.totalAmount | number:'1.0-0' }}</div>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Payment Status</span>
+          <div class="fw-semibold">{{ getPaymentStatusLabel(order?.paymentStatus) }}</div>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Order Status</span>
+          <div class="fw-semibold">{{ getOrderStatusLabel(order?.orderStatus) }}</div>
+        </div>
+        <div class="col-6">
+          <span class="text-muted">Paid Amount</span>
+          <div class="fw-semibold">৳ {{ order?.paidAmount | number:'1.0-0' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reason field -->
+    <div class="mb-4">
+      <label class="form-label fw-semibold required">Reason for Deletion</label>
+      <textarea class="form-control form-control-solid"
+        rows="3"
+        maxlength="500"
+        placeholder="Enter a clear reason for permanently deleting this order…"
+        [(ngModel)]="reason">
+      </textarea>
+      <div class="text-muted fs-8 mt-1">Minimum 5 characters. Stored in the audit trail.</div>
+    </div>
+
+    <!-- Order number confirmation -->
+    <div class="mb-2">
+      <label class="form-label fw-semibold required">
+        Type <span class="text-danger fw-bold">{{ order?.orderNumber }}</span> to confirm
+      </label>
+      <input type="text"
+        class="form-control form-control-solid"
+        [class.is-valid]="isConfirmMatching"
+        [class.is-invalid]="confirmInput && !isConfirmMatching"
+        placeholder="Enter order number to confirm deletion"
+        [(ngModel)]="confirmInput"
+        autocomplete="off" />
+      <div *ngIf="confirmInput && !isConfirmMatching" class="text-danger fs-8 mt-1">
+        Order number does not match.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm" (click)="dismiss()" [disabled]="isDeleting">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-danger btn-sm" (click)="confirm()" [disabled]="!canConfirm">
+      <span *ngIf="isDeleting" class="spinner-border spinner-border-sm me-1"></span>
+      <i *ngIf="!isDeleting" class="bi bi-trash3-fill me-1"></i>
+      {{ isDeleting ? 'Deleting…' : 'Permanently Delete' }}
+    </button>
+  </div>
+</div>

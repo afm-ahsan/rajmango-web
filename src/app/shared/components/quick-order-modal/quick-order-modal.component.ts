@@ -104,12 +104,12 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
         crateType: [0, [dropdownRequiredValidator()]],
         area: [null, [dropdownRequiredValidator()]],
         quantity: [1, Validators.compose([Validators.required, Validators.min(1)])],
-        note: [''],
         courierStationId: [null],
         fallbackAddress: [''],
         receiverType: [ReceiverType.Self, [Validators.required]],
         receiverName: [null],
         receiverMobileNumber: [null],
+        deliveryNote: [null],
       },
       { validators: [minOrderKgValidator(10)] }
     );
@@ -165,7 +165,6 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
       crateType: 0,
       area: null,
       quantity: 1,
-      note: '',
       receiverType: ReceiverType.Self,
       receiverName: null,
       receiverMobileNumber: null,
@@ -238,7 +237,6 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
         mangoTypeId,
         crateType,
         quantity,
-        note: formValue.note,
         unitPrice,
         totalPrice,
         mangoName: mangoType?.name,
@@ -249,7 +247,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     }
 
     this.orderDto.totalAmount = this.getTotalPrice();
-    this.orderForm.patchValue({ quantity: 1, note: '' });
+    this.orderForm.patchValue({ quantity: 1 });
     this.showAddedFeedback();
     this.cdRef.detectChanges();
     this.refreshPreview();
@@ -276,7 +274,6 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
       crateType: 0,
       area: null,
       quantity: 1,
-      note: '',
       courierStationId: null,
       fallbackAddress: '',
       receiverType: ReceiverType.Self,
@@ -484,6 +481,7 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     this.orderInputDto.receiverType = receiverType;
     this.orderInputDto.receiverName = receiverType === ReceiverType.Others ? this.orderForm.get('receiverName')?.value : null;
     this.orderInputDto.receiverMobileNumber = receiverType === ReceiverType.Others ? this.orderForm.get('receiverMobileNumber')?.value : null;
+    this.orderInputDto.deliveryNote = this.orderForm.get('deliveryNote')?.value?.trim() || null;
   }
 
   private initObject(): OrderDto {

@@ -22,12 +22,14 @@ export const AppPermissions = {
   },
 
   Orders: {
-    View:        'order.view',
-    Create:      'order.create',
-    Update:      'order.update',
-    Delete:      'order.delete',
-    AdminView:   'order.admin.view',
-    AdminManage: 'order.admin.manage',
+    View:                  'order.view',
+    Create:                'order.create',
+    Update:                'order.update',
+    Delete:                'order.delete',
+    AdminView:             'order.admin.view',
+    AdminManage:           'order.admin.manage',
+    AdminCreateForCustomer: 'order.admin.create-for-customer',
+    AdminDeletePermanent:   'order.admin.delete-permanent',
   },
 
   Payments: {

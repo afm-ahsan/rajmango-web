@@ -9,4 +9,6 @@ export interface OrderInputDto {
   receiverType: number | null;
   receiverName: string | null;
   receiverMobileNumber: string | null;
+  /** Maps to Order.DeliveryNote — overall customer delivery instruction. */
+  deliveryNote?: string | null;
 }

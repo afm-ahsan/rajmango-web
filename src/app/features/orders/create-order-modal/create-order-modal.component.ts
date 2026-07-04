@@ -29,6 +29,13 @@ import { OrderDto } from '../models/order-dto.model';
 import { OrderInputDto } from '../models/order-input-dto.model';
 import { OrderService } from '../order.service';
 
+export interface AdminCustomerSearchResult {
+  userId: number;
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+}
+
 @Component({
   selector: 'app-create-order-modal',
   templateUrl: './create-order-modal.component.html',
@@ -37,6 +44,14 @@ import { OrderService } from '../order.service';
 export class CreateOrderModalComponent implements OnInit, OnDestroy {
   @Input() id: number;
   @Input() mangoTypeId: number = 0;
+  /** When true, shows a customer selector at the top and routes save() to adminCreateForCustomer. */
+  @Input() isAdminCreate = false;
+
+  // ── Admin create-for-customer state ─────────────────────────────────────
+  selectedCustomer: AdminCustomerSearchResult | null = null;
+  customerResults: AdminCustomerSearchResult[] = [];
+  isCustomerSearching = false;
+  customerSearch$ = new Subject<string>();
 
   mangoTypes: MangoTypeDto[] = [];
   mangoTypeOptions: EntityDropdownModel[] = [];
@@ -102,6 +117,36 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     this.crateTypeOptions = this.dropdownService.getCrateTypeOptions();
     this.newOrderDto = this.initNewOrder();
     this.loadData();
+    if (this.isAdminCreate && !this.id) {
+      this.setupCustomerSearch();
+    }
+  }
+
+  private setupCustomerSearch(): void {
+    this.subs.sink = this.customerSearch$.pipe(
+      debounceTime(350),
+      distinctUntilChanged(),
+      filter(term => !!term && term.length >= 2),
+      tap(() => { this.isCustomerSearching = true; this.cdRef.detectChanges(); }),
+      switchMap(term => this.orderService.adminCustomerSearch(term).pipe(
+        catchError(() => of({ data: [] }))
+      ))
+    ).subscribe(res => {
+      this.customerResults = res?.data ?? [];
+      this.isCustomerSearching = false;
+      this.cdRef.detectChanges();
+    });
+  }
+
+  selectCustomer(c: AdminCustomerSearchResult): void {
+    this.selectedCustomer = c;
+    this.customerResults = [];
+    this.cdRef.detectChanges();
+  }
+
+  clearSelectedCustomer(): void {
+    this.selectedCustomer = null;
+    this.cdRef.detectChanges();
   }
 
   private buildForm(): FormGroup {
@@ -122,12 +167,12 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         this.newOrderDto.quantity,
         Validators.compose([Validators.required, Validators.min(1)]),
       ],
-      note: [this.newOrderDto.note],
       courierStationId: [null],
       fallbackAddress: [this.newOrderDto.fallbackAddress],
       receiverType: [ReceiverType.Self, [Validators.required]],
       receiverName: [null],
       receiverMobileNumber: [null],
+      deliveryNote: [null],
     }, { validators: [minOrderKgValidator(10)] });
   }
 
@@ -233,10 +278,10 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         mangoType: firstItem?.mangoTypeId,
         crateType: firstItem?.crateType,
         quantity: firstItem?.quantity,
-        note: firstItem?.note,
         receiverType: this.orderDto.receiverType ?? ReceiverType.Self,
         receiverName: this.orderDto.receiverName ?? null,
         receiverMobileNumber: this.orderDto.receiverMobileNumber ?? null,
+        deliveryNote: this.orderDto.deliveryNote ?? null,
       });
       this.updateReceiverValidators(this.orderDto.receiverType ?? ReceiverType.Self);
       if (!this.orderDto.courierStationId) {
@@ -252,7 +297,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         crateType: 0,
         area: null,
         quantity: 1,
-        note: '',
+
         receiverType: ReceiverType.Self,
         receiverName: null,
         receiverMobileNumber: null,
@@ -301,7 +346,6 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         mangoTypeId,
         crateType,
         quantity,
-        note: formValue.note,
         unitPrice: unitPrice,
         totalPrice: totalPrice,
         mangoName: mangoType?.name,
@@ -311,7 +355,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       this.lastAddedItem = orderDetail;
     }
     this.orderDto.totalAmount = this.getTotalPrice();
-    this.orderForm.patchValue({ quantity: 1, note: '' });
+    this.orderForm.patchValue({ quantity: 1 });
     this.showAddedFeedback();
     this.cdRef.detectChanges();
     this.refreshPreview();
@@ -514,9 +558,30 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         this.cdRef.detectChanges();
         try {
           this.prepareData();
-          const call$ = this.orderDto.id
-            ? this.orderService.update(this.id, this.orderInputDto)
-            : this.orderService.create(this.orderInputDto);
+          let call$;
+          if (this.isAdminCreate && !this.id && this.selectedCustomer) {
+            // Admin placing an order on behalf of a customer
+            const customer = this.selectedCustomer!;
+            call$ = this.orderService.adminCreateForCustomer({
+              targetCustomerId:     customer.userId,
+              courierStationId:     this.orderInputDto.courierStationId,
+              fallbackAddress:      this.orderInputDto.fallbackAddress ?? null,
+              receiverType:         this.orderInputDto.receiverType!,
+              receiverName:         this.orderInputDto.receiverName ?? null,
+              receiverMobileNumber: this.orderInputDto.receiverMobileNumber ?? null,
+              deliveryNote:         this.orderForm.get('deliveryNote')?.value ?? null,
+              orderDetails:         this.orderDetails.map(d => ({
+                mangoTypeId: d.mangoTypeId,
+                crateType:   d.crateType,
+                quantity:    d.quantity,
+                discount:    0,
+              })),
+            });
+          } else {
+            call$ = this.orderDto.id
+              ? this.orderService.update(this.id, this.orderInputDto)
+              : this.orderService.create(this.orderInputDto);
+          }
           const res: any = await firstValueFrom(call$);
           if (res?.succeeded) return true;
           Swal.showValidationMessage(res?.messages?.join('\n') ?? 'Save failed.');
@@ -586,6 +651,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     this.orderInputDto.receiverType = receiverType;
     this.orderInputDto.receiverName = receiverType === ReceiverType.Others ? this.orderForm.get('receiverName')?.value : null;
     this.orderInputDto.receiverMobileNumber = receiverType === ReceiverType.Others ? this.orderForm.get('receiverMobileNumber')?.value : null;
+    this.orderInputDto.deliveryNote = this.orderForm.get('deliveryNote')?.value?.trim() || null;
   }
 
   private initObject(): OrderDto {
@@ -626,6 +692,8 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     
   get isSaveDisabled(): boolean {
     if (!this.orderForm || this.orderDetails.length === 0 || this.isSubmitting || this.isCourierStationLoading) return true;
+    // In admin create mode, a customer must be selected before the form can be submitted
+    if (this.isAdminCreate && !this.id && !this.selectedCustomer) return true;
     if (this.orderForm.get('area')?.invalid) return true;
     if (this.isFallbackMode) {
       if (this.orderForm.get('fallbackAddress')?.invalid) return true;

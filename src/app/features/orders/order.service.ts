@@ -142,4 +142,40 @@ export class OrderService {
   filterByTitle(title: any): Observable<any> {
     return this.httpClient.get(`${this.apiUrl}?title_like=${title}`);
   }
+
+  // ─── Admin — Create Order for Customer ───────────────────────────────────
+
+  /**
+   * Typeahead customer search (min 2 chars, returns up to 20 results).
+   * Used in the admin Create Order for Customer flow to select the order owner.
+   */
+  adminCustomerSearch(q: string): Observable<any> {
+    const params = new HttpParams().set('q', q);
+    return this.httpClient.get(`${this.apiUrl}/admin/orders/customer-search`, { params });
+  }
+
+  /**
+   * Create an order on behalf of an existing customer.
+   * targetCustomerId = AppUser.Id of the customer who will own the order.
+   */
+  adminCreateForCustomer(dto: {
+    targetCustomerId: number;
+    courierStationId?: number | null;
+    fallbackAddress?: string | null;
+    receiverType: number;
+    receiverName?: string | null;
+    receiverMobileNumber?: string | null;
+    deliveryNote?: string | null;
+    orderDetails: { mangoTypeId: number; crateType: number; quantity: number; discount?: number; note?: string }[];
+  }): Observable<any> {
+    return this.httpClient.post(`${this.apiUrl}/admin/orders/create-for-customer`, dto);
+  }
+
+  /**
+   * Permanently delete (soft-delete) an order with audit trail.
+   * Admin must supply the exact order number for confirmation.
+   */
+  adminPermanentDelete(id: number, dto: { confirmOrderNumber: string; reason: string }): Observable<any> {
+    return this.httpClient.delete(`${this.apiUrl}/admin/orders/${id}/permanent-delete`, { body: dto });
+  }
 }

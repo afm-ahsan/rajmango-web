@@ -33,6 +33,8 @@ export interface AdminOrderListDto {
 
   isCourierEligible: boolean;
   mangoTypeName: string;
+  /** Customer note entered at order placement. Null/empty means no instructions. */
+  deliveryNote: string | null;
 }
 
 export interface AdminOrderFilterModel {

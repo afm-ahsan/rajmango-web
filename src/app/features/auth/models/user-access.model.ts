@@ -9,6 +9,8 @@ export class UserAccessModel {
   hasOrderAccess: boolean;
   hasAdminOrdersAccess: boolean;
   hasAdminOrdersManageAccess: boolean;
+  hasAdminOrdersCreateForCustomerAccess: boolean;
+  hasAdminOrdersDeletePermanentAccess: boolean;
   hasMangoTypeAccess: boolean;
   hasMangoAvailabilityAccess: boolean;
   hasCustomersAccess: boolean;

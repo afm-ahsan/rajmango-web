@@ -26,6 +26,8 @@ export interface OrderDto {
   receiverType?: number | null;
   receiverName?: string | null;
   receiverMobileNumber?: string | null;
+  /** Customer delivery instruction from Order.DeliveryNote. Null/empty = no note. */
+  deliveryNote?: string | null;
   deliveryStatus: DeliveryStatus;
   orderDetails: OrderDetailDto[];
   // Courier charge breakdown (returned by API)
