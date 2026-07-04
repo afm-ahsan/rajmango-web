@@ -75,12 +75,14 @@ export class AuthService implements OnDestroy {
     );
   }
 
-  logout(): void {
+  logout(navigate = true): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userIdKey);
     this.permissionService.clearPermissions();
     this.currentUserSubject.next(undefined);
-    this.router.navigate(['/auth/login']);
+    if (navigate) {
+      this.router.navigate(['/auth/login']);
+    }
   }
 
   registration(user: RegisterModel): Observable<{ success: boolean; messages: string[] }> {

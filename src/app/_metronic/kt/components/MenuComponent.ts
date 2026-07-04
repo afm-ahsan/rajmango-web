@@ -890,6 +890,13 @@ class MenuComponent {
     }
   }
 
+  // Guard: initGlobalHandlers registers raw document.body event listeners that survive
+  // Angular component destruction. Without this flag, every re-login after logout
+  // calls bootstrap() → initGlobalHandlers() again, doubling the listeners.
+  // Two toggle-handlers on the same click event open then immediately close every
+  // dropdown, making them appear broken. One registration per browser session is enough.
+  private static handlersInitialized = false
+
   // Global handlers
   public static createInstances = (selector: string) => {
     // Initialize menus
@@ -903,6 +910,9 @@ class MenuComponent {
   }
 
   public static initGlobalHandlers = () => {
+    if (MenuComponent.handlersInitialized) return
+    MenuComponent.handlersInitialized = true
+
     // Dropdown handler
     document.addEventListener('click', (e) => {
       const menuItems = document.querySelectorAll('.show.menu-dropdown[data-kt-menu-trigger]')

@@ -40,6 +40,16 @@ export class IdleSessionService implements OnDestroy {
   /**
    * Call this to trigger a single, clean session-expired logout.
    * Safe to call from the HTTP interceptor or internal idle logic.
+   *
+   * Ordering is deliberate:
+   *  1. Auth state is cleared immediately (tokens, permissions, currentUser$) so
+   *     no further authenticated requests can go out.
+   *  2. Swal is shown, and router.navigate is deferred to the .then() callback so
+   *     that routing only starts AFTER Swal has fully closed and removed its backdrop.
+   *     Keeping routing and Swal open concurrently causes two compounding bugs:
+   *       a) body overflow/backdrop gets stuck → all clicks intercepted
+   *       b) this method may be invoked from outside Angular's zone (RxJS timer or
+   *          BroadcastChannel), so everything runs inside ngZone.run().
    */
   handleSessionExpired(message: string = 'Your session has expired due to inactivity. Please login again.'): void {
     if (this.isHandlingExpiry) return;
@@ -48,19 +58,16 @@ export class IdleSessionService implements OnDestroy {
     this.stopWatcher();
     this.broadcastExpiry();
 
-    // Clear auth state: removes localStorage tokens, emits undefined to currentUser$,
-    // and initiates router.navigate(['/auth/login']) asynchronously.
-    // We do NOT rely on that navigation alone — we explicitly redirect in .then()
-    // below to guarantee arrival on the login page after the user dismisses the Swal.
-    this.authService.logout();
-
-    // Close any lingering Swal (e.g. warning still animating closed).
+    // Close any still-animating warning Swal before showing the expiry dialog.
     Swal.close();
 
-    // ngZone.run ensures the Swal callback and subsequent router.navigate()
-    // run inside Angular's zone — required because this method may be reached
-    // from a Promise resolution or BroadcastChannel event outside the zone.
+    // All work runs inside ngZone.run() because this method can be reached from
+    // a RxJS timer or BroadcastChannel callback that runs outside Angular's zone.
     this.ngZone.run(() => {
+      // Clear auth state immediately (security) but skip router navigation for now.
+      // Navigation happens in .then() after Swal is fully closed.
+      this.authService.logout(false);
+
       Swal.fire({
         title: 'Session Expired',
         text: message,
@@ -69,9 +76,13 @@ export class IdleSessionService implements OnDestroy {
         allowOutsideClick: false,
         allowEscapeKey: false,
       }).then(() => {
-        // Explicit navigate guarantees the user lands on the login page even if
-        // the async navigation started by logout() was superseded by a guard or
-        // another competing navigation event.
+        // Swal is now fully closed: its backdrop and body classes have been removed.
+        // Defensively scrub any residual Swal body state before routing — prevents
+        // stuck overflow or backdrop from carrying over into the next session.
+        document.body.classList.remove('swal2-shown', 'swal2-height-auto');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('padding-right');
+
         this.router.navigate(['/auth/login']);
       });
     });
