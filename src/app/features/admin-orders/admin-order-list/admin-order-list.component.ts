@@ -201,6 +201,7 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
       error: () => {
         this.orders = [];
         this.totalCount = 0;
+        this.summary = { totalQuantityKg: 0, crate10KgCount: 0, crate20KgCount: 0, totalAmount: 0, totalPaid: 0, totalDue: 0 };
       }
     });
   }

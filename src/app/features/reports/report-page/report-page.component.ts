@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import * as moment from 'moment';
 import { finalize } from 'rxjs';
@@ -40,6 +40,24 @@ export class ReportPageComponent implements OnInit, OnDestroy {
 
   isExporting = false;
   isExportingPdf = false;
+  showExportMenu = false;
+
+  get isAnyExporting(): boolean {
+    return this.isExporting || this.isExportingPdf;
+  }
+
+  toggleExportMenu(event: MouseEvent): void {
+    event.stopPropagation();
+    this.showExportMenu = !this.showExportMenu;
+  }
+
+  @HostListener('document:click')
+  closeExportMenu(): void {
+    if (this.showExportMenu) {
+      this.showExportMenu = false;
+      this.cdRef.detectChanges();
+    }
+  }
 
   // Order Lines filters (mirrors admin-orders/list)
   showOrderFilters = false;
