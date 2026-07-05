@@ -198,18 +198,55 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       switchMap(({ mangoTypes, availabilities }) => {
         this.mangoTypes = mangoTypes.data ?? [];
         const activeAvail: MangoAvailabilityDto[] = availabilities.data ?? [];
-        this.priceMap = activeAvail.reduce((map, a) => {
-          map[a.mangoTypeId] = a.pricePerKg;
-          return map;
-        }, {} as Record<number, number>);
-        const availableIds = new Set(
-          activeAvail
-            .filter(a => a.status === MangoAvailabilityStatus._1 || a.status === MangoAvailabilityStatus._2)
-            .map(a => a.mangoTypeId)
-        );
-        this.mangoTypeOptions = this.dropdownService.mapToEntityDropdown(
-          this.mangoTypes.filter(m => availableIds.has(m.id)), 'id', 'name'
-        );
+
+        // Admins see all mango types regardless of availability status.
+        // This includes both the create-for-customer flow (isAdminCreate)
+        // and admin users editing existing orders.
+        const currentRoleCode = (this.authService.currentUserValue as any)?.roleCode ?? '';
+        const isAdminUser = this.isAdminCreate ||
+          currentRoleCode === 'system_admin' || currentRoleCode === 'admin';
+
+        if (isAdminUser) {
+          // Build price map preferring Available price, falling back to any configured price.
+          this.priceMap = {};
+          const grouped = new Map<number, MangoAvailabilityDto[]>();
+          for (const a of activeAvail) {
+            if (!grouped.has(a.mangoTypeId)) grouped.set(a.mangoTypeId, []);
+            grouped.get(a.mangoTypeId)!.push(a);
+          }
+          for (const [typeId, avails] of grouped) {
+            const preferred = avails.find(a => a.status === MangoAvailabilityStatus._1) ?? avails[0];
+            this.priceMap[typeId] = preferred.pricePerKg;
+          }
+
+          // Show all mango types; append a status label for non-Available ones.
+          const statusLabel: Record<number, string> = {
+            [MangoAvailabilityStatus._0]: 'Upcoming',
+            [MangoAvailabilityStatus._2]: 'Sold Out',
+            [MangoAvailabilityStatus._3]: 'Season Ended',
+          };
+          this.mangoTypeOptions = this.mangoTypes.map(m => {
+            const avail = activeAvail.find(a => a.mangoTypeId === m.id);
+            const suffix = avail && avail.status !== MangoAvailabilityStatus._1
+              ? ` (${statusLabel[avail.status] ?? 'Unavailable'})`
+              : avail ? '' : ' (No availability)';
+            return { id: m.id, name: `${m.name}${suffix}` };
+          });
+        } else {
+          // Customer: existing behaviour — only Available and SoldOut types shown.
+          this.priceMap = activeAvail.reduce((map, a) => {
+            map[a.mangoTypeId] = a.pricePerKg;
+            return map;
+          }, {} as Record<number, number>);
+          const availableIds = new Set(
+            activeAvail
+              .filter(a => a.status === MangoAvailabilityStatus._1 || a.status === MangoAvailabilityStatus._2)
+              .map(a => a.mangoTypeId)
+          );
+          this.mangoTypeOptions = this.dropdownService.mapToEntityDropdown(
+            this.mangoTypes.filter(m => availableIds.has(m.id)), 'id', 'name'
+          );
+        }
 
         if (!this.id) {
           this.orderDto = this.initObject();

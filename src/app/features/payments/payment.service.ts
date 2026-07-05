@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PagedAndSortedDto } from 'src/app/shared/models/pagedAndSorted.model';
 import { environment } from 'src/environments/environment';
+import { OrderPaymentLookupDto } from './models/order-payment-lookup.model';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
@@ -19,6 +20,30 @@ export class PaymentService {
     return this.http.get(`${this.apiUrl}/payment/paged`, { params }).pipe(
       catchError(this.handleError)
     );
+  }
+
+  /**
+   * Fetch a single payment by ID, bypassing the generated proxy so that
+   * fields added after the proxy was generated (orderNumber, customerName)
+   * are included in the raw JSON response.
+   */
+  getById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/payment/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Typeahead order search for the Record Payment modal.
+   * Searches by partial Order Number; returns up to 10 results including
+   * current financials so the modal can auto-populate without a second request.
+   * Minimum 3 characters; returns an empty list for shorter terms.
+   */
+  orderPaymentLookup(search: string): Observable<{ data: OrderPaymentLookupDto[] }> {
+    const params = new HttpParams().set('search', search);
+    return this.http.get<{ data: OrderPaymentLookupDto[] }>(
+      `${this.apiUrl}/admin/orders/payment-lookup`, { params }
+    ).pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse) {

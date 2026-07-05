@@ -10,8 +10,8 @@
             <i class="bi bi-search fs-3 position-absolute ms-3 text-muted"></i>
             <input
               type="search"
-              class="form-control form-control-solid w-100 w-sm-250px ps-10"
-              placeholder="Search by order or transaction"
+              class="form-control form-control-solid w-100 w-sm-350px ps-10"
+              placeholder="Search by order number or transaction ID"
               (input)="onSearchChange($event)"
             />
           </div>
@@ -39,10 +39,11 @@
             <thead>
               <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                 <th>#</th>
-                <th>Order ID</th>
+                <th>Order Number</th>
+                <th>Customer</th>
                 <th>Transaction ID</th>
                 <th class="text-end">Paid Amount</th>
-                <th class="text-end">Due Amount</th>
+                <th class="text-end">Due at Recording</th>
                 <th>Method</th>
                 <th>Status</th>
                 <th class="text-center">Actions</th>
@@ -52,10 +53,11 @@
               <tr *ngFor="let p of payments; index as i">
                 <td>{{ (filter.pageNumber - 1) * filter.pageSize + i + 1 }}</td>
                 <td>
-                  <a href="javascript:void(0)" (click)="view(p.id)" class="text-gray-800 text-hover-primary">
-                    #{{ p.orderId }}
+                  <a href="javascript:void(0)" (click)="view(p.id)" class="text-gray-800 text-hover-primary fw-bold">
+                    {{ p.orderNumber || ('Order #' + p.orderId) }}
                   </a>
                 </td>
+                <td class="text-gray-700">{{ p.customerName || '—' }}</td>
                 <td>{{ p.transactionId || '—' }}</td>
                 <td class="text-end fw-bold text-success">{{ p.paidAmount | number:'1.0-2' }}</td>
                 <td class="text-end fw-bold text-danger">{{ p.dueAmount | number:'1.0-2' }}</td>
@@ -72,7 +74,7 @@
                       </a>
                     </div>
                     <div class="menu-item px-3">
-                      <a class="menu-link px-3" (click)="record(p.orderId)">
+                      <a class="menu-link px-3" (click)="record()">
                         <i class="bi bi-plus-circle me-2 text-primary"></i>Record Payment
                       </a>
                     </div>

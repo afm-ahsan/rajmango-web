@@ -5,22 +5,110 @@
   </div>
   <div class="modal-body py-6 px-lg-8">
     <form [formGroup]="form">
-      <div class="row g-4">
-        <div class="col-12 col-md-6">
-          <label class="form-label fw-semibold required">Order ID</label>
-          <input type="number" class="form-control form-control-solid" formControlName="orderId"
-            [class.is-invalid]="isInvalid('orderId')" placeholder="Enter order ID" />
-          <div class="text-muted fs-8 mt-1">The order's internal ID (shown in the order list URL/details), not the Order Number.</div>
-          <div *ngIf="hasError('orderId', 'required')" class="text-danger fs-7 mt-1">Order ID is required.</div>
-          <div *ngIf="hasError('orderId', 'min')" class="text-danger fs-7 mt-1">Order ID must be a valid number.</div>
-          <div *ngIf="hasError('orderId', 'max')" class="text-danger fs-7 mt-1">That number is too large to be an Order ID — make sure you entered the Order ID, not the Order Number.</div>
+
+      <!-- ── Order Number Typeahead ── -->
+      <div class="mb-5">
+        <label class="form-label fw-semibold required">Order Number</label>
+        <div class="d-flex align-items-center gap-2">
+          <input
+            type="text"
+            class="form-control form-control-solid"
+            [class.is-valid]="!!selectedOrder"
+            [value]="orderSearchTerm"
+            (input)="onOrderSearchInput($any($event.target).value)"
+            placeholder="Type order number to search…"
+            autocomplete="off"
+          />
+          <span *ngIf="isOrderSearching" class="ms-1 flex-shrink-0">
+            <span class="spinner-border spinner-border-sm text-muted"></span>
+          </span>
+          <button *ngIf="selectedOrder" type="button"
+            class="btn btn-icon btn-sm btn-light flex-shrink-0"
+            (click)="clearOrder()" title="Clear selection">
+            <i class="bi bi-x-lg text-muted fs-7"></i>
+          </button>
         </div>
+        <!-- Dropdown results — position:relative so modal overflow cannot clip it -->
+        <ul *ngIf="orderSearchResults.length > 0 && !selectedOrder"
+          class="list-group mt-1 shadow"
+          style="position:relative; z-index:9999; max-height:260px; overflow-y:auto;">
+          <li
+            *ngFor="let o of orderSearchResults"
+            class="list-group-item list-group-item-action cursor-pointer py-2 px-3 d-flex justify-content-between align-items-start"
+            (click)="selectOrder(o)"
+          >
+            <div>
+              <div class="fw-bold fs-7">{{ o.orderNumber }}</div>
+              <div class="text-muted fs-8">{{ o.customerName }}
+                <span *ngIf="o.receiverName && o.receiverName !== o.customerName"> · {{ o.receiverName }}</span>
+              </div>
+            </div>
+            <div class="text-end flex-shrink-0 ms-3">
+              <div class="fw-semibold fs-8">Due: ৳{{ o.dueAmount | number:'1.0-2' }}</div>
+              <span class="badge fs-9" [ngClass]="getPaymentStatusBadgeClass(o.paymentStatus)">
+                {{ getPaymentStatusLabel(o.paymentStatus) }}
+              </span>
+            </div>
+          </li>
+        </ul>
+        <div class="text-muted fs-8 mt-1">Type at least 3 characters of the order number.</div>
+      </div>
+
+      <!-- ── Selected Order Summary Panel ── -->
+      <div *ngIf="selectedOrder"
+        class="rounded-2 border mb-5 px-5 py-4"
+        [class.border-warning]="isAlreadyPaid"
+        [class.border-success]="!isAlreadyPaid"
+        style="background:#f9fafb;">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <span class="fw-bold fs-7 text-gray-800">Order {{ selectedOrder.orderNumber }}</span>
+          <span class="badge fs-7" [ngClass]="getPaymentStatusBadgeClass(selectedOrder.paymentStatus)">
+            {{ getPaymentStatusLabel(selectedOrder.paymentStatus) }}
+          </span>
+        </div>
+        <div class="row g-3 fs-7">
+          <div class="col-6 col-md-4">
+            <div class="text-muted text-uppercase fs-8 mb-1">Customer</div>
+            <div class="fw-semibold">{{ selectedOrder.customerName || '—' }}</div>
+          </div>
+          <div class="col-6 col-md-4" *ngIf="selectedOrder.receiverName">
+            <div class="text-muted text-uppercase fs-8 mb-1">Receiver</div>
+            <div class="fw-semibold">{{ selectedOrder.receiverName }}</div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="text-muted text-uppercase fs-8 mb-1">Order Total</div>
+            <div class="fw-bold">৳{{ selectedOrder.totalAmount | number:'1.0-2' }}</div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="text-muted text-uppercase fs-8 mb-1">Already Paid</div>
+            <div class="fw-semibold text-success">৳{{ selectedOrder.paidAmount | number:'1.0-2' }}</div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="text-muted text-uppercase fs-8 mb-1">Balance Due</div>
+            <div class="fw-bold" [class.text-danger]="selectedOrder.dueAmount > 0" [class.text-success]="selectedOrder.dueAmount <= 0">
+              ৳{{ selectedOrder.dueAmount | number:'1.0-2' }}
+            </div>
+          </div>
+        </div>
+        <div *ngIf="isAlreadyPaid" class="alert alert-warning d-flex align-items-center gap-2 mt-3 mb-0 py-2 px-3 rounded">
+          <i class="bi bi-info-circle-fill flex-shrink-0"></i>
+          <span class="fs-7">This order is fully paid — no outstanding balance.</span>
+        </div>
+      </div>
+
+      <!-- ── Payment Fields ── -->
+      <div class="row g-4">
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold required">Paid Amount</label>
           <input type="number" class="form-control form-control-solid" formControlName="paidAmount"
-            [class.is-invalid]="isInvalid('paidAmount')" placeholder="0.00" step="0.01" />
+            [class.is-invalid]="isInvalid('paidAmount') || isOverpayment"
+            placeholder="0.00" step="0.01" min="0.01" />
           <div *ngIf="hasError('paidAmount', 'required')" class="text-danger fs-7 mt-1">Paid amount is required.</div>
           <div *ngIf="hasError('paidAmount', 'min')" class="text-danger fs-7 mt-1">Amount must be greater than zero.</div>
+          <div *ngIf="isOverpayment" class="text-danger fs-7 mt-1">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            Amount exceeds the current due balance of ৳{{ selectedOrder!.dueAmount | number:'1.0-2' }}.
+          </div>
         </div>
         <div class="col-12 col-md-6">
           <label class="form-label fw-semibold required">Payment Method</label>
@@ -31,17 +119,19 @@
           </select>
           <div *ngIf="isInvalid('paymentMethod')" class="text-danger fs-7 mt-1">Payment method is required.</div>
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-12">
           <label class="form-label fw-semibold">Transaction ID</label>
           <input type="text" class="form-control form-control-solid" formControlName="transactionId"
-            placeholder="bKash/bank transaction reference" />
+            placeholder="bKash / bank reference (optional)" />
         </div>
       </div>
+
     </form>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-light btn-sm me-3" (click)="cancel()">Cancel</button>
-    <button type="button" class="btn btn-primary btn-sm" (click)="save()" [disabled]="isLoading">
+    <button type="button" class="btn btn-primary btn-sm" (click)="save()"
+      [disabled]="isLoading || isAlreadyPaid || isOverpayment">
       <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>Save
     </button>
   </div>

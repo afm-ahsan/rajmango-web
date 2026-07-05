@@ -70,7 +70,7 @@
                     Actions <i class="bi bi-three-dots-vertical ms-2"></i>
                   </button>
                   <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
-                    <div class="menu-item px-3">
+                    <div class="menu-item px-3" *ngIf="canEdit(user)">
                       <a class="menu-link px-3" (click)="edit(user.id)">
                         <i class="bi bi-pencil-square me-2 text-primary"></i>Edit
                       </a>
@@ -80,7 +80,7 @@
                         <i class="bi bi-eye me-2 text-info"></i>View
                       </a>
                     </div>
-                    <div class="menu-item px-3">
+                    <div class="menu-item px-3" *ngIf="!isSystemAdminUser(user)">
                       <a class="menu-link px-3 text-danger" (click)="delete(user.id)">
                         <i class="bi bi-trash me-2"></i>Delete
                       </a>

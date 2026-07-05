@@ -2,8 +2,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { SubSink } from 'subsink';
-import { GetPaymentByIdDto, PaymentServiceProxy } from 'src/app/services/client-proxy';
 import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
+import { PaymentService } from '../payment.service';
 
 @Component({
   selector: 'app-view-payment-modal',
@@ -14,11 +14,11 @@ export class ViewPaymentModalComponent implements OnInit, OnDestroy {
 
   subs = new SubSink();
   isLoading = false;
-  payment: GetPaymentByIdDto | null = null;
+  payment: any = null;
 
   constructor(
     public modal: NgbActiveModal,
-    private paymentProxy: PaymentServiceProxy
+    private paymentService: PaymentService,
   ) {}
 
   ngOnInit(): void {
@@ -27,7 +27,7 @@ export class ViewPaymentModalComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.isLoading = true;
-    this.subs.sink = this.paymentProxy.getById(this.id).subscribe({
+    this.subs.sink = this.paymentService.getById(this.id).subscribe({
       next: (res: any) => {
         this.payment = res?.data ?? null;
         this.isLoading = false;
@@ -42,6 +42,10 @@ export class ViewPaymentModalComponent implements OnInit, OnDestroy {
 
   getPaymentStatusLabel(status: any): string {
     return EnumLabelUtils.getPaymentStatusLabel(status);
+  }
+
+  getPaymentStatusBadgeClass(status: any): string {
+    return EnumLabelUtils.getPaymentStatusBadgeClass(status);
   }
 
   getPaymentMethodLabel(method: any): string {

@@ -12,6 +12,7 @@ import { UserService } from '../user.service';
 import { CreateUserModalComponent } from '../create-user-modal/create-user-modal.component';
 import { DeleteUserModalComponent } from '../delete-user-modal/delete-user-modal.component';
 import { ViewUserModalComponent } from '../view-user-modal/view-user-modal.component';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   selector: 'app-user-list',
@@ -36,12 +37,31 @@ export class UserListComponent implements OnInit, OnDestroy {
     userId: 0
   };
 
+  private readonly SYSTEM_ADMIN_ROLE_CODE = 'system_admin';
+
   constructor(
     private modalService: NgbModal,
     private cdRef: ChangeDetectorRef,
     private userService: UserService,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private authService: AuthService,
   ) {}
+
+  get currentUserIsSuperAdmin(): boolean {
+    const user = this.authService.currentUserValue as any;
+    // roleCode check covers sessions after the roleCode field was added to the login response.
+    // roleId === 1 is the backward-compatible fallback for existing sessions that predate that change.
+    return user?.roleCode === this.SYSTEM_ADMIN_ROLE_CODE || user?.roleId === 1;
+  }
+
+  isSystemAdminUser(user: any): boolean {
+    return user?.roleCode === this.SYSTEM_ADMIN_ROLE_CODE;
+  }
+
+  canEdit(user: any): boolean {
+    if (this.isSystemAdminUser(user)) return this.currentUserIsSuperAdmin;
+    return true;
+  }
 
   ngOnInit() {
     this.loadRole();

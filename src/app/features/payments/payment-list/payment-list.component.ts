@@ -67,9 +67,8 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     this.load();
   }
 
-  record(orderId = 0): void {
-    const modalRef = this.modalService.open(RecordPaymentModalComponent, { size: 'md' });
-    modalRef.componentInstance.orderId = orderId;
+  record(): void {
+    const modalRef = this.modalService.open(RecordPaymentModalComponent, { size: 'lg' });
     modalRef.result.then(
       (result: string) => { if (result === 'success') this.load(); },
       () => {}

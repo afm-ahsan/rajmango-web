@@ -12,4 +12,5 @@ export interface AppUserModel {
   isActive: boolean;
   pic: string;
   imagePath?: string | null;
+  roleCode?: string | null;
 }
