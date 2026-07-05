@@ -41,6 +41,17 @@ export class AdminOrderUpdateStatusModalComponent implements OnInit, OnDestroy {
     { value: PaymentStatus.Failed,   label: 'Failed' },
   ];
 
+  readonly paymentMethodOptions = [
+    { value: 1,  label: 'Cash' },
+    { value: 2,  label: 'Bank Transfer' },
+    { value: 3,  label: 'Mobile Payment (bKash/Nagad/Rocket)' },
+    { value: 4,  label: 'Credit Card' },
+    { value: 5,  label: 'Debit Card' },
+    { value: 10, label: 'Admin Adjustment' },
+  ];
+
+  readonly PaymentStatus = PaymentStatus;
+
   readonly deliveryStatusOptions = [
     { value: DeliveryStatus.Pending,    label: 'Pending' },
     { value: DeliveryStatus.Dispatched, label: 'Dispatched' },
@@ -67,6 +78,8 @@ export class AdminOrderUpdateStatusModalComponent implements OnInit, OnDestroy {
       deliveryDate:          [this.toDateInputValue(this.order.deliveryDate)],
       shouldNotifyReceiver:  [true],
       shouldNotifySender:    [false],
+      manualPaymentMethod:   [10],
+      adminPaymentNote:      [''],
     });
 
     // Rule 4: mutually exclusive — checking one unchecks the other.
@@ -98,7 +111,8 @@ export class AdminOrderUpdateStatusModalComponent implements OnInit, OnDestroy {
     this.isSaving = true;
 
     const { orderStatus, paymentStatus, deliveryStatus, deliveryDate,
-            shouldNotifyReceiver, shouldNotifySender } = this.form.value;
+            shouldNotifyReceiver, shouldNotifySender,
+            manualPaymentMethod, adminPaymentNote } = this.form.value;
 
     this.subs.sink = this.orderService.adminUpdateStatus(this.order.orderId, {
       orderStatus,
@@ -107,6 +121,9 @@ export class AdminOrderUpdateStatusModalComponent implements OnInit, OnDestroy {
       deliveryDate: deliveryDate || null,
       shouldNotifyReceiver,
       shouldNotifySender,
+      manualPaymentMethod: paymentStatus === PaymentStatus.Paid ? manualPaymentMethod : null,
+      adminPaymentNote: paymentStatus === PaymentStatus.Paid && adminPaymentNote?.trim()
+        ? adminPaymentNote.trim() : null,
     }).pipe(
       finalize(() => { this.isSaving = false; this.cdRef.detectChanges(); })
     ).subscribe({

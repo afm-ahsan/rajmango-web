@@ -99,15 +99,30 @@
       <!-- ── Payment Fields ── -->
       <div class="row g-4">
         <div class="col-12 col-md-6">
-          <label class="form-label fw-semibold required">Paid Amount</label>
+          <label class="form-label fw-semibold required">Paid Amount (Cash)</label>
           <input type="number" class="form-control form-control-solid" formControlName="paidAmount"
             [class.is-invalid]="isInvalid('paidAmount') || isOverpayment"
             placeholder="0.00" step="0.01" min="0.01" />
           <div *ngIf="hasError('paidAmount', 'required')" class="text-danger fs-7 mt-1">Paid amount is required.</div>
           <div *ngIf="hasError('paidAmount', 'min')" class="text-danger fs-7 mt-1">Amount must be greater than zero.</div>
-          <div *ngIf="isOverpayment" class="text-danger fs-7 mt-1">
-            <i class="bi bi-exclamation-triangle me-1"></i>
-            Amount exceeds the current due balance of ৳{{ selectedOrder!.dueAmount | number:'1.0-2' }}.
+        </div>
+        <div class="col-12 col-md-6">
+          <label class="form-label fw-semibold">Discount Amount</label>
+          <input type="number" class="form-control form-control-solid" formControlName="discountAmount"
+            [class.is-invalid]="isInvalid('discountAmount')"
+            placeholder="0.00" step="0.01" min="0" />
+          <div class="text-muted fs-8 mt-1">Reduces outstanding balance. Defaults to 0.</div>
+          <div *ngIf="hasError('discountAmount', 'min')" class="text-danger fs-7 mt-1">Discount cannot be negative.</div>
+        </div>
+        <div class="col-12" *ngIf="isOverpayment">
+          <div class="alert alert-danger py-2 px-3 d-flex align-items-center gap-2 mb-0">
+            <i class="bi bi-exclamation-triangle-fill flex-shrink-0"></i>
+            <span class="fs-7">
+              Cash (৳{{ form.get('paidAmount')?.value | number:'1.0-2' }})
+              + Discount (৳{{ form.get('discountAmount')?.value | number:'1.0-2' }})
+              = ৳{{ effectiveTotal | number:'1.0-2' }}
+              exceeds current due balance of ৳{{ selectedOrder!.dueAmount | number:'1.0-2' }}.
+            </span>
           </div>
         </div>
         <div class="col-12 col-md-6">
@@ -119,7 +134,7 @@
           </select>
           <div *ngIf="isInvalid('paymentMethod')" class="text-danger fs-7 mt-1">Payment method is required.</div>
         </div>
-        <div class="col-12">
+        <div class="col-12 col-md-6">
           <label class="form-label fw-semibold">Transaction ID</label>
           <input type="text" class="form-control form-control-solid" formControlName="transactionId"
             placeholder="bKash / bank reference (optional)" />

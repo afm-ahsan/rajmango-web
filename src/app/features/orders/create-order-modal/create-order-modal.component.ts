@@ -46,6 +46,8 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   @Input() mangoTypeId: number = 0;
   /** When true, shows a customer selector at the top and routes save() to adminCreateForCustomer. */
   @Input() isAdminCreate = false;
+  /** Set by admin-order-list when opening an existing order for edit — enables admin price controls. */
+  @Input() isAdminEdit = false;
 
   // ── Admin create-for-customer state ─────────────────────────────────────
   selectedCustomer: AdminCustomerSearchResult | null = null;
@@ -88,6 +90,9 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
   lastAddedItem: OrderDetailDto | null = null;
   itemAddedFeedback = false;
   private _feedbackTimer: ReturnType<typeof setTimeout> | null = null;
+
+  /** Courier charge stored on the loaded order — shown as the default when admin edits. */
+  savedCourierCharge: number | null = null;
 
   areaTypeahead$ = new Subject<string>();
   isAreaSearching = false;
@@ -173,11 +178,26 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       receiverName: [null],
       receiverMobileNumber: [null],
       deliveryNote: [null],
+      explicitCourierCharge: [null],
     }, { validators: [minOrderKgValidator(10)] });
   }
 
   get formControl() {
     return this.orderForm.controls;
+  }
+
+  /** True when an admin (any role) is editing an existing order. */
+  get isAdminEditMode(): boolean {
+    // isAdminEdit is set explicitly by the admin-order-list opener — most reliable signal.
+    // roleCode/roleId checks are belt-and-suspenders for other entry points and older sessions.
+    if (this.isAdminEdit && !!this.id) return true;
+    const user = this.authService.currentUserValue as any;
+    const roleCode = user?.roleCode ?? '';
+    const roleId = +(user?.roleId ?? 0);
+    const isAdmin = this.isAdminCreate
+      || roleCode === 'system_admin' || roleCode === 'admin'
+      || roleId === 1 || roleId === 2;
+    return isAdmin && !!this.id;
   }
 
   loadData(): void {
@@ -264,6 +284,7 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
         if (orderRes) {
           this.orderDto = orderRes.data;
           this.orderDetails = this.orderDto.orderDetails;
+          this.savedCourierCharge = (this.orderDto as any)?.courierCharge ?? null;
           this.updateOrderDetailsWithNames();
           this.afterDataLoad(true);
           this.cdRef.detectChanges();
@@ -423,6 +444,31 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
       this.cdRef.detectChanges();
       this.refreshPreview();
     }
+  }
+
+  updateItemQuantity(item: OrderDetailDto, rawValue: string | number): void {
+    const qty = Math.floor(+rawValue);
+    if (!qty || qty < 1 || isNaN(qty)) return;
+    const crateWeight = DomainUtils.getCrateWeight(item.crateType);
+    item.quantity = qty;
+    item.totalPrice = qty * item.unitPrice * crateWeight;
+    this.orderDto.totalAmount = this.getTotalPrice();
+    this.cdRef.detectChanges();
+    this.refreshPreview();
+  }
+
+  updateItemUnitPrice(item: OrderDetailDto, rawValue: string | number): void {
+    const price = +rawValue;
+    if (!price || price <= 0 || isNaN(price)) return;
+    const crateWeight = DomainUtils.getCrateWeight(item.crateType);
+    item.unitPrice = price;
+    item.totalPrice = item.quantity * price * crateWeight;
+    this.orderDto.totalAmount = this.getTotalPrice();
+    // Courier charge is weight-based (unchanged); update grand total locally
+    // to avoid showing server-calculated product total at stale system rates.
+    this.previewProductTotal = null;
+    this.previewGrandTotal = this.getTotalPrice() + (this.previewCourierCharge ?? 0);
+    this.cdRef.detectChanges();
   }
 
   reset(): void {
@@ -689,6 +735,16 @@ export class CreateOrderModalComponent implements OnInit, OnDestroy {
     this.orderInputDto.receiverName = receiverType === ReceiverType.Others ? this.orderForm.get('receiverName')?.value : null;
     this.orderInputDto.receiverMobileNumber = receiverType === ReceiverType.Others ? this.orderForm.get('receiverMobileNumber')?.value : null;
     this.orderInputDto.deliveryNote = this.orderForm.get('deliveryNote')?.value?.trim() || null;
+
+    // Admin edit: pass explicit courier charge if the admin supplied one.
+    // Null means "use existing logic" on the backend.
+    if (this.isAdminEditMode) {
+      const raw = this.orderForm.get('explicitCourierCharge')?.value;
+      this.orderInputDto.explicitCourierCharge =
+        raw !== null && raw !== '' && !isNaN(+raw) ? +raw : null;
+    } else {
+      this.orderInputDto.explicitCourierCharge = null;
+    }
   }
 
   private initObject(): OrderDto {

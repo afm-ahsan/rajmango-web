@@ -1,49 +1,145 @@
 <div class="modal-content">
   <div class="modal-header">
-    <h2 class="modal-title">{{ actionLabel }}</h2>
+    <h2 class="modal-title">
+      <ng-container *ngIf="isConfirmAction">Confirm Order</ng-container>
+      <ng-container *ngIf="!isConfirmAction">{{ actionLabel }}</ng-container>
+    </h2>
     <button type="button" class="btn-close" (click)="modal.dismiss()"></button>
   </div>
-  <div class="modal-body py-6 px-lg-8">
 
-    <p class="text-gray-700 fs-6 mb-4">{{ actionDescription }}</p>
+  <div class="modal-body py-5 px-lg-7">
 
-    <!-- Customer note — shown only on Confirm action when a note exists -->
-    <div *ngIf="hasNote" class="rounded-2 border border-warning mb-4 px-4 py-3" style="background:#fffbf0;">
-      <div class="d-flex align-items-center gap-2 mb-2">
-        <i class="bi bi-chat-left-text-fill text-warning fs-6"></i>
-        <span class="fw-bold text-gray-800 fs-7 text-uppercase">Customer Note</span>
+    <!-- ══ CONFIRM: rich order summary ══ -->
+    <ng-container *ngIf="isConfirmAction && order">
+
+      <!-- Header row: order number + date -->
+      <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom">
+        <div>
+          <div class="text-muted fs-8 fw-semibold text-uppercase mb-1">Order Number</div>
+          <div class="fw-bold fs-3 text-primary">{{ order.orderNumber }}</div>
+        </div>
+        <div class="text-end">
+          <div class="text-muted fs-8 fw-semibold text-uppercase mb-1">Order Date</div>
+          <div class="fw-semibold fs-6">{{ order.orderDate | safeDate | date:'dd MMM yyyy' }}</div>
+        </div>
       </div>
-      <p class="text-gray-700 fs-6 mb-0" style="white-space:pre-wrap;">{{ deliveryNote }}</p>
-    </div>
 
-    <!-- Tracking number input only for Ship action -->
-    <div *ngIf="isShipAction" class="mb-4">
-      <label class="form-label fw-semibold">Tracking Number <span class="text-muted">(optional)</span></label>
-      <input
-        type="text"
-        class="form-control form-control-solid"
-        placeholder="e.g. SA123456BD"
-        [(ngModel)]="trackingNumber"
-      />
-    </div>
+      <!-- Customer + Receiver -->
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6">
+          <div class="text-muted fs-8 fw-semibold text-uppercase mb-1">Customer</div>
+          <div class="fw-semibold fs-6">{{ order.customerName || '—' }}</div>
+          <div class="text-muted fs-7">{{ order.customerPhone }}</div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="text-muted fs-8 fw-semibold text-uppercase mb-1">Receiver</div>
+          <div class="fw-semibold fs-6">{{ order.receiverName || order.customerName || '—' }}</div>
+          <div class="text-muted fs-7">{{ order.receiverMobile || order.customerPhone }}</div>
+        </div>
+      </div>
+
+      <!-- Mango + Quantity + Courier -->
+      <div class="row g-3 mb-4">
+        <div class="col-6">
+          <div class="text-muted fs-8 fw-semibold text-uppercase mb-1">Mango Type</div>
+          <div class="fw-semibold fs-6">{{ order.mangoTypeName || '—' }}</div>
+        </div>
+        <div class="col-6">
+          <div class="text-muted fs-8 fw-semibold text-uppercase mb-1">Total Weight</div>
+          <div class="fw-semibold fs-6">{{ order.totalQuantity | number }} kg</div>
+        </div>
+        <div class="col-12" *ngIf="order.courierStationName">
+          <div class="text-muted fs-8 fw-semibold text-uppercase mb-1">Courier Station</div>
+          <div class="fw-semibold fs-6">
+            {{ order.courierProviderName }} — {{ order.courierStationName }}
+            <span *ngIf="order.deliveryArea" class="text-muted fw-normal"> ({{ order.deliveryArea }})</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial summary -->
+      <div class="rounded-2 border px-4 py-3 mb-4" style="background:#f8f9fa;">
+        <div class="row g-2">
+          <div class="col-6 col-md-4">
+            <div class="text-muted fs-8 text-uppercase mb-1">Product Total</div>
+            <div class="fw-semibold fs-6">৳{{ order.productTotal | number:'1.0-2' }}</div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="text-muted fs-8 text-uppercase mb-1">Courier Charge</div>
+            <div class="fw-semibold fs-6">৳{{ order.courierCharge | number:'1.0-2' }}</div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="text-muted fs-8 text-uppercase mb-1">Grand Total</div>
+            <div class="fw-bold fs-5 text-dark">৳{{ order.totalAmount | number:'1.0-2' }}</div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="text-muted fs-8 text-uppercase mb-1">Payment Status</div>
+            <span class="badge fs-7" [ngClass]="getPaymentStatusBadgeClass(order.paymentStatus)">
+              {{ getPaymentStatusLabel(order.paymentStatus) }}
+            </span>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="text-muted fs-8 text-uppercase mb-1">Delivery Status</div>
+            <span class="badge fs-7" [ngClass]="getDeliveryStatusBadgeClass(order.deliveryStatus)">
+              {{ getDeliveryStatusLabel(order.deliveryStatus) }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery note / customer instructions — amber highlight -->
+      <div *ngIf="hasNote" class="rounded-2 border border-warning px-4 py-3 mb-2" style="background:#fffbf0;">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="bi bi-chat-left-text-fill text-warning fs-6"></i>
+          <span class="fw-bold text-gray-800 fs-7 text-uppercase">Order Note / Delivery Instructions</span>
+        </div>
+        <p class="text-gray-700 fs-6 mb-0" style="white-space:pre-wrap;">{{ deliveryNote }}</p>
+      </div>
+
+    </ng-container>
+    <!-- ══ END CONFIRM summary ══ -->
+
+    <!-- Non-confirm actions: simple description -->
+    <ng-container *ngIf="!isConfirmAction">
+
+      <p class="text-gray-700 fs-6 mb-4">{{ actionDescription }}</p>
+
+      <!-- Tracking number input only for Ship action -->
+      <div *ngIf="isShipAction" class="mb-4">
+        <label class="form-label fw-semibold">Tracking Number <span class="text-muted">(optional)</span></label>
+        <input
+          type="text"
+          class="form-control form-control-solid"
+          placeholder="e.g. SA123456BD"
+          [(ngModel)]="trackingNumber"
+        />
+      </div>
+
+    </ng-container>
 
     <!-- Error alert -->
-    <div class="alert alert-danger py-3" *ngIf="errorMessage">
+    <div class="alert alert-danger py-3 mt-3" *ngIf="errorMessage">
       <i class="bi bi-exclamation-triangle me-2"></i>{{ errorMessage }}
     </div>
 
   </div>
+
   <div class="modal-footer">
-    <button type="button" class="btn btn-light" (click)="modal.dismiss()" [disabled]="isSaving">
+    <button type="button" class="btn btn-light btn-sm" (click)="modal.dismiss()" [disabled]="isSaving">
       Cancel
     </button>
     <button
       type="button"
-      [ngClass]="isCancelAction ? 'btn btn-danger' : 'btn btn-primary'"
+      class="btn btn-sm"
+      [ngClass]="isCancelAction ? 'btn-danger' : 'btn-primary'"
       (click)="submit()"
       [disabled]="isSaving">
       <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2" role="status"></span>
-      {{ isSaving ? 'Saving...' : actionLabel }}
+      <ng-container *ngIf="!isSaving">
+        <ng-container *ngIf="isConfirmAction">Confirm Order</ng-container>
+        <ng-container *ngIf="!isConfirmAction">{{ actionLabel }}</ng-container>
+      </ng-container>
+      <ng-container *ngIf="isSaving">Saving...</ng-container>
     </button>
   </div>
 </div>

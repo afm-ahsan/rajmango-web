@@ -40,6 +40,44 @@
           <input type="date" class="form-control form-control-solid" formControlName="deliveryDate" />
         </div>
 
+        <!-- ── Payment details: only shown when admin sets status to Paid ── -->
+        <div class="col-12"
+             *ngIf="form.get('paymentStatus')?.value === PaymentStatus.Paid">
+          <div class="rounded-2 border border-success px-4 py-3" style="background:#f0fdf4;">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <i class="bi bi-cash-coin text-success fs-6"></i>
+              <span class="fw-bold fs-7 text-gray-800">Payment Record</span>
+            </div>
+
+            <div *ngIf="order.dueAmount > 0" class="mb-3 fs-7 text-gray-700">
+              <i class="bi bi-info-circle me-1 text-primary"></i>
+              A payment of <strong class="text-success">৳{{ order.dueAmount | number:'1.0-2' }}</strong>
+              will be recorded to clear the outstanding balance.
+            </div>
+            <div *ngIf="order.dueAmount <= 0" class="mb-3 alert alert-info py-2 px-3 fs-7">
+              <i class="bi bi-check-circle me-1"></i>
+              This order is already fully paid. No new payment record will be created.
+            </div>
+
+            <div class="row g-3" *ngIf="order.dueAmount > 0">
+              <div class="col-12 col-md-6">
+                <label class="form-label fs-7 fw-semibold">Payment Method</label>
+                <select class="form-select form-select-solid form-select-sm" formControlName="manualPaymentMethod">
+                  <option *ngFor="let m of paymentMethodOptions" [ngValue]="m.value">{{ m.label }}</option>
+                </select>
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label fs-7 fw-semibold">Reference / Note <span class="text-muted fw-normal">(optional)</span></label>
+                <input type="text" class="form-control form-control-solid form-control-sm"
+                  formControlName="adminPaymentNote"
+                  placeholder="e.g. Bkash manual, receipt #123"
+                  maxlength="100" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ── End Payment details ── -->
+
         <div class="col-12">
           <label class="form-label fs-7 fw-semibold text-uppercase text-muted">SMS Notification</label>
           <div class="d-flex flex-column gap-2 mt-1">

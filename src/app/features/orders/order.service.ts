@@ -135,6 +135,8 @@ export class OrderService {
     deliveryDate: string | null;
     shouldNotifyReceiver?: boolean;
     shouldNotifySender?: boolean;
+    manualPaymentMethod?: number | null;
+    adminPaymentNote?: string | null;
   }): Observable<any> {
     return this.httpClient.post(`${this.apiUrl}/admin/orders/${id}/update-status`, dto);
   }

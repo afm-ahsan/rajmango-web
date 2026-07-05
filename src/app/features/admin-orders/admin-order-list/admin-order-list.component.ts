@@ -279,6 +279,7 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   edit(orderId: number): void {
     const ref = this.modalService.open(CreateOrderModalComponent, { size: 'lg' });
     ref.componentInstance.id = orderId;
+    ref.componentInstance.isAdminEdit = true;
     ref.result.then(
       (result: 'success' | 'dismissed') => { if (result === 'success') this.load(); },
       () => {}
@@ -314,11 +315,13 @@ export class AdminOrderListComponent implements OnInit, OnDestroy {
   }
 
   openAction(order: AdminOrderListDto, action: 'confirm' | 'process' | 'ship' | 'deliver' | 'cancel'): void {
-    const ref = this.modalService.open(AdminOrderActionModalComponent, { size: 'sm' });
+    const size = action === 'confirm' ? 'md' : 'sm';
+    const ref = this.modalService.open(AdminOrderActionModalComponent, { size });
     ref.componentInstance.orderId = order.orderId;
     ref.componentInstance.orderNumber = order.orderNumber;
     ref.componentInstance.action = action;
     ref.componentInstance.deliveryNote = order.deliveryNote ?? null;
+    ref.componentInstance.order = order;
     ref.result.then(
       (result: 'success' | 'dismissed') => {
         if (result === 'success') this.load();

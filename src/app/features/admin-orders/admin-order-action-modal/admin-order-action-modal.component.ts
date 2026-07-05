@@ -2,8 +2,10 @@ import { ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
 import { extractApiErrorMessage } from 'src/app/shared/utils/api-error.utils';
+import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { SubSink } from 'subsink';
 import Swal from 'sweetalert2';
+import { AdminOrderListDto } from '../../orders/models/admin-order-list-dto.model';
 import { OrderService } from '../../orders/order.service';
 
 export type AdminOrderAction = 'confirm' | 'process' | 'ship' | 'deliver' | 'cancel';
@@ -18,6 +20,8 @@ export class AdminOrderActionModalComponent implements OnDestroy {
   @Input() action!: AdminOrderAction;
   /** Customer note from Order.DeliveryNote — displayed in the Confirm modal only. */
   @Input() deliveryNote: string | null = null;
+  /** Full order row — used by the Confirm redesign to show a rich order summary. */
+  @Input() order: AdminOrderListDto | null = null;
 
   trackingNumber = '';
   isSaving = false;
@@ -73,6 +77,11 @@ export class AdminOrderActionModalComponent implements OnDestroy {
   get hasNote(): boolean {
     return this.isConfirmAction && !!this.deliveryNote?.trim();
   }
+
+  getPaymentStatusLabel(status: any): string { return EnumLabelUtils.getPaymentStatusLabel(status); }
+  getPaymentStatusBadgeClass(status: any): string { return EnumLabelUtils.getPaymentStatusBadgeClass(status); }
+  getDeliveryStatusLabel(status: any): string { return EnumLabelUtils.getDeliveryStatusLabel(status); }
+  getDeliveryStatusBadgeClass(status: any): string { return EnumLabelUtils.getDeliveryStatusBadgeClass(status); }
 
   submit(): void {
     this.errorMessage = null;

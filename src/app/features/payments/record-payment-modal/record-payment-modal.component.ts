@@ -47,9 +47,10 @@ export class RecordPaymentModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.paymentMethodOptions = this.dropdownService.getPaymentMethodOptions();
     this.form = this.fb.group({
-      paidAmount:    [null, [Validators.required, Validators.min(0.01)]],
-      paymentMethod: [0,    [dropdownRequiredValidator()]],
-      transactionId: [''],
+      paidAmount:     [null, [Validators.required, Validators.min(0.01)]],
+      discountAmount: [0,    [Validators.min(0)]],
+      paymentMethod:  [0,    [dropdownRequiredValidator()]],
+      transactionId:  [''],
     });
 
     this.setupOrderSearch();
@@ -89,8 +90,8 @@ export class RecordPaymentModalComponent implements OnInit, OnDestroy {
     this.selectedOrder = order;
     this.orderSearchTerm = order.orderNumber;
     this.orderSearchResults = [];
-    // Pre-fill paid amount with current due amount
     this.form.get('paidAmount')?.setValue(order.dueAmount > 0 ? order.dueAmount : null);
+    this.form.get('discountAmount')?.setValue(0);
     this.cdRef.detectChanges();
   }
 
@@ -99,12 +100,18 @@ export class RecordPaymentModalComponent implements OnInit, OnDestroy {
     this.orderSearchTerm = '';
     this.orderSearchResults = [];
     this.form.get('paidAmount')?.setValue(null);
+    this.form.get('discountAmount')?.setValue(0);
+  }
+
+  get effectiveTotal(): number {
+    const paid     = +this.form.get('paidAmount')?.value || 0;
+    const discount = +this.form.get('discountAmount')?.value || 0;
+    return paid + discount;
   }
 
   get isOverpayment(): boolean {
     if (!this.selectedOrder) return false;
-    const entered = +this.form.get('paidAmount')?.value;
-    return !isNaN(entered) && entered > this.selectedOrder.dueAmount;
+    return this.effectiveTotal > this.selectedOrder.dueAmount;
   }
 
   get isAlreadyPaid(): boolean {
@@ -149,11 +156,12 @@ export class RecordPaymentModalComponent implements OnInit, OnDestroy {
 
     const v = this.form.value;
     const command = new CreatePaymentCommand({
-      orderId:       this.selectedOrder.orderId,
-      paidAmount:    +v.paidAmount,
-      paymentMethod: +v.paymentMethod as PaymentMethod,
-      transactionId: v.transactionId || undefined,
-    });
+      orderId:        this.selectedOrder.orderId,
+      paidAmount:     +v.paidAmount,
+      discountAmount: +v.discountAmount || 0,
+      paymentMethod:  +v.paymentMethod as PaymentMethod,
+      transactionId:  v.transactionId || undefined,
+    } as any);
 
     this.isLoading = true;
     this.subs.sink = this.paymentProxy.create(command).subscribe({

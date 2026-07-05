@@ -267,6 +267,17 @@ export class QuickOrderModalComponent implements OnInit, OnDestroy {
     }
   }
 
+  updateItemQuantity(item: OrderDetailDto, rawValue: string | number): void {
+    const qty = Math.floor(+rawValue);
+    if (!qty || qty < 1 || isNaN(qty)) return;
+    const crateWeight = DomainUtils.getCrateWeight(item.crateType);
+    item.quantity = qty;
+    item.totalPrice = qty * item.unitPrice * crateWeight;
+    this.orderDto.totalAmount = this.getTotalPrice();
+    this.cdRef.detectChanges();
+    this.refreshPreview();
+  }
+
   reset(): void {
     this.orderDetails = [];
     this.orderForm.reset({
