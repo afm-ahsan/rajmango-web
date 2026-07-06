@@ -46,6 +46,17 @@ export class PaymentService {
     ).pipe(catchError(this.handleError));
   }
 
+  /**
+   * Full refund of a completed bKash payment. paymentId is the internal Payment.Id
+   * (not the bKash gateway paymentID) — the backend resolves gateway identifiers and
+   * refunds the full paid amount; partial refunds are not supported yet.
+   */
+  refund(paymentId: number, reason: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/payments/${paymentId}/refund`, { reason }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: HttpErrorResponse) {
     return throwError(() => error);
   }

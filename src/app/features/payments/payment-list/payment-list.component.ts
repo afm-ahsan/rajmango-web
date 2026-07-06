@@ -2,6 +2,9 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
 import { MenuComponent } from 'src/app/_metronic/kt/components';
+import { PaymentMethod } from 'src/app/services/client-proxy';
+import { UserPermissionKey } from 'src/app/core/constants/user-permission-keys.enum';
+import { PaymentStatus } from 'src/app/shared/enums/payment_status.enum';
 import { FilterModel } from 'src/app/shared/models/filter.model';
 import { FilterUtils } from 'src/app/shared/utils/filter-utils';
 import { SubSink } from 'subsink';
@@ -9,6 +12,7 @@ import { EnumLabelUtils } from 'src/app/shared/utils/enum-label.utils';
 import { SignalRService } from 'src/app/shared/services/signalr.service';
 import { PaymentService } from '../payment.service';
 import { RecordPaymentModalComponent } from '../record-payment-modal/record-payment-modal.component';
+import { RefundModalComponent } from '../refund-modal/refund-modal.component';
 import { ViewPaymentModalComponent } from '../view-payment-modal/view-payment-modal.component';
 
 @Component({
@@ -16,6 +20,8 @@ import { ViewPaymentModalComponent } from '../view-payment-modal/view-payment-mo
   templateUrl: './payment-list.component.html',
 })
 export class PaymentListComponent implements OnInit, OnDestroy {
+  readonly UserPermissionKey = UserPermissionKey;
+
   subs = new SubSink();
   isLoading = false;
   payments: any[] = [];
@@ -79,6 +85,25 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     const modalRef = this.modalService.open(ViewPaymentModalComponent, { size: 'md' });
     modalRef.componentInstance.id = id;
     modalRef.result.then(() => {}, () => {});
+  }
+
+  /**
+   * Cosmetic-only check — the backend independently enforces bKash/Paid/permission
+   * on the refund endpoint, so hiding the button here is not the security boundary.
+   */
+  canRefund(p: any): boolean {
+    return +p.paymentMethod === PaymentMethod._9 // Bkash
+        && +p.paymentStatus === PaymentStatus.Paid
+        && !!p.transactionId;
+  }
+
+  refund(p: any): void {
+    const modalRef = this.modalService.open(RefundModalComponent, { size: 'md' });
+    modalRef.componentInstance.payment = p;
+    modalRef.result.then(
+      (result: string) => { if (result === 'success') this.load(); },
+      () => {}
+    );
   }
 
   pageChanged($event: any): void {

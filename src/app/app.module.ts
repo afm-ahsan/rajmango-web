@@ -16,6 +16,7 @@ import { AppComponent } from './app.component';
 import { GlobalHttpInterceptor } from './core/interceptors/global-http.interceptor';
 import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 import { AuthService } from './features/auth/services/auth.service';
+import { BkashResultModule } from './features/bkash-result/bkash-result.module';
 import { GlobalErrorHandlerService } from './shared/services/global-error-handler.service';
 import { LoaderService } from './shared/services/loader.service';
 import { SharedModule } from './shared/shared.module';
@@ -36,6 +37,7 @@ import { environment } from 'src/environments/environment';
     InlineSVGModule.forRoot(),
     ClipboardModule,
     SharedModule,
+    BkashResultModule,
     AppRoutingModule
   ],
   providers: [

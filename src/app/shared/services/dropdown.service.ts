@@ -36,7 +36,8 @@ export class DropdownService {
       { id: 3, label: 'Failed' },
       { id: 4, label: 'Refunded' },
       { id: 5, label: 'Cancelled' },
-      { id: 6, label: 'Pending' }
+      { id: 6, label: 'Pending' },
+      { id: 8, label: 'Partially Refunded' }
     ];
   }
 

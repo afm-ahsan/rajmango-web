@@ -29,6 +29,7 @@ export class EnumLabelUtils {
   }
 
   static getPaymentStatusLabel(type: PaymentStatus): string {
+    if (type === PaymentStatus.PartiallyRefunded) return 'Partially Refunded';
     return PaymentStatus[type] ?? 'Unknown';
   }
 
@@ -191,6 +192,7 @@ export class EnumLabelUtils {
       [PaymentStatus.Cancelled]: 'badge-light-secondary',
       [PaymentStatus.Pending]:   'badge-light-warning',
       [PaymentStatus.Expired]:   'badge-light-secondary',
+      [PaymentStatus.PartiallyRefunded]: 'badge-light-info',
     };
     return classes[status] ?? 'badge-light-secondary';
   }

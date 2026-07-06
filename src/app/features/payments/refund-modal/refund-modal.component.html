@@ -1,0 +1,55 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h2 class="modal-title">Refund Payment</h2>
+    <button type="button" class="btn-close" (click)="cancel()"></button>
+  </div>
+  <div class="modal-body py-6 px-lg-8">
+    <div class="rounded-2 border mb-5 px-5 py-4" style="background:#f9fafb;">
+      <div class="row g-3 fs-7">
+        <div class="col-6 col-md-6">
+          <div class="text-muted text-uppercase fs-8 mb-1">Order Number</div>
+          <div class="fw-bold">{{ payment?.orderNumber || ('Order #' + payment?.orderId) }}</div>
+        </div>
+        <div class="col-6 col-md-6">
+          <div class="text-muted text-uppercase fs-8 mb-1">Customer</div>
+          <div class="fw-semibold">{{ payment?.customerName || '—' }}</div>
+        </div>
+        <div class="col-6 col-md-6">
+          <div class="text-muted text-uppercase fs-8 mb-1">Transaction ID</div>
+          <div class="fw-semibold">{{ payment?.transactionId || '—' }}</div>
+        </div>
+        <div class="col-6 col-md-6">
+          <div class="text-muted text-uppercase fs-8 mb-1">Paid Amount</div>
+          <div class="fw-bold text-success">৳{{ payment?.paidAmount | number:'1.0-2' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-warning d-flex align-items-center gap-2 py-2 px-3 mb-5">
+      <i class="bi bi-info-circle-fill flex-shrink-0"></i>
+      <span class="fs-7">Only a full refund of the paid amount is supported. Partial refunds are not available yet.</span>
+    </div>
+
+    <form [formGroup]="form">
+      <div class="mb-5">
+        <label class="form-label fw-semibold">Refund Amount</label>
+        <input type="text" class="form-control form-control-solid" [value]="payment?.paidAmount | number:'1.0-2'" readonly disabled />
+      </div>
+      <div class="mb-2">
+        <label class="form-label fw-semibold required">Refund Reason</label>
+        <textarea class="form-control form-control-solid" rows="3" formControlName="reason"
+          [class.is-invalid]="isInvalid('reason')"
+          placeholder="Why is this payment being refunded?"></textarea>
+        <div *ngIf="isInvalid('reason')" class="text-danger fs-7 mt-1">
+          Please provide a reason (at least 5 characters).
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm me-3" (click)="cancel()">Cancel</button>
+    <button type="button" class="btn btn-danger btn-sm" (click)="submit()" [disabled]="isSubmitting">
+      <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>Refund
+    </button>
+  </div>
+</div>

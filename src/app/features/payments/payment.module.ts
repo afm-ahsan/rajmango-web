@@ -9,6 +9,7 @@ import { PaymentListComponent } from './payment-list/payment-list.component';
 import { PaymentRoutingModule } from './payment-routing.module';
 import { PaymentComponent } from './payment.component';
 import { RecordPaymentModalComponent } from './record-payment-modal/record-payment-modal.component';
+import { RefundModalComponent } from './refund-modal/refund-modal.component';
 import { ViewPaymentModalComponent } from './view-payment-modal/view-payment-modal.component';
 
 @NgModule({
@@ -17,6 +18,7 @@ import { ViewPaymentModalComponent } from './view-payment-modal/view-payment-mod
     PaymentListComponent,
     RecordPaymentModalComponent,
     ViewPaymentModalComponent,
+    RefundModalComponent,
   ],
   imports: [
     CommonModule,

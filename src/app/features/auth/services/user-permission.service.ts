@@ -67,9 +67,10 @@ export class UserPermissionService {
       hasCustomersAccess:         can(AppPermissions.Customers.View),
 
       // ─── Admin — Finance ─────────────────────────────────────────
-      hasPaymentsAccess:    can(AppPermissions.Payments.View),
-      hasExpenseTypeAccess: can(AppPermissions.ExpenseTypes.View),
-      hasExpensesAccess:    can(AppPermissions.Expenses.View),
+      hasPaymentsAccess:           can(AppPermissions.Payments.View),
+      hasPaymentAdminRefundAccess: can(AppPermissions.Payments.AdminRefund),
+      hasExpenseTypeAccess:        can(AppPermissions.ExpenseTypes.View),
+      hasExpensesAccess:           can(AppPermissions.Expenses.View),
 
       // ─── Logistics ───────────────────────────────────────────────
       hasCourierProviderAccess:   can(AppPermissions.CourierProviders.View)   || can(AppPermissions.Couriers.View),

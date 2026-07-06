@@ -82,6 +82,13 @@
                         <i class="bi bi-plus-circle me-2 text-primary"></i>Record Payment
                       </a>
                     </div>
+                    <ng-container *ngIf="canRefund(p)">
+                      <div class="menu-item px-3" *appPermission="UserPermissionKey.HasPaymentAdminRefundAccess">
+                        <a class="menu-link px-3" (click)="refund(p)">
+                          <i class="bi bi-arrow-counterclockwise me-2 text-danger"></i>Refund
+                        </a>
+                      </div>
+                    </ng-container>
                   </div>
                 </td>
               </tr>

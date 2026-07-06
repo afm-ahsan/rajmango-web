@@ -6,5 +6,6 @@ export enum PaymentStatus {
   Refunded = 4,
   Cancelled = 5,
   Pending = 6,
-  Expired = 7
+  Expired = 7,
+  PartiallyRefunded = 8
 }

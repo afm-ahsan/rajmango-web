@@ -37,6 +37,8 @@ export const AppPermissions = {
     Create: 'payment.create',
     Update: 'payment.update',
     Delete: 'payment.delete',
+    /** System Admin/Admin only — refund a completed bKash payment. */
+    AdminRefund: 'payment.admin.refund',
   },
 
   Expenses: {

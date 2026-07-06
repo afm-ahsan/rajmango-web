@@ -17,6 +17,7 @@ export class UserAccessModel {
 
   // ─── Finance ───────────────────────────────────────────────────────
   hasPaymentsAccess: boolean;
+  hasPaymentAdminRefundAccess: boolean;
   hasExpenseTypeAccess: boolean;
   hasExpensesAccess: boolean;
 
